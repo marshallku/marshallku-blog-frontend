@@ -4,7 +4,9 @@ import matter from "gray-matter";
 import { POSTS_DIRECTORY } from "#constants";
 
 export function getPostSlugs() {
-    return readdirSync(POSTS_DIRECTORY).map((x) => x.replace(/\.md$/, ""));
+    return readdirSync(POSTS_DIRECTORY)
+        .filter((fileName) => fileName.endsWith(".md"))
+        .map((fileName) => fileName.replace(/\.md$/, ""));
 }
 
 export function getPostBySlug(slug: string) {
