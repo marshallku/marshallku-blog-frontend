@@ -1,8 +1,7 @@
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
-
-const POSTS_DIRECTORY = join(process.cwd(), "_posts");
+import { POSTS_DIRECTORY } from "#constants";
 
 export function getPostSlugs() {
     return readdirSync(POSTS_DIRECTORY).map((x) => x.replace(/\.md$/, ""));
