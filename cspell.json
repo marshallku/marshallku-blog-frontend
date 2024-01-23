@@ -1,0 +1,34 @@
+{
+    "words": [
+        "autodocs",
+        "BUILDKIT",
+        "callout",
+        "codebases",
+        "codepoint",
+        "codepoints",
+        "hookform",
+        "localforage",
+        "marshallku",
+        "nextjs",
+        "preconfigured",
+        "preconfigures",
+        "Pretendard",
+        "Promiseable",
+        "treeshake",
+        "tsup",
+        "Turborepo",
+        "vercel"
+    ],
+    "ignorePaths": [
+        "pnpm-lock.yaml",
+        "package.json",
+        "Dockerfile",
+        "node_modules/**",
+        "**/node_modules/**",
+        ".git/**",
+        "**/dist/**",
+        "**/.next/**",
+        "**/storybook-static/**",
+        "**/.turbo/**"
+    ]
+}
