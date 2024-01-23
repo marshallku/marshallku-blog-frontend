@@ -1,5 +1,3 @@
-import "@marshallku/ui/dist/reset.css";
-import "@marshallku/ui/dist/palette.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
