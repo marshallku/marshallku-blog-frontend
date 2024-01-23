@@ -1,12 +1,19 @@
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
 import { POSTS_DIRECTORY } from "#constants";
+import { walk } from "./file";
 
 export function getPostSlugs() {
-    return readdirSync(POSTS_DIRECTORY)
-        .filter((fileName) => fileName.endsWith(".md"))
-        .map((fileName) => fileName.replace(/\.md$/, ""));
+    const files: string[] = [];
+
+    walk(POSTS_DIRECTORY, (path) => {
+        if (path.endsWith(".md")) {
+            files.push(path);
+        }
+    });
+
+    return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.md$/, ""));
 }
 
 export function getPostBySlug(slug: string): {
