@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PAGE_SIZE } from "#constants";
 import { getGroupedPostByCategory, getPosts } from "#utils";
 
@@ -27,8 +28,12 @@ export default async function Archive({ params: { category } }: ArchiveProps) {
         <section>
             <h2>Recent posts</h2>
             <section>
-                {postsInPage.map(({ content, data }, i) => (
-                    <article key={i}>{JSON.stringify({ content, data })}</article>
+                {postsInPage.map(({ data, slug }, i) => (
+                    <article key={i}>
+                        <Link href={slug}>
+                            <h2>{data.title}</h2>
+                        </Link>
+                    </article>
                 ))}
             </section>
             <ul>

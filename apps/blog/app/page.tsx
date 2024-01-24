@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { getAllCategories, getPosts } from "#utils";
 import { PAGE_SIZE } from "#constants";
-import Link from "next/link";
 
 export default async function Home() {
     const posts = getPosts();
