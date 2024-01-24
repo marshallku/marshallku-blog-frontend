@@ -8,12 +8,12 @@ export function getPostSlugs(subDirectory?: string) {
     const files: string[] = [];
 
     walk(subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY, (path) => {
-        if (path.endsWith(".md")) {
+        if (path.endsWith(".mdx")) {
             files.push(path);
         }
     });
 
-    return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.md$/, ""));
+    return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.mdx$/, ""));
 }
 
 export function getPostBySlug(slug: string): {
@@ -28,7 +28,7 @@ export function getPostBySlug(slug: string): {
     slug: string;
     category: string;
 } {
-    const fullPath = join(POSTS_DIRECTORY, `${slug}.md`);
+    const fullPath = join(POSTS_DIRECTORY, `${slug}.mdx`);
     const fileContents = readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
