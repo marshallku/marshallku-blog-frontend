@@ -20,7 +20,7 @@ export function generateStaticParams() {
 
 export default async function Archive({ params: { category } }: ArchiveProps) {
     const posts = getPosts(category);
-    const postsInPage = posts.slice(PAGE_SIZE);
+    const postsInPage = posts.slice(0, PAGE_SIZE);
 
     return (
         <section>
