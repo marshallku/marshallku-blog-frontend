@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { PAGE_SIZE } from "#constants";
-import { getPosts } from "#utils";
+import { getGroupedPostByCategory, getPosts } from "#utils";
 
 export const dynamic = "error";
 
@@ -12,27 +12,10 @@ interface ArchiveProps {
 }
 
 export function generateStaticParams() {
-    const posts = getPosts();
-    const groupedPosts = posts.reduce(
-        (acc, post) => {
-            const category = post.category.slice(1);
+    const groupedPosts = getGroupedPostByCategory();
 
-            if (!category) {
-                return acc;
-            }
-
-            if (!acc[category]) {
-                acc[category] = [];
-            }
-
-            acc[category].push(post.slug);
-            return acc;
-        },
-        {} as Record<string, string[]>,
-    );
-
-    return Object.entries(groupedPosts).flatMap(([category, slugs]) =>
-        Array.from({ length: Math.ceil(slugs.length / PAGE_SIZE) }, (_, i) => ({
+    return Object.entries(groupedPosts).flatMap(([category, posts]) =>
+        Array.from({ length: Math.ceil(posts.length / PAGE_SIZE) }, (_, i) => ({
             params: {
                 category,
                 index: `${i + 1}`,

@@ -51,3 +51,23 @@ export function getPosts(category?: string) {
         .map((slug) => getPostBySlug(slug))
         .sort((a, b) => (a.data.date > b.data.date ? -1 : 1));
 }
+
+export function getAllCategories() {
+    const posts = getPosts();
+    const categories = new Set(posts.map((post) => post.category));
+
+    return [...categories];
+}
+
+export function getGroupedPostByCategory() {
+    const posts = getPosts();
+    const categories = new Set(posts.map((post) => post.category));
+
+    const groupedPosts: Record<string, typeof posts> = {};
+
+    for (const category of categories) {
+        groupedPosts[category] = posts.filter((post) => post.category === category);
+    }
+
+    return groupedPosts;
+}
