@@ -1,13 +1,13 @@
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, parse } from "path";
 import matter from "gray-matter";
 import { POSTS_DIRECTORY } from "#constants";
 import { walk } from "./file";
 
-export function getPostSlugs() {
+export function getPostSlugs(subDirectory?: string) {
     const files: string[] = [];
 
-    walk(POSTS_DIRECTORY, (path) => {
+    walk(subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY, (path) => {
         if (path.endsWith(".md")) {
             files.push(path);
         }
@@ -26,6 +26,7 @@ export function getPostBySlug(slug: string): {
     };
     content: string;
     slug: string;
+    category: string;
 } {
     const fullPath = join(POSTS_DIRECTORY, `${slug}.md`);
     const fileContents = readFileSync(fullPath, "utf8");
@@ -41,11 +42,12 @@ export function getPostBySlug(slug: string): {
         },
         content,
         slug,
+        category: parse(slug).dir,
     };
 }
 
-export function getAllPosts() {
-    return getPostSlugs()
+export function getPosts(category?: string) {
+    return getPostSlugs(category)
         .map((slug) => getPostBySlug(slug))
         .sort((a, b) => (a.data.date > b.data.date ? -1 : 1));
 }
