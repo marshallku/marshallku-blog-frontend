@@ -21,6 +21,7 @@ export function generateStaticParams() {
 export default async function Archive({ params: { category } }: ArchiveProps) {
     const posts = getPosts(category);
     const postsInPage = posts.slice(0, PAGE_SIZE);
+    const maxPage = Math.ceil(posts.length / PAGE_SIZE);
 
     return (
         <section>
@@ -30,6 +31,18 @@ export default async function Archive({ params: { category } }: ArchiveProps) {
                     <article key={i}>{JSON.stringify({ content, data })}</article>
                 ))}
             </section>
+            <ul>
+                {Array.from({ length: maxPage }, (_, i) => (
+                    <li key={i}>
+                        <a href={`/${category}/page/${i + 1}`}>{i + 1}</a>
+                    </li>
+                ))}
+                {maxPage > 1 && (
+                    <li>
+                        <a href={`/${category}/page/2`}>Next</a>
+                    </li>
+                )}
+            </ul>
         </section>
     );
 }
