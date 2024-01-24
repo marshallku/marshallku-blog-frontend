@@ -30,12 +30,6 @@ export function generateStaticParams() {
         {} as Record<string, string[]>,
     );
 
-    console.log(
-        Object.entries(groupedPosts).flatMap(([category]) => ({
-            category,
-        })),
-    );
-
     return Object.entries(groupedPosts).flatMap(([category]) => ({
         category,
     }));
