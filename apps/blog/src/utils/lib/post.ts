@@ -61,12 +61,14 @@ export function getAllCategories() {
 
 export function getGroupedPostByCategory() {
     const posts = getPosts();
-    const categories = new Set(posts.map((post) => post.category));
-
     const groupedPosts: Record<string, typeof posts> = {};
 
-    for (const category of categories) {
-        groupedPosts[category] = posts.filter((post) => post.category === category);
+    for (let i = 0, max = posts.length; i < max; i++) {
+        const post = posts[i];
+        if (!groupedPosts[post.category]) {
+            groupedPosts[post.category] = [];
+        }
+        groupedPosts[post.category].push(post);
     }
 
     return groupedPosts;
