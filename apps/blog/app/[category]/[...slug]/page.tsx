@@ -1,10 +1,11 @@
-import { getPostBySlug, getPostSlugs } from "#utils";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
+import { MDXComponents } from "#components";
+import { getPostBySlug, getPostSlugs } from "#utils";
 
 export const dynamic = "error";
 
@@ -37,6 +38,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
             <section>
                 <MDXRemote
                     source={post.content}
+                    components={MDXComponents}
                     options={{
                         mdxOptions: {
                             remarkPlugins: [remarkToc, remarkGfm, remarkSlug],
