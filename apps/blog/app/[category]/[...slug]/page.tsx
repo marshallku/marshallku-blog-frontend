@@ -1,5 +1,10 @@
 import { getPostBySlug, getPostSlugs } from "#utils";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
+import remarkSlug from "remark-slug";
+import remarkToc from "remark-toc";
 
 export const dynamic = "error";
 
@@ -30,7 +35,25 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 <time dateTime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString("ko-KR")}</time>
             </header>
             <section>
-                <MDXRemote source={post.content} />
+                <MDXRemote
+                    source={post.content}
+                    options={{
+                        mdxOptions: {
+                            remarkPlugins: [remarkToc, remarkGfm, remarkSlug],
+                            rehypePlugins: [
+                                rehypeAutolinkHeadings,
+                                [
+                                    // @ts-expect-error
+                                    rehypePrettyCode,
+                                    {
+                                        theme: "solarized-light",
+                                        keepBackground: true,
+                                    },
+                                ],
+                            ],
+                        },
+                    }}
+                />
             </section>
         </article>
     );
