@@ -5,7 +5,7 @@ export interface Post {
         coverImage: string;
         date: Date;
         ogImage: {
-            src: string;
+            url: string;
         };
     };
     content: string;
