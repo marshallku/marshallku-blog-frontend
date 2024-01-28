@@ -26,8 +26,12 @@ export function getPostBySlug(slug: string): Post {
         data: {
             title: data.title,
             description: data.description,
+            date: {
+                posted: new Date(data.date.posted),
+                modified: data.date.modified ? new Date(data.date.modified) : undefined,
+            },
+            tags: data.tags,
             coverImage: data.coverImage,
-            date: new Date(data.date),
             ogImage: data.ogImage,
         },
         content,

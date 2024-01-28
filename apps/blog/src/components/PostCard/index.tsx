@@ -13,9 +13,9 @@ const cx = classNames(styles, "post-card");
 export default function PostCard({ post }: PostCardProps) {
     return (
         <article className={cx()}>
-            {post.data.ogImage?.url && (
+            {post.data.ogImage && (
                 <figure className={cx("__image")}>
-                    <img src={post.data.ogImage.url} alt={post.data.title} />
+                    <img src={post.data.ogImage} alt={post.data.title} />
                 </figure>
             )}
             <header className={cx("__header")}>
@@ -33,9 +33,9 @@ export default function PostCard({ post }: PostCardProps) {
                     component="time"
                     className={cx("__time")}
                     variant="c1"
-                    dateTime={post.data.date.toISOString()}
+                    dateTime={post.data.date.posted.toISOString()}
                 >
-                    {post.data.date.toLocaleDateString("ko-KR")}
+                    {post.data.date.posted.toLocaleDateString("ko-KR")}
                 </Typography>
             </header>
         </article>
