@@ -1,3 +1,5 @@
+import "#styles/reset.scss";
+import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";

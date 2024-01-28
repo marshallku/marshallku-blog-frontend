@@ -1,0 +1,97 @@
+$light-palette: (
+    text: #080808,
+    highlight: #606060,
+    background: #fff,
+    background-transparent: rgba(255, 255, 255, 0),
+    selection: #d9d9d9,
+    main: #aaa,
+    main-opacity: rgba(170, 170, 170, 0.7),
+    sub: #aaa,
+    sub-opacity: rgba(170, 170, 170, 0.7),
+    list-text: #3d3d3d,
+    comment: #e6e6e6,
+    comment-2: #f2f2f2,
+    comment-text: #515151,
+    scroll: #aaa,
+    masonry-alt: #fff,
+    masonry-alt-transparent: rgba(230, 230, 230, 0),
+    link: #0554bb,
+);
+
+$dark-palette: (
+    text: #bbb,
+    highlight: #f1f1f1,
+    background: #121212,
+    background-transparent: rgba(18, 18, 18, 0),
+    selection: #3c3c3c,
+    main: #2b2b2b,
+    main-opacity: rgba(43, 43, 43, 0.7),
+    sub: #787878,
+    sub-opacity: rgba(120, 120, 120, 0.7),
+    list-text: #7d7d7d,
+    comment: #292929,
+    comment-2: #202020,
+    comment-text: #aaa,
+    scroll: #aaa,
+    masonry-alt: #262626,
+    masonry-alt-transparent: rgba(38, 38, 38, 0),
+    link: #55b1ff,
+);
+
+$sepia-palette: (
+    text: #080808,
+    highlight: #606060,
+    background: #f6f1e1,
+    background-transparent: rgba(246, 241, 225, 0),
+    selection: #f4d9be,
+    main: #793d00,
+    main-opacity: rgba(121, 61, 0, 0.7),
+    sub: #ad661f,
+    sub-opacity: rgba(173, 102, 31, 0.7),
+    list-text: #e4a667,
+    comment: #f0cca8,
+    comment-2: #f4d9be,
+    comment-text: #653c12,
+    scroll: #b06457,
+    masonry-alt: #e8dbb0,
+    masonry-alt-transparent: rgba(232, 219, 176, 0),
+    link: #0021c2,
+);
+
+@function get-color($palette, $key, $sub-key: null) {
+    @if map-has-key($palette, $key) {
+        $color: map-get($palette, $key);
+
+        @if type-of($color) == "map" {
+            @if map-has-key($color, $sub-key) {
+                @return map-get($color, $sub-key);
+            }
+
+            @warn "`#{$sub-key}` doesn't exist in color";
+        }
+
+        @return $color;
+    }
+
+    @warn "`#{$color}` doesn't exist in palette";
+    @return null;
+}
+
+@function color($key, $sub-key: null) {
+    @if map-has-key($light-palette, $key) {
+        $color: map-get($light-palette, $key);
+
+        @if type-of($color) == "map" {
+            @if map-has-key($color, $sub-key) {
+                @return var(--palette-#{$key}-#{$sub-key});
+            }
+
+            @warn "`#{$sub-key}` doesn't exist in color";
+        }
+
+        @return var(--palette-#{$key});
+    }
+
+    @warn "`#{$color}` doesn't exist in palette";
+    @return null;
+}

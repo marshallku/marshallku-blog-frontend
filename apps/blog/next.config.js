@@ -12,7 +12,7 @@ const nextConfig = {
         outputFileTracingRoot: path.join(__dirname, "../../"),
     },
     sassOptions: {
-        prependData: '@import "@marshallku/ui/dist/palette.scss";',
+        prependData: '@import "src/styles/palette.scss";',
     },
 };
 

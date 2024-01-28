@@ -1,0 +1,46 @@
+@import "./palette.scss";
+
+html {
+    @each $key, $value in $light-palette {
+        @if type-of($value) == "map" {
+            @each $child-key, $child-value in $value {
+                --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
+            }
+        } @else {
+            --palette-#{"" + $key}: #{$value};
+        }
+    }
+
+    background-color: get-color($light-palette, background);
+    color: get-color($light-palette, text);
+}
+
+html[data-theme="dark"] {
+    @each $key, $value in $dark-palette {
+        @if type-of($value) == "map" {
+            @each $child-key, $child-value in $value {
+                --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
+            }
+        } @else {
+            --palette-#{"" + $key}: #{$value};
+        }
+    }
+
+    background-color: get-color($dark-palette, background);
+    color: get-color($dark-palette, text);
+}
+
+html[data-theme="sepia"] {
+    @each $key, $value in $sepia-palette {
+        @if type-of($value) == "map" {
+            @each $child-key, $child-value in $value {
+                --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
+            }
+        } @else {
+            --palette-#{"" + $key}: #{$value};
+        }
+    }
+
+    background-color: get-color($sepia-palette, background);
+    color: get-color($sepia-palette, text);
+}
