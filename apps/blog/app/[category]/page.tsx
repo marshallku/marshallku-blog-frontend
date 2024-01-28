@@ -1,7 +1,6 @@
-import Link from "next/link";
+import { Pagination, PostCard } from "#components";
 import { PAGE_SIZE } from "#constants";
 import { getGroupedPostByCategory, getPosts } from "#utils";
-import { PostCard } from "#components";
 
 export const dynamic = "error";
 
@@ -23,7 +22,6 @@ export function generateStaticParams() {
 export default async function Archive({ params: { category } }: ArchiveProps) {
     const posts = getPosts(category);
     const postsInPage = posts.slice(0, PAGE_SIZE);
-    const maxPage = Math.ceil(posts.length / PAGE_SIZE);
 
     return (
         <section>
@@ -33,18 +31,7 @@ export default async function Archive({ params: { category } }: ArchiveProps) {
                     <PostCard key={post.slug} post={post} />
                 ))}
             </section>
-            <ul>
-                {Array.from({ length: maxPage }, (_, i) => (
-                    <li key={i}>
-                        <a href={`/${category}/page/${i + 1}`}>{i + 1}</a>
-                    </li>
-                ))}
-                {maxPage > 1 && (
-                    <li>
-                        <a href={`/${category}/page/2`}>Next</a>
-                    </li>
-                )}
-            </ul>
+            <Pagination currentIndex={1} totalCount={posts.length} basePath={`/${category}`} rowSize={PAGE_SIZE} />
         </section>
     );
 }

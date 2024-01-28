@@ -1,0 +1,12 @@
+.pagination {
+    &__page {
+        &--current {
+            color: color(main);
+        }
+    }
+    &__direction {
+        &--invisible {
+            visibility: hidden;
+        }
+    }
+}

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Pagination, PostCard } from "#components";
 import { PAGE_SIZE } from "#constants";
 import { getGroupedPostByCategory, getPosts } from "#utils";
 
@@ -43,31 +43,16 @@ export default async function Archive({ params: { category, index } }: ArchivePr
         <section>
             <h2>Recent posts</h2>
             <section>
-                {postsInPage.map(({ data, slug }, i) => (
-                    <article key={slug}>
-                        <Link href={slug}>
-                            <h2>{data.title}</h2>
-                        </Link>
-                    </article>
+                {postsInPage.map((post) => (
+                    <PostCard key={post.slug} post={post} />
                 ))}
             </section>
-            <ul>
-                {actualIndex > 0 && (
-                    <li>
-                        <a href={`/${category}/page/${actualIndex}`}>Previous</a>
-                    </li>
-                )}
-                {Array.from({ length: maxPage }, (_, i) => (
-                    <li key={i}>
-                        <a href={`/${category}/page/${i + 1}`}>{i + 1}</a>
-                    </li>
-                ))}
-                {actualIndex < maxPage - 1 && (
-                    <li>
-                        <a href={`/${category}/page/${actualIndex + 2}`}>Next</a>
-                    </li>
-                )}
-            </ul>
+            <Pagination
+                currentIndex={pageIndex}
+                totalCount={posts.length}
+                basePath={`/${category}`}
+                rowSize={PAGE_SIZE}
+            />
         </section>
     );
 }
