@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { join, parse } from "path";
 import matter from "gray-matter";
 import { POSTS_DIRECTORY } from "#constants";
+import { Post } from "#types";
 import { walk } from "./file";
 
 export function getPostSlugs(subDirectory?: string) {
@@ -16,18 +17,7 @@ export function getPostSlugs(subDirectory?: string) {
     return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.mdx$/, ""));
 }
 
-export function getPostBySlug(slug: string): {
-    data: {
-        title: string;
-        excerpt: string;
-        coverImage: string;
-        date: Date;
-        ogImage: { src: string };
-    };
-    content: string;
-    slug: string;
-    category: string;
-} {
+export function getPostBySlug(slug: string): Post {
     const fullPath = join(POSTS_DIRECTORY, `${slug}.mdx`);
     const fileContents = readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
