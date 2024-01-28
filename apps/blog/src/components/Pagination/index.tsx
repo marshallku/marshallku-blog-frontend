@@ -42,7 +42,7 @@ function calculatePageNumbers({
     return pages;
 }
 
-function Pagination({ currentIndex, rowSize = 6, totalCount, pageRange = 3, basePath = "/" }: PaginationProps) {
+function Pagination({ currentIndex, rowSize = 6, totalCount, pageRange = 5, basePath = "/" }: PaginationProps) {
     const pageCount = useMemo(() => Math.ceil(totalCount / rowSize), [totalCount, rowSize]);
 
     return (
