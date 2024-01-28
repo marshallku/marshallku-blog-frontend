@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Post({ params: { category, slug } }: PostProps) {
-    const post = getPostBySlug(`${category}/${slug.join("/")}`);
+    const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
     return (
         <article>
