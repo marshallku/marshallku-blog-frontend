@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
 import { MDXComponents } from "#components";
-import { getPostBySlug, getPostSlugs } from "#utils";
+import { setImageMetaData, getPostBySlug, getPostSlugs } from "#utils";
 
 export const dynamic = "error";
 
@@ -54,6 +54,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                         keepBackground: true,
                                     },
                                 ],
+                                setImageMetaData,
                             ],
                         },
                     }}
