@@ -43,7 +43,17 @@ export function getPostBySlug(slug: string): Post {
 export function getPosts(category?: string) {
     return getPostSlugs(category)
         .map((slug) => getPostBySlug(slug))
-        .sort((a, b) => (a.data.date > b.data.date ? -1 : 1));
+        .sort((a, b) => {
+            if (a.data.date.posted > b.data.date.posted) {
+                return -1;
+            }
+
+            if (a.data.date.posted < b.data.date.posted) {
+                return 1;
+            }
+
+            return 0;
+        });
 }
 
 export function getAllCategories() {
