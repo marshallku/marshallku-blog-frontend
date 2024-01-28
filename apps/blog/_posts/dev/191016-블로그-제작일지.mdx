@@ -1,0 +1,81 @@
+---
+title: 191016 블로그 제작일지
+description: 모바일 전용 업데이트 스와이프 기능을 업데이트했습니다. 아무래도 모바일에선 버튼 터치보단 스와이프가 훨씬 직관적인 것 같더라고요.저도 본능적으로 슬라이더를 넘기거나 드로워를 열려고 스와이프를 하기도 하고요. 홈 화면에 있는 슬라이더를 스와이프 하면 이전, 다음 슬라이더로 넘어가고, 화면 왼쪽 끝에서 오른쪽, 오른쪽 끝에서 왼쪽으로 스와이프 하면 양측 드로워 - 삼선 메뉴나 프로필 사진 누르면 열리는 것 - 가 열립니다.
+date:
+  posted: 2019-10-16T14:50:00.000Z
+  modified: 2023-11-19T07:29:00.000Z
+tags:
+  - 워드프레스
+  - 제작일지
+coverImage: /images/2019/10/댓글-프로필.png
+ogImage: /images/2019/10/댓글-프로필.png
+---
+
+## 모바일 전용 업데이트
+
+스와이프 기능을 업데이트했습니다.
+
+아무래도 모바일에선 버튼 터치보단 스와이프가 훨씬 직관적인 것 같더라고요.  
+저도 본능적으로 슬라이더를 넘기거나 드로워를 열려고 스와이프를 하기도 하고요.
+
+홈 화면에 있는 슬라이더를 스와이프 하면 이전, 다음 슬라이더로 넘어가고, 화면 왼쪽 끝에서 오른쪽, 오른쪽 끝에서 왼쪽으로 스와이프 하면 양측 드로워 - 삼선 메뉴나 프로필 사진 누르면 열리는 것 - 가 열립니다.
+
+## 홈 화면 업데이트
+
+![](/images/2019/10/블로그-홈-화면.png)
+
+홈 화면을 갈아엎고자 하는 생각을 항상 품고 살았는데, 이 정도 선에서 일단락 지어야 하지 싶습니다.
+
+화면 최상단에 표시되던 랜덤 사진을 없애고, 인기 글 목록이 들어간 슬라이더를 넣었습니다.  
+근데 인기 글 기준이 최다 조회 수라, 새로 올라온 글이 치고 올라오기 너무 힘든 환경이 아닌가 싶긴 하네요.
+
+## Since
+
+![](/images/2019/10/since.png)
+
+푸터에 블로그 시작일을 기재해두고, 자바스크립트로 몇 년 몇 개월이 지났는지 표시하도록 했습니다.  
+적고 보니 조만간 9주년이네요. 언제 이렇게까지 됐는지.
+
+## toggleSlide 업데이트
+
+![](/images/2019/10/toggleSlide-업데이트.png)
+
+이제 하위 카테고리가 하나씩만 열립니다.
+
+```
+[...document.querySelectorAll(".cat-item")].forEach(a => {
+    const button = document.createElement("button");
+    let children;
+    0 !== a.querySelectorAll(".children").length && (
+        a.classList.add("hasChildren"),
+        a.insertBefore(button, a.querySelector(".children")),
+        button.addEventListener("click", () => {
+            button.classList.toggle("flip-y"),
+            [...document.querySelectorAll(".cat-item.hasChildren")].forEach(x => {
+                children = x.querySelector(".children"),
+                x !== a && children !== null && children.style.height !== "" && children.style.height !== "0px" && (
+                    toggleSlide(children),
+                    x.querySelector("button").classList.toggle("flip-y")
+                )
+            }),
+            toggleSlide(a.querySelector(".children"))
+        })
+    )
+})
+
+```
+
+화살표 버튼 클릭할 때마다 높이가 0이 아닌 엘리먼트를 찾아서 toggleSlide() 함수를 실행하도록 해뒀습니다.
+
+## 댓글 프로필
+
+![](/images/2019/10/댓글-프로필.png)
+
+이름, 이메일 주소 등을 브라우저에 저장하면, 해당 아이콘이 댓글 창에 표시됩니다.
+
+## 마우스 아이콘 대체
+
+![](/images/2019/10/마우스-화살표-변경.png)
+
+예전 홈 화면이나, 배너를 전체 화면으로 표시할 때 표시되던 마우스 모양 아이콘을 화살표 모양의 svg로 대체했습니다.  
+훨씬 깔끔해져서 개인적으로 마음에 드네요.

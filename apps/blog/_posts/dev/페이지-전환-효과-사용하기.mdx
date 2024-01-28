@@ -1,0 +1,212 @@
+---
+title: 페이지 전환 효과 사용하기
+description: 페이지 전환 효과(Page Transition Effect)는 Node.js로 백엔드를 수정하거나, React, Vue 등으로 만든 사이트에서 훨씬 쉽고 화려하게 만들 수 있지만, 이미 만든 사이트에 페이지 전환 효과 넣자고 사이트를 갈아엎긴 아무래도 힘듭니다.그래서 간단하게 페이지에 별다른 수정을 거치지 않고 페이드 등의 간단한 효과를 사용하는 방법을 공유해볼까 합니다. Javascript function isSameAsLocation(uriString) { &#160; &#160; const uri = new URL(uriString);
+date:
+  posted: 2020-02-15T14:59:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - CSS
+coverImage: /images/2020/02/page-transition-thumb.png
+ogImage: /images/2020/02/page-transition-thumb.png
+---
+
+페이지 전환 효과(Page Transition Effect)는 Node.js로 백엔드를 수정하거나, React, Vue 등으로 만든 사이트에서 훨씬 쉽고 화려하게 만들 수 있지만, 이미 만든 사이트에 페이지 전환 효과 넣자고 사이트를 갈아엎긴 아무래도 힘듭니다.  
+그래서 간단하게 페이지에 별다른 수정을 거치지 않고 페이드 등의 간단한 효과를 사용하는 방법을 공유해볼까 합니다.
+
+## Javascript
+
+```
+function isSameAsLocation(uriString) {
+    const uri = new URL(uriString);
+
+    return (
+        uri.origin === window.location.origin &&
+        uri.pathname === window.location.pathname
+    );
+}
+
+function pageTransition(nodeList) {
+    nodeList.forEach((node) => {
+        if (!(node instanceof HTMLAnchorElement)) return;
+
+        const { href } = node;
+
+        if (!href || node.target === "_blank" || isSameAsLocation(href)) return;
+
+        node.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            document.body.addEventListener(
+                "transitionend",
+                () => {
+                    window.location.href = href;
+                },
+                { passive: true, once: true }
+            );
+            document.body.classList.add("hidden");
+        });
+    });
+}
+
+
+```
+
+페이지에 있는 모든 a 태그를 클릭하면 위 함수가 작동하도록 할 겁니다.
+
+자바스립트로 특수한 이벤트를 넣어둔 a 태그들은 위 함수의 조건문에서 걸러지도록 해주세요.  
+a.id !== "ID"  
+!a.classList.contains("class")  
+위 두 조건을 활용하시면 됩니다.
+
+location.href로 uri를 변경했는데, hash만 변경되면 페이지를 새로 불러오지 않습니다.  
+근데 또 아예 똑같은 uri면 새로 불러옵니다.  
+그래서 현재 보고 있는 페이지에서 hash만 바뀔 때만 스크립트가 작동하지 않도록 해뒀습니다.
+
+```
+pageTransition(document.querySelectorAll("a"))
+```
+
+일단 위 스크립트처럼 페이지에 있는 모든 a 태그에 클릭 이벤트를 추가해주시고, 자바스크립트 등으로 페이지에 요소가 추가될 때마다 이벤트를 해당 요소에 추가해주셔야 합니다.
+
+```
+document.body.classList.add("reveal");
+```
+
+페이지가 로딩됐을 때 애니메이션을 표시할 수 있도록 웹사이트의 메인 자바스크립트 파일 제일 아래에 위 코드를 추가해주세요.
+
+전 그냥 메인 자바스크립트파일 제일 아래에만 추가해뒀는데, window.addEventListener("load"), document.addEventListener("DOMContentLoaded") 등을 이용해 특정 상황에 class를 추가하셔도 됩니다.
+
+## 페이드 인 / 아웃 - CSS
+
+```
+body {
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .65s .15s
+}
+
+body.reveal {
+    opacity: 1;
+    overflow-y: auto
+}
+
+body.hidden {
+    opacity: 0
+}
+
+```
+
+위 영상에도 나오는 제일 만만한 페이드 인 / 아웃입니다.  
+제일 만만하게 사용하실 수 있고, 효과 자체도 무난하니 괜찮습니다.
+
+## 기타 효과 사용하기
+
+간단하게 만들어본 효과입니다.  
+딱히 뭐라 명명해야 할 진 모르겠네요.
+
+```
+<div id="loader">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+```
+
+전 8개의 div를 넣어뒀습니다.  
+본인이 원하는 만큼 늘리거나 줄이시면 됩니다.
+
+```
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  
+    &>div {
+      width: 100%;
+      height: 12.5%;
+      background: blueviolet;
+      transition: transform 500ms;
+    }
+  
+    @for $i from 1 through 8 { 
+        &>div:nth-child(#{$i}) {
+            transition-delay: $i * 100ms;
+        }
+    }
+}
+
+body:not(.hidden).reveal #loader>div {
+    transform: translateX(-100%)
+}
+
+```
+
+:nth-child(1) 부터 (8)까지 적기 귀찮아서 Sass(SCSS)를 사용해 루프 돌렸습니다.  
+div 개수 수정하시면 위 코드 수정하시고 [온라인 컴파일러](https://www.sassmeister.com/)를 사용하시거나, 아래에 컴파일된 CSS를 수정해주세요.
+
+```
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#loader>div {
+    width: 100%;
+    height: 12.5%;
+    background: blueviolet;
+    transition: transform 500ms;
+}
+
+#loader>div:nth-child(1) {
+    transition-delay: 100ms;
+}
+
+#loader>div:nth-child(2) {
+    transition-delay: 200ms;
+}
+
+#loader>div:nth-child(3) {
+    transition-delay: 300ms;
+}
+
+#loader>div:nth-child(4) {
+    transition-delay: 400ms;
+}
+
+#loader>div:nth-child(5) {
+    transition-delay: 500ms;
+}
+
+#loader>div:nth-child(6) {
+    transition-delay: 600ms;
+}
+
+#loader>div:nth-child(7) {
+    transition-delay: 700ms;
+}
+
+#loader>div:nth-child(8) {
+    transition-delay: 800ms;
+}
+
+body:not(.hidden).reveal #loader>div {
+    transform: translateX(-100%);
+}
+
+```
+
+컴파일된 CSS입니다.

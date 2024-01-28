@@ -24,7 +24,7 @@ export function getPostBySlug(slug: string): Post {
 
     return {
         data: {
-            title: data.title,
+            title: data.title.replace(/\\/g, ""),
             description: data.description,
             date: {
                 posted: new Date(data.date.posted),

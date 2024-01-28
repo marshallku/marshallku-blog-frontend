@@ -1,0 +1,321 @@
+---
+title: PWA의 Manifest 작성하기
+description: PWA(Progressive Web App)의 정보를 담은 Manifet 파일의 작성
+date:
+  posted: 2020-12-09T12:02:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - PWA
+coverImage: /images/2020/12/PWA_Manifest.png
+ogImage: /images/2020/12/PWA_Manifest.png
+---
+
+Manifest 파일은 PWA(Progressive Web App)의 정보를 담은 JSON 텍스트 파일로, 주로 루트 디렉토리에 manifest.json / manifest.webmanifest 등의 이름으로 저장합니다.
+
+오브젝트에 후술할 멤버들을 추가하시면 되고, 필수로 들어가야 하는 멤버엔 \* 표시를, 더는 사용하지 않는 멤버엔 🗑️ 표시를 해뒀습니다. 기본적으로 알파벳순 정렬이지만, 필수로 들어가야 하는 멤버는 먼저 표시하고, 사용하지 않는 멤버는 최하단에 배치했습니다. 가끔 자연스러운 서술을 위해 순서를 뒤집기도 했습니다.
+
+## name\* : String
+
+PWA의 이름입니다. 앱 목록뿐 아니라 PWA를 설치(홈 화면에 추가)할 때나, 로딩 화면 등에서도 표시됩니다.
+
+### 예시
+
+```
+"name": "My Web App"
+```
+
+후술하겠지만, 아랍어처럼 오른쪽에서 왼쪽으로 읽는 언어는 `dir`이란 멤버를 따로 추가해주셔야 합니다.
+
+```
+"dir": "rtl",
+"lang": "ar",
+"name": "تطبيق الويب الخاص بي"
+
+```
+
+## icons\* : Array
+
+아이콘 정보가 있는 오브젝트들이 들어가는 멤버로, 다양한 해상도의 이미지를 추가해두면 알아서 필요한 이미지를 사용합니다.
+
+오브젝트엔 src, sizes, type, purpose 가 들어가며, type과 purpose는 생략하실 수 있습니다.
+
+* src - 이미지의 주소. 상대주소로 입력하면 manifest 파일의 위치가 기준.
+* sizes - 이미지의 크기, 공백으로 구분되며 다양한 크기 입력 가능.
+* type - 이미지의 형식.
+* purpose - 이미지의 목적.  
+   * monochrome : 색상 정보 없이 알파 채널만 사용하는 아이콘입니다. 단색 아이콘에 색상을 입히는 등의 상황에 쓰입니다.  
+   * maskable : 아이콘이 Safe Area를 벗어나지 않게 설계된 아이콘입니다. 사용자의 테마에 맞게 Safe Area 밖은 잘릴 수 있습니다. 아이콘 이미지의 내접원을 벗어나지 않게 작업하면 되고, [Maskable​.app Editor](https://maskable.app/editor)에서 "Minimum safe area" 등의 다양한 상황에서 아이콘이 어떻게 보이는지 확인하실 수 있습니다.  
+   * any(기본값) : 사용자 에이전트가 자유롭게 아이콘을 표시합니다.
+
+### 예시
+
+```
+"icons": [
+    {
+        "src": "/logo/logo.ico",
+        "sizes": "48x48 64x64"
+    },
+    {
+        "src": "/logo/logo-128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+    },
+    {
+        "src": "/logo/logo-192.png",
+        "sizes": "192x192",
+        "purpose": "maskable"
+    },
+    {
+        "src": "/logo/logo-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }
+]
+
+```
+
+## background\_color : String
+
+페이지의 배경색에는 아무런 영향을 끼치지 않으며, Stylesheet을 불러오기 전에 표시되는 배경색입니다.  
+크롬 등의 브라우저에선 실제 배경색과 달라도 트랜지션덕에 크게 어색하지 않게 화면이 전환되지만, 사파리 등에선 트랜지션이 없으니 실제 웹 앱의 배경색과 같은 색을 사용하시는 걸 추천합니다.
+
+### 예시
+
+```
+"background_color": "#121212"
+```
+
+## categories : Array<String>
+
+웹 앱이 속하는 카테고리가 들어있는 배열입니다. 카테고리의 이름은 구조화된 데이터 등과는 다르게 표준이 딱히 없습니다만, 브라우저가 이를 처리하기 전에 모든 스트링을 소문자로 변경하기 때문에 어지간하면 소문자로만 작성하시는 걸 추천합니다.
+
+### 예시
+
+```
+"categories": ["sports" ,"basketball", "news"]
+```
+
+## description : String
+
+웹 앱에 대한 설명입니다.
+
+### 예시
+
+```
+"description": "PWA의 제작 과정을 기술합니다."
+```
+
+name과 마찬가지로 오른쪽에서 왼쪽으로 읽는 언어는 `dir` 멤버를 따로 추가해주셔야 합니다.  
+\* 물론 멤버는 한 번만 추가하시면 됩니다.
+
+```
+"dir": "rtl",
+"lang": "ar",
+"description": "تطبيق الويب الخاص بي"
+
+```
+
+## dir : String
+
+글을 읽는 방향을 설정합니다.
+
+* auto - 사용자 에이전트의 설정에 따릅니다
+* ltr - 왼쪽에서 오른쪽으로 읽습니다.
+* rtl - 오른쪽에서 왼쪽으로 읽습니다.
+
+## iarc\_rating\_id : String
+
+웹 앱의 국제등급분류연합(IARC, International Age Rating Coalition)의 인증 코드입니다.
+
+## lang : String
+
+Manifest의 언어로, 하나만 지정하실 수 있습니다.  
+`dir` 멤버와 함께 글자를 읽는 방향을 결정하는데 사용됩니다.
+
+### 예시
+
+```
+"language": "ko-KR"
+```
+
+## orientation : String
+
+웹 앱을 실행했을 때 화면 방향에 대한 설정으로, 아래의 값들이 추가될 수 있습니다.
+
+* any
+* natural
+* landscape
+* landscape-primary
+* landscape-secondary
+* portrait
+* portrait-primary
+* portrait-secondary
+
+### 예시
+
+```
+"orientation": "portrait"
+```
+
+## related\_applications : Array
+
+해당 웹 앱과 관련 있는 기본 플랫폼에서 설치할 수 있는 네이티브 앱의 목록입니다.
+
+네이티브 앱의 정보를 나타내는 오브젝트엔 platform, url, id가 들어갈 수 있습니다.
+
+* platform - 앱의 플랫폼으로, [w3c/manifest/Platforms](https://github.com/w3c/manifest/wiki/Platforms)의에서 들어갈 수 있는 스트링 목록을 확인하실 수 있습니다.
+* url - 앱의 스토어 주소
+* id - 앱의 id
+
+### 예시
+
+```
+"related_applications": [
+    {
+        "platform": "play",
+        "url": "https://play.google.com/store/apps/details?id=com.my.app",
+        "id": "com.my.app"
+    },
+    {
+        "platform": "itunes",
+        "url": "https://itunes.apple.com/app/my-app/id123456789"
+    }
+]
+
+```
+
+## prefer\_related\_applications : Boolean
+
+웹 앱과 `related_applications`의 네이티브 앱 사이의 우선순위를 결정하는 멤버입니다. 기본적으론 `false`이며, `true`로 변경하면 사용자 에이전트가 앱의 설치를 권장할 수 있습니다.
+
+### 예시
+
+```
+"prefer_related_applications": true
+```
+
+## scope : String
+
+웹 앱의 탐색 범위를 제한하는 멤버입니다. `scope`에 지정한 범위를 벗어나면 웹 앱에서 표시되지 않고, 브라우저 탭에서 표시됩니다.  
+icons의 src와 마찬가지로, 상대주소를 사용하면 manifest 파일의 위치가 기준이 됩니다.
+
+### 예시
+
+```
+"scope": "https://example.com/app/"
+```
+
+## screenshots : Array
+
+웹 앱의 스크린샷의 정보가 있는 오브젝트가 들어가는 멤버로, 일반적인 상황에선 표시되지 않고 스토어 등에 출시할 때 사용됩니다.
+
+오브젝트에는 `icons`의 오브젝트에서 `purpose`를 제외한 값들이 포함될 수 있습니다.
+
+### 예시
+
+```
+"screenshots": [
+    {
+        "src": "/screenshots/1.png",
+        "sizes": "1600x900",
+        "type": "image/png"
+    },
+    {
+        "src": "/screenshots/2.png",
+        "sizes": "1600x900",
+        "type": "image/png"
+    }
+]
+
+```
+
+## short\_name : String
+
+이름을 전부 표시할만한 공간적 여유가 없을 때 표시되는 이름입니다. `name`이나 `description`과 마찬가지로, `dir`과 `lang`에 의해 읽는 방향이 결정됩니다.
+
+\* 반드시 `name`보다 짧은 스트링이 들어갈 필요는 없습니다.
+
+### 예시
+
+```
+"short_name": "app"
+```
+
+## shortcuts : Array
+
+웹 앱의 링크에 대한 정보가 들어간 오브젝트가 들어가는 멤버입니다. Windows의 작업 표시줄에서 아이콘에 우클릭을 한 상황처럼 주로 아이콘에 특정 작업을 하면 표시됩니다.
+
+![Context Menu](/images/2020/12/menu.png)
+
+백문불여일견
+
+오브젝트엔 name, url, short\_name, description, icons가 포함되며 name과 url은 필수입니다.
+
+* name - 표시될 이름(String)
+* url - 클릭 시 이동할 주소(String)
+* short\_name - 공간이 부족할 때 표시될 이름(String)
+* description - 바로 가기의 설명(String)
+* icons - 바로 가기의 icon(Object, 상술한 icons와 동일 // src, sizes, type, purpose)
+
+### 예시
+
+```
+"shortcuts": [
+    {
+        "name": "Upload Image",
+        "icons": [
+            {
+                "src": "/icons/image.png",
+                "sizes": "192x192"
+            }
+        ],
+        "url": "/upload/image"
+    },
+    {
+        "name": "Upload Video",
+        "icons": [
+            {
+                "src": "/icons/video.png",
+                "sizes": "192x192"
+            }
+        ],
+        "url": "/upload/video"
+    }
+]
+
+```
+
+## start\_url : String
+
+웹 앱을 실행하면 불러오는 url입니다. 절대적이진 않으며, 사용자 에이전트가 무시하거나 사용자에게 변경할 권한을 줄 수도 있습니다. 마찬가지로 상대주소를 입력하면 manifest 파일의 위치가 기준이 됩니다.
+
+### 예시
+
+```
+"start_url": "/"
+```
+
+## theme\_color : String
+
+웹 앱의 테마 색으로, 상태 표시줄이나 상단바 등에 표시됩니다.
+
+### 예시
+
+```
+"theme_color": "#890309"
+```
+
+## serviceworker 🗑️
+
+서비스 워커의 정보를 담은 오브젝트입니다.
+
+\* 더는 사용하지 않는 멤버이며, 서비스 워커는 아래 예제처럼 자바스크립트로 제어합니다.
+
+```
+navigator.serviceWorker.register("/service-worker.js");
+```
+
+### 참고
+
+[Web App Manifest](https://w3c.github.io/manifest/), W3C, 26 October 2020  
+[Web app manifests](https://developer.mozilla.org/en-US/docs/Web/Manifest), MDN contributors, 28 November 2020

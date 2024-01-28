@@ -1,0 +1,76 @@
+---
+title: 이미지 줌 라이브러리 제작일지
+description: Github라이브 데모 일전에 블로그에 업데이트하고 굉장히 만족도가 높았던 이미지 줌 효과를 난생처음 npm 패키지로 만들어보고 있습니다.그간 만든 것은 대부분 코드를 복사 붙여 넣기 해야 쓸 수 있었는데, 이젠 cdn 링크를 script로 추가하는 건 물론이고, npm i smooth-zoom으로 설치까지 할 수 있습니다. webpack으로 빌드해보려다 계속 실패해서 일단 수동으로 작업해서 올려뒀는데, Rollup으로 갈아타거나 간단한 스크립트를 만들거나 해서
+date:
+  posted: 2021-02-13T15:00:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - Smooth Zoom
+  - 제작일지
+coverImage: /images/2021/02/이미지-줌-라이브러리_Smooth-Zoom_제작일지.png
+ogImage: /images/2021/02/이미지-줌-라이브러리_Smooth-Zoom_제작일지.png
+---
+
+[Github](https://github.com/marshallku/smooth-zoom)  
+[라이브 데모](https://smooth-zoom.marshallku.com/)
+
+일전에 블로그에 업데이트하고 굉장히 만족도가 높았던 이미지 줌 효과를 난생처음 npm 패키지로 만들어보고 있습니다.  
+그간 만든 것은 대부분 코드를 복사 붙여 넣기 해야 쓸 수 있었는데, 이젠 cdn 링크를 script로 추가하는 건 물론이고, `npm i smooth-zoom`으로 설치까지 할 수 있습니다.
+
+webpack으로 빌드해보려다 계속 실패해서 일단 수동으로 작업해서 올려뒀는데, Rollup으로 갈아타거나 간단한 스크립트를 만들거나 해서 빌드 자동화도 해야 하고, 구형 브라우저 지원도 해야 하고, 아직 신경 쓸 게 많네요. 일단 IE11까진 지원해볼 생각입니다.  
+정리되는 대로 글도 조금 더 다듬어서 작성하도록 하겠습니다.
+
+## 설치
+
+```
+npm install smooth-zoom
+# or
+yarn add smooth-zoom
+```
+
+## 사용법
+
+```
+<script src="node_modules/smooth-zoom/dist/zoom.min.js"></script>
+<!-- or -->
+<script src="https://cdn.jsdelivr.net/npm/smooth-zoom@latest/dist/zoom.min.js"></script>
+
+```
+
+설치 후 스크립트 태그를 추가하셔도 되고, 설치 없이 사용하시려면 jsdelivr 링크를 추가하시면 됩니다.
+
+```
+import Zoom from "smooth-zoom";
+
+```
+
+혹은 모듈로 가져오실 수도 있습니다.
+
+```
+Zoom(".zoomable");
+
+```
+
+그다음, CSS 셀렉터를 담아 호출해주시면 끝입니다.
+
+## 옵션
+
+```
+Zoom(".zoomable", {
+    originalizer: (src) => src.replace(/-[0-9]+\.jpg/, ".jpg"),
+    background: "auto",
+});
+
+```
+
+### originalizer
+
+* 타입 : (src: string) => string
+* 기본값 : (src) => src
+* 설명 : string을 받아와 string을 반환하는 함수입니다. `image-768x768.jpg`를 `image.jpg`로 수정하는 것처럼 반응형으로 추가한 이미지 주소를 원본 주소로 바꾸는 데 사용합니다.
+
+### background
+
+* 타입 : string
+* 기본값 : rgb(0, 0, 0)
+* 설명 : 이미지의 배경에 들어가는 색입니다. "auto"를 사용하시면 이미지의 평균 색으로 지정됩니다만, CORS 설정이 안 된 외부 주소에서 가져온 이미지의 색상은 가져오지 못하는 점 참고해주세요.

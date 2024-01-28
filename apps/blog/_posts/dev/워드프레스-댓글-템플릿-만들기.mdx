@@ -1,0 +1,204 @@
+---
+title: 워드프레스 댓글 템플릿 만들기
+description: wp_list_comments의 html 구조를 변경하는
+date:
+  posted: 2020-12-19T15:32:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - 워드프레스
+  - PHP
+coverImage: /images/2020/12/댓글-템플릿-제작하기.png
+ogImage: /images/2020/12/댓글-템플릿-제작하기.png
+---
+
+간단하게 티스토리에서 치환자 써서 만들듯이 워드프레스의 댓글 템플릿을 제작하는 방법입니다.
+
+`index.php`에 전부 구겨 넣으셔도 되고, `single.php`처럼 필요한 부분에 따로 추가하셔도 물론 작동은 하지만, 여러 군데서 돌려쓰시려면 `comments.php` 파일을 생성하시는 게 가장 편합니다.
+
+생성한 탬플릿은 `comments_template`으로 불러올 수 있습니다. 기본적으로 `comments.php`의 내용을 가져오지만, 별도의 파일을 인자로 넘겨주실 수도 있습니다.
+
+댓글 목록 출력은 [wp\_list\_comments](https://developer.wordpress.org/reference/functions/wp%5Flist%5Fcomments/)로 하실 수 있으며, `callback`이나 `walker`를 추가하셔서 구조를 변경하실 수 있습니다. `get_comments`로 댓글 배열을 받아온다거나 하는 방법도 존재하긴 하지만, 이 방법이 훨씬 직관적이리라 보고 이 방법으로 소개합니다.
+
+## callback
+
+```
+<?php
+function format_comment($comment, $args, $depth)
+{
+
+    $isAuthor = $comment->user_id == 1 ?>
+
+    <li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
+        <div class="avatarWrap overHidden"><?php
+            $author_link = get_comment_author_url();
+
+            if ($isAuthor) : ?>
+                <img src="https://cdn.jsdelivr.net/gh/marshallku/wp@1.0.0/images/marshall-logo.svg" alt="author" width="40" height="40">
+            <?php else : ?>
+                <img src="https://cdn.jsdelivr.net/gh/marshallku/wp@1.0.0/images/loader.svg" data-avatar="<?php echo get_avatar_url($comment->comment_author_email, ['size' => '40']); ?>" alt="profile" class="avatar lazyLoad" width="40" height="40" data-index="<?php echo get_comment_author_IP()[1]; ?>">
+            <?php endif; ?>
+        </div>
+
+        <div class="c-head">
+            <?php if ($isAuthor) : ?>
+                <a href="https://marshallku.com" class="name">Marshall K</a>
+            <?php else : ?>
+                <span class="name pseudo-link" <?php
+                if ($author_link) {
+                    echo 'data-uri="' . $author_link . '"';
+                } ?>><?php
+                echo get_comment_author();
+            ?></span>
+            <?php endif; ?>
+        </div>
+
+        <div class="c-bubble">
+
+            <?php if ($comment->comment_approved == 0) : ?>
+                <div class="c-text">관리자의 승인을 기다리는 중인 댓글입니다.</div>
+            <?php else : ?>
+                <div class="c-text"><?php comment_text(); ?></div>
+            <?php endif; ?>
+
+        </div>
+
+        <time><?php echo get_comment_date(); ?></time>
+
+        <div class="c-bottom"><?php
+            echo edit_comment_link('수정');
+            comment_reply_link(array_merge(
+                $args,
+                array(
+                    'reply_text' => '답글',
+                    'depth' => $depth,
+                    'max_depth' => $args['max_depth']
+                )
+            ));
+        ?></div>
+
+    </li>
+<?php } ?>
+
+```
+
+간략한 예시를 위해 제가 사용하던 코드를 들고왔습니다.  
+`comment_class`와 `comment_ID`를 추가하는 것까진 기본적인 워드프레스의 동작을 위해 해주시는 게 좋을 거라 봅니다.
+
+나머지는
+
+* `get_comment_author` (혹은 `$comment->comment_author`) : 작성자 이름
+* `get_comment_author_url` (혹은 `$comment->comment_author_url`) : 작성자 url
+* `get_avatar_url` : 작성자 Gravatar (`comment_author_email`을 인자로 넘겨줘야 합니다.)
+* `get_comment_text` (혹은 `$comment->comment_content`) : 댓글 내용
+* `get_comment_date` (혹은 `$comment->comment_date`) : 댓글을 작성한 날짜
+* `comment_reply_link` : 답글 작성용 링크 (인자로 넘겨준 값들 참고해주세요.)
+
+등을 잘 활용하셔서 구조를 만들어가면 됩니다. 전 `echo get_comment_text()` 대신 `comment_text()`를 사용했는데, `get_comment_text`로 출력하면 순수하게 문자열만 출력돼서, p 태그를 자동으로 추가하려고 `comment_text`를 사용했습니다.
+
+답글은 `comment_reply_link`로 주소를 바꿔버리는 대신 댓글 입력 폼의 `input[name="comment_parent"]`의 value를 댓글 id로 수정하셔도 작동합니다. 답글 링크 클릭할 때마다 페이지가 바뀌는 게 거슬리시면 JS로 input의 value를 수정해주세요.
+
+```
+wp_list_comments(array(
+    'style' => 'ul',
+    'callback' => 'format_comment'
+));
+
+```
+
+작성이 끝나시면 `wp_list_comments`의 인자로 넘겨주는 array에 `callback`으로 함수명을 넘겨주시면 됩니다.
+
+## walker
+
+조금 더 근간을 뜯어고치고 싶으실 때 사용하시면 됩니다.
+
+```
+class comment_walker extends Walker_Comment
+{
+    public $tree_type = 'comment';
+    public $db_fields = array(
+        'parent' => 'comment_parent',
+        'id' => 'comment_ID'
+    );
+
+    // 댓글 리스트 시작
+    function __construct() { ?>
+        <section>
+    <?php }
+
+    // 댓글 리스트 끝
+    function __destruct() { ?>
+        </section>
+    <?php }
+
+    // 답글 목록 시작
+    function start_lvl(&$output, $depth = 0, $args = array())
+    {
+        $GLOBALS['comment_depth'] = $depth + 2;
+    ?>
+        <ul class="children">
+    <?php }
+
+    // 답글 목록 끝
+    function end_lvl(&$output, $depth = 0, $args = array())
+    {
+        $GLOBALS['comment_depth'] = $depth + 2;
+    ?>
+        </ul>
+    <?php }
+
+    // 댓글 시작
+    function start_el(&$output, $comment, $depth = 0, $args = array(), $id = 0)
+    {
+        $depth++;
+        $GLOBALS['comment_depth'] = $depth;
+        $GLOBALS['comment'] = $comment; ?>
+        <li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
+            <div class="author">
+                <div class="author__avatar">
+                    <img src="<?php echo get_avatar_url(
+                        $comment->comment_author_email,
+                        ['size' => '40']
+                    ); ?>" alt="" class="author__avatar__img">
+                </div>
+                <div class="author__name">
+                    <a href="<?php echo $comment->comment_author_url; ?>"><?php echo $comment->comment_author ?></a>
+                </div>
+            </div>
+            <div class="content">
+                <?php comment_text(); ?>
+            </div>
+            <time class="date"><?php echo get_comment_date('Y-m-d'); ?></time>
+            <div class="manage"><?php
+                echo edit_comment_link('수정');
+                comment_reply_link(array_merge(
+                    $args,
+                    array(
+                        'reply_text' => '답글',
+                        'depth' => $depth,
+                        'max_depth' => $args['max_depth']
+                    )
+                ));
+            ?></div>
+    <?php }
+
+    // 댓글 끝
+    function end_el(&$output, $comment, $depth = 0, $args = array()) { ?>
+        </li>
+    <?php }
+}
+
+```
+
+보이는 것처럼 `callback`에선 수정할 수 없던 부분까지 수정할 수 있어서, 전 댓글 목록을 JSON으로 만드는 데 사용했습니다. 워드프레스에서 제공해주는 API가 있긴 하지만, 답글이 따로 분리가 안 돼 있어서 상당히 불편하더라고요.
+
+댓글 목록 내부를 수정하는 건 상술한 것과 크게 다르지 않으니 넘어가겠습니다.
+
+```
+wp_list_comments(array(
+    'style' => 'ul',
+    'walker' => new comment_walker()
+));
+
+```
+
+작성이 끝나시면 이번엔 `walker`에 객체를 생성해서 넘겨주시면 됩니다.

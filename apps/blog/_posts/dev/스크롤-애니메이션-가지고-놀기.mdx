@@ -1,0 +1,270 @@
+---
+title: 스크롤 애니메이션 가지고 놀기
+description: 간단한 스크롤 애니메이션 페이지 제작한 방법과 짧은
+date:
+  posted: 2021-01-04T14:53:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - Parallax
+  - 애니메이션
+  - 제작일지
+coverImage: /images/2021/01/fullmoon-long.png
+ogImage: /images/2021/01/fullmoon-long.png
+---
+
+일전에 작업 중이라 소개했던 [Parallax Effect](https://marshallku.github.io/Parallax-Effect/)에 관한 글입니다.([Github](https://github.com/marshallku/Parallax-Effect))  
+드라마 상황과 비슷한 사진 주워 쓰는 것도 한계가 있는데, 공정 사용 관련해서 아무리 찾아봐도 저런 웹사이트 만드는 건 해당 사항이 없는 것 같아 이것저것 더 제작해보다가 멈춰버렸습니다.
+
+## 틀 잡기
+
+```
+const screenSize = {
+    vw: 0,
+    vh: 0,
+};
+
+function setScreenSize() {
+    screenSize.vw =
+        Math.max(
+            document.documentElement.clientWidth || 0,
+            window.innerWidth || 0
+        ) / 100;
+    screenSize.vh =
+        Math.max(
+            document.documentElement.clientHeight || 0,
+            window.innerHeight || 0
+        ) / 100;
+}
+
+```
+
+이런 효과는 대부분 일정 크기 이하의 기기에선 없애버리지만, 전 그래도 모바일에서 보이게는 하고 싶어서 vw, vh 두 단위를 적극 활용했습니다. 덕분에 매번 vw과 vh을 px로 변환해줘야 하는 귀찮음을 동반하긴 했지만요.
+
+근데 만들고 보니 확실히 모바일에선 숨기는 게 나아 보입니다. 성능 문제도 있지만, 일단 데스크탑이나 랩탑에 비해 과하게 작은 디스플레이에서 이 모든 걸 표현하기가 쉽지 않더라고요.
+
+```
+function scrollEffect() {
+    const { scrollY } = window;
+    const { vw, vh } = screenSize;
+    const largerPart = Math.max(vw, vh);
+
+    if (scrollY <= 100 * vh) {
+        // Do something
+    } else if (scrollY <= 150 * vh) {
+        // Do something
+    } else {
+        // Do something
+    }
+}
+
+```
+
+vh으로 높이를 정해뒀고, `window.scrollY`가 계속 필요해서, Intersection Observer는 사용하지 않고, scroll 이벤트를 활용했습니다.
+
+또한, 첫 조건문을 제외한 나머지 조건문엔 `const currentY = scrollY - 이전 범위 최댓값 * vh`처럼 currentY를 선언해뒀습니다.
+
+뒤에 호텔 소개하는 부분엔 Intersection Observer를 사용하긴 했지만, 상술했듯 안타깝게도 엎어져 버렸네요.
+
+## Parallax 효과
+
+![풍경](/images/2021/01/landscape.png)
+
+하늘, 도시 배경이 실제 스크롤 속도(검은 div가 올라오는 속도)와 다르게 움직이는데, 이런 것 까지는 `position: fixed`로 두고 `transform`을 이용해 `window.scrollY`보다 작은 폭으로 움직이게 해주면 아주 간단하게 만들 수 있습니다.
+
+```
+city.style.transform = `translate3d(0, ${-0.1 * scrollY}px, 0)`;
+```
+
+스크롤을 내려야 보이는 요소라면 `offsetTop`이나 `element.getBoundingClientRect().top`을 고려하는 것만 잊지 않으면 됩니다.
+
+## 달
+
+제일 중요한 부분이다 보니 시작부터 거의 끝까지 총 4가지의 효과를 보여줍니다.
+
+x, y로 이동은 물론 크기까지 변하기에, `transform: matrix(a, b, c, d, tx, ty)`를 활용했습니다.
+
+scale : `matrix(x, 0, 0, y, 0, 0)`  
+translate : `matrix(1, 0, 0, 1, x, y)`  
+skew : `matrix(1, tan y, tan x, 1, 0, 0)`  
+rotate : `matrix(cos θ. sin θ, -sin θ, cos θ, 0, 0)`  
+만 참고하셔도 어지간한 transform을 활용한 애니메이션은 구현하실 수 있습니다.
+
+### 포물선 이동
+
+x 좌표와 y 좌표 모두 y(window.scrollY, 이하 scrollY)가 0에서 60 \* vh까지 움직일 때 x의 값에 대한 함수로 구했습니다.  
+x 좌표를 구하는 함수는 일차 함수, y 좌표를 구하는 함수는 이차 함수로 간단한 편이고, 심지어 원점(O)까지 지나니 식을 구하기는 크게 어렵지 않습니다.
+
+#### x 좌표 구하기
+
+y가 60 \* vh일 때 화면 정 중앙에 달이 있게 할 것이므로, scrollY가 0일 때 0에서 출발해 60 \* vh에 도달하면 -50 \* vw에 moon의 너비의 반을 더한 값만큼 오면 됩니다. moon은 너비와 높이가 17vh인 정사각형에 넣어뒀기에, -8.5 \* vh이 되겠네요.
+
+```
+moonTransform.x = ((-50 * vw - 8.5 * vh) / (60 * vh)) * scrollY;
+```
+
+정리하면 이런 모양이 됩니다.
+
+#### y 좌표 구하기
+
+화면비가 어떨지 모르기 때문에, vw과 vh 중 큰 값을 `largePart`로 지정하고, 5 \* largePart만큼 y 좌표를 움직이게 했습니다.  
+이는 O(0, 0)을 지나고, 꼭짓점이 (30 \* vh, -5 \* largePart)인 이차함수의 식을 구하면 됩니다.
+
+수학 시간이 아니니, 짧게만 짚으면 꼭짓점을 통해 위 좌표를 구할 수 있고, 원점을 지나니 위 식의 x와 y에 0을 넣으면 a의 값도 구할 수 있습니다.
+
+```
+const largerPart = Math.max(vw, vh);
+const halfVh = 30 * vh;
+moonTransform.y =((5 * largerPart) / Math.pow(halfVh, 2)) * Math.pow(scrollY - halfVh, 2) - 5 * largerPart;
+
+```
+
+정리하면 이런 모양이 됩니다.
+
+```
+moon.style.transform = `matrix(${moonTransform.scale}, 0, 0, ${moonTransform.scale}, ${moonTransform.x}, ${moonTransform.y})`;
+```
+
+아직 scale은 변환하지 않으니, `moonTransform.scale`을 1로 선언해두고, 상술한 것처럼 matrix 함수를 사용하면 달이 부드럽게 포물선을 그리며 움직입니다.
+
+다소 길었을 수 있는데, 이게 거의 끝입니다.  
+아래부턴 굉장히 짧고 쉽습니다.
+
+### 아래로 커지며 이동
+
+```
+moonTransform.x = -50 * vw - 8.5 * vh;
+moonTransform.y = currentY * 0.9;
+moonTransform.scale = 1 + currentY * 0.01;
+
+```
+
+x의 값은 scrollY가 60 \* vh일 때 값으로 고정해두고, y의 값과 scale 값은 각각 0과 1부터 조금씩 커지게 하면 끝입니다.
+
+[이 델루나 포스터](https://t1.daumcdn.net/cfile/tistory/998441395FF319822E?original) 느낌을 내기 위해 달 중심에 성도 페이드 인 되게 해뒀습니다.  
+또한 밋밋함을 덜기 위해 달이 빛나는 효과도 천천히 생기게 해뒀는데, 똑같은 달 이미지를 겹쳐두고 z-index가 낮은 달에 `filter: blur(10px)`을 추가하고 페이드 인 되게 해서 만들었습니다.
+
+```
+moonGlow.style.opacity = `${currentY / 40 * vh}`;
+```
+
+opacity가 0에서 1이 될 땐 상술한 것처럼 `현재 좌표 / 페이드 인 되는 범위`를 사용했습니다. 1에서 0이 될 땐 `1 - 현재 좌표 / 페이드 아웃 되는 범위`를 사용하시면 됩니다.
+
+### 왼쪽으로 조금 이동
+
+```
+tmpMoonTransform.x = moonTransform.x - currentY * 0.1;
+```
+
+[델루나 포스터](https://t1.daumcdn.net/cfile/tistory/9914E2435FF3198230?original) 같은 느낌을 내야 하니, 달을 왼쪽으로 살짝 치워줍니다.  
+굳이 스크롤마다 `-50 * vw - 8.5 * vh`을 계산하지 않게 하려고 지금까지 `moonTransform`에 값을 저장하고 있었습니다.  
+아래에서도 쭉 이 x를 유지해야 하기에, `tmpMoonTransform`을 만들어 x만 따로 저장해뒀습니다.
+
+### 작아지며 페이드 아웃
+
+```
+const half = currentY / (50 * vh);
+const moonScale = Math.max(
+    moonTransform.scale - half * moonTransform.scale,
+    0
+);
+
+```
+
+페이드 아웃은 상술한 것과 똑같고, scale은 0보다 작아져서 뒤집혀 표시되는 참사만 안 벌어지게 하면 됩니다.
+
+## 마우스 커서를 바라보는 요소 만들기
+
+![장만월](/images/2021/01/fullmoon-long.png)
+
+`mousemove` 이벤트 핸들러에서 `event.clientX`와 `event.clientY`를 넘겨주고, `touchmove` 이벤트 핸들러에서 `event.touches[0].clientX`와 `event.touches[0].clientY`를 넘겨주면 커서나 터치의 위치를 감지할 수 있습니다.
+
+```
+const ease = 20;
+
+// 고정된 요소가 아니면 offset 대신 getBoundingClientRect을 이용하세요.
+const x =  -(yCord - element.offsetTop - element.offsetHeight / 2) / ease;
+const y = (xCord - element.offsetLeft - element.offsetWidth / 2) / ease;
+
+element.style.setProperty("--x", `${x}deg`);
+element.style.setProperty("--y", `${y}deg`);
+
+```
+
+커서나 터치의 위치를 `(xCord, yCord)`라 할 때, 위 코드처럼 작업하신 뒤
+
+```
+#frames.reveal > .frame {
+    transform: perspective(500px) rotateX(var(--x)) rotateY(var(--y));
+}
+
+```
+
+회전만 시켜선 몸통을 돌려 바라보지 않으니, perspective를 추가해주고 회전시키면 커서 바라기를 만드실 수 있습니다.
+
+![반짝 반짝 작은 별](/images/2021/01/twinkle-twinkle.png)
+
+작은 화면에 액자를 6개나 넣으니 너무 정신없어서 전 모바일에선 별만 반짝이게 해뒀습니다.
+
+## 네온사인
+
+![호텔 델루나](/images/2021/01/hotel-del-luna.png)
+
+```
+<svg>
+    <filter id="neon-blue">
+        <feDropShadow
+            dx="0"
+            dy="0"
+            stdDeviation="8"
+            flood-color="#bfebee"
+            flood-opacity="1"
+        />
+    </filter>
+</svg>
+
+```
+
+이렇게 filter를 추가해주고
+
+```
+#logo > svg.filter > path:not(.moon) {
+    filter: url(#neon-blue);
+}
+
+```
+
+css에서 필터를 먹이시면 네온 사인처럼 빛나는 효과를 만드실 수 있습니다.
+
+물론 svg가 없고 투명한 png만 있거나, `feDropShadow`가 마음에 안 드시면, 위에서 달을 빛나게 할 때 쓰던 방법처럼 blur 효과를 주셔서 구현하셔도 됩니다.
+
+```
+@keyframes blink {
+    0%,
+    50%,
+    85% {
+        opacity: 0;
+    }
+    25%,
+    75%,
+    100% {
+        opacity: 1;
+    }
+}
+
+#logo.on > svg.filter {
+    animation: blink 2s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+```
+
+필터를 위한 svg를 겹쳐두시고, 이렇게 애니메이션을 추가하시면 네온사인이 깜빡이면서 켜지는 듯한 애니메이션도 만드실 수 있습니다.
+
+## 짧은 후기
+
+제가 지금까지 웹사이트에 애니메이션을 넣은 건 대부분 몰입을 해치지 않게 하려고 적당히 부드럽게 요소들이 움직이게 하는 게 전부였습니다. 그런데 이렇게 처음부터 끝까지 애니메이션을 위한 걸 만들어보니, 역시 많은 게 부드럽게 움직이는 게 안 예쁘기는 라면 못 끓이기랑 비슷한 난이도로 어려워 보이네요.
+
+다만, 스타일을 재계산해야 하는 offsetTop 등을 최초 한 번만 계산하고 메모리에 저장하는 등의 노력을 했음에도, 그냥 transform도 계산하느라 힘들어 죽겠다고 호소하는 구세대 인텔 내장 그래픽과 저사양 모바일 프로세서 때문에 실제로 여기저기 사용하는 건 힘들어 보인다는 게 가장 큰 흠이긴 하지만, 적절한 디자인, 기획과 함께라면 홈 페이지나 소개 페이지처럼 강렬한 인상을 줘야 하는 페이지엔 충분히 도전해볼 만하다고 생각합니다.
+
+난이도는 1 \~ 3차 함수 - 그냥 그래프만 대충 그릴 줄 알면 되는 문제라, 사실 더 고차 함수도 크게 무리가 되진 않을 것 같습니다 - 와 정말 기초적인 삼각 함수만 알아도 간단한 애니메이션과 easing 함수를 구현하는데 큰 어려움이 없어 보입니다. 심지어 easing 함수는 [치트 시트 사이트](https://easings.net/)도 존재하고요.
+
+저도 홈 페이지에는 간단한 애니메이션도 넣어볼까 싶네요.

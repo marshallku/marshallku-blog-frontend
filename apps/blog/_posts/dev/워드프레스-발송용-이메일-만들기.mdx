@@ -1,0 +1,79 @@
+---
+title: \[우분투\] 워드프레스 발송용 이메일 만들기
+description: 우분투에서 돌아가는 워드프레스에 발송용 메일 계정을 추가하는 방법입니다. postfix 설치 sudo apt-get update &amp;&amp; sudo apt-get install postfix 업데이트를 진행한 후 postfix를 설치합니다. 설치 도중에 설정 창이 뜹니다. Internet Site를 선택해주세요. System mail name을 입력하라고 나옵니다.위 설명에 적혀있지만 root@example.com이 발신자 메일이라 치면, example.com을 입력하시면 됩니다. 전 no-reply@marshallku.com을 이용할 예정이기에, marshallku.com이라 작성했습니다. 위 과정이 모두 끝나면
+date:
+  posted: 2020-01-19T15:29:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - 워드프레스
+  - PHP
+  - Ubuntu
+coverImage: /images/2020/01/Screenshot-from-2020-01-19-23-17-49.png
+ogImage: /images/2020/01/Screenshot-from-2020-01-19-23-17-49.png
+---
+
+우분투에서 돌아가는 워드프레스에 발송용 메일 계정을 추가하는 방법입니다.
+
+## postfix 설치
+
+```
+sudo apt-get update && sudo apt-get install postfix
+```
+
+업데이트를 진행한 후 postfix를 설치합니다.
+
+![](/images/2020/01/Screenshot-from-2020-01-19-23-17-49.png)
+
+설치 도중에 설정 창이 뜹니다.
+
+Internet Site를 선택해주세요.
+
+![](/images/2020/01/Screenshot-from-2020-01-19-23-20-22.png)
+
+System mail name을 입력하라고 나옵니다.  
+위 설명에 적혀있지만 root@example.com이 발신자 메일이라 치면, example.com을 입력하시면 됩니다.
+
+전 no-reply@marshallku.com을 이용할 예정이기에, marshallku.com이라 작성했습니다.
+
+위 과정이 모두 끝나면 /etc/postfix/main.cf을 텍스트 편집기에서 열어주세요.
+
+```
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = loopback-only
+
+```
+
+위 내용을 추가하신 후 저장하시고,
+
+```
+sudo service postfix reload
+```
+
+위 내용을 터미널에서 실행해주세요.
+
+## WordPress 설정
+
+위 과정을 끝마치면 일단 메일이 발송되기 시작합니다.  
+하지만 발신자의 정보가 이름은 WordPress, 메일은 wordpress@블로그.주소 입니다.  
+functions.php를 조금 손봐 위를 수정하실 수 있습니다.
+
+```
+function mailSenderMail($original_email_address) {
+    return "이름@도메인.주소";
+}
+
+function mailSenderName($original_email_from) {
+    return "이름";
+}
+
+add_filter("wp_mail_from", "mailSenderMail");
+add_filter("wp_mail_from_name", "mailSenderName");
+
+```
+
+## 아쉬운 점
+
+![](/images/2020/01/its-spam.jpg)
+
+스팸이 창궐하는 인터넷이기에, 당연히 no-reply@marshallku.com라는 신용도가 바닥인 발신자가 발송한 메일은 묻지도 따지지도 않고 스팸함에 박아버립니다. 😥

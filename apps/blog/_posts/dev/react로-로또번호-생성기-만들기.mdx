@@ -1,0 +1,178 @@
+---
+title: React로 로또번호 생성기 만들기
+description: 깃허브 약 9개월 전에 바닐라 자바스크립트로 만든 로또 추첨기를 리액트로 다시 제작해봤습니다. 손보는 김에 예전엔 모바일 기기에선 공을 세로로 일렬로 표시했으나, 이젠 3열로 표시하게 해뒀습니다.버리는 공간이 훨씬 적어진 느낌이라 마음에 드네요. 바닐라로 짤 땐 html에 .ball이란 div를 만들고, #button을 클릭하면 document.querySelectorAll(&quot;.ball&quot;)로 DOM에 접근해 내용을 바꾸는 방식으로 작업하는데, 리액트로 짜니 컴포넌트를 만들고, 버튼을 클릭하면 컴포넌트의 상태를
+date:
+  posted: 2020-05-18T15:10:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - 로또
+  - ReactJS
+coverImage: /images/2020/05/react-lottery-app.png
+ogImage: /images/2020/05/react-lottery-app.png
+---
+
+[깃허브](https://github.com/marshallku/React-Lottery-App)
+
+약 9개월 전에 바닐라 자바스크립트로 만든 [로또 추첨기](https://marshallku.com/web/tips/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%A1%9C%EB%98%90-%EC%B6%94%EC%B2%A8%EA%B8%B0)를 리액트로 다시 제작해봤습니다.
+
+손보는 김에 예전엔 모바일 기기에선 공을 세로로 일렬로 표시했으나, 이젠 3열로 표시하게 해뒀습니다.  
+버리는 공간이 훨씬 적어진 느낌이라 마음에 드네요.
+
+바닐라로 짤 땐 html에 .ball이란 div를 만들고, #button을 클릭하면 document.querySelectorAll(".ball")로 DOM에 접근해 내용을 바꾸는 방식으로 작업하는데, 리액트로 짜니 컴포넌트를 만들고, 버튼을 클릭하면 컴포넌트의 상태를 업데이트하는 전혀 다른 방식으로 진행해야 해 난항을 겪었네요.
+
+처음엔 바닐라만큼 직관적이진 않다고 느꼈으나, 한 엘리먼트에 여러 곳에서 접근하다 코드가 꼬이는 등의 불상사는 일어날 일이 없어 보이니 단순한 접근 방식의 차이일 뿐이지 직관성은 뛰어날 수도 있겠다 싶습니다.
+
+```
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+
+const numbers = [...Array(45).keys()];
+
+class LotteryBox extends React.Component {
+    state = { number: [0, 0, 0, 0, 0, 0, 0] };
+    randomize = () => {
+        if (!this.state.effect) {
+            const numberCopy = numbers.map((x) => x);
+            const arr = [];
+            for (let i = 0; i <= 7; i++) {
+                const random = Math.floor(
+                    Math.random() * (numberCopy.length - 1)
+                );
+                arr.push(numberCopy[random] + 1);
+                numberCopy.splice(random, 1);
+            }
+            this.setState({ number: arr, effect: true });
+            setTimeout(() => {
+                this.setState({ effect: false });
+            }, 8000);
+        }
+    };
+
+    render() {
+        return (
+            <React.Fragment>
+                <h1 id="title">Lotto</h1>
+                <div id="numbers">
+                    <LotteryItem
+                        index="0"
+                        color="blue"
+                        number={this.state.number[0]}
+                        decrypting={this.state.effect}
+                    />
+                    <LotteryItem
+                        index="1"
+                        color="blue"
+                        number={this.state.number[1]}
+                        decrypting={this.state.effect}
+                    />
+                    <LotteryItem
+                        index="2"
+                        color="blue"
+                        number={this.state.number[2]}
+                        decrypting={this.state.effect}
+                    />
+                    <LotteryItem
+                        index="3"
+                        color="red"
+                        number={this.state.number[3]}
+                        decrypting={this.state.effect}
+                    />
+                    <LotteryItem
+                        index="4"
+                        color="red"
+                        number={this.state.number[4]}
+                        decrypting={this.state.effect}
+                    />
+                    <LotteryItem
+                        index="5"
+                        color="grey"
+                        number={this.state.number[5]}
+                        decrypting={this.state.effect}
+                    />
+                    <div className="plus">+</div>
+                    <LotteryItem
+                        index="6"
+                        color="bonus"
+                        number={this.state.number[6]}
+                        decrypting={this.state.effect}
+                    />
+                </div>
+                <div>
+                    <LotteryButton
+                        decrypting={this.state.effect}
+                        run={this.randomize}
+                    />
+                </div>
+            </React.Fragment>
+        );
+    }
+}
+
+class LotteryButton extends React.Component {
+    render() {
+        return (
+            <button
+                id="btn"
+                className={this.props.decrypting && "hide"}
+                onClick={this.props.run}
+            >
+                추첨!
+            </button>
+        );
+    }
+}
+
+class LotteryItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            number: "?",
+            decryptingDone: "",
+        };
+    }
+
+    decryptEffect() {
+        this.setState({ decryptingDone: "" });
+        this.timer = setInterval(() => {
+            this.randomNumber();
+        }, 10);
+        setTimeout(() => {
+            this.setState({
+                decryptingDone: "done",
+                number: this.props.number,
+            });
+            clearTimeout(this.timer);
+        }, 1000 * +this.props.index + 1000);
+    }
+
+    randomNumber() {
+        this.setState({ number: Math.round(Math.random() * 44) + 1 });
+    }
+
+    componentDidUpdate(nextProps) {
+        const { decrypting } = this.props;
+        if (nextProps.decrypting !== decrypting) {
+            if (decrypting) {
+                this.decryptEffect();
+            }
+        }
+    }
+
+    render() {
+        return (
+            <div
+                className={`ball ${this.props.color} ${this.state.decryptingDone}`}
+            >
+                {this.state.number}
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(<LotteryBox />, document.getElementById("root"));
+
+```
+
+아직 React 초보라, LotteryItem에 index를 일일이 넣어주는 점이며, LotteryBox의 number란 array의 아이템을 LotteryItem에 하나씩 전달해주는 점이 굉장히 우아하지 못한 것 같은데, 첫술에 배를 불리려는 건 과욕이겠지요. 😂

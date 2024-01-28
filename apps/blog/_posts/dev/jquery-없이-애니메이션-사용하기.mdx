@@ -1,0 +1,107 @@
+---
+title: jQuery 없이 애니메이션 사용하기
+description: 애니메이션 대부분은 JS에선 엘리먼트의 class 정도만 변경해주고 CSS에서 애니메이션을 추가하는 방식으로 사용하실 수 있습니다.하지만, 엘리먼트의 width나 height을 변경하거나, 특정 엘리먼트까지 부드럽게 스크롤 하는 덴 위 방식으로 한계가 있습니다.엘리먼트의 width나 height을 css의 transition으로 변경하면 60FPS 보장이 굉장히 힘들어지고, scroll-behavior은 사파리에서 지원하지 않기 때문입니다. jQuery에선 .animate() .slideToggle() 등으로 간단히 작업할 수 있는데, 이를 바닐라로 비슷하게 구현해봤습니다. function animateScroll(to) {
+date:
+  posted: 2020-04-08T06:01:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - animation
+coverImage: /images/2020/04/js-animation.png
+ogImage: /images/2020/04/js-animation.png
+---
+
+애니메이션 대부분은 JS에선 엘리먼트의 class 정도만 변경해주고 CSS에서 애니메이션을 추가하는 방식으로 사용하실 수 있습니다.  
+하지만, 엘리먼트의 width나 height을 변경하거나, 특정 엘리먼트까지 부드럽게 스크롤 하는 덴 위 방식으로 한계가 있습니다.  
+엘리먼트의 width나 height을 css의 transition으로 변경하면 60FPS 보장이 굉장히 힘들어지고, scroll-behavior은 사파리에서 지원하지 않기 때문입니다.
+
+jQuery에선 .animate() .slideToggle() 등으로 간단히 작업할 수 있는데, 이를 바닐라로 비슷하게 구현해봤습니다.
+
+```
+function animateScroll(to) {
+    function animation() {
+        const now = (performance.now() - startTime) / time,
+            progress = transition(now);
+
+        1 > now
+        ? (
+            window.requestAnimationFrame(animation),
+            window.scrollTo(0, from + (to - from) * progress)
+        )
+        : (
+            window.scrollTo(0, to)
+        )
+    }
+
+    const from = window.scrollY;
+    const time = 500,
+        transition = number => {
+            return -.5 * (Math.cos(Math.PI * number) - 1)
+        },
+        startTime = performance.now();
+    animation()
+}
+
+```
+
+특정 위치까지 부드럽게 스크롤 해주는 스크립트입니다.  
+animateScroll(숫자), animateScroll(엘리먼트.offsetTop)  
+같은 방식으로 사용하시면 됩니다.
+
+time은 애니메이션이 진행될 시간(ms)입니다.
+
+transition 함수는 css의 transition에 넣는 ease-in-out 같은 역할을 해주는 함수입니다. (easing function이라 부릅니다.)  
+정의역은 0 \~ 1까지 실수입니다. 특별한 애니메이션을 만들 게 아니라면 (0,0)에서 (1,1)까지 가도록 하시는 게 좋습니다.
+
+![f(x)=-0.5(cos(pi*x)-1)](/images/2020/04/graph.png)
+
+f(x) = -0.5(cos(pi\*x)-1)
+
+위 함수에서 animation() 함수에 들어있는 window.scrollTo와 from, to를 수정하시면 원하는 애니메이션을 제작하실 수 있습니다.
+
+```
+function slideToggle(element) {
+    function animation() {
+        const now = (performance.now() - startTime) / time,
+            progress = transition(now);
+
+        1 > now
+        ? (
+            window.requestAnimationFrame(animation),
+            element.style.height = `${from + (to - from) * progress}px`
+        )
+        : (
+            element.style.height = `${to}px`
+        )
+    }
+    const status = element.dataset.expand ? element.dataset.expand === "1" : element.offsetHeight;
+    const from = element.offsetHeight;
+    let to = 0;
+
+    status
+    ? (
+        element.dataset.expand = 0
+    )
+    : (
+        element.dataset.expand = 1,
+        element.style.height = "auto",
+        to = element.offsetHeight,
+        element.style.height = 0,
+        void element.offsetHeight
+    );
+
+    const time = 300,
+        transition = number => {
+            return -.5 * (Math.cos(Math.PI * number) - 1)
+        },
+        startTime = performance.now();
+    animation()
+}
+
+```
+
+다른 예시로 jQuery의 slideToggle()을 구현해봤습니다.  
+data-expand 란 attribute을 생성해 엘리먼트의 상태를 확인하고, 펼쳐진 상태면 to를 0으로, 그렇지 않으면 offsetHeight을 측정해 그 값으로 설정합니다.
+
+외에도 전 홈 화면 슬라이더를 움직이는 애니메이션도 위 스크립트를 활용해 제작해뒀습니다.  
+animateScroll()만 제대로 보셔도 애니메이션 대부분에 활용하실 수 있습니다.

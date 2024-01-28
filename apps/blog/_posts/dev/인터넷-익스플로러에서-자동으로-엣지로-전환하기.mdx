@@ -1,0 +1,53 @@
+---
+title: 인터넷 익스플로러에서 자동으로 엣지로 전환하기
+description: 인터넷 익스플로러로 페이지에 접근할 시 엣지로 요청을 넘겨버리는 간단한
+date:
+  posted: 2021-01-11T10:33:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - Internet Explorer
+coverImage: /images/2021/01/internet-explorer.png
+ogImage: /images/2021/01/internet-explorer.png
+---
+
+[7개월 4일](https://death-to-ie11.com/)의 생을 남겨둔 IE에서 자동으로 엣지로 요청을 넘겨주는 방법입니다.
+
+## IE 감지
+
+'언어 이름 Detect IE' 같은 키워드로 검색하시면 사용자가 인터넷 익스플로러를 사용 중인지 확인할 수 있는 다양한 코드들이 지천으로 있습니다. 아래에선 백엔드에서 PHP로 감지하는 방법, 프론트엔드에서 Javascript로 감지하는 방법만 기술해뒀습니다.
+
+### PHP
+
+```
+if (preg_match('/MSIE|Internet Explorer|Trident/i', $_SERVER['HTTP_USER_AGENT'])) {
+    // IE!!
+}
+
+```
+
+### Javascript
+
+```
+if (window.navigator.userAgent.match(/MSIE|Internet Explorer|Trident/i)) {
+    // IE!!
+}
+
+```
+
+## 엣지로 리다이렉트
+
+```
+window.location = "microsoft-edge:" + window.location.href;
+```
+
+별거 없이 `window.location`에 `microsoft-edge:`만 붙여줘도 엣지로 리다이렉트됩니다.  
+`window.open`에도 사용할 수 있지만, 팝업을 수동으로 허용해줘야 엣지로 넘어갑니다.
+
+```
+if (preg_match('/MSIE|Internet Explorer|Trident/i', $_SERVER['HTTP_USER_AGENT'])) {
+    echo '<script>window.location="microsoft-edge:https://marshallku.com'.$_SERVER['REQUEST_URI'].'";</script>';
+}
+
+```
+
+저는 `head` 태그 중간에 코드를 이렇게 삽입해뒀습니다.

@@ -1,0 +1,37 @@
+---
+title: GIF Converter 업데이트 및 고뇌
+description: 비디오를 움짤로 변환할 때 종종 필요 없는 부분을 잘라야 할 때가 있어서, 관련 옵션을 업데이트해봤습니다.쉽게 보고 시작했는데, 8방향 모두 크기 조절이 가능하도록 업데이트하는 게 쉬운 일은 아니더라고요. 앱에서 확인해보시면 아시겠지만, 일단 비디오를 크롭하는 것까진 성공했고 스케일을 조정해도 문제없이 gif 이미지가 나오는 것까진 확인해서 기능 제작은 끝났습니다. 이제 기능 제작보다 더 큰 난관 하나만 해결하면 되는데…
+date:
+  posted: 2021-01-10T13:16:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - GIF Converter
+  - 제작일지
+coverImage: /images/2021/01/gif-converter-crop-video.png
+ogImage: /images/2021/01/gif-converter-crop-video.png
+---
+
+![비디오 크롭 업데이트](/images/2021/01/gif-converter-crop-video.png)
+
+움짤 출처 : [탱갤 R\_ 님](https://gall.dcinside.com/board/view/?id=taeyeon%5Fnew1&no=4640121)
+
+비디오를 움짤로 변환할 때 종종 필요 없는 부분을 잘라야 할 때가 있어서, 관련 옵션을 업데이트해봤습니다.  
+쉽게 보고 시작했는데, 8방향 모두 크기 조절이 가능하도록 업데이트하는 게 쉬운 일은 아니더라고요.
+
+앱에서 확인해보시면 아시겠지만, 일단 비디오를 크롭하는 것까진 성공했고 스케일을 조정해도 문제없이 gif 이미지가 나오는 것까진 확인해서 기능 제작은 끝났습니다. 이제 기능 제작보다 더 큰 난관 하나만 해결하면 되는데…
+
+![이벤트 리스너 추가](/images/2021/01/addEvents.png)
+
+[파일에서 보기](https://github.com/marshallku/gifconverter/blob/6a92bbe72df4026a452f830e461d1582fc64d3e4/src/VideoCropper.tsx#L252)
+
+삼항 연산자를 쓰니 가독성이 떨어지고, 그렇다고 죽 늘어놓자니 미관상 좋지 않아 고민의 고민을 거듭하는 중인 부분입니다.  
+삼항 연산자로 떡칠하면 나중에 봤을 때 크게 후회할 것 같아 일단 한 방향만 움직이는 것, 두 방향으로 움직이는 것, 두 개로 구분해서 나눠뒀는데 아무리 봐도 이게 최선은 아닐 것 같네요.
+
+![비디오 크롭](/images/2021/01/moveBox.png)
+
+[파일에서 보기](https://github.com/marshallku/gifconverter/blob/master/src/VideoCropper.tsx#L96)
+
+마찬가지로 크기 조절하는 함수들도 다 고만고만하게 생겨서 어찌 잘만 하면 하나나 두 개로 합쳐볼 수 있지 않을까 싶은데, 쉬이 감이 안 오네요.  
+보통 이런 건 생각을 아예 다른 방향으로 해야 해결되는데, 제 생각에 갇혀버려 답이 안 나오는 것 같습니다.
+
+추가로, 터치와 클릭 좌표 받는 건 `event.touches ? event.touches[0].clientX : event.clientX`면 문제가 생길 여지가 없어 보이는데, 타입스크립트는 항상 시비를 거네요. any 쓰기 싫어서 보통 `handleMouseDown` `handleTouchDown`처럼 두 개로 나눠서 쓰는데, 이번엔 그러면 너무 스파게티 코드가 될까봐 그냥 any를 썼습니다.

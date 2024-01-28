@@ -1,0 +1,115 @@
+---
+title: \[자바스크립트\] 렌티큘러 카드 구현하기
+description: 사진처럼 보는 각도에 따라 보이는 이미지가 달라지는 걸 렌티큘러 카드(Lenticular Card)라 부릅니다. 저번에 작성했던 기기 방향을 감지하는 스크립트를 이용하면 굉장히 쉽게 구현할 수 있습니다. HTML &lt;div id=&quot;card&quot;&gt;     &lt;div id=&quot;layer1&quot; class=&quot;lenticular&quot;&gt;&lt;/div&gt;     &lt;div id=&quot;layer2&quot; class=&quot;lenticular&quot;&gt;&lt;/div&gt; &lt;/div&gt; 배경 이미지가 보일 메인 레이어 하나와 각도에 따라 표시할 레이어 두 개만 추가해주면 끝납니다. CSS #card {     position: relative;     max-width: 100%;     height: 0;     padding-bottom: 100%;     background-image: url(배경_이미지);     background-size: cover; } #card .lenticular {     position: absolute;     width: 100%;
+date:
+  posted: 2019-12-20T14:17:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/12/fancy-u-lenticular-card.jpg
+ogImage: /images/2019/12/fancy-u-lenticular-card.jpg
+---
+
+![](/images/2019/12/fancy-u-lenticular-card.jpg)
+
+사진처럼 보는 각도에 따라 보이는 이미지가 달라지는 걸 렌티큘러 카드(Lenticular Card)라 부릅니다.
+
+저번에 작성했던 [기기 방향을 감지하는 스크립트](https://marshallku.com/web/tips/%ec%9e%90%eb%b0%94%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%ea%b8%b0%ea%b8%b0-%eb%b0%a9%ed%96%a5-%ea%b0%90%ec%a7%80%ed%95%98%ea%b8%b0)를 이용하면 굉장히 쉽게 구현할 수 있습니다.
+
+## HTML
+
+```
+<div id="card">
+    <div id="layer1" class="lenticular"></div>
+    <div id="layer2" class="lenticular"></div>
+</div>
+
+```
+
+배경 이미지가 보일 메인 레이어 하나와 각도에 따라 표시할 레이어 두 개만 추가해주면 끝납니다.
+
+## CSS
+
+```
+#card {
+    position: relative;
+    max-width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    background-image: url(배경_이미지);
+    background-size: cover;
+}
+
+#card .lenticular {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0
+}
+
+#card .lenticular {
+    background-position: center;
+    background-size: contain;
+}
+
+#layer1 {
+    background-image: url(각도에_따라_보일_이미지_1);
+}
+
+#layer2 {
+    background-image: url(각도에_따라_보일_이미지_2);
+}
+
+```
+
+당연한 소리지만 배경 이미지는 제거하셔도 무관하며, 전 배경에 무늬를 넣을 예정이라 layer1과 2에 background-repeat을 제거하지 않았습니다만, 위 사진처럼 인물을 넣을 예정이라면 background-repeat을 제거하고 background-size를 조절하셔야 합니다.
+
+## Javascript
+
+기기의 각도에 따라 Opacity를 조절해야 하는데, 제일 먼저 떠오르는 함수가 삼각함수더라고요.
+
+![](/images/2019/12/opacity-graph.png)
+
+sin(x)와 cos(x)는 -1과 1 사이를 오가지만, opacity는 0 \~ 1 사이를 오가야 하니, sin 함수는 (sin(x) + 1) / 2 이렇게 이동해야 하고, sin(x)의 결과와 cos(x)의 결과가 정반대여야 하니, cos 함수는 (cos(x + 1/2\*PI) + 1) / 2가 되어야 합니다.  
+Opacity가 조금 더 천천히 바뀌도록 x 에 1/3을 곱해줍니다.
+
+여담으로, 채영 렌틸카드와 비교했을 땐 1/10을 곱해야 렌틸카드와 이미지 바뀌는 각도가 비슷하더라고요.
+
+```
+const layer1 = document.getElementById("layer1"),
+  layer2 = document.getElementById("layer2");
+
+function handleOrientation(event) {
+  const beta = 1/10 * event.beta;
+
+  if (event.alpha === null) {
+    //자바스크립트에선 0 !== null이라 이래도 됩니다.
+    window.removeEventListener("deviceorientation", handleOrientation),
+    document.getElementById("card").addEventListener("mousemove", handleMouseMove);
+  }
+
+  layer1.style.opacity = (Math.sin(beta) + 1) / 2,
+  layer2.style.opacity = (Math.cos(beta + 1.570795) + 1)/ 2
+}
+
+function handleMouseMove(event) {
+  const y = 1/30 * event.clientY;
+
+  layer1.style.opacity = (Math.sin(y) + 1) / 2,
+  layer2.style.opacity = (Math.cos(y + 1.570795) + 1)/ 2
+}
+
+window.addEventListener("deviceorientation", handleOrientation);
+
+```
+
+위 원리만 알면 모든 건 끝납니다. x축을 중심으로 움직였을 때 이미지가 바뀌어야 하므로, event.beta 값을 x에 대입해 레이어의 opacity를 조절하면 끝납니다.  
+1/2\*PI는 그냥 3.14159를 2로 나눈 값을 넣었습니다.  
+파이 값을 넣고 싶으시면 Math.PI를 사용하시면 파이 값을 반환합니다.
+
+event.alpha 값이 null일 땐(자이로 센서가 없을 때) 마우스의 y 좌표값에 따라 opacity가 변경되도록 했습니다.
+
+## 결과물
+
+휴대폰을 기울이거나 마우스를 올려두고 움직여보세요!

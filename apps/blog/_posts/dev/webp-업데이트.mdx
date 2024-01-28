@@ -1,0 +1,83 @@
+---
+title: WebP 업데이트
+description: WebP는 구글에서 만든 이미지 포맷으로, JPEG, PNG 등의 포맷보다 우월한 압축률을 자랑하는 포맷입니다.물론 IE는 읽지 못하는 포맷이고, 사파리도 부분적으로만 지원하기에 결국 기존 이미지 포맷과 병행해서 사용해야 한단 단점이 있습니다. 개인적으론 앞선 단점보다 이미지를 내려받았을 때 휴대폰에서 이미지를 볼 수 없단 단점 때문에 싫어했고요. 근데 이젠 딱히 아이돌 관련된 사진을 올리지도 않으니 블로그에 내려받을 이미지도 없고,
+date:
+  posted: 2021-01-16T14:54:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 워드프레스
+  - WebP
+  - 제작일지
+coverImage: /images/2021/01/WebP-업데이트.png
+ogImage: /images/2021/01/WebP-업데이트.png
+---
+
+WebP는 구글에서 만든 이미지 포맷으로, JPEG, PNG 등의 포맷보다 우월한 압축률을 자랑하는 포맷입니다.  
+물론 IE는 읽지 못하는 포맷이고, 사파리도 부분적으로만 지원하기에 결국 기존 이미지 포맷과 병행해서 사용해야 한단 단점이 있습니다. 개인적으론 앞선 단점보다 이미지를 내려받았을 때 휴대폰에서 이미지를 볼 수 없단 단점 때문에 싫어했고요.
+
+근데 이젠 딱히 아이돌 관련된 사진을 올리지도 않으니 블로그에 내려받을 이미지도 없고, 최적화의 필요성은 느끼고 있어서 한 번 대공사를 실시해봤습니다.
+
+여담인데, 꼭 서울에 올라와서 메인 컴퓨터도 없고, 테스트 서버도 없는 상황에 왜 이런 업데이트를 종종 하는지 모르겠습니다. 어제 2.5.0 버전으로 WebP 지원을 부분적으로 시작하고 블로그의 모든 이미지를 WebP로 전환하니 2.5.11 버전까지 왔네요. CSS가 조금 엇나가서 수정한 게 반은 넘는 것 같은데, 테스트 서버에서 한 번만 돌려볼 수 있었어도 2.5.3 정도에서 끝날 수 있지 않았나 싶은데 좀 아쉽네요. 역시 두뇌 디버깅으론 CSS까진 무리 같습니다.
+
+![webp 업데이트](/images/2021/01/webp-support.png)
+
+보시다시피 블로그의 모든 이미지에 WebP 포맷을 추가했습니다.
+
+메인 서버에 올린 파일들을 하나하나 WebP로 수정하기엔 일이 너무 많고 귀찮을 것 같아서, 캐시 서버에서 요청이 들어오면 파일을 변환해 저장하도록 해뒀습니다.  
+캐시 서버는 어차피 이미지 저장용이니 CPU의 성능은 그다지 좋지 않은 서비스를 이용 중이라 서버가 뻗어버리면 어쩌나 걱정했는데, 모니터링 해보니 다행히 이미지 변환에도 큰 사양이 필요하진 않더라고요.
+
+```
+class MainContainer {
+    // ...
+    createPicture(
+        alt: string,
+        lazyload?: boolean,
+        src?: string,
+        srcset?: string
+    ): HTMLPictureElement {
+        const picture = document.createElement("picture");
+        const webpSource = document.createElement("source");
+        const origSource = document.createElement("source");
+        const img = document.createElement("img");
+        const regex = /\.(jpe?g|png) /gm;
+
+        const webpSrcset = `${
+            srcset ? srcset.replace(regex, ".$1.webp ") : `${src}.webp`
+        }`;
+
+        webpSource.type = "image/webp";
+
+        if (lazyload) {
+            webpSource.dataset.srcset = webpSrcset;
+            origSource.dataset.srcset = `${srcset ? srcset : src}`;
+            img.dataset.src = src || srcset;
+            srcset && (img.dataset.srcset = srcset);
+        } else {
+            webpSource.srcset = webpSrcset;
+            origSource.srcset = `${srcset ? srcset : src}`;
+            img.src = src || srcset;
+            srcset && (img.srcset = srcset);
+        }
+
+        alt && (img.alt = alt);
+
+        picture.append(webpSource);
+        picture.append(origSource);
+        picture.append(img);
+
+        return picture;
+    }
+    // ...
+}
+
+```
+
+지금까진 `img` 태그 하나만 만들면 되고, 돔 업데이트를 할 때도 `img.src`와 `img.srcset`만 수정하면 됐는데 이젠 `picture, source, source, img` 총 네 개를 만들어야 하고, 업데이트도 `source.srcset, source.srcset, img.src, img.srcset` 네 개를 업데이트해야 한단 번거로움이 생기긴 했지만,
+
+![WebP, PNG 용량 비교](/images/2021/01/webp-vs-png.png)
+
+그럴 가치가 있는 용량 차이지 싶네요.
+
+정규표현식으로 `<img src="tmp.png">`를 `<picture><source type="image/webp" srcset="tmp.png.webp></source><source srcset="tmp.png"></source><img src="tmp,png"></picture>`같은 방식으로 바꾸느라 TTFB는 10ms가량 늘었으나, 이미지를 내려받는 데 소모하는 시간이 훨씬 짧아질 것이라 예상되니 이 정도면 이득인 교환이 아닌가 싶습니다.
+
+이미지 캐시 서버를 따로 두는 사람도, 워드프레스를 쓰면서 이런 걸 굳이 플러그인 안 쓰고 만들어 쓰는 사람도 별로 없을 것 같아 얼마나 많은 사람에게 도움이 될진 모르겠지만, 큰 오류가 없다고 판단되면 코드를 정리해 올릴 생각입니다. 눈에 보이는 오류는 다 잡은 것 같은데, 아직 좀 불안하네요.

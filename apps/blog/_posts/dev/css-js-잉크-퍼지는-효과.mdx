@@ -1,0 +1,311 @@
+---
+title: \[CSS, JS\] 잉크 퍼지는 효과
+description: JavaScript와 CSS로 잉크가 퍼지는 효과를 만들어보았습니다.
+date:
+  posted: 2020-02-29T14:00:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - CSS
+  - 잉크
+coverImage: /images/2020/02/ink-transition-effect.jpg
+ogImage: /images/2020/02/ink-transition-effect.jpg
+---
+
+원본은 codehouse의 [Ink Transition Effect](https://codyhouse.co/gem/ink-transition-effect)입니다.  
+[데모 페이지](https://marshallku.github.io/ink-transition-effect/)에서 확인하실 수 있듯, 버튼을 누르면 잉크가 퍼지는 효과와 함께 모달 창이 열립니다.
+
+원본 스크립트에서 jQuery를 제거하고, 자바스크립트에서 처리할 필요 없이 css에서 처리하면 되는 건 css로 옮겨뒀습니다.
+
+[깃허브](https://github.com/marshallku/ink-transition-effect)에서 파일들을 내려받으실 수 있습니다.  
+Clone or download 버튼을 클릭하셔서 zip 파일을 내려받으시거나
+
+index.html  
+css>style.css  
+js>main.vanilla.js  
+img>모든 파일  
+정도만 받으셔서 수정하셔도 됩니다.
+
+## 자바스크립트
+
+```
+document.addEventListener("DOMContentLoaded", () => {
+    const modalTrigger = document.querySelector(".cd-modal-trigger"),
+        transitionLayer = document.querySelector(".cd-transition-layer"),
+        transitionBackground = transitionLayer.querySelector(".bg-layer"),
+        modalWindow = document.querySelector(".cd-modal");
+
+    const frameProportion = 1.70,
+        frames = 25;
+
+    let resize;
+
+    function setLayerDimensions() {
+        const windowWidth = window.innerWidth,
+            windowHeight = window.innerHeight,
+            condition = windowWidth / windowHeight > frameProportion;
+        let layerHeight, layerWidth;
+
+        layerWidth = `${condition ? windowWidth : windowHeight*1.2*frameProportion}`,
+        layerHeight = `${condition ? layerWidth/frameProportion : windowHeight*1.2}`,
+
+        transitionBackground.style.width = `${layerWidth*frames}px`,
+        transitionBackground.style.height = `${layerHeight}px`,
+
+        resize = false;
+    }
+
+    function animationEndHandler() {
+        const animEnd = () => {
+            transitionLayer.classList.contains("closing") && (
+                transitionLayer.classList.remove("closing", "opening", "visible")
+            )
+        };
+
+        transitionBackground.addEventListener("animationend", animEnd),
+        transitionBackground.addEventListener("webkitAnimationend", animEnd)
+    }
+
+    setLayerDimensions(),
+    animationEndHandler(),
+
+    modalTrigger.addEventListener("click", e => {
+        const delay = document.querySelector(".no-cssanimations") ? 0 : 600;
+        e.preventDefault(),
+        transitionLayer.classList.add("visible", "opening");
+        setTimeout(() => {
+            modalWindow.classList.add("visible")
+        }, delay)
+    }),
+
+    modalWindow.querySelector(".modal-close").addEventListener("click", e => {
+        e.preventDefault(),
+        transitionLayer.classList.add("closing"),
+        modalWindow.classList.remove("visible")
+    }),
+
+    window.addEventListener("resize", () => {
+        resize || (
+            resize = true,
+            (!window.requestAnimationFrame) ? setTimeout(setLayerDimensions, 300) : window.requestAnimationFrame(setLayerDimensions)
+        )
+    })
+
+})
+
+```
+
+단순히 원본 스크립트를 vanilla javascript로 작성한 버전입니다. (main.vanilla.js 파일)
+
+위 스크립트에서 setLayerDimension()이 배경 레이어의 크기를 정하는 함순데, 별 거 없이 화면 비 1.7을 기준으로 배경 레이어의 크기만 정하는 간단한 함수입니다.
+
+css의 (min-aspect-ratio), (max-aspect-ratio) 옵션을 이용해 대체할 수 있으니 관련 스크립트는 싹 지우면
+
+```
+document.addEventListener("DOMContentLoaded", () => {
+    const modalTrigger = document.querySelector(".cd-modal-trigger"),
+        transitionLayer = document.querySelector(".cd-transition-layer"),
+        transitionBackground = transitionLayer.querySelector(".bg-layer"),
+        modalWindow = document.querySelector(".cd-modal");
+
+    function animationEndHandler() {
+        const animEnd = () => {
+            transitionLayer.classList.contains("closing") && (
+                transitionLayer.classList.remove("closing", "opening", "visible")
+            )
+        };
+
+        transitionBackground.addEventListener("animationend", animEnd),
+        transitionBackground.addEventListener("webkitAnimationend", animEnd)
+    }
+    animationEndHandler(),
+
+    modalTrigger.addEventListener("click", e => {
+        const delay = document.querySelector(".no-cssanimations") ? 0 : 600;
+        e.preventDefault(),
+        transitionLayer.classList.add("visible", "opening");
+        setTimeout(() => {
+            modalWindow.classList.add("visible")
+        }, delay)
+    }),
+
+    modalWindow.querySelector(".modal-close").addEventListener("click", e => {
+        e.preventDefault(),
+        transitionLayer.classList.add("closing"),
+        modalWindow.classList.remove("visible")
+    })
+
+})
+
+```
+
+이만큼만 남습니다.
+
+## CSS
+
+```
+.cd-transition-layer .bg-layer {
+  width: 5100vh;
+  height: 120vh;
+}
+
+@media screen and (min-aspect-ratio: 17/10) {
+  .cd-transition-layer .bg-layer {
+    width: 2500vw;
+    height: calc(100vw / 1.7)
+  }
+}
+
+```
+
+setLayerDimension()을 CSS로 처리하는 방법입니다.
+
+.cd-transition-layer .bg-layer의 width와 height을 위처럼 수정하시고, @media부터 제일 아래까진 복사해서 css 제일 아래에 붙여 넣으시면 됩니다.
+
+## 잉크 색상 수정 (포토샵)
+
+![](/images/2020/02/ink-color.png)
+
+오른쪽 아래의 fx 버튼을 클릭하시고 색상 오버레이를 클릭하시면 위 화면이 뜹니다.  
+혼합 모드 표준으로 두시고 원하는 색상으로 변경하시면 잉크의 색상이 변경됩니다.
+
+## 활용 (페이지 전환 효과에 사용)
+
+예전에 다뤘던 페이지 전환 효과에도 이를 활용할 수 있습니다.  
+HTML과 CSS는 필요한 부분만 가져오며 일부 수정했고, 자바스크립트는 목적에 맞게 적당히 수정했습니다.
+
+```
+<div class="cd-transition-layer visible opened color"> 
+    <div class="bg-layer"></div>
+</div>
+
+```
+
+visible, opened, color 세 class를 추가해 .cd-transition-layer를 복사해왔습니다.
+
+```
+.cd-transition-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999999
+}
+
+.cd-transition-layer .bg-layer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translateY(-50%) translateX(-2%);
+    transform: translateY(-50%) translateX(-2%);
+    width: 5100vh;
+    height: 120vh;
+    background: url(ink.png주소) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+
+.cd-transition-layer.color .bg-layer {
+    background: #3f2f44
+}
+
+.cd-transition-layer.visible {
+    opacity: 1;
+}
+
+.cd-transition-layer.opening .bg-layer {
+    -webkit-animation: cd-sequence 0.8s steps(24);
+    animation: cd-sequence 0.8s steps(24);
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.cd-transition-layer.closing .bg-layer {
+    -webkit-animation: cd-sequence-reverse 0.8s steps(24);
+    animation: cd-sequence-reverse 0.8s steps(24);
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.cd-transition-layer.opened .bg-layer {
+    transform: translateY(-50%) translateX(-98%)
+}
+
+@media screen and (min-aspect-ratio: 17/10) {
+    .cd-transition-layer .bg-layer {
+        width: 2500vw;
+        height: calc(100vw / 1.7)
+    }
+}
+
+```
+
+ink.png의 주소만 변경해주시면 됩니다.
+
+레이어가 열린 상태여야 하니 opened란 class를 추가해 transform을 추가해뒀고, 이미지를 불러오지 않으면 투명한 레이어가 표시되니 이미지가 로딩될 때까지 색상을 표시할 수 있도록 color란 class를 추가해 배경에 이미지 대신 색상이 표시되도록 해뒀습니다.
+
+ink.png의 색상을 수정하셨으면 그 색에 맞게 #3f2f44를 수정하셔야 합니다.
+
+```
+const modalTrigger = document.querySelector(".cd-modal-trigger"),
+    transitionLayer = document.querySelector(".cd-transition-layer"),
+    transitionBackground = transitionLayer.querySelector(".bg-layer"),
+    modalWindow = document.querySelector(".cd-modal");
+
+function pageTransition(nodeList) {
+    nodeList.forEach(a => {
+        const href = a.getAttribute("href");
+        const hash = a.hash || "tmp";
+
+        href && href[0] !== "#" && a.target !== "_blank" && a.href !== `${location.protocol}//${location.hostname}${location.pathname}${hash}` && (
+            a.addEventListener("click", e => {
+                e.preventDefault(),
+    
+                setTimeout(() => {
+                    transitionLayer.classList.contains("visible") && (
+                        location.href = href
+                    )
+                }, 800),
+                transitionLayer.classList.add("visible", "opening")
+            })
+        )
+    })
+}
+
+function inkTransitionInit() {
+    const animEnd = () => {
+        transitionLayer.classList.contains("closing") && (
+            transitionLayer.classList.remove("closing", "opening", "visible", "opened")
+        )
+    };
+    const bgImg = new Image();
+    bgImg.src = "ink.png주소",
+
+    bgImg.onload = () => {
+        setTimeout(() => {
+            transitionLayer.classList.remove("color")
+        }, 200),
+        setTimeout(() => {
+            transitionLayer.classList.add("closing")
+        }, 300)
+    },
+
+    transitionBackground.addEventListener("animationend", animEnd),
+    transitionBackground.addEventListener("webkitAnimationend", animEnd)
+}
+
+inkTransitionInit(),
+pageTransition(document.querySelectorAll("a"))
+
+```
+
+pageTransition 함수는 [이 글](https://marshallku.com/web/tips/%ed%8e%98%ec%9d%b4%ec%a7%80-%ec%a0%84%ed%99%98-%ed%9a%a8%ea%b3%bc-%ec%82%ac%ec%9a%a9%ed%95%98%ea%b8%b0)에서 설명해뒀습니다.
+
+inkTransitionInit은 앞서 작성했던 스크립트의 animationEndHandler와 .modal-close를 클릭했을 때 작동하던 함수를 가져온 형식입니다.
+
+배경 이미지가 불러진 걸 감지하기 위해 new Image()를 추가했습니다.
+
+다른 상황에 잉크가 지워지도록 하고 싶으시면 transitionLayer.classList.add("closing")을 다른 위치로 옮기시면 됩니다.

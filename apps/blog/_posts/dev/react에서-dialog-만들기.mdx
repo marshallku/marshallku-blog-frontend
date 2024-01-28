@@ -1,0 +1,388 @@
+---
+title: React에서 dialog 만들기
+description: 바쁘다는 핑계로 너무 오랜만에 글을 올리는 것 같네요. 😥 1일 1커밋 그거 뭐 별일인가 하는 생각으로 살고는 있지만, 그것관 별개로 770일간 쌓아 올린 탑이 무너지는 건 슬픈 일이라 일하면서도 꾸준히 contribute은 진행하고 있습니다.그러다 보니 퇴근하고 코드 좀 치면 산책(매일 한 시간 이상은 뒷산을 걷습니다) 나갈 시간이라 블로그에 통 신경을 못 쓰고 있었네요. ua에 내장된 window.confirm,
+date:
+  posted: 2022-07-22T11:49:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - ReactJS
+  - TypeScript
+coverImage: /images/2022/07/React에서-dialog-만들기.png
+ogImage: /images/2022/07/React에서-dialog-만들기.png
+---
+
+바쁘다는 핑계로 너무 오랜만에 글을 올리는 것 같네요. 😥
+
+1일 1커밋 그거 뭐 별일인가 하는 생각으로 살고는 있지만, 그것관 별개로 770일간 쌓아 올린 탑이 무너지는 건 슬픈 일이라 일하면서도 꾸준히 contribute은 진행하고 있습니다.  
+그러다 보니 퇴근하고 코드 좀 치면 산책(매일 한 시간 이상은 뒷산을 걷습니다) 나갈 시간이라 블로그에 통 신경을 못 쓰고 있었네요.
+
+---
+
+[라이브 데모](https://reactdialog.netlify.app/)
+
+ua에 내장된 `window.confirm`, `window.alert`, `window.prompt` 등 클래식함을 아득히 지나쳐 낡은 디자인을 가진 창들을 간단하게 대체하는 방법입니다.  
+폴더 구조를 포함한 코드는 Github에서 확인하실 수 있습니다.  
+전역 상태 관리 도구로 zustand를 사용했는데, 보일러 플레이트가 적으니 사용하시는 스택으로 옮겨가시기 편하지 않을까 싶습니다.
+
+```
+export type ResponseHandler<T = unknown> = (value: T | PromiseLike<T>) => void;
+export type DialogType = "alert" | "confirm" | "prompt";
+
+export interface DialogStore<T = unknown> {
+    title: string;
+    setTitle(text: string): void;
+    description: string;
+    setDescription(description: string): void;
+    type: DialogType;
+    setType(state: DialogType): void;
+    revealed: boolean;
+    setRevealed: (show: boolean) => void;
+    responseHandler?: ResponseHandler<T>;
+    setResponseHandler(responseHandler: ResponseHandler<T>): void;
+}
+
+```
+
+store의 타입입니다.  
+자세한 설명은 아래에서 하겠습니다.
+
+```
+import create from "zustand";
+import { DialogStore } from "../@types/useDialogStore";
+
+export default create<DialogStore>((set) => ({
+    title: "",
+    setTitle(title) {
+        set((prev) => ({ ...prev, title }));
+    },
+    description: "",
+    setDescription(description) {
+        set((prev) => ({ ...prev, description }));
+    },
+    type: "alert",
+    setType(type) {
+        set((prev) => ({ ...prev, type }));
+    },
+    revealed: false,
+    setRevealed(revealed) {
+        set((prev) => ({ ...prev, revealed }));
+    },
+    setResponseHandler(responseHandler) {
+        set((prev) => ({ ...prev, responseHandler }));
+    },
+}));
+
+```
+
+`WEBSITE says`가 들어갈 `title`과 내용을 저장할 `description`을 제일 먼저 만들었습니다.  
+다음으로 `alert`, `confirm`, `prompt` 세 타입 중 현재 띄운 창이 어떤 것일지를 저장할 곳도 만들었습니다.  
+마지막으로 창의 표시 여부 상태를 저장할 곳을 만들고, 기존에 `alert` 등이 동작하는 것처럼 후의 동작을 `await`으로 막기 위해 `Promise`를 사용할 건데, executor 중 `resolve`를 `responseHandler`에 담을 예정입니다.
+
+```
+import useDialogStore from "../store/useDialogStore";
+import { DialogType } from "../@types/useDialogStore";
+
+export default function useDialog() {
+    const {
+        setTitle,
+        setDescription,
+        setRevealed,
+        setType,
+        responseHandler,
+        setResponseHandler,
+    } = useDialogStore();
+
+    const onInteractionEnd = (value: string | boolean) => {
+        setRevealed(false);
+        responseHandler?.(value);
+        setTitle("");
+        setDescription("");
+    };
+
+    const setAttributes = (
+        type: DialogType,
+        title: string,
+        description: string
+    ) => {
+        setRevealed(true);
+        setTitle(title);
+        setDescription(description);
+        setType(type);
+    };
+
+    const confirm = (title: string, description = "") => {
+        setAttributes("confirm", title, description);
+
+        return new Promise<boolean>((res) => {
+            setResponseHandler(res);
+        });
+    };
+
+    const alert = (title: string, description = "") => {
+        setAttributes("alert", title, description);
+
+        return new Promise<boolean>((res) => {
+            setResponseHandler(res);
+        });
+    };
+
+    const prompt = (title: string, description = "") => {
+        setAttributes("prompt", title, description);
+
+        return new Promise<boolean>((res) => {
+            setResponseHandler(res);
+        });
+    };
+
+    return {
+        confirm,
+        alert,
+        prompt,
+        onInteractionEnd,
+    };
+}
+
+```
+
+이제 훅을 만들어주면 준비는 거의 끝났습니다.  
+`alert`, `confirm`, `prompt`를 호출하면 제목 등을 설정한 뒤 `Promise`를 반환하며, 창이 닫힐 때 `onInteractionEnd`를 호출하도록 만들 겁니다.
+
+```
+import { memo, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
+import useDialogStore from "../store/useDialogStore";
+import useDialog from "../hooks/useDialog";
+import "./Dialog.css";
+
+export default function Dialog() {
+    const dialogRoot = document.getElementById("dialog") as HTMLElement;
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { revealed, title, description, type } = useDialogStore();
+    const { onInteractionEnd } = useDialog();
+    const handleConfirmClick = useCallback(() => {
+        if (type === "prompt") {
+            onInteractionEnd(inputRef.current?.value || "");
+            return;
+        }
+
+        onInteractionEnd(true);
+    }, [inputRef.current, type, onInteractionEnd]);
+    const handleCancelClick = useCallback(() => {
+        if (type === "prompt") {
+            onInteractionEnd("");
+            return;
+        }
+
+        onInteractionEnd(false);
+    }, [type, onInteractionEnd]);
+    const DialogComponent = memo(() => (
+        <>
+            <div className="dialog-backdrop" onClick={handleCancelClick} />
+            <section className="dialog">
+                <h2 className="dialog__title">{title}</h2>
+                {description && (
+                    <p className="dialog__description">{description}</p>
+                )}
+                {type === "prompt" && (
+                    <form onSubmit={handleConfirmClick}>
+                        <input
+                            autoFocus
+                            type="text"
+                            className="dialog__input"
+                            ref={inputRef}
+                        />
+                    </form>
+                )}
+                <div className="dialog__buttons">
+                    <button
+                        type="button"
+                        className="dialog__button dialog__button--confirm"
+                        onClick={handleConfirmClick}
+                    >
+                        OK
+                    </button>
+                    {type !== "alert" && (
+                        <button
+                            type="button"
+                            className="dialog__button dialog__button--cancel"
+                            onClick={handleCancelClick}
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
+            </section>
+        </>
+    ));
+
+    return createPortal(revealed ? <DialogComponent /> : null, dialogRoot);
+}
+
+```
+
+type이 alert일 땐 확인만 뜨게 하는 등 각 상황에 맞게 마크업을 짜줬습니다.
+
+굳이 상태를 만들 필요는 없을 것 같아 `input`은 `useRef`로 관리하여, 창이 닫힐 때 그 값을 꺼내오도록 하였습니다.
+
+```
+<div id="dialog"></div>
+
+```
+
+포탈을 열었으니 `#dialog`를 추가해주는 것도 잊으면 안 됩니다.
+
+```
+.dialog-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog {
+    --dialog-primary: #e57373;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: clamp(0px, 90vw, 400px);
+    padding: 16px;
+    background-color: #fff;
+    transform: translate3d(-50%, -50%, 0);
+    box-sizing: border-box;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.dialog__title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.dialog__description {
+    margin: 0.5rem 0;
+    line-height: 1.3;
+}
+
+.dialog__input {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.4rem 0.8rem;
+    border: 2px solid #121212;
+    border-radius: 0.3rem;
+    outline: 0;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+}
+
+.dialog__input:focus {
+    border-color: var(--dialog-primary);
+}
+
+.dialog__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.dialog__button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dialog__button--confirm {
+    border: 1px solid var(--dialog-primary);
+    background-color: var(--dialog-primary);
+}
+
+.dialog__button--cancel {
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    color: var(--dialog-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+    .dialog {
+        --dialog-primary: #ffcdd2;
+        background-color: #121212;
+        color: #f1f1f1;
+    }
+
+    .dialog__input {
+        background-color: #121212;
+        color: #f1f1f1;
+        border-color: #f1f1f1;
+    }
+
+    .dialog__button--confirm {
+        color: #121212;
+    }
+
+    .dialog__button--cancel {
+        border: 1px solid #4f4f4f;
+        background-color: #121212;
+        color: var(--dialog-primary);
+    }
+}
+
+```
+
+너무 밋밋하지만 않게 디자인해뒀습니다.  
+마크업에서도 확인할 수 있지만, 조금 더 창에 집중할 수 있도록 배경을 어둡게 만드는 작업도 진행했습니다.
+
+`prefers-color-scheme`은 여기서만 작업해두면 창이 뜨는 페이지와 어울리지 않을 수 있어 작업하는 게 맞을지 고민을 잠깐 했는데, 잠깐 고민해보니 ua가 띄우는 창도 그냥 사용자가 선호하는 색상에 따라 배경색이 결정되니 큰 상관이 없지 않을까 싶어 작업해뒀습니다.
+
+```
+import { useCallback, useState } from "react";
+import useDialog from "./hooks/useDialog";
+
+export default function App() {
+    const { confirm, alert, prompt } = useDialog();
+    const [message, setMessage] = useState("");
+
+    const showConfirm = useCallback(async () => {
+        const confirmed = await confirm(
+            "Are you sure?",
+            "This can't be undone."
+        );
+
+        setMessage(confirmed ? "Sure!" : "Nope.");
+    }, []);
+
+    const showAlert = useCallback(async () => {
+        await alert("Hello there!");
+
+        setMessage("Will update after alert");
+    }, []);
+
+    const showPrompt = useCallback(async () => {
+        const inputted = await prompt("What's your name?");
+
+        setMessage(`Your name is ${inputted}`);
+    }, []);
+
+    return (
+        <div style={{ textAlign: "center" }}>
+            <button type="button" onClick={showConfirm}>
+                Confirm
+            </button>
+            <button type="button" onClick={showAlert}>
+                Alert
+            </button>
+            <button type="button" onClick={showPrompt}>
+                Prompt
+            </button>
+            <h1>{message}</h1>
+        </div>
+    );
+}
+
+```
+
+이제 끝입니다!  
+비록 매번 `async` 함수를 만들고 `await`을 매번 걸어줘야 한다는 게 안타깝긴 하지만, 디자인적으로 훨씬 자유롭게 컴포넌트들을 활용할 수 있으니 충분히 그만한 가치가 있지 않나 싶습니다.

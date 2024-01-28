@@ -1,0 +1,692 @@
+---
+title: 2차 프로젝트 시작하기 직전에야 쓰는 1차 프로젝트 회고
+description: About Project Github 기획서 프로젝트 팀원 분들과 주제를 정하다, 이렇다 할 주제가 나오질 않아 서로의 관심사를 공유하는 시간을 가져봤고, 그 과정에서 &quot;여행&quot;과 &quot;음식&quot;이란 키워드가 가장 많이 겹쳐 &quot;음식이 가져다주는 행복&quot;을 지역별로 기록하는 서비스를 제작하게 되었습니다. 결과물 서버가 내려가서 작동 과정이 가장 잘남은 자료가 스터디원 분들께 크롬 개발자 도구에 Recorder 나온 거 보여 드리려고 촬영했던 동영상이네요.프리미어로
+date:
+  posted: 2022-01-24T15:54:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 엘리스
+  - 제작일지
+coverImage: /images/2022/01/엘리스-sw-엔지니어-트랙_1차-프로젝트-회고.png
+ogImage: /images/2022/01/엘리스-sw-엔지니어-트랙_1차-프로젝트-회고.png
+---
+
+## About Project
+
+[Github](https://github.com/marshallku/have-u-tried-this)
+
+[기획서](https://github.com/marshallku/have-u-tried-this/wiki/%EA%B8%B0%ED%9A%8D%EC%84%9C)
+
+프로젝트 팀원 분들과 주제를 정하다, 이렇다 할 주제가 나오질 않아 서로의 관심사를 공유하는 시간을 가져봤고, 그 과정에서 '여행'과 '음식'이란 키워드가 가장 많이 겹쳐 '음식이 가져다주는 행복'을 지역별로 기록하는 서비스를 제작하게 되었습니다.
+
+### 결과물
+
+서버가 내려가서 작동 과정이 가장 잘남은 자료가 스터디원 분들께 크롬 개발자 도구에 Recorder 나온 거 보여 드리려고 촬영했던 동영상이네요.  
+프리미어로 필요 없는 부분은 자른다고 잘랐는데, 깔끔하게 자르긴 힘드네요.
+
+### 기술 스택 및 서버 구조
+
+![이거 먹어봄? 기술 스택 및 서버 구조](/images/2022/01/기술-스택-및-서버-구조.png)
+
+서버 한 대로 모든 걸 처리해야 해서 정적 파일용 서버, 미디어 서버, 노드 서버, DB 서버가 모두 한 VM에 있습니다.  
+Nginx의 리버스 프록시 등을 적극 활용했습니다.
+
+## 이런저런 어려움들
+
+### 시간 및 체력 관리
+
+프로젝트가 진행되는 12일간 711회(일 평균 59.25)의 contribution을 진행했고, 가장 많은 날은 157회였습니다.
+
+깨있는 시간 거의 전부를 팀 프로젝트에 투자했고, 산책 등의 루틴도 반납했습니다.  
+잘해야 한다는 부담감에 잠도 제대로 못 잤는데, 프로젝트 막바지가 되니 잠을 자는 게 아니라 잠깐 죽었다 살아나는 느낌이더라고요.
+
+주어진 기간이 2주다 보니 어쩔 수 없는 부분도 있었다고 생각하는데, 다음번엔 5.3kg가량이 2주 만에 빠지는 참사는 안 일어나게 더욱 잘 먹어야겠단 생각이 들었습니다.
+
+### 팀으로 작업하기
+
+팀으로 움직이는 것도 처음인데, 팀장직까지 맡으니 신경 쓸 게 하나둘이 아니었습니다.
+
+#### 코드 스타일 통일
+
+가장 먼저 코드 스타일을 통일해야 했습니다.  
+Prettier와 Eslint(airbnb 스타일)를 사용해 최대한 틀을 맞췄고, BEM 방법론으로 네이밍도 통일했습니다.  
+외에도 함수 이름을 짓는 방식이나, 돔에 접근하는 방식 등 다양한 스타일도 맞춰가야 했는데, 각기 다른 사람들을 한 스타일로 묶는다는 게 생각보다 어려운 일이더라고요.
+
+* Element를 반환하는 함수는 대문자로 시작할 것
+* Boolean을 반환하는 함수는 is로 시작할 것
+
+등의 규칙을 세워가며 진행했고, 돔에 접근하는 방식 통일은 후술하겠습니다.
+
+덧붙여 안 그래도 정신없는 일정에 처음 보는 방법론이나 스타일들을 도입했음에도 지키려 노력하시고, 지키는 데 성공한 팀원분들 께 항상 감사한 마음입니다.
+
+#### 코드 리뷰
+
+`master` 브랜치로 병합은 코치님의 리뷰 후 진행되었으나, 개발 브랜치로 병합할 땐 프론트엔드는 제가, 백엔드는 다른 팀원 분이 리뷰를 진행하고 병합했습니다.  
+짧은 시간 안에 남의 코드를 읽고 분석해야 한다는 게 쉽지 않은 일이었으나, 다양한 함수를 최대한 컴포넌트화하고, 코드 스타일을 통일해가니 수고가 많이 줄었습니다.  
+덕분에 남의 코드 읽는 실력도 많이 늘기도 했습니다.
+
+촉박한 시간 탓에 문제가 보여도 일단 병합하고 제가 수정해버릴 때도 잦았는데, 다른 팀원의 성장 가능성을 막은 것 같아 끝나고 돌아보니 많이 죄스럽네요.  
+데드라인을 팀원끼리 상의해서 할 수 있는 프로젝트였으면 여러모로 서로 더 성장할 수 있지 않았을까 하는 아쉬움이 남습니다.
+
+#### 분업
+
+해야 할 일을 찾고, 그 일을 적당한 사람에게 배분하는 것도 녹록지 않았는데, 처음엔 제게 주어진 정보가 팀원 분들의 Github 뿐이라, 해당 작업을 감당할 수 있을지, 속도는 어느 정도가 될지 가늠하기가 참 어려웠습니다.  
+이런 문제는 시간이 흐르고 서로 조금 더 알게 되며 보통 해결되긴 하지만, 온라인으로 진행되다 보니 소통도 오프라인만큼 수월하진 않아 해결되는 속도가 조금 더뎠던 것 같네요.
+
+나는 단위 시간 내에 얼만큼의 일을 해결할 수 있는지 객관화도 열심히 해야겠단 생각이 들었습니다.
+
+## 작업하며 배우고 느낀 것
+
+### 돔 업데이트
+
+* 함수 내부에서 `createElemnt`로만 요소를 생성 / 업데이트
+* 함수 내부에서 요소를 생성한 후 `innerHTML`로 구조를 업데이트
+* class 내부에서 요소를 생성한 후 `render` 메서드를 통해 `innerHTML`로 구조를 업데이트
+
+작업 시작하자마자 프론트엔드 팀원이 각각 스타일이 모두 다르단 걸 알 수 있었습니다.
+
+개인적으로 `innerHTMl`을 사용하는 걸 아주 안 좋아하는데
+
+```
+document.body.innerHTML = `<img src=x onerror=alert('hi')>`;
+
+```
+
+지금은 이런 스크립트도 실행이 안 되지만, 불과 몇 주 전 저희가 프로젝트를 진행할 때만 해도 저런 코드가 잘 실행되어 보안의 문제도 있고
+
+```
+document.body.innerHTML = `
+    <div class="tmp">
+        <h2 class="tmp__title">Title</h2>
+        <p class="tmp__description">Description</p>
+    </div>
+`;
+
+```
+
+Syntax 하이라이트가 하나도 지원되지 않는데다가, 따옴표도 매번 수동으로 닫아야 하고, 생성 후 이벤트 리스너를 추가하거나, 내용을 수정할 때도 돔에 다시 접근해서 번거롭게 작업해야 합니다.
+
+그리고 사실 무엇보다 `innerHTML`을 쓴다는 것 자체가 아름답지 않아 보이기도 합니다.
+
+```
+function WithCreateElement() {
+    const container = document.createElement("div");
+    const title = document.createElement("h2");
+    const description = document.createElement("p");
+
+    title.innerText = "Title";
+    title.classList.add("tmp__title");
+
+    description.innerText = "Description";
+    description.classList.add("tmp__description");
+
+    container.classList.add("tmp");
+    container.addEventListener("click", () => {
+        console.log("hi");
+    });
+    container.append(title, description);
+
+    return container;
+}
+
+```
+
+이런 방식으로 `createElement`만 이용하는 것도 가독성이나, 유지보수에 못지않게 나쁘긴 합니다.
+
+```
+export default function el(nodeName, attributes, ...children) {
+    const node =
+        nodeName === "fragment"
+            ? document.createDocumentFragment()
+            : document.createElement(nodeName);
+
+    Object.entries(attributes).forEach(([key, value]) => {
+        if (key === "events") {
+            Object.entries(value).forEach(([type, listener]) => {
+                node.addEventListener(type, listener);
+            });
+
+            return;
+        }
+
+        if (key in node) {
+            try {
+                node[key] = value;
+            } catch (err) {
+                node.setAttribute(key, value);
+            }
+        } else {
+            node.setAttribute(key, value);
+        }
+    });
+
+    children.forEach((childNode) => {
+        if (typeof childNode === "string") {
+            node.appendChild(document.createTextNode(childNode));
+        } else {
+            node.appendChild(childNode);
+        }
+    });
+
+    return node;
+}
+
+```
+
+그래서 앞서 작성한 중간회고에서 언급했듯, 위 코드와 같은 팩토리 함수를 제작했습니다.
+
+**참고**  
+[Jason Miller: Preact: Into the void 0 | JSConf EU 2017](https://www.youtube.com/watch?v=LY6y3HbDVmg)  
+[How to Write Your Own JavaScript DOM Element Factory](https://kyleshevlin.com/how-to-write-your-own-javascript-dom-element-factory)
+
+```
+function WithFactoryFunction() {
+    return el(
+        "div",
+        {
+            className: "tmp",
+            events: {
+                click: () => {
+                    console.log("hi");
+                },
+            },
+        },
+        el("h2", { className: "tmp__title" }, "Title"),
+        el("p", { className: "tmp__description" }, "Description"),
+    );
+}
+
+```
+
+구조 파악도 한결 쉬워지고, 이벤트 리스너도 간편히 추가할 수 있게 되었습니다.  
+만약 요소에 접근할 일이 있으면, `createElement`를 사용할 때처럼 따로 변수에 저장해둘 수도 있습니다.
+
+한 번 제작해보니 바닐라로 프로젝트를 진행할 일 있으면 이 방법을 쓰는 게 대부분 상황에서 좋지 않을까 싶을 만큼 만족도가 높은 작업이었습니다.
+
+### 라우터
+
+```
+import renderPage from "../pages";
+
+export function route(isPopstate?: boolean) {
+  const path = window.location.pathname.split("/")[1];
+
+  renderPage(path, isPopstate || false);
+}
+
+export function replacePath(path: string): void {
+  window.history.replaceState("", document.title, path);
+  route();
+}
+
+export function updatePath(path: string): void {
+  window.history.pushState("", document.title, path);
+  route();
+}
+
+export function addClickEvent(elt: HTMLElement, path: string): void {
+  elt.setAttribute("href", path);
+  elt.addEventListener("click", (event) => {
+    event.preventDefault();
+    updatePath(path);
+  });
+}
+
+export function initializeRouter() {
+  route();
+
+  window.addEventListener("popstate", (event) => {
+    if (window.location.pathname === "/add" && window.location.hash) return;
+    event.preventDefault();
+    route(true);
+  });
+}
+
+```
+
+`History API`를 기반으로 간단하게 라우터를 만들었습니다.
+
+간단한 애플리케이션에선 이 정도로 충분하겠지만, 관리 페이지처럼 `/user`, `/user/posts`, `/user/liked`, `/user/comments`같이 깊이가 하나 추가된 상태에서 모든 페이지가 하나 이상의 컴포넌트를 공유하며, 해당 내용을 업데이트만 하면 될 때를 감당하긴 힘들었습니다.
+
+```
+export function customRouter(): ICustomRouter {
+  return {
+    base: "",
+    baseElement: null,
+    routes: {},
+    navigators: [],
+    update(path, init) {
+      const uriPath = `/${this.base}${path === "/" ? "" : path}`;
+      window.scrollTo(0, 0);
+      if (!init) {
+        window.history.pushState("", document.title, uriPath);
+      }
+      this.navigators.forEach((x) => x.classList.remove("highlight"));
+      this.navigators
+        .filter((x) => x instanceof HTMLAnchorElement && x.pathname === uriPath)
+        .forEach((x) => x.classList.add("highlight"));
+
+      if (this.baseElement && this.routes[path]) {
+        this.baseElement.innerHTML = "";
+        this.baseElement.append(this.routes[path]());
+      }
+    },
+    addNavigator(elt: HTMLElement, path: string) {
+      elt.setAttribute("href", `/${this.base}${path === "/" ? "" : path}`);
+      elt.addEventListener("click", (event) => {
+        event.preventDefault();
+        this.update(path);
+      });
+      this.navigators.push(elt);
+    },
+    initialize(path) {
+      this.update(path, true);
+    },
+  };
+}
+
+```
+
+그래서 급하게 위 상황을 해결할 수 있도록 함수를 하나 제작하고
+
+```
+function Drawer(userPageRouter: ICustomRouter) {
+  const Button = ({ text, path }: { text: string; path: string }) => {
+    const a = el(
+      "a",
+      { className: "nav__item" },
+      el("i", { className: "icon-utensil-spoon-solid" }),
+      text,
+    );
+
+    userPageRouter.addNavigator(a, path);
+
+    return el("li", {}, a);
+  };
+
+  return el(
+    "nav",
+    { className: "nav" },
+    el(
+      "ul",
+      { className: "nav__items" },
+      Button({
+        text: "작성 글",
+        path: "/",
+      }),
+      Button({
+        text: "추천한 글",
+        path: "/liked",
+      }),
+      Button({
+        text: "작성 댓글",
+        path: "/comment",
+      }),
+    ),
+  );
+}
+
+export default function UserPage() {
+  const isMain = window.location.pathname === "/user";
+  const userPageRouter = customRouter();
+  userPageRouter.base = "user";
+  userPageRouter.routes = {
+    "/": UserPagePost,
+    "/liked": UserPageLike,
+    "/comment": UserPageComment,
+  };
+
+  const drawer = Drawer(userPageRouter);
+  const main = el("main", { className: "settings" });
+
+  userPageRouter.baseElement = main;
+  userPageRouter.initialize(
+    window.location.pathname.replace("/user", isMain ? "/" : ""),
+  );
+
+  return el("fragment", {}, drawer, main);
+}
+
+```
+
+이런 방식으로 활용할 수 있도록 했는데, 아무래도 상술한 상황 하나를 해결해야 한다는 생각에서 출발하다 보니, 재사용성이 높은 함수를 만들어내진 못한 것 같습니다.
+
+코치님께선 "주어진 시간을 고려하면 잘 만들었다."고 해주셨지만, 개인적으로 조금만 다르게 해석하면 "잘 만들진 못했다."는 말과 별반 다를 게 없는 말이라고 생각합니다. 상술한 것처럼 제가 보기에도 여전히 문제가 남아있으니까요.
+
+2차 프로젝트까지 끝나면 프로젝트를 수정하건, 간단한 프로젝트를 진행해보건 하며 업데이트해볼 생각입니다.  
+물론 마음에 들게 제대로 만들려면 돔 생성하는 부분부터 시작해 갈아엎어야 할 게 하나둘이 아니라 얼마나 오랜 시간이 걸릴지 의문이긴 합니다.
+
+### 남도 쓸 수 있는 코드 작성
+
+```
+export default function renderHeader(page) {
+  const [wideAddr, localAddr] = window.location.pathname
+    .split("/")
+    .slice(2)
+    .map((x) => decodeURI(x));
+  ...
+
+```
+
+얼핏 보면 `wideAddr`과 `localAddr`을 도대체 어디서 어떻게 가져오는지 알기 힘든 코드를
+
+```
+export function getPaths(index = 1): string[] {
+  return window.location.pathname
+    .split("/")
+    .slice(index)
+    .map((x) => decodeURI(x));
+}
+
+```
+
+이런 식으로 함수로 따로 빼내 가독성뿐 아니라 재사용성을 올리고, 한 컴포넌트는 하나의 일만 해야 한단 원칙에도 조금 더 가까운 코드를 작성할 수 있게 되었습니다.
+
+```
+export const MS_TO_SECOND = 1000;
+export const MINUTE_TO_SECOND = 60;
+export const HOUR_TO_SECOND = MINUTE_TO_SECOND * 60;
+export const DAY_TO_SECOND = HOUR_TO_SECOND * 24;
+export const WEEK_TO_DAY = 7;
+export const MONTH_TO_DAY = 30.43; // (365.24 / 12).toFixed(2)
+export const YEAR_TO_DAY = 365.24; // leap year
+
+export function formatToReadableTime(dateString: string) {
+  const { floor } = Math;
+  const now = new Date().getTime();
+  const date = new Date(dateString).getTime();
+  if (Number.isNaN(date)) return "어떤 오후";
+  const diffToSeconds = (now - date) / MS_TO_SECOND;
+  const diffToDay = floor(diffToSeconds / DAY_TO_SECOND);
+  const lessThanDay = diffToSeconds < DAY_TO_SECOND;
+
+  if (lessThanDay) {
+    if (diffToSeconds < 5 * MINUTE_TO_SECOND) return "방금";
+    if (diffToSeconds < HOUR_TO_SECOND)
+      return `${floor(diffToSeconds / MINUTE_TO_SECOND)}분 전`;
+    return `${floor(diffToSeconds / HOUR_TO_SECOND)}시간 전`;
+  }
+
+  if (diffToDay < WEEK_TO_DAY) return `${diffToDay}일 전`;
+  if (diffToDay < 2 * MONTH_TO_DAY)
+    return `${floor(diffToDay / WEEK_TO_DAY)}주 전`;
+  if (diffToDay < YEAR_TO_DAY)
+    return `${floor(diffToDay / MONTH_TO_DAY)}개월 전`;
+  return `${floor(diffToDay / YEAR_TO_DAY)}년 전`;
+}
+
+```
+
+난무하던 매직 넘버도 모두 분리했고
+
+```
+const DEFAULT_WAIT = 500;
+
+export function throttle(func: () => any, wait = DEFAULT_WAIT): () => void {
+  let timer: ReturnType<typeof setTimeout> | null;
+
+  return () => {
+    if (!timer) {
+      timer = setTimeout(() => {
+        timer = null;
+        func();
+      }, wait);
+    }
+  };
+}
+
+```
+
+위 상황처럼 파라미터에서나, `switch`문에서 지금까진 '그냥 파라미터로 넘길 때 타이핑 적게 하려고' 등의 이유로 기본값을 작성해왔으나, 혹시 모를 실수를 방지하고, 최대한 매직 넘버를 줄이며, 애플리케이션 작동의 통일성을 높이기 위한 기본값을 작성하는 계기도 되었습니다.
+
+### 명시적인 코드 작성
+
+```
+const array = ["first", "second", "third"];
+
+const first = array[0];
+const second = array[1];
+
+const [first, second] = array;
+
+```
+
+위 상황처럼 배열 내에서 둘 이상의 아이템을 가져오지 않을 땐 `배열[인덱스]`등의 접근도 자주 사용했습니다.  
+코치님의 피드백을 통해 위 방식이 명시적이지 않을 수 있음을 알 수 있었고, 상술한 내용에서 꾸준히 강조했듯 알아보기 좋은 코드의 작성을 위해 여러 방면에서 고민해보는 계기가 되었습니다.
+
+```
+const setSize = () => {
+    itemWidth = container.querySelector(selector).offsetWidth;
+    const cols = Math.floor(container.offsetWidth / itemWidth);
+
+    stack = [...new Array(cols)].map(() => 0);
+    ...
+
+```
+
+또한, 이렇게 가독성도 떨어지고 위험한 방식으로 배열을 조작하기보다
+
+```
+export function reset(arr: Array<any>): void {
+  while (arr[0]) {
+    arr.pop();
+  }
+}
+
+export function resetWithSize(
+  arr: Array<any>,
+  size: number,
+  number: number,
+): void {
+  reset(arr);
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < size; i++) {
+    arr.push(number);
+  }
+}
+
+```
+
+이렇게 함수를 하나 따로 만들어 가독성과 안정성을 조금씩 높여가는 계기도 되었습니다.
+
+### 선언형 프로그래밍에 관한 고민
+
+```
+export default function Carousel(items: Array<IPhoto>) {
+  const container = document.createElement("div");
+  const carousel = document.createElement("div");
+  const slider = document.createElement("ul");
+  const dotsContainer = document.createElement("div");
+
+  const buttons: Array<HTMLElement> = [];
+  const dots: Array<HTMLElement> = [];
+
+  let currentIndex = 0;
+  let containerWidth = 0;
+  let initialX = 0;
+  let diffX = 0;
+  ...
+
+```
+
+개인적으로도 마음에 안 드는 코드였는데, 시간이 부족하기도 하고, 방향성을 잡지도 못해 결국 리팩터링하지 못 했던 코드입니다.  
+`Carousel` 내부에서 위에 보이는 것처럼 `let`으로 선언한 변수들과 `buttons`, `dots` 두 상수를 global 변수처럼 사용하도록 코드를 짜뒀습니다.
+
+```
+const slide = (direction: TDirection) => {
+  // First Page
+  if (currentIndex === 0 && direction === -1) {
+    slide(0);
+    return;
+  }
+
+  // Last page
+  if (direction === 1 && currentIndex === items.length - 1) {
+    slide(0);
+    return;
+  }
+
+  if (containerWidth === undefined) setContainerWidth();
+
+  // Update currentIndex
+  currentIndex += direction;
+
+  // Update Buttons
+  buttons.forEach((x) => x.classList.remove("carousel__button--disabled"));
+
+  if (currentIndex === 0)
+    buttons[0].classList.add("carousel__button--disabled");
+  if (currentIndex === items.length - 1)
+    buttons[1].classList.add("carousel__button--disabled");
+
+  // Update Count
+  counter.update(currentIndex + 1);
+
+  // Update dots
+  dots.forEach((x) => x.classList.remove("carousel__dot--active"));
+  dots[currentIndex].classList.add("carousel__dot--active");
+
+  // Slider Element
+  slider.style.transform = `translate3d(${
+    containerWidth * currentIndex * -1
+  }px, 0, 0)`;
+};
+
+```
+
+당장 봐도 `buttons[0]`, `buttons[1]`을 `const [ prevButton, nextButton ] = buttons`처럼 수정할 수 있다는 생각이 드는데 왜 수정을 안 했는지 좀 의문이네요.
+
+아무튼 이런 식으로 global 변수처럼 접근하는 게 굳이 `slide` 함수가 호출될 때마다 돔에 접근할 필요가 없어 성능 상엔 이점이 있지 않을까 싶다가도, 가독성도 떨어지고 너무 막 짠 코드 같아 보이는데다, 클로저를 활용하면 매번 돔에 접근할 필요가 없을 수도 있지 않을까 싶습니다.
+
+코치님께서 '선언형 프로그래밍'이란 키워드를 던져주셨는데, 아직 해결하지 못한 숙제로 남아있어 마찬가지로 2차 프로젝트가 끝나면 더 깊이 있게 알아봐야 할 주제입니다.
+
+### Webpack 세팅
+
+```
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+    mode: "production",
+    target: "web",
+    entry: "./src/ts/index.ts",
+    devtool: false,
+    output: {
+        filename: "[name].js",
+        sourceMapFilename: "[file].map[query]",
+        path: path.resolve(__dirname, "dist"),
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
+                generator: {
+                    filename: "[name][ext]",
+                },
+            },
+            {
+                test: /\.tsx?$/,
+                exclude: /node_modules/,
+                use: "ts-loader",
+            },
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+            },
+        ],
+    },
+    plugins: [
+        new MiniCssExtractPlugin({ filename: "[name].css" }),
+        new HtmlWebpackPlugin({
+            template: "./index.html",
+            filename: "index.html",
+        }),
+    ],
+    optimization: {
+        minimizer: [new CssMinimizerPlugin(), "..."],
+    },
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"],
+    },
+    devServer: {
+        static: {
+            directory: path.join(__dirname, "./static"),
+            publicPath: "/static",
+        },
+        port: 9990,
+        hot: true,
+        historyApiFallback: true,
+    },
+};
+
+
+```
+
+처음엔 `HtmlWebpackPlugin`을 활용하지 못해 라이브 서버를 켜고, `index.html`에 `script`와 `link`태그를 추가한 뒤, webpack 개발 서버도 켜고, 커밋할 땐 `index.html`을 제외하고 커밋하는 해괴한 방식으로 작업했는데, webpack 설정도 한 단계 나아갈 수 있었습니다.
+
+```
+const fs = require("fs");
+
+fs.cp("./static", "./dist", { recursive: true }, async (err) => {
+    // Copy ./static to ..dist
+    if (err) {
+        throw err;
+    }
+
+    console.log("Copied [./public] to [./dist]");
+
+    // Remove ./dist/icon
+    fs.rm("./dist/icon", { recursive: true }, (rmErr) => {
+        if (rmErr) {
+            throw rmErr;
+        }
+
+        console.log("Deleted [./dist/icon]");
+    });
+
+    // Replace path in js
+    const data = fs.readFileSync("./dist/main.js", "utf-8");
+    const newValue = data.replaceAll("/static", "");
+
+    fs.writeFileSync("./dist/main.js", newValue, "utf-8");
+
+    console.log("Replaced [/static] to [] in [./dist/main.js]");
+
+    // Replace path in html
+    const htmlData = fs.readFileSync("./dist/index.html", "utf-8");
+    const newHtmlValue = htmlData
+        .replaceAll("/static", "")
+        .replace(/main\.(js|css)/gim, "/main.$1");
+
+    fs.writeFileSync("./dist/index.html", newHtmlValue, "utf-8");
+
+    console.log("Replaced values in [./dist/index.html]");
+});
+
+```
+
+물론 여전히 해결하지 못한 문제가 몇몇 남아, `post-build.js`라는 스크립트를 따로 짜서 해결한 문제가 있는데, 구글링을 좀 해봐도 해답을 찾기 힘들고, 스크립트를 짜는 것보다 수월하게 해결될 것 같지도 않아서 어느 정도 선에선 스크립트를 활용하는 게 현명하지 않을까 싶기도 합니다.
+
+### 삽질은 마냥 삽질이 아니다
+
+기존에 진행했던 다양한 프로젝트의 경험이 여러모로 도움이 많이 되었습니다. 읽기 좋게 시간을 변환해주는 함수처럼 작은 단위에서 시작해, VM에 접근할 수 있는 SSH 비밀번호 하나 주어진 열악한 환경에서 `scp`를 통해 배포를 진행하고, `nginx`를 활용해 서버를 설정하는 것까지 지금까지 해온 다양한 경험이 프로젝트를 한층 빨리 진행할 수 있는 큰 원동력과 밑거름이 되어줬습니다.
+
+다양한 경험을 해보는 것의 중요성을 다시금 절실히 깨닫는 계기가 되었습니다.
+
+### 혼자 하는 프로젝트가 아님을 명심하기
+
+프로젝트 마지막 날에 '어차피 프론트엔드에 아직 작업하는 사람은 나뿐이다'는 생각과, '이제 끝이다'라는 생각에 잡다한 버그를 잡으러 typescript를 혼자 도입해버렸습니다.  
+기술 스택을 바꾸는 정도의 큰일을, 팀원의 동의 없이, 추후에 유지 보수할 가능성을 배제하고 이런 일을 벌인 건 아주 경솔하고 오만한 판단이었다고 생각하고 깊이 반성했습니다.
+
+다행히 추후에 모든 팀원 분들께서 동의해주셨기에 javascript로 다시 마이그레이션 하진 않았고, 백엔드에서도 typescript의 필요성을 느껴 프로젝트 전체가 typescript로 기술 스택을 전환했으나, 순서가 잘못되었음은 변하지 않은 것 같습니다.  
+함께 나아가는 것이 이리도 서툴러 걱정입니다.
+
+## 맺으며
+
+빡빡한 일정을 그래도 잘 소화한 것 같아 기쁘고, 협업과 더불어 상술한 것처럼 명시적인 코드 작성, 재사용성, 선언형 프로그래밍 등 다양한 것들에 관해 고민하고, 앞으로도 생각해갈 수 있는 좋은 계기가 되었습니다.  
+혼자 작업할 때보다 git도 훨씬 많이 활용했고, 남의 코드를 보는 눈도 기를 수 있게 되었습니다.  
+또한 힘들 때 서로 힘이 되어주고, 같은 곳을 바라보며 나아가고, 서로 성장할 수 있는 팀 프로젝트의 즐거움에도 눈뜰 수 있게 되었습니다.
+
+이 자리를 빌려 다시금 성심성의껏 코드 리뷰를 진행해주시고, 다양한 방면의 조언을 해주신 코치님들과 힘겨운 일정 함께 소화해낸 팀원 분들께 감사하단 말씀 전하며 이만 줄이도록 하겠습니다.

@@ -1,0 +1,121 @@
+---
+title: 200325 블로그 제작일지
+description: 헤더 카테고리 자동화 염원하고 염원하던 그 기능입니다.글 발행하고 업데이트를 까먹기도 하고, 매번 수동으로 업데이트하기 귀찮아서 HTML로 저장하는 걸 멈춰야 하나 생각도 했는데, 드디어 해냈네요. add_action(&quot;publish_post&quot;, &quot;실행될함수&quot;); 이렇게 훅을 걸어두시면 포스트를 공개할 때마다 특정 함수가 실행되게 할 수 있습니다. wp_update_post()를 이용해 php로 작성된 페이지를 가져와 html로 캐싱하도록 해뒀습니다. 업데이트하고 이렇게 기쁜 건 오랜만이네요. 😁 + save_post에 훅을
+date:
+  posted: 2020-03-25T13:11:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 워드프레스
+  - 제작일지
+coverImage: /images/2020/03/img-new-tab.png
+ogImage: /images/2020/03/img-new-tab.png
+---
+
+## 헤더 카테고리 자동화
+
+염원하고 염원하던 그 기능입니다.  
+글 발행하고 업데이트를 까먹기도 하고, 매번 수동으로 업데이트하기 귀찮아서 HTML로 저장하는 걸 멈춰야 하나 생각도 했는데, 드디어 해냈네요.
+
+```
+add_action("publish_post", "실행될함수");
+```
+
+이렇게 훅을 걸어두시면 포스트를 공개할 때마다 특정 함수가 실행되게 할 수 있습니다.
+
+[wp\_update\_post()](https://developer.wordpress.org/reference/functions/wp%5Fupdate%5Fpost/)를 이용해 php로 작성된 페이지를 가져와 html로 캐싱하도록 해뒀습니다.
+
+업데이트하고 이렇게 기쁜 건 오랜만이네요. 😁
+
+\+ save\_post에 훅을 거니 무한 콜백 지옥에 빠지더라고요. 유저가 포스트 수정 => 감지 => 포스트 업데이트 => 감지 => 포스트 업데이트…
+
+```
+remove_action("save_post", "updataeHeadcat", 25);
+wp_update_post($headcat);
+add_action("save_post", "updateHeadcat", 25);
+
+```
+
+이렇게도 해봤는데 제대로 작동하지 않습니다.  
+포스트 업데이트를 진행하면 그냥 로딩만 계속되더라고요.
+
+```
+function disableMessingUp( $content ) {
+    if (is_singular('page')) {
+      remove_filter('the_content', 'wpautop');
+      remove_filter('the_excerpt', 'wpautop');
+    }
+    return $content;
+}
+add_filter( 'the_content', 'disableMessingUp', 0 );
+
+```
+
+위 방식으로 포스트를 진행하면 워드프레스가 마음대로 nbsp 태그와 p 태그를 오만 곳에 뿌리고 다녀, 상술한 코드로 그걸 방지해뒀습니다.
+
+## 페이지 전환 효과 삭제
+
+티스토리 사용하던 시절에 자바스크립트가 html 수정하는 게 눈에 보이면 별로라 추가해 쓰기 시작했던 페이드 인 / 아웃 효과를 삭제했습니다.  
+최근엔 헤더 카테고리 내용을 fetch하는 동안 페이지를 표시하지 않는 역할을 하는 중이었는데, 이번에 헤더 카테고리 로딩 방식을 클라이언트 측에서 처리하는 게 아닌 서버 측에서 처리하도록 변경하여 필요가 없어졌네요.
+
+효과 자체는 마음이 드는데, 자바스크립트가 모두 실행되는 동안 텅 빈 화면만 표시하는 게 로딩이 느리단 느낌을 줄까 싶어 깔끔하게 지웠습니다.
+
+## Material Tipple 효과 삭제
+
+페이지 전환 효과가 삭제되니 Material Ripple 효과는 끝까지 보기조차 힘들어졌습니다.  
+깔끔하게 삭제했습니다.
+
+## 이미지 새 탭에서 열기
+
+![새 탭에서 연 이미지](/images/2020/03/img-new-tab.png)
+
+이미지를 클릭하는 이유는 대부분 저장이나 확대를 위해서일 텐데, 이미지를 표시하는 레이어가 열리는 건 확대에 전혀 도움이 되지 않습니다.  
+심지어 전 모바일에서 페이지 확대 / 축소를 막아뒀기에, 강제로 확대 / 축소가 가능하게 해둔 게 아니라면 확대를 시도조차 할 수 없습니다.
+
+그래서 다시 이미지를 새 탭에서 열도록 업데이트했습니다.  
+예전엔 말 그대로 이미지 자체를 새 탭에서 여는 거라, 이미지 확인이 끝나면 탭을 닫아야(모바일에선 뒤로 가기) 했습니다.  
+하지만 이번엔 별도로 뷰어 페이지를 제작해 이미지를 표시하는 거라, 이미지를 클릭하면 탭이 닫히도록 설정해뒀습니다. 유저 테마를 인식해 배경색이 바뀌게도 해뒀습니다.
+
+```
+function formatImage($content) {
+    global $post;
+
+    if ($post->post_type != "page" && !checkBot() && !is_feed()) {
+        $content = preg_replace("/<img.(src=\")(.*?)(\")(.*?)>/i", '<a href="https://marshallku.com/viewer?$2" target="_blank" class="img_a"><img $1$2$3$4></a>', $content);
+        $content = preg_replace("/<img(.*?)(src=)(.*?)>/i", '<img$1data-$2$3 src="/images/2020/01/loader.svg">', $content);
+        $content = preg_replace("/<img(.*?)(srcset=)(.*?)>/i", '<img$1data-$2$3>', $content);
+        $content = preg_replace('/<img(.*?)class=\"(.*?)\"(.*?)>/i', '<img$1class="$2 lazyLoad"$3>', $content);
+        $content = preg_replace('/<img((.(?!class=))*)\/?>/i', '<img class="lazyLoad"$1>', $content);
+    }
+    return $content;
+}
+
+```
+
+이미지 여는 a 태그도 서버 측에서 넣도록 해뒀습니다.  
+예전엔 원본 이미지 경로를 찾고 해당 이미지를 열 수 있는 a 태그를 추가해야 하는 거라 그냥 클라이언트 측에서 모두 처리했는데, 이번 업데이트를 진행하며 서버 측에서 모두 처리하도록 해뒀습니다.
+
+## CSS, JS 최적화
+
+CSS는 예전 티스토리 블로그 시절 것을 그대로 긁어온 게 많아, 지금은 쓰지도 않는 요소를 위한 스타일도 많았습니다.  
+사용하지 않는 스타일은 전부 제거했습니다.
+
+position: relative의 사용도 최대한 절제하고, pseudo element도 많이 삭제했습니다.  
+blur 효과도 아직 렉 걸리는 기기가 많아 모조리 제거했습니다.  
+외에도 랙을 유발하던 많은 옵션을 제거하거나 수정했습니다.
+
+JS도 인라인으로 들어가 있던 스크립트를 빼고, innerHTML을 최대한 직접 수정하지 않는 쪽으로 수정했습니다.  
+쓸데없이 글로벌 변수로 선언되어 있던 것도 제거했습니다.  
+본문 이미지뿐 아니라 댓글 이미지도 lazy laod에 IntersectionObserver를 사용하도록 업데이트했습니다.
+
+## 이전 / 다음 글 디자인 변경
+
+![이전 / 다음 글 디자인](/images/2020/03/prev-next.png)
+
+꽤 오래 쓰던 디자인인데 이번에 변경했습니다.  
+개인적으로 이전 것보다 훨씬 마음에 듭니다.
+
+## 댓글 정보 입력 폼
+
+![댓글 정보 입력](/images/2020/03/comment-form.png)
+
+그냥 배경 색만 입혀져 있었는데, 그림자를 추가해 조금 더 입체적인 느낌이 들게 해봤습니다.

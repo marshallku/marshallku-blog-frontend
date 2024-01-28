@@ -1,0 +1,108 @@
+---
+title: JS 없이 더보기 / 접기 구현하기
+description: 종종 이 더 보기 / 접기를 위해 자바스크립트(특히 jQuery)를 이용하는 케이스가 꽤 많습니다.하지만 화려한 효과 없이 이를 구현하는 건 HTML과 CSS만으로 충분합니다. HTML &lt;details&gt; &lt;summary&gt;Click me&lt;/summary&gt; &lt;div&gt; Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia eum fugiat, dignissimos exercitationem, dicta quidem iste quia voluptatum iusto vel, eius maiores distinctio cupiditate optio laborum natus architecto
+date:
+  posted: 2020-10-03T12:41:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - CSS
+coverImage: /images/2020/10/details-summary.png
+ogImage: /images/2020/10/details-summary.png
+---
+
+종종 이 더 보기 / 접기를 위해 자바스크립트(특히 jQuery)를 이용하는 케이스가 꽤 많습니다.  
+하지만 화려한 효과 없이 이를 구현하는 건 HTML과 CSS만으로 충분합니다.
+
+## HTML
+
+```
+<details>
+    <summary>Click me</summary>
+    <div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia eum
+        fugiat, dignissimos exercitationem, dicta quidem iste quia voluptatum
+        iusto vel, eius maiores distinctio cupiditate optio laborum natus
+        architecto corporis consectetur. Officiis labore hic aperiam modi
+        incidunt nostrum enim necessitatibus commodi sed numquam voluptate
+        dignissimos quidem molestias at, non amet expedita fuga rerum. Sequi ad
+        velit magnam sapiente culpa unde iure iusto! Eveniet ducimus blanditiis
+        veritatis ipsam mollitia distinctio provident ad eaque deleniti ipsa
+        nemo, placeat sequi sunt et accusantium veniam ut, voluptatum numquam
+        perspiciatis fugiat ea, adipisci ab! Tempora sed eveniet alias ex
+        pariatur sequi eum similique accusantium reprehenderit sunt!
+    </div>
+</details>
+
+```
+
+아마 대부분 깊이 살펴보지 않았을 HTML 태그 중 `details` 태그를 이용해 이를 구현할 수 있습니다.
+
+`details` 태그 내부에 `summary` 태그를 추가하면 `summary` 태그만 표시되고, `summary`를 클릭해야 `details` 내부의 나머지 내용이 표시됩니다.  
+이때 `details` 태그에 `open`이란 속성이 토글됩니다.
+
+## CSS
+
+```
+details {
+    margin-bottom: 1rem;
+}
+
+details > summary {
+    background: rgba(150, 255, 150);
+    padding: 1rem;
+    outline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.5s;
+}
+
+details > summary::-webkit-details-marker {
+    background: url(https://marshall-storage.tistory.com/attachment/cfile29.uf@993E16335F785C0037CB43.svg) no-repeat center;
+    background-size: contain;
+    color: transparent;
+    transform: rotate3d(0, 0, 1, 90deg);
+    transition: transform 0.25s;
+}
+
+details[open] > summary::-webkit-details-marker {
+    transform: rotate3d(0, 0, 1, 180deg);
+}
+
+details[open] > summary {
+    background: rgba(100, 255, 100);
+}
+
+details[open] > summary ~ * {
+    animation: reveal 0.5s;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -10px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+```
+
+summary 태그에 표시되는 삼각형은 summary::-webkit-details-marker 혹은 summary::marker로 수정하실 수 있습니다.  
+반드시 두 개에 대한 스타일은 아래와 같이 따로 작성해주셔야 합니다.
+
+```
+details > summary::marker {
+    /* styles */
+}
+
+details > summary::-webkit-details-marker {
+    /* styles */
+}
+
+```
+
+`details` 내부의 요소가 표시될 땐 animation을 추가했습니다.  
+opacity와 transform을 직접 추가하고 transition을 추가해도, display: block과 display: none을 토글하는 것처럼 transition이 작동하지 않으니, 반드시 animation을 추가하셔야 합니다.

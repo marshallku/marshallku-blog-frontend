@@ -1,0 +1,92 @@
+---
+title: \[CSS, 자바스크립트\]Material Ripple 효과 구현하기
+description: 요소를 클릭했을 때, 물결(Ripple)이 퍼져 나가는 것 같은 효과를 줄 수 있습니다.
+date:
+  posted: 2019-08-11T05:36:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - CSS
+  - vanilla JS
+coverImage: /images/2019/08/material-ripple.jpg
+ogImage: /images/2019/08/material-ripple.jpg
+---
+
+요소를 클릭했을 때, 물결(Ripple)이 퍼져 나가는 것 같은 효과를 줄 수 있습니다.
+
+## HTML
+
+```
+<a href="#" class="material-ripple">Click Me!</a>
+<a href="#" class="material-ripple" data-color="ff99ff">Custom Color</a>
+
+```
+
+엘리먼트에 material-ripple이란 class만 추가하시면 됩니다.
+
+ripple 효과에 특정 색상을 원하시면 data-color이란 속성을 만드신 후에 색상 코드를 추가하시면 됩니다.  
+\* 16진수 색상을 이용해주시고, #은 제외하고 넣어주세요.
+
+## CSS
+
+```
+@keyframes materialRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(1)
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(var(--material-scale));
+        opacity: 0
+    }
+}
+
+.material-ripple {
+    position: relative;
+    overflow: hidden;
+  
+    /* Additional */
+    display: inline-block;
+    padding: 10px 20px;
+    color: #000;
+    text-decoration: none
+}
+
+.material-ripple .animate {
+    width: 2px;
+    height: 2px;
+    position: absolute;
+    border-radius: 50%;
+    animation: materialRipple 0.5s linear
+}
+
+```
+
+Additional 아래의 내용은 크게 중요하지 않은 내용입니다.  
+position이 static이 되지 않도록 해주시고, overflow만 감춰주세요.
+
+적당한 여백을 줘놓으셔야 효과가 확실히 보이므로, padding을 적절히 추가하시는 걸 추천합니다.
+
+## 자바스크립트
+
+```
+Array.from(document.querySelectorAll(".material-ripple")).forEach(a => {
+    a.addEventListener("click", function (e) {
+        const ripple = document.createElement("div"),
+            rect = a.getBoundingClientRect();
+        ripple.className = "animate",
+        ripple.style.left = `${e.x - rect.left}px`,
+        ripple.style.top = `${e.y - rect.top}px`,
+        ripple.style.background = `#${a.dataset.color !== undefined ? a.dataset.color : "bdc3c7"}`,
+        ripple.style.setProperty("--material-scale", a.offsetWidth),
+        a.append(ripple),
+        setTimeout(function () {
+            ripple.parentNode.removeChild(ripple)
+        }, 500)
+    })
+})
+
+```
+
+position: fixed 등의 상황에선 offset을 제대로 불러오지 못해 getBoundingClientRect()를 이용했습니다.
+
+그것 외에는 크게 설명이 필요한 건 없어 보이네요.

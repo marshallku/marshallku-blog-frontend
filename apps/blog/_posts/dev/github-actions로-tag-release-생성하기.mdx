@@ -1,0 +1,245 @@
+---
+title: Github Actions로 tag, release 생성하기
+description: 개인적인 용도로 만든 npm package들도 있고, 알바몬에 사용할 npm package들에 기능 등의 추가가 필요하거나 문제가 있으면 업무 외 시간에 업데이트하곤 합니다. 어느새 그 가짓수만 해도 꽤 늘었습니다.이 패키지들 관리하며 npm 배포 자동화를 위해 한 삽질을 좀 공유할까 합니다.
+date:
+  posted: 2023-06-19T02:23:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - Github Actions
+  - Shell Script
+  - CD
+coverImage: /images/2023/06/Create-tag-release-with-github-actions.png
+ogImage: /images/2023/06/Create-tag-release-with-github-actions.png
+---
+
+개인적인 용도로 만든 npm package들도 있고, 알바몬에 사용할 npm package들에 기능 등의 추가가 필요하거나 문제가 있으면 업무 외 시간에 업데이트하곤 합니다.
+
+* smooth zoom(개인, 이미지 줌)
+* crtElt(개인, DOM Element 생성용)
+* react-postscribe(회사, 외부 스크립트로 DOM 업데이트용 / 주로 광고 출력)  
+   * 기존 개발 과정에 사용되던 react-postscribe가 5년째 관리가 안 되고 있고, TypeScript를 지원하지 않아 신규로 제작
+* cookiess-next(회사, Next.JS에서 쿠키 관리용)  
+   * URL Encoding 등의 문제가 있어 fork 후 오류 수정. 오류가 되는 사항들은 기존 패키지에도 PR 생성했으나, 알바몬에 필요한 기능 추가하고, 배포 pipeline 생성 / 코딩 스타일 수정 등 추가로 진행
+* ckeditor5(회사, 텍스트 에디터)  
+   * 한글 입력이나 커스터마이징 관련해 오류가 많아 fork 후 커스터마이징 및 오류 수정
+* react-sortablejs(회사, DOM Element Drag & Drop)  
+   * 낮은 버전의 iOS에서 구문 오류가 발생함. 관련 내용이 Issue로 등록된 지 꽤 오랜 시간이 지나고, PR도 생성되어 있으나 업데이트되지 않음. 알바몬 최소 지원 버전을 맞추지 못해 빠르게 수정하기 위해 fork 후 오류 수정.
+
+어느새 그 가짓수만 해도 꽤 늘었습니다.  
+이 패키지들 관리하며 npm 배포 자동화를 위해 한 삽질을 좀 공유할까 합니다.
+
+참고: 아래 작성된 글의 pipeline은 [React Postscribe repository](https://github.com/marshallku/react-postscribe)에서 확인하실 수 있습니다.
+
+## 기존 작업 방식
+
+```
+name: Publish package
+
+on:
+    release:
+        types: [created]
+
+jobs:
+    publish-npm:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  check-latest: true
+                  registry-url: https://registry.npmjs.org/
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+                  run_install: |
+                      - recursive: true
+                        args: [--frozen-lockfile, --strict-peer-dependencies]
+            - run: pnpm publish --access=public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+기존에는 이 정도 yml 파일만 작성해두고, release를 수동으로 생성하여 npm에 배포를 진행했습니다.
+
+간단하게 작업할 땐 큰 불편함을 못 느꼈으나, 관리하는 패키지의 가짓수가 늘어나고 작업을 오래 하다 보니 아래와 같은 문제들이 있었습니다.
+
+1. `package.json`의 버전을 업데이트하지 않고 release를 생성할 수 있습니다.
+2. 이전 release에서 어떤 변화가 생겼는지 파악이 쉽지 않습니다.
+3. 매번 github을 들어와 번거롭게 2번을 진행하고 release를 수동으로 생성해야 합니다.
+
+따라서 버전을 업데이트하는 커밋을 생성하면, 자동으로 이전에 생성된 tag에서부터 현재 커밋까지 커밋 목록을 생성하고, npm에 배포까지 진행할 수 있게 작업해봤습니다.따라서 버전을 업데이트하는 커밋을 생성하면, 자동으로 이전에 생성된 tag에서부터 현재 커밋까지 커밋 목록을 생성하고, npm에 배포까지 진행할 수 있게 작업해봤습니다.
+
+## 버전 업데이터 만들기
+
+```
+#!/bin/bash
+version=${1:-'patch'}
+pnpm version "$version" -m "Update version to v%s"
+```
+
+간단한 버전 업데이터입니다.  
+`＂update-version＂: ＂bash scripts/update.sh＂`와 같이 `package.json`에 스크립트를 추가해두고, `pnpm run update-version (major|minor|patch)`와 같이 실행하면, 버전을 업데이트하고(기본으로 patch) 커밋합니다.
+
+참고로, 저는 버전을 `v1.0.0`같은 형식으로 관리해 앞에 v를 붙여주도록 했습니다.  
+만약 다른 패턴을 사용하시면 수정하시면 됩니다.
+
+## Tag / Release 생성 파이프라인 추가
+
+```
+name: Create tag and release
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    check-commit:
+        runs-on: ubuntu-latest
+        outputs:
+            result: ${{ steps.check.outputs.result }}
+            version: ${{ steps.get-version.outputs.version }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Check commit message
+              id: check
+              run: echo "result=$(echo '${{ github.event.head_commit.message }}' | grep -oP '^Update version to v(\d|\.)+$')" >> $GITHUB_OUTPUT
+              shell: bash
+            - name: Get version
+              id: get-version
+              run: echo "version=$(echo '${{ github.event.head_commit.message }}' | grep -oP 'v(\d|\.)+')" >> $GITHUB_OUTPUT
+              shell: bash
+    create-tag:
+        runs-on: ubuntu-latest
+        needs: ["check-commit"]
+        if: ${{ needs.check-commit.outputs.result != '' }}
+        outputs:
+            tag-exists: ${{ steps.create-tag.outputs.tag_exists }}
+            release-body: ${{ steps.generate-body.outputs.body }}
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - name: Generate body
+              id: generate-body
+              run: |
+                  EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+                  git_logs=$(git log "$(git describe --tags --abbrev=0)"..HEAD --oneline)
+                  git_logs="${git_logs//$'\n'/$'\n'- }"
+                  {
+                      echo "body<<$EOF"
+                      echo "- $git_logs"
+                      echo "$EOF"
+                  } >>"$GITHUB_OUTPUT"
+              shell: bash
+            - uses: rickstaa/action-create-tag@v1
+              id: create-tag
+              with:
+                  tag: ${{ needs.check-commit.outputs.version }}
+                  tag_exists_error: true
+                  message: ${{ needs.check-commit.outputs.version }}
+    create-release:
+        runs-on: ubuntu-latest
+        needs: ["check-commit", "create-tag"]
+        if: ${{ needs.create-tag.outputs.tag-exists == 'false' }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Create a GitHub release
+              uses: ncipollo/release-action@v1
+              with:
+                  tag: ${{ needs.check-commit.outputs.version }}
+                  name: ${{ needs.check-commit.outputs.version }}
+                  body: ${{ needs.create-tag.outputs.release-body }}
+    trigger-deploy:
+        runs-on: ubuntu-latest
+        needs: ["create-release"]
+        name: Trigger publish workflow
+        steps:
+            - uses: actions/github-script@v6
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  script: |
+                      github.rest.actions.createWorkflowDispatch({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        workflow_id: 'npm-publish.yml',
+                        ref: 'master',
+                      })
+
+```
+
+원하는 대로 제작하려고 반나절 정도 삽질한 것 같습니다.  
+job 순서대로 하나씩 설명해보겠습니다.
+
+### check-commit
+
+버전 업데이터에 만들어둔 커밋 메시지 패턴과 현재 커밋 메시지가 일치하는지 확인합니다.  
+위 업데이터에서 버전 패턴을 변경하셨으면 정규표현식도 수정해야 합니다.
+
+regex matching string 및 버전을 output에 저장합니다.
+
+### create-tag
+
+check-commit job에서 regex matching 이 있으면 실행됩니다(if: 참고).
+
+먼저, 이전 tag에서부터 현재 커밋까지 커밋 목록을 생성하여 output에 저장합니다.  
+`git log "$(git describe --tags --abbrev=0)"..HEAD --oneline`를 실행하면 이전 tag부터 HEAD까지 commit log를 출력할 수 있습니다.  
+참고: github output에 문자를 저장할 때 줄바꿈이 들어가면 오류가 발생하는데, Github Docs의 Using Workflow 문서의 [Multiline strings](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings)를 참고하여 작업했습니다.
+
+이후에 태그를 생성하고, 태그가 이미 존재하는지를 output에 저장합니다.  
+[create-tag-release](https://github.com/marketplace/actions/create-tag-release)가 deprecated되기 전까진 한 번에 가능했는데...안타깝게도 이젠 하나씩 해줘야 하는 것 같더라고요.
+
+### create-release
+
+create-tag job이 태그 생성에 성공하면 실행됩니다.  
+check-commit에서 추출한 버전명을 제목, create-tag에서 생성된 body를 내용으로 사용합니다.
+
+### trigger-deploy
+
+create-release job이 완료만 되면 실행됩니다.  
+Github actions가 release를 생성하면 자동으로 pipeline이 수행되지 않기에(무한 루프 등 방지 위해 의도된 기능), deploy workflow를 trigger해줘야 합니다.
+
+## Publish 파이프라인 수정
+
+```
+name: Publish package
+
+on:
+    release:
+        types: [created]
+    workflow_dispatch:
+    repository_dispatch:
+
+jobs:
+    publish-npm:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  check-latest: true
+                  registry-url: https://registry.npmjs.org/
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+                  run_install: |
+                      - recursive: true
+                        args: [--frozen-lockfile, --strict-peer-dependencies]
+            - run: pnpm publish --access=public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+다른 pipeline에서 publish pipeline이 trigger 되게 할 수 있도록, 조건을 조금 수정해줘야 합니다.  
+workflow\_dispatch, repository\_dispatch에도 trigger 되도록 수정하면 됩니다.
+
+## 마무리
+
+![Github Actions 실행 결과](/images/2023/06/Actions-Result.png)
+
+![Github release 결과](/images/2023/06/Github-release-card.png)
+
+버전 업데이터로 버전을 업데이트하면 변경된 내용이 요약된 release가 생성되고, npm에 자동으로 배포까지 되는 것을 확인할 수 있습니다.

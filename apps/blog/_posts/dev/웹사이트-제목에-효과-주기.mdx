@@ -1,0 +1,106 @@
+---
+title: 웹사이트 제목에 효과 주기
+description: 예전에 작성했던 글자 적고 지우는 스크립트를 타이틀에 사용하는 방법입니다. 예전엔 무조건 글자를 적고 지우는 기능만 넣어뒀는데, 이번엔 글자를 단순히 적기만 하고 끝나는 기능과 지우는 애니메이션은 생략하고 적기만 하는 애니메이션 두 가지를 추가했습니다. 또한, Array뿐 아니라 String도 사용할 수 있도록 업데이트했습니다.
+date:
+  posted: 2020-01-03T08:08:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2020/01/title-bar.png
+ogImage: /images/2020/01/title-bar.png
+---
+
+예전에 작성했던 [글자 적고 지우는 스크립트](https://marshallku.com/web/tips/%ec%9e%90%eb%b0%94%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%ec%9e%90%eb%8f%99%ec%9c%bc%eb%a1%9c-%ea%b8%80%ec%9e%90-%ec%a0%81%ea%b3%a0-%ec%a7%80%ec%9a%b0%ea%b8%b0)를 타이틀에 사용하는 방법입니다.
+
+예전엔 무조건 글자를 적고 지우는 기능만 넣어뒀는데, 이번엔 글자를 단순히 적기만 하고 끝나는 기능과 지우는 애니메이션은 생략하고 적기만 하는 애니메이션 두 가지를 추가했습니다.
+
+또한, Array뿐 아니라 String도 사용할 수 있도록 업데이트했습니다.
+
+```
+function typeTitle(title, animation, speed) {
+  const isString = typeof(title) === "string";
+  let i = 0, j = 0;
+  speed === undefined && (
+    speed = 500
+  ),
+
+  function txtnum() {
+    j == textArray.length - 1
+    ? j = 0
+    : j++
+  }
+
+  function type() {
+    const max = isString ? title.length : title[j].length;
+    i <= max
+    ? (
+      document.title = `\u200E${(isString ? title : title[j]).slice(0, i)}`,
+      i++,
+      setTimeout(type, speed)
+    )
+    : (
+      isString && (
+        animation.indexOf("type-") === -1
+        ? remove()
+        : (
+          animation === "type-once" || (
+            setTimeout(() => {
+              document.title = "\u200E",
+              i = 0,
+              type()
+            }, +animation.replace("type-", ""))
+          )
+        )
+      )
+    )
+  }
+
+  function remove() {
+    0 < i
+    ? (
+      document.title = document.title.slice(0, i),
+      i--,
+      0 == i && (document.title = "\u200E"),
+      setTimeout(remove, speed)
+    )
+    : (
+      isString || txtnum(),
+      type()
+    )
+  }
+
+  document.title = "\u200E",
+  type();
+}
+
+```
+
+title 태그가 텅 비어있으면 주소를 표시하기 때문에, u200E라는 아무것도 표시되지 않는 유니코드를 집어넣었습니다.
+
+```
+typeTitle("title")
+typeTitle(["first", "second", "third"])
+
+```
+
+타이틀을 집어넣어 함수를 호출만 해도 애니메이션이 적용됩니다.  
+String, Array 두 가지만 사용하셔야 오류가 없습니다.
+
+```
+typeTitle("title", "type-once")
+typeTitle("title", "type-500")
+
+```
+
+세 가지 애니메이션이 있습니다.
+
+기본 : 한 글자씩 적고 한 글자씩 지웁니다.  
+type-once : 한 글자씩 적고 작동을 멈춥니다.  
+type-(숫자) : 한 글자씩 적고, (숫자)밀리초 이후에 글자를 모두 지우고 한 글자씩 적습니다.
+
+```
+typeTitle("title", "", 500)
+```
+
+글자를 적는 시간을 조절하실 수 있습니다.  
+과하게 빠르게 설정하면 두세 글자씩 적히는지라 적당한 속도를 유지해주시는 게 중요합니다.

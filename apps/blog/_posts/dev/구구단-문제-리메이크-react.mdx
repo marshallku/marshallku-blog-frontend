@@ -1,0 +1,87 @@
+---
+title: 구구단 문제 리메이크 - React
+description: 깃허브도전해보기 React랑 조금 친하게 지내보려고 예전에 만들어둔 것들을 React로 다시 짜보고 있습니다.로또 추첨기가 첫 번째, 구구단 문제가 두 번째, 다음으론 가사집을 생각하고 있습니다. 사용자가 종료하기 전까지 문제가 계속되고, 난도도 계속 상승하던 예전관 달리 난이도와 문제 수를 고를 수 있게 해뒀습니다.보통을 2 ~ 20, 어려움을 11 ~ 20, 아주 어려움을 11 ~ 30으로 해뒀다가, &quot;보통&quot;이란 난이도에서
+date:
+  posted: 2020-06-18T15:03:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - ReactJS
+  - 구구단
+  - 제작일지
+coverImage: /images/2020/06/question.png
+ogImage: /images/2020/06/question.png
+---
+
+[깃허브](https://github.com/marshallku/simple-brain-training)  
+[도전해보기](https://marshallku.github.io/simple-brain-training/)
+
+React랑 조금 친하게 지내보려고 예전에 만들어둔 것들을 React로 다시 짜보고 있습니다.  
+[로또 추첨기](https://marshallku.com/web/tips/react%eb%a1%9c-%eb%a1%9c%eb%98%90%eb%b2%88%ed%98%b8-%ec%83%9d%ec%84%b1%ea%b8%b0-%eb%a7%8c%eb%93%a4%ea%b8%b0)가 첫 번째, 구구단 문제가 두 번째, 다음으론 [가사집](https://marshallku.com/twice/discography)을 생각하고 있습니다.
+
+![난이도 선택](/images/2020/06/difficulty.png)
+
+![문제 수 선택](/images/2020/06/number-of-questions.png)
+
+사용자가 종료하기 전까지 문제가 계속되고, 난도도 계속 상승하던 예전관 달리 난이도와 문제 수를 고를 수 있게 해뒀습니다.  
+보통을 2 \~ 20, 어려움을 11 \~ 20, 아주 어려움을 11 \~ 30으로 해뒀다가, '보통'이란 난이도에서 19\*19는 너무 가혹하지 않나 싶어서 난이도는 전체적으로 하향 조정했습니다.
+
+![문제 화면](/images/2020/06/question.png)
+
+이걸 만들어야겠다고 생각하자마자 만들기 시작했던 부분입니다.  
+앞서 만든 구구단 게임은, 자바스크립트의 prompt를 사용해 모바일 접근성은 최악이었습니다.  
+'무조건 키패드를 만들어 PC에선 키보드와 키패드를, 모바일에선 키패드를 쓸 수 있게 하자'란 생각으로 시작했는데, 부모 컴포넌트랑 값 계속 주고받고 하는 과정을 제작하는 게 생각보다 까다롭고 귀찮아 여간 힘든 게 아니었네요.
+
+![결과 화면](/images/2020/06/result.png)
+
+결과 창도 조금 더 친절하게 만들고, 다시 시작을 누르면 페이지를 새로 고침 하던 과거와 달리 새로 고침 없이 난이도 선택부터 다시 진행됩니다.
+
+---
+
+```
+componentDidUpdate(prevProps) {
+  const { value } = this.props;
+  if (prevProps.value !== value) {
+      if (value) {
+        this.setState({
+          value: value
+        });
+      }
+  }
+}
+
+```
+
+일반적으로 props가 업데이트될 때, 무한 루프에 빠지지 않게 하려고 상술한 것처럼 조건문으로 감싸줘야 합니다. 대부분 props의 업데이트를 감지하고 렌더링을 다시 한다는 건 이전의 props와 바꿀 props가 다를 때 진행하는데, 키패드는 33, 22같이 동일한 props가 전달될 수도 있습니다.
+
+```
+componentDidUpdate(prevProps) {
+    const { value } = this.props;
+    if (prevProps.value !== value) {
+        const trueValue = value.replace(/-(.*)/g, "");
+        if (trueValue) {
+            if (trueValue === "del") {
+                this.delete();
+            } else if (trueValue === "ok") {
+                this.submit();
+            } else {
+                this.setState({
+                    input: this.state.input + trueValue,
+                });
+            }
+        }
+    }
+}
+
+<Input
+    value={`${this.state.input}${
+        this.state.checkOK ? "" : `- ${performance.now()}`
+    }`}
+    confirm={this.props.confirm}
+/>
+
+```
+
+이렇게 `performance.now()`와 함께 값을 넘겨줘서 이 문제는 해결했습니다.  
+그냥 키패드에서 누른 버튼 값만 넘겨주는 게 아니라 지금까지 입력한 값을 모두 넘겨주면 이런 짓을 할 필요가 없는데, 키보드 입력도 생각해 Input 컴포넌트에 `handleChange`까지 붙여야 하는 상황이니 그냥 이렇게 억지로 해결했습니다.
+
+상술한 것처럼 다양한 값과 함수가 컴포넌트 사이를 오가야 해서 이게 옳게 된 리메이크인진 아직 확신이 없습니다만, 리액트가 익숙해져야 최적화를 하건 뭘 하건 할 테니 일단은 리액트와 최대한 친해지는 데 의미를 두고 있습니다.

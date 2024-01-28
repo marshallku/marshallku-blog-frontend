@@ -1,0 +1,105 @@
+---
+title: Pull Request를 병합하기 전에 코드 검사하기
+description: 원활한 협업을 위해 ESLint나 Prettier 등의 도구를 활용하곤 합니다. 하지만 이를 로컬에서만 실행되게 하면 &quot;설치하지 않는다&quot;, &quot;무시한다&quot; 등의 옵션이 존재하기도 하고, 설치가 제대로 되지 않았으나 설치가 된 줄 알고 작업하는 불상사가 벌어질 수도 있습니다. 더불어, 테스트 케이스 수준에서 걸러지는 오류를 처리하는 등 자동화할 수 있는 작업들을 Pull Request 시에 자동으로 처리하는 방법에 대해 알아보고자 합니다.
+date:
+  posted: 2022-05-06T08:59:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - ESLint
+  - Github Actions
+coverImage: /images/2022/05/Pull-Request-병합-전-코드-검사하기.png
+ogImage: /images/2022/05/Pull-Request-병합-전-코드-검사하기.png
+---
+
+원활한 협업을 위해 ESLint나 Prettier 등의 도구를 활용하곤 합니다. 하지만 이를 로컬에서만 실행되게 하면 '설치하지 않는다', '무시한다' 등의 옵션이 존재하기도 하고, 설치가 제대로 되지 않았으나 설치가 된 줄 알고 작업하는 불상사가 벌어질 수도 있습니다. 더불어, 테스트 케이스 수준에서 걸러지는 오류를 처리하는 등 자동화할 수 있는 작업들을 Pull Request 시에 자동으로 처리하는 방법에 대해 알아보고자 합니다.
+
+## 스크립트 추가
+
+```
+"scripts": {
+    "lint": "eslint 'src/**/*.ts'",
+    "lint-diff": "eslint $(git diff --name-only --diff-filter=duxb origin/$BASE origin/$HEAD | grep -E '\\.((j|t)sx?)$' | xargs)"
+},
+
+```
+
+`npm run lint`를 입력하면 src 아래 모든 파일을 검사하도록 했습니다.  
+지금 목적은 Pull Request 시 리뷰를 돕기 위함인데, 위 스크립트 하나만 있으면 요청자가 작성하지 않은 파일도 모두 검사하게 됩니다. 내가 하지도 않은 일로 털리는 건 많이 억울하니, `git diff`를 통해 현재 브랜치와 Pull Request 대상 브랜치를 비교해 변경된 파일 중 `.js`, `.jsx`, `.ts`, `.tsx` 파일만 검사하는 `lint-diff` 스크립트도 추가했습니다.
+
+스크립트의 `--dif-filter=duxb`는 특정 파일들을 검사하지 않기 위해 추가했습니다.
+
+* d: Deleted
+* u: Unmerged
+* x: Unknown
+* b: Broken
+
+입니다. 자세한 옵션은 [git-diff 문서](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRTUXB82308203)에서 확인하실 수 있습니다.
+
+`$BASE`가 어떤 변수인진 후술하도록 하겠습니다.
+
+## workflow 생성
+
+```
+name: Check code with eslint
+
+on:
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "16"
+                  check-latest: true
+            - name: Check
+              run: |
+                  npm ci
+                  npm run lint-diff
+              env:
+                  CI: true
+                  BASE: ${{ github.base_ref }}
+                  HEAD: ${{ github.head_ref }}
+
+```
+
+간단하게 `master` 브랜치에 Pull Request 할 때마다 `lint-diff`를 수행하도록 workflow를 만들어봤습니다.  
+`check-on-pr.yml` 등의 이름으로 `.github/workflows` 폴더에 추가해주면 잘 작동합니다.
+
+`github.base_ref`는 Pull Request 대상 브랜치, `github.head_ref`는 Base 브랜치에 반영시키고 싶은 브랜치입니다.
+
+![Pull Request 페이지에서 ESLint 오류 확인](/images/2022/05/Screen-Shot-2022-05-06-at-1.19.27-PM.png)
+
+정상적으로 작업이 진행되었다면, Pull Request를 생성했을 때 workflow가 실행되고, Pull Request 페이지나 Actions 페이지에서 결과를 확인할 수 있습니다.  
+아직 베타긴 하지만, 커밋 메시지를 눌러보면 어느 부분에 어떤 오류가 있는지도 상세히 표시해줍니다.
+
+## 브랜치 보호
+
+이제 확인은 자동으로 진행되지만, 모든 검사가 완료되지 않아도 Merge pull request 버튼이 활성화된다는 문제가 있습니다.
+
+![브랜치 보호 설정](/images/2022/05/Screen-Shot-2022-05-06-at-12.04.18-PM.png)
+
+Settings > Branches > Branch protection rules에서 Add rule 버튼을 클릭하면 보이는 화면입니다.  
+"Require status checks to pass before merging"을 클릭한 뒤, 아래 검색창에 workflow의 이름을 입력하면, 해당 작업이 진행되어야 특정 브랜치에 커밋할 수 있도록 브랜치가 보호됩니다.
+
+Branch name pattern에 쓸 수 있는 패턴은 [About branch protection rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule#about-branch-protection-rules)를 참고해주세요.
+
+![체크 실패 시 Merge pull request 비활성화](/images/2022/05/Screen-Shot-2022-05-06-at-1.12.32-PM.png)
+
+이제 자동화된 작업 선에서 거를 수 있는 문제가 있는 코드는 브랜치에 들어오지 못하게 됐습니다.  
+물론 관리자가 강제로 병합할 순 있지만요.
+
+![체크 통과 시 Merge pull request 활성화](/images/2022/05/Screen-Shot-2022-05-06-at-1.17.18-PM.png)
+
+모든 확인이 끝나면 Merge pull request 버튼이 활성화됩니다.
+
+본문에선 ESLint만 다뤘지만, 상술한 것처럼 테스트 케이스 등 자동화된 작업 선에서 거를 수 있는 문제 대부분은 위 방법으로 걸러낼 수 있습니다.
+
+## 사족
+
+[Rome](https://rome.tools/)이란 Rust로 작성된 도구가 있습니다. formatting, linting, bundling 등 작업을 빠른 속도로 수행할 수 있고, Prettier와 달리 코드에 문제가 있어도 formatting을 수행합니다.  
+아직 개발이 진행 중이지만 혹시 관심 있으면 확인해보세요!

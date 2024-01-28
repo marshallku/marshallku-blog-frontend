@@ -1,0 +1,47 @@
+---
+title: GIF / MP4 변환기
+description: 온라인 변환기 대부분은 서버에서 변환을 처리합니다. 이는 느린 속도, 파일 크기 / 파일 길이 / 프레임 등의 제한이라는 단점이 필연적으로 동반되기 마련인데, WASM과 FFMpeg를 통해 이 단점을 해결한 앱입니다.이 앱의 가장 큰 단점은 SharedArrayBuffer를 사용해 모바일에선 사용이 힘들단 것입니다(보안상 이유로 차단됨).
+date:
+  posted: 2020-11-26T14:20:00.000Z
+  modified: 2022-01-21T11:33:00.000Z
+tags:
+  - ReactJS
+  - TypeScript
+  - FFmpeg
+  - GIF Converter
+coverImage: /images/2020/11/gif-converter.png
+ogImage: /images/2020/11/gif-converter.png
+---
+
+Github : <https://github.com/marshallku/gifconverter>  
+App : [https://marshallku.github.io/gifconverter/](https://marshallku.com/gifconverter/)
+
+온라인 변환기 대부분은 서버에서 변환을 처리합니다. 이는 느린 속도, 파일 크기 / 파일 길이 / 프레임 등의 제한이라는 단점이 필연적으로 동반되기 마련인데, WASM과 FFMpeg를 통해 이 단점을 해결한 앱입니다.  
+이 앱의 가장 큰 단점은 SharedArrayBuffer를 사용해 모바일에선 사용이 힘들단 것입니다(보안상 이유로 차단됨).
+
+## 사용 방법
+
+아이콘을 클릭해 파일을 선택하거나 파일을 드래그 앤 드랍 하시면 해당 파일을 변환하실 수 있습니다.
+
+#### MP4를 GIF로 변환
+
+![mp4 to gif](/images/2020/11/mp4-to-gif2.png)
+
+MP4 파일을 선택하시면 위 옵션이 보입니다. 기본적으로 끝나는 시간과 너비는 동영상과 똑같이 설정되어있으니, 필요하시면 바꾸면 됩니다. 시계 아이콘을 클릭하시면 동영상의 현재 시각으로 설정하실 수 있습니다.  
+FPS는 FFMpeg의 기본 설정인 25에 맞춰져 있습니다. 필요에 따라 조정하시면 됩니다.
+
+옵션 변경이 끝나면 아래의 화살표를 클릭하시면 변환이 진행됩니다.
+
+#### GIF를 MP4로 변환
+
+![gif to mp4](/images/2020/11/gif-to-mp4.png)
+
+해당 과정은 자동으로 진행됩니다.
+
+#### 마무리
+
+![변환 끝](/images/2020/11/done.png)
+
+변환된 파일과 용량이 표시됩니다.  
+우클릭 하셔서 저장하면 길고 이상한 이름으로 저장되니, 다운로드 버튼을 클릭하셔서 다운로드해주세요. 원본 파일과 똑같은 이름으로 저장됩니다.  
+Try Another 버튼을 클릭하시면 모든 과정을 처음부터 다시 시작하실 수 있습니다.

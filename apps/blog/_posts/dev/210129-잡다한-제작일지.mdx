@@ -1,0 +1,185 @@
+---
+title: 210129 잡다한 제작일지
+description: 블로그 자동 재구독 2020년 결산에서 언급했던 문젠데, 저 글에 적었던 대로 2021년의 저는 해결 방법을 알아냈습니다. 푸시 알림 구독 기간이 만료되어 생기는 문제였는데, pushsubscriptionchange 이벤트의 리스너를 추가하면 해결할 수 있는 문제였습니다.짧게 첨언하면, pushsubscriptionchange 이벤트는 기간 만료 등 애플리케이션 제어 밖에서 푸시 알림 구독에 변화가 생겼을 때 발생합니다. 이제 매번 기간 만료될 때마다 다시 구독 버튼을
+date:
+  posted: 2021-01-29T14:42:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 블로그
+  - About IU
+  - 제작일지
+coverImage: /images/2021/01/210129_블로그_About-IU_제작일지.png
+ogImage: /images/2021/01/210129_블로그_About-IU_제작일지.png
+---
+
+## 블로그
+
+### 자동 재구독
+
+[2020년 결산](https://marshallku.com/notice/2020%eb%85%84-%ea%b2%b0%ec%82%b0)에서 언급했던 문젠데, 저 글에 적었던 대로 2021년의 저는 해결 방법을 알아냈습니다.
+
+푸시 알림 구독 기간이 만료되어 생기는 문제였는데, [pushsubscriptionchange 이벤트](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/pushsubscriptionchange%5Fevent)의 리스너를 추가하면 해결할 수 있는 문제였습니다.  
+짧게 첨언하면, `pushsubscriptionchange` 이벤트는 기간 만료 등 애플리케이션 제어 밖에서 푸시 알림 구독에 변화가 생겼을 때 발생합니다.
+
+이제 매번 기간 만료될 때마다 다시 구독 버튼을 클릭해야 하는 일이 없었으면 좋겠네요.
+
+한 번 억지로 만료되게 해서 테스트해보니 푸시 알림 서버에 구독 정보는 보내는데 구독은 풀려있더라고요.  
+푸시 알림 구독 -> 성공 시 푸시 알림 서버에 구독 정보 전송  
+순으로 스크립트가 실행되는데 도대체 왜 이런 일이 발생했는진 모르겠지만, 일단 억지로 구독을 만료되게 해서 생긴 문제라 봅니다.  
+혹 예상과 다르게 뭔가 진짜 잘못된 거라면 2021년 2월 혹은 3월의 제가 다시 해결할 겁니다.
+
+### 코드 복사 버튼 추가
+
+![코드블록](/images/2021/01/codeblock.png)
+
+이제 코드를 드래그해서 복사할 필요 없이 우측 상단의 아이콘만 클릭하면 해당 코드를 복사하실 수 있습니다!
+
+### MP4 everywhere
+
+```
+async function uploadToImgur(uri: string): Promise<ImgurApiResponse> {
+    const formData = new FormData();
+    formData.append("image", uri);
+
+    try {
+        const response = await fetch("https://api.imgur.com/3/image", {
+            method: "POST",
+            headers: {
+                Authorization: "Client-ID CLIENTID",
+                Accept: "application/json",
+            },
+            body: formData,
+        });
+
+        if (!response.ok) return { success: false };
+
+        const json = await response.json();
+
+        return json;
+    } catch (error) {
+        console.error(error);
+
+        return {
+            success: false,
+        };
+    }
+}
+
+async function convertGifToMp4(string: string): Promise<string> {
+    const uri = /(\bhttps?:\/\/[-A-Z0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|+&@#\/%?=~_|!:,.;]*[-A-Z0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|+&@#\/%=~_|])/gi;
+    const request = /\?(.*)/gi;
+    const match = string.match(uri);
+
+    if (!match) return string;
+
+    const gifs = match.filter((link) =>
+        link.replace(request, "").endsWith(".gif")
+    );
+
+    if (!gifs.length) return string;
+
+    toast("GIF 이미지 발견! MP4로 변환 후 댓글이 등록됩니다.");
+
+    await Promise.all(gifs.map((url) => uploadToImgur(url))).then((results) => {
+        results.forEach((result, index) => {
+            if (result.success) {
+                const { data } = result;
+
+                if (data.mp4) {
+                    string = string.replace(gifs[index], data.mp4);
+                }
+            }
+        });
+    });
+
+    return string;
+}
+
+```
+
+종종 댓글에 첨부된 움짤 중 용량이 과하게 크다 싶은 건 따로 mp4로 변환해서 수정해 두곤 했는데, 굳이 이걸 왜 내가 수동으로 하고 있나 싶어서 만든 기능입니다.  
+댓글을 등록하기 전에 .gif로 끝나는 링크가 있는지 검사하고, 있으면 모조리 Imgur에 업로드해 mp4 링크로 변환합니다.  
+
+이제 이 블로그에서 gif 파일이 보일 일은 정말 얼마 없겠네요.
+
+### 최적화
+
+* head 태그에 있던 marshall.head.js 인라인화
+* 필요없는 요소 제거해 DOM 최적화
+* 사용하지 않는 php 변수 모두 제거
+* 메가 메뉴 썸네일에 width, height 속성 추가
+* 워드프레스 기본 css 파일 jsdelivr로 이동
+* 이미지 줌 효과 위치 계산 속도 개선
+* `img` 태그를 `picture` 태그로 변환하는 함수 속도 개선
+
+### 버그 수정
+
+* 배너 이미지의 주소가 캐시 서버의 주소로 변환되지 않던 오류 수정
+* 카테고리 관련 글의 썸네일 alt 속성이 업데이트되지 않던 오류 수정
+* 간헐적으로 카테고리 관련 글의 썸네일에 캐시 서버 주소가 들어가지 않아 webp를 지원하는 브라우저에선 썸네일이 보이지 않던 오류 수정
+* 댓글을 작성할 때 이름, 이메일, 웹사이트 모두 수정하지 않으면 유저 정보가 업데이트되지 않던 오류 수정
+
+## About IU
+
+![About IU 홈 화면](/images/2021/01/about-iu.png)
+
+### Celebrity 업데이트
+
+Profile 페이지의 이미지는 티저가 공개됐을 때 진작 교체해뒀고, 홈 화면 비디오 교체, Discography 추가는 발매되자마자 해뒀습니다.  
+Special Clip 라이브 무대도 홈 화면에 추가해뒀습니다. 뮤직비디오나 라이브가 무작위로 재생됩니다.
+
+### 현재 페이지 하이라이트
+
+상단의 내비게이션(모바일에선 햄버거 버튼을 눌렀을 때 나오는 내비게이션)에서 지금 보고 있는 페이지는 보라색으로 하이라이트 처리되도록 업데이트했습니다.
+
+하고 보니 훨씬 보기 좋아서 블로그에도 작업해야 하나 싶네요.
+
+### Function Component
+
+```
+class List extends React.Component<
+    ListProps,
+    {
+        isStored: boolean;
+    }
+> {
+    constructor(props: ListProps) {
+        super(props);   
+        this.state = {  
+            isStored: !!window[this.props.name],    
+        };
+    }
+    ...
+
+```
+
+변경 전
+
+```
+export default function List(props: ListProps) {
+    const [stored, setStored] = useState<boolean>(!!window[props.name]);
+    ...
+
+```
+
+변경 후
+
+메모리 자원을 좀 덜 사용한다고 하기도 하고, 아무래도 이쪽이 자바스크립트랑은 더 잘 어울리지 않나 싶어서 Class Component를 모두 Function Component로 교체했습니다.
+
+### 기타
+
+* index.html을 index.php로 바꾸는 과정을 자동화했습니다.
+* 화면에 보이지 않는 요소(예: 모바일에서 상단 내비게이션)는 렌더링하지 않게 했습니다.
+* 더는 자막을 자동으로 표시하지 않습니다.
+* 언어를 en에서 ko로 변경했습니다.
+
+### 직면한 문제
+
+![About IU 인스타그램 페이지](/images/2021/01/Instagram-page.png)
+
+이젠 클라이언트에서 인스타그램 페이지를 불러와도 302 상태를 응답하며 로그인 페이지로 보내버리더라고요.  
+덕분에 오류가 발생했을 때도 프로필은 표시하게 업데이트하긴 했는데, 이걸 어떻게 해결해야 좋을지 고민입니다.
+
+크롤링해서 데이터를 가져오자니, 인스타그램의 robots.txt는 `Disallow: /`가 기본이라 도의에 맞지 않는 일 같고, 빼버리자니 좌우 대칭이 안 맞아버려서…
+
+깊이 고민해보고 조속히 업데이트해보겠습니다.

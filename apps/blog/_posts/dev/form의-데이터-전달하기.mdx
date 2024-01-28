@@ -1,0 +1,61 @@
+---
+title: Form의 데이터 전달하기
+description: Form의 데이터를 전달하는 방법에 대해 알아봅니다.
+date:
+  posted: 2020-01-14T15:00:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2020/01/serialize-form.png
+ogImage: /images/2020/01/serialize-form.png
+---
+
+xhr(XMLHttpRequest) 혹은 fetch 등으로 데이터를 보낼(POST) 때, 쓰는 스크립트입니다.
+
+input\[type="submit"\]을 클릭했을 때와 같은 동작을 하는 버튼을 만들 때 쓰신다고 생각하시면 편합니다.
+
+```
+function serialize(form) {
+    const serialized = new FormData();
+
+    for (let i = 0, length = form.elements.length; i < length; i++) {
+        const field = form.elements[i];
+        
+        if (field.name && !field.disabled && "file" !== field.type && "reset" !== field.type && "submit" !== field.type && "button" !== field.type) {
+
+            if ("select-multiple" === field.type) {
+                for (let n = 0; n < field.options.length; n++)
+                    field.options[n].selected && serialized.append(field.name, field.options[n].value);
+            }
+
+            else {
+                ("checkbox" !== field.type && "radio" !== field.type || field.checked) && serialized.append(field.name, field.value)
+            }
+
+        }
+        
+    }
+
+    return serialized;
+}
+
+```
+
+위 함수를 추가한 뒤
+
+\* jQuery엔 .serialize()란 함수가 있습니다. [참고](https://api.jquery.com/serialize/)
+
+```
+const myForm = document.getElementById("myForm");
+const data = serialize(myForm);
+
+fetch(myForm.action, {
+  method: "POST",
+  body: data
+})
+
+```
+
+이런 방식으로 데이터를 보내시면 됩니다.
+
+예시에선 form에 적힌 action의 url로 데이터를 보냈는데, myForm.action을 "https://example.com"등 주소로 변경하실 수도 있습니다.

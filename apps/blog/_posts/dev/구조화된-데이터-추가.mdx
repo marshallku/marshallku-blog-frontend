@@ -1,0 +1,177 @@
+---
+title: 구조화된 데이터 추가
+description: 신경을 끄고 살다 검색 엔진에 블로그가 어떻게 노출되는지 확인해보니, 분명 티스토리 쓸 땐 본문에 첨부한 이미지도 검색 결과에 표시되고 그랬는데 블로그를 옮긴 후로는 그런 게 싹 사라졌더라고요.원인을 찾다 보니 구조화된 데이터(Structured Data)가 빠져서 그런 거였습니다. SEO 최적화 플러그인만 설치하면 끝날 문제긴 하나, 외부 플러그인 사용의 최소화란 똥고집 때문에 구조화된 데이터를 직접 만들어가는 중입니다. 새삼스럽게 정말
+date:
+  posted: 2019-12-26T16:15:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 제작일지
+coverImage: /images/2019/12/structured-data.png
+ogImage: /images/2019/12/structured-data.png
+---
+
+신경을 끄고 살다 검색 엔진에 블로그가 어떻게 노출되는지 확인해보니, 분명 티스토리 쓸 땐 본문에 첨부한 이미지도 검색 결과에 표시되고 그랬는데 블로그를 옮긴 후로는 그런 게 싹 사라졌더라고요.  
+원인을 찾다 보니 구조화된 데이터(Structured Data)가 빠져서 그런 거였습니다.
+
+SEO 최적화 플러그인만 설치하면 끝날 문제긴 하나, 외부 플러그인 사용의 최소화란 똥고집 때문에 구조화된 데이터를 직접 만들어가는 중입니다.
+
+새삼스럽게 정말 처음부터 끝까지 알아서 해야 한단 생각이 다시 드네요.
+
+[schema.org](https://schema.org/)와 [구글의 가이드](https://developers.google.com/search/docs/data-types/article)를 참고하며 만들었습니다.
+
+```
+<head>
+    <script type="application/ld+json"></script>
+</head>
+
+```
+
+일단, head 태그에 type이 application/ld+json인 script를 하나 추가해주면 됩니다.
+
+```
+<script type = "application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    <?php if(is_category()) : $schemaLoop=1; ?>
+    @type" : "ItemList",
+    "itemListElement" : [<?php if(have_posts()) : while(have_posts()) : the_post(); if($schemaLoop!=1){echo ',';}?>{
+      "@type" : "ListItem",
+      "position" : "<?php echo $schemaLoop; $schemaLoop++; ?>",
+      "url" : "<?php echo get_the_permalink(); ?>"
+    }
+    <?php endwhile;endif; ?>]
+    <?php endif; if(is_front_page()):?>
+    "potentialAction" : {
+      "@type" : "SearchAction",
+      "target" : "https://marshallku.com/?s={search_term_string}",
+      "query-input" : "required name=search_term_string"
+    }
+    <?php endif; if(is_single()) : ?>
+    "@type" : "BlogPosting",
+    "mainEntityOfPage" : {
+      "@id" : "<?php echo get_the_permalink(); ?>"
+    },
+    "url" : "<?php echo get_the_permalink(); ?>",
+    "headline" : "<?php the_title(); ?>",
+    "description" : "<?php echo $excerpt; ?>",
+    "author" : {
+      "@type" : "Person",
+      "name" : "Marshall K"
+    },
+    "image" : {
+      "@type" : "ImageObject",
+      "url" : "<?php echo getThumbnail($post->ID, 768, 0); ?>",
+      <?php echo getThumbnail($post->ID, 768, 1); ?>
+    },
+    "datePublished" : "<?php echo get_the_date('Ymd').'T'.get_the_date('H:i:s').'+09:00'; ?>",
+    "dateModified" : "<?php echo get_the_modified_date('Ymd').'T'.get_the_modified_date('H:i:s').'+09:00'; ?>",
+    "publisher" : {
+      "@type" : "Organization",
+      "name" : "Marshall K",
+      "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https://secure.gravatar.com/avatar/34cf82f16801687021cacbce7479d01a?s=800",
+        "width" : "800px",
+        "height" : "800px"
+      }
+    }
+  <?php endif; ?>}
+</script>
+
+```
+
+내부 내용은 이렇게 채웠습니다.
+
+category면 type을 ItemList로 만들어 최근 글을 나열하고, 홈 화면에선 SearchAction으로 만들어 검색창만 적당히 추가해뒀습니다.  
+포스트 페이지에선 BlogPosting이란 type을 사용했는데, shcema.org에선 해당 type이 있지만, 구글 가이드에선 모조리 newsArticle로 표기해둬서 좀 혼란스럽네요.
+
+애당초 script 태그 안에 들어간 json을 제대로 인식하지 못하고, 그 안에서 php를 사용하니 그거도 제대로 인식을 못 해서, 저렇게 회색 글자들만 보면서 작업했습니다. 참 적응 안 되고 힘들더라고요.
+
+## 완성된 데이터 - 카테고리 페이지
+
+예시) 웹 카테고리 페이지
+
+```
+{
+    "@context": "http://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [{
+        "@type": "ListItem",
+        "position": "1",
+        "url": "https://marshallku.com/web/191223-%ec%84%9c%eb%b2%84-%ea%b8%b4%ea%b8%89-%ec%a0%90%ea%b2%80-%ec%99%84%eb%a3%8c"
+    }, {
+        "@type": "ListItem",
+        "position": "2",
+        "url": "https://marshallku.com/web/tips/api-%ec%97%86%ec%9d%b4-%ec%9d%b8%ec%8a%a4%ed%83%80%ea%b7%b8%eb%9e%a8-%ed%94%bc%eb%93%9c-%ea%b0%80%ec%a0%b8%ec%98%a4%ea%b8%b0"
+    }, {
+        "@type": "ListItem",
+        "position": "3",
+        "url": "https://marshallku.com/web/tips/%ec%9e%90%eb%b0%94%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%eb%a0%8c%ed%8b%b0%ed%81%98%eb%9f%ac-%ec%b9%b4%eb%93%9c-%ea%b5%ac%ed%98%84%ed%95%98%ea%b8%b0"
+    }, {
+        "@type": "ListItem",
+        "position": "4",
+        "url": "https://marshallku.com/web/log/191216-%ec%9b%80%ec%a7%a4-%ea%b0%a4%eb%9f%ac%eb%a6%ac-%ec%a0%9c%ec%9e%91%ec%9d%bc%ec%a7%80"
+    }, {
+        "@type": "ListItem",
+        "position": "5",
+        "url": "https://marshallku.com/web/log/%ec%84%9c%eb%b8%8c-%eb%b8%94%eb%a1%9c%ea%b7%b8-%ea%b0%9c%ec%84%a4-%ec%9b%80%ec%a7%a4-%ea%b0%a4%eb%9f%ac%eb%a6%ac"
+    }, {
+        "@type": "ListItem",
+        "position": "6",
+        "url": "https://marshallku.com/web/tips/%ed%8b%b0%ec%8a%a4%ed%86%a0%eb%a6%ac-%eb%aa%a8%eb%b0%94%ec%9d%bc-%ed%8e%98%ec%9d%b4%ec%a7%80-%ec%99%84%eb%b2%bd%ed%9e%88-%eb%b9%84%ed%99%9c%ec%84%b1%ed%99%94%ed%95%98%ea%b8%b0"
+    }, {
+        "@type": "ListItem",
+        "position": "7",
+        "url": "https://marshallku.com/web/log/191214-%eb%b8%94%eb%a1%9c%ea%b7%b8-%ec%a0%9c%ec%9e%91%ec%9d%bc%ec%a7%80"
+    }, {
+        "@type": "ListItem",
+        "position": "8",
+        "url": "https://marshallku.com/web/log/%ed%99%88-%ed%99%94%eb%a9%b4-%ec%8a%ac%eb%9d%bc%ec%9d%b4%eb%8d%94-%ec%97%85%eb%8d%b0%ec%9d%b4%ed%8a%b8"
+    }, {
+        "@type": "ListItem",
+        "position": "9",
+        "url": "https://marshallku.com/web/log/191205-%eb%b8%94%eb%a1%9c%ea%b7%b8-%ec%a0%9c%ec%9e%91%ec%9d%bc%ec%a7%80"
+    }]
+}
+
+```
+
+## 완성된 데이터 - 포스트 페이지
+
+예시) TWICEZINE 2 T 전화 테마
+
+```
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@id": "https://marshallku.com/%f0%9f%92%95/twice/t-%ec%a0%84%ed%99%94-%ed%85%8c%eb%a7%88-twicezine-2"
+    },
+    "url": "https://marshallku.com/%f0%9f%92%95/twice/t-%ec%a0%84%ed%99%94-%ed%85%8c%eb%a7%88-twicezine-2",
+    "headline": "[T 전화 테마] TWICEZINE 2",
+    "description": "소개 테마로 만들만한 사진 없나 찾아보다 정장 입은 트와이스가 눈에 들어와 만들어본 테마입니다. 배경이 깔끔하게 흰색이라 작업하기 생각보다 편했네요.아무리 그래도 자동 선택으로 그냥 지워버리면 꽤 끔찍한 결과가 도출돼서, 특정 색상을 지우는 방법이나 레이어의 테두리를 다듬는 방법 등을 공부하는 계기도 됐습니다. 그리고, 이번 테마에선 다이얼 화면의 버튼을 점으로 바꾼 버전도 제작해봤습니다.안 그래도 피쳐폰 쓰던 시절부터 익숙해진...",
+    "author": {
+        "@type": "Person",
+        "name": "Marshall K"
+    },
+    "image": {
+        "@type": "ImageObject",
+        "url": "/images/2019/12/TWICEZINE-2-Preview-768x768.jpg",
+        "width": "768px",
+        "height": "768px"
+    },
+    "datePublished": "20191202T22:20:19+09:00",
+    "dateModified": "20191202T23:09:29+09:00",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Marshall K",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/34cf82f16801687021cacbce7479d01a?s=800",
+            "width": "800px",
+            "height": "800px"
+        }
+    }
+}
+
+```

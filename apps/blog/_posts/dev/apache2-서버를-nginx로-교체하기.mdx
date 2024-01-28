@@ -1,0 +1,218 @@
+---
+title: Apache2 서버를 Nginx로 교체하기
+description: 우분투 18.04에서 워드프레스 엔진을 교체하는 것을 기준으로 설명합니다.PHP를 사용하지 않으신다면 모듈 설치는 건너뛰시면 됩니다. 아래 과정을 따라 하시면 설치하는 중에 2~3초가량을 제외하곤 아무런 문제 없이 웹사이트에 접속할 수 있습니다. 참고로 워드프레스 등의 PHP를 사용하는 웹사이트를 운영하신다면, Nginx로 교체해도 성능이 체감될 만큼 향상되진 않습니다만, 개인적으로 관리가 Apache2보다 훨씬 편한 것 같습니다. 약간의 성능 차이도 있긴 하고요.
+date:
+  posted: 2020-05-29T14:42:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - Ubuntu
+  - apache2
+  - nginx
+coverImage: /images/2020/05/apache2-to-nginx.png
+ogImage: /images/2020/05/apache2-to-nginx.png
+---
+
+우분투 18.04에서 워드프레스 엔진을 교체하는 것을 기준으로 설명합니다.  
+PHP를 사용하지 않으신다면 모듈 설치는 건너뛰시면 됩니다.
+
+아래 과정을 따라 하시면 설치하는 중에 2\~3초가량을 제외하곤 아무런 문제 없이 웹사이트에 접속할 수 있습니다.
+
+참고로 워드프레스 등의 PHP를 사용하는 웹사이트를 운영하신다면, Nginx로 교체해도 성능이 체감될 만큼 향상되진 않습니다만, 개인적으로 관리가 Apache2보다 훨씬 편한 것 같습니다. 약간의 성능 차이도 있긴 하고요.
+
+## Ngnix 및 PHP 모듈 설치
+
+```
+sudo apt update
+sudo apt install nginx
+```
+
+아마 설치를 진행하시면 Apache2가 80번 포트를 쓰고 있어 Nginx는 시작하지 못하고 오류를 뿜을 겁니다.  
+괘념치 마시고 다음 단계로 진행하시면 됩니다.
+
+```
+sudo apt install php7.4-fpm #본인 PHP 버전에 맞게 설치
+```
+
+nginx는 php-fpm이 있어야 php를 구동할 수 있습니다. 반드시 설치해주세요.
+
+## PHP 설정 수정
+
+```
+sudo vim /etc/php/버전/fpm/php.ini
+```
+
+본인이 사용 중인 php 버전을 "버전"에 입력하시면 됩니다.  
+잘 모르시겠다면 `cd /etc/php` 를 입력하신 후 `ls` 를 입력하시면 폴더 목록이 출력됩니다. 해당 폴더로 가시면 됩니다.
+
+```
+max_execution_time = 180
+memory_limit = 15000M
+post_max_size = 20M
+upload_max_filesize = 20M
+```
+
+사용하시던 설정대로 php.ini를 수정하시면 됩니다.  
+전 보통 상술한 값을 수정합니다.
+
+## dhparam.pem 생성 (선택)
+
+```
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 # 퍼미션 오류 나면 sudo로 실행
+```
+
+ssl을 사용 중이시라면 Nginx용 파일을 하나 생성해주셔야 합니다.  
+ssl을 사용할 의향이 있으시면 [우분투에 워드프레스 설치하기](https://marshallku.com/web/tips/%ec%9a%b0%eb%b6%84%ed%88%ac%ec%97%90-%ec%9b%8c%eb%93%9c%ed%94%84%eb%a0%88%ec%8a%a4-%ec%84%a4%ec%b9%98%ed%95%98%ea%b8%b0) 글에 발급 방법을 설명해뒀습니다. 참고해주세요.
+
+## conf 파일 생성 및 설정
+
+```
+sudo vim /etc/nginx/sites-available/config
+```
+
+\* 제일 마지막에 config은 변경하셔도 됩니다. 전 주로 도메인 네임을 파일 이름으로 설정합니다.
+
+아파치의 000-default.conf 등의 파일과 같이 사이트가 어떻게 작동할지 설정하는 파일입니다.
+
+```
+server {
+    listen 80;
+    server_name 도메인.주소 www.도메인.주소;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name 도메인.주소 www.도메인.주소;
+    root /var/www/html;
+    index index.php;
+
+    ssl_certificate "/etc/letsencrypt/live/도메인.주소/fullchain.pem";
+    ssl_certificate_key "/etc/letsencrypt/live/도메인.주소/privkey.pem";
+    ssl_dhparam "/etc/ssl/certs/dhparam.pem";
+
+    client_max_body_size 20M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ^~ /.well-known/acme-challenge/ {
+        allow all;
+        default_type "text/plain";
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location ~* \.(log|binary|pem|enc|crt|conf|cnf|sql|sh|key)$ {
+        deny all;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+    }
+
+    location ~* \.(png|jpg|jpeg|webm|gif|ico|svg|mp4|webp|ttf|eot|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    location ~* \.(js|css)$ {
+        expires 6m;
+        add_header Cache-Control "public, no-transform";
+    }
+}
+
+```
+
+간단한 설정을 해둔 설정 파일입니다.  
+ssl을 사용하지 않으시면 `listen 80;` 아래에 ssl과 관련된 내용을 제외하고 붙여 넣으신 뒤 사용하시면 됩니다.
+
+[Nginx의 워드프레스 설정 방법](https://www.nginx.com/resources/wiki/start/topics/recipes/wordpress/) 등을 참고하시면 더 세세한 설정을 하실 수 있습니다.
+
+설정 파일 작성을 완료하신 뒤, `sudo nginx -t` 란 명령어를 이용하시면 문제없이 작성했는지 확인하실 수 있습니다.
+
+```
+sudo ln -s /etc/nginx/sites-available/config /etc/nginx/sites-enabled
+```
+
+config 파일 작성 후 `sites-available` 폴더에서 `sites-enabled` 폴더로 링크해주세요.
+
+## 포트 수정 및 Nginx 가동
+
+이제 Apache2에서 80번 포트와 443번 포트를 탈취해 Nginx에게 줄 차례입니다.
+
+```
+sudo vim /etc/apache2/ports.conf
+```
+
+위 파일을 여신 뒤 아래 내용을 수정해주세요.
+
+```
+Listen 8080
+
+<IfModule ssl_module>
+    Listen 4433
+</IfModule>
+
+<IfModule mod_gnutls.c>
+    Listen 4433
+</IfModule
+
+```
+
+단순히 80번 포트를 8080으로, 443번 포트를 4433으로 수정했습니다.
+
+```
+sudo vim /etc/apache2/sites-available/000-default.conf
+```
+
+이제 기존에 쓰던 아파치의 설정 파일에서도 포트를 수정하시면 됩니다.
+
+```
+<VirtualHost *:8080>
+...
+<VirtualHost *:4433>
+...
+```
+
+똑같이 80번 포트를 8080번으로, 443번 포트를 4433번으로 수정했습니다.
+
+이젠 Apache2를 종료하고 Nginx를 가동할 수 있습니다!
+
+```
+sudo systemctl reload apache2
+sudo systemctl stop apache2
+sudo systemctl start nginx
+```
+
+여기까지 왔는데 아무런 오류가 뜨지 않는다면 성공적으로 Nginx가 실행되기 시작했을 겁니다.  
+웹사이트로 한 번 가보셨는데 성공적으로 로딩이 된다면 이제 Apache2를 제거할 일만 남았습니다.
+
+## Apache2 제거
+
+정들었던 아파치를 보내줄 차례입니다.
+
+```
+dpkg --get-selections | grep apache
+```
+
+위 명령어를 입력하면 apache와 관련된 패키지 목록이 나옵니다.
+
+```
+sudo apt remove something somethingElse ...
+```
+
+remove 뒤에 목록에 나온 패키지를 하나씩 입력하시면 패키지가 제거됩니다.

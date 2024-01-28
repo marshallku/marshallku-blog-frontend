@@ -1,0 +1,94 @@
+---
+title: 윈도우에 우분투 설치하기 (WSL)
+description: Windows의 개발 환경은 예전부터 최악이란 평가가 많았지만, 작년 5월 WSL의 등장으로 옛말이 되었습니다.많이 불안정하고 느리단 평이 많아 설치를 꺼렸으나, 지난 12일에 WSL 2가 나오며 꽤 괜찮아졌단 평이 많길래 저도 설치해봤습니다. 물론 리눅스의 개발 환경이 최강인 이유 중 하나인 &quot;그것밖에 할 게 없다&quot;는 이유는 Windows가 앞으로 아무리 발전해도 도달할 수 없겠지만요. Windows 하위 시스템 활성화 윈도우
+date:
+  posted: 2020-06-24T13:55:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - Ubuntu
+  - WSL
+  - Windows
+coverImage: /images/2020/06/install-ubuntu.png
+ogImage: /images/2020/06/install-ubuntu.png
+---
+
+Windows의 개발 환경은 예전부터 최악이란 평가가 많았지만, 작년 5월 WSL의 등장으로 옛말이 되었습니다.  
+많이 불안정하고 느리단 평이 많아 설치를 꺼렸으나, 지난 12일에 WSL 2가 나오며 꽤 괜찮아졌단 평이 많길래 저도 설치해봤습니다.
+
+물론 리눅스의 개발 환경이 최강인 이유 중 하나인 '그것밖에 할 게 없다'는 이유는 Windows가 앞으로 아무리 발전해도 도달할 수 없겠지만요.
+
+## Windows 하위 시스템 활성화
+
+![enable windows subsystem linux](/images/2020/06/enable-subsystem.png)
+
+윈도우 버튼을 누르고 Powershell을 검색하신 후, 관리자 권한으로 Powershell을 실행해주세요.
+
+```
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+```
+
+위 명령어를 입력하신 뒤 컴퓨터를 재시작해주세요.
+
+## Linux 설치
+
+![우분투 설치](/images/2020/06/install-ubuntu.png)
+
+Microsoft 스토어를 실행하시고 Linux를 검색하시면 리눅스 OS들이 나옵니다.  
+전 Ubuntu를 설치했습니다.
+
+---
+
+위 과정이 완료되면 다시 터미널을 켜시고 `wsl`을 입력해보세요.  
+익숙한 우분투 향이 가득한 터미널로 바뀌면 성공하신 겁니다.
+
+\* 잘 진행되지 않으면 우분투 앱을 한 번 실행하시면 이름과 비밀번호를 설정하는 터미널이 뜹니다. 이름과 비밀번호를 설정하신 뒤 터미널에서 wsl -l을 입력하시고 리눅스 OS가 뜨는지 확인해주세요.
+
+---
+
+이 아래로는 전부 선택 사항입니다. 우분투의 설치는 끝났으니, 즐겁게 개발을 시작하시면 됩니다.
+
+## Windows Terminal 설치
+
+![터미널 설치](/images/2020/06/windows-terminal.png)
+
+개인적으로 Powershell은 좀 못생겨서 Windows Terminal을 선호합니다.  
+필요하시면 설치하시면 됩니다.
+
+![우분투 터미널](/images/2020/06/ubuntu-command-line.png)
+
+Powershell보다 훨씬 깔끔하고, 다양한 기능이 있습니다.
+
+## oh my zsh 설치
+
+![ZSH 설치](/images/2020/06/install-zsh.png)
+
+oh my zsh를 이용하시면 터미널을 훨씬 더 자유롭게 커스터마이징 하실 수 있습니다.
+
+```
+sudo apt install zsh
+```
+
+위 명령어를 입력하셔서 zsh를 설치하시고
+
+![oh my zsh](/images/2020/06/oh-my-zsh.png)
+
+```
+#curl
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+#wget
+sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+위 명령어를 입력해 oh my zsh를 설치하실 수 있습니다.  
+자세한 내용은 oh my zsh의 [레포지토리](https://github.com/ohmyzsh/ohmyzsh)를 확인해주세요.
+
+## Remote - WSL 설치
+
+![Remote - WSL](/images/2020/06/remote-wsl.png)
+
+VS Code에 Remote - WSL을 설치하시면 우분투 터미널을 VS Code에서도 사용하실 수 있습니다.
+
+![VS Code 우분투 터미널](/images/2020/06/ubuntu-terminal.png)
+
+설치하신 후, 좌측 하단의 파란 버튼을 클릭하시거나, Ctrl + Shift + P를 입력하신 후 wsl을 입력하셔서 Remote-WSL: New Window를 클릭하시면 위 사진처럼 우분투의 터미널을 사용하실 수 있습니다.

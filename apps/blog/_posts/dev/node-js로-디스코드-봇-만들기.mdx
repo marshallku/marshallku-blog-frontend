@@ -1,0 +1,197 @@
+---
+title: Node.js로 디스코드 봇 만들기
+description: Ayana, FredBoat 등의 디스코드 봇을 직접 제작하는 방법입니다.Node.js 외에도 파이썬, 자바 ,Go 등 다양한 언어로 제작할 수 있습니다만, 이 글에선 Node.js로 봇을 만드는 법을 다룹니다. 디스코드 봇을 만들기 위해선 서버를 돌릴 수 있는 기기 혹은 서비스가 필요합니다. 시작하시기 전에 유념해주세요.개인 PC로도 충분히 되긴 하지만, 24시간으로 돌릴 서비스에 windows 10을 이용하는 건 추천하지 않으며, 개인 PC를
+date:
+  posted: 2020-03-04T13:22:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - Node.js
+  - Discord
+coverImage: /images/2020/03/final.png
+ogImage: /images/2020/03/final.png
+---
+
+Ayana, FredBoat 등의 디스코드 봇을 직접 제작하는 방법입니다.  
+Node.js 외에도 파이썬, 자바 ,Go 등 다양한 언어로 제작할 수 있습니다만, 이 글에선 Node.js로 봇을 만드는 법을 다룹니다.
+
+디스코드 봇을 만들기 위해선 서버를 돌릴 수 있는 기기 혹은 서비스가 필요합니다. 시작하시기 전에 유념해주세요.  
+개인 PC로도 충분히 되긴 하지만, 24시간으로 돌릴 서비스에 windows 10을 이용하는 건 추천하지 않으며, 개인 PC를 사용하는 건 더욱 추천하지 않습니다.
+
+[이 글](https://marshallku.com/game/minecraft/%eb%a7%88%ec%9d%b8%ed%81%ac%eb%9e%98%ed%94%84%ed%8a%b8-%eb%ac%b4%eb%a3%8c%eb%a1%9c-24%ec%8b%9c%ea%b0%84-%ec%84%9c%eb%b2%84-%eb%a7%8c%eb%93%a4%ea%b8%b0)에 소개한 Google Bot이란 서비스를 이용하시면 꽤 오래 무료로 서버를 사용하실 수 있습니다.  
+혹 사정이 여의치 않으시면 참고해주세요.
+
+[IU 봇 깃허브](https://github.com/marshallku/Discord-IU-Bot)  
+[IU 봇 추가 링크](https://discordapp.com/api/oauth2/authorize?client%5Fid=684667274287906835&permissions=8&scope=bot) (혹 추가하셨을 때 오프라인이라도 그러려니 해주세요. 재미 & 테스트 용이라 😥)
+
+## 디스코드 앱 추가
+
+![](/images/2020/03/create-app.png)
+
+[디스코드 개발자 페이지](https://discordapp.com/developers/applications/)에서 어플리케이션을 추가해주세요.  
+위 이름이 봇의 이름이 되진 않습니다.
+
+![](/images/2020/03/add-bot.png)
+
+좌측 메뉴에서 Bot을 클릭하신 후 우측의 Add Bot 버튼을 누르시면 위 창이 뜹니다.  
+Yes, do it! 눌러주시면 됩니다.
+
+![](/images/2020/03/token.png)
+
+나중에 로그인할 때 토큰을 사용하니 Copy 버튼을 클릭하셔서 어디 잘 보관해둬 주세요.  
+봇에 로그인을 토큰으로만 진행하므로 외부에 유출하시면 안 됩니다!
+
+![](/images/2020/03/OAuth2-bot.png)
+
+간단하게 봇을 설정하신 후에, 다시 좌측의 OAuth2를 클릭하시면 위 메뉴가 뜹니다.
+
+Bot 버튼을 클릭하시고, 아래에서 봇에 사용할 옵션들을 클릭하신 후에, Copy 버튼을 클릭하시면 봇을 서버에 추가할 수 있는 주소가 복사됩니다.
+
+![](/images/2020/03/add-bot-to-server.png)
+
+서버를 선택하시고 계속하기를 클릭해주세요.
+
+![](/images/2020/03/bot-added.png)
+
+봇이 성공적으로 추가됐습니다!  
+이제 이 봇에 생명을 불어넣어 줄 차례입니다.
+
+## 서버 세팅
+
+시작하기 전, 상술했듯 서버를 돌릴 수 있는 기기 혹은 서비스가 필요합니다.  
+여기선 우분투 18.04로 돌아가는 제 랩탑을 기준으로 설명하겠습니다.
+
+![](/images/2020/03/Screenshot-from-2020-03-04-16-51-35.png)
+
+[이 링크](https://github.com/nodesource/distributions#installation-instructions)에서 구체적인 내용을 확인하실 수 있습니다.  
+데비안, readhat 등을 이용하신다면 위 링크를 참조해주세요.
+
+```
+nodejs --version
+```
+
+Node.js의 버전을 확인할 수 있는 명령어입니다.  
+13.x가 가장 최신 릴리즈입니다.
+
+```
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+```
+
+curl을 실행할 수 없으시면 sudo apt install curl로 설치하시면 됩니다.
+
+위 두 명령어를 입력하시면 최신 버전의 Node.js를 사용하실 수 있습니다.
+
+완료하셨으면 봇 구동에 쓸 파일들을 넣을 폴더를 하나 생성해주세요. (전 discordbot이란 폴더를 생성했습니다.)  
+그 후 터미널을 켜서 해당 폴더로 이동해주세요.  
+cd 명령어를 사용하시거나, vs code를 사용하시면 우클릭 -> Open in Terminal 클릭하시면 터미널에서 바로 열립니다.
+
+![](/images/2020/03/Screenshot-from-2020-03-04-16-58-28.png)
+
+이제 [discord.js](https://discord.js.org/)를 설치할 차례입니다.
+
+```
+npm install discord.js
+```
+
+후술할 내용 외에도 다양한 api가 공식 문서에 기술되어 있으니 위 링크를 참고해보세요.
+
+```
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('message', msg => {
+  if (msg.content === 'ping') {
+    msg.reply('Pong!');
+  }
+});
+
+client.login('token');
+
+```
+
+app.js(이름은 자유) 파일을 생성하신 후 코드를 작성하시면 됩니다.  
+위 예제 코드는 상술한 [공식 홈페이지](https://discord.js.org/)에 있는 ping이라 입력하면 pong이라 대답하는 코드입니다.
+
+제가 사용한 코드는 상술한 [깃허브](https://github.com/marshallku/Discord-IU-Bot)의 app.js 파일에 기록되어 있습니다.
+
+저는 추가로 같은 폴더에 token.json이란 파일을 생성한 후
+
+```
+{
+    "token": "토큰"
+}
+
+```
+
+이렇게 따로 빼뒀습니다.
+
+```
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const token = require("./token.json");
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('message', msg => {
+  if (msg.content === 'ping') {
+    msg.reply('Pong!');
+  }
+});
+
+client.login(token.token);
+
+```
+
+이렇게 외부 파일에서 token 값을 가져와 사용할 수 있습니다.  
+필수 사항은 아니지만, 아무래도 중요한 키는 따로 보관하는 게 마음이 편해서요.
+
+![](/images/2020/03/Screenshot-from-2020-03-04-21-23-01.png)
+
+봇에 쓸 코드 입력을 완료하면, 다시 터미널을 열어서
+
+```
+node app.js
+```
+
+위 코드를 입력해주세요.
+
+앱을 중지하실 땐 Ctrl + C를 입력하시면 됩니다.
+
+![](/images/2020/03/reply.png)
+
+이제 끝났습니다!  
+봇은 여러분이 작성한 코드대로 착실히 돌아갈 겁니다.
+
+![](/images/2020/03/final.png)
+
+봇이 돌아가는 와중에도 개발자 페이지에서 이름과 프로필 사진을 변경하실 수 있습니다.
+
+## 24시간 구동하기
+
+노드 앱 실행하신 터미널 계속 켜두셔도 24시간 돌아가긴 합니다만, 전 그냥 깔끔하게 사용하기 위해 screen을 사용하겠습니다.
+
+![](/images/2020/03/Screenshot-from-2020-03-04-22-13-57.png)
+
+```
+sudo apt install -y screen
+```
+
+![](/images/2020/03/Screenshot-from-2020-03-04-22-14-18.png)
+
+설치가 끝나면 screen이란 명령어를 사용하시면 깔끔한 새 창이 뜹니다.  
+여기 입력한 코드는 터미널을 꺼도 계속 실행됩니다.
+
+Ctrl + A => D로 나갈 수 있고  
+screen -r로 다시 돌아올 수 있습니다. (screen이 한 개일 때)
+
+![](/images/2020/03/Screenshot-from-2020-03-04-22-15-34.png)
+
+상술했듯 봇이 있는 폴더로 이동하신 후 node app.js로 실행해주시면 끝납니다.

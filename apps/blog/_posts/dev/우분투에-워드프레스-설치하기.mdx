@@ -1,0 +1,189 @@
+---
+title: 우분투에 워드프레스 설치하기
+description: 설정할 때마다 조금씩 헷갈려 정리용으로 작성하는 글입니다. 우분투 18.04에서 터미널만을 이용해 작업합니다. 우분투 콘솔, SSH 등의 상황에서도 똑같이 하실 수 있습니다. 가볍게 체험만 하고 싶으시면 구글 클라우드 플랫폼 등 무료로 호스팅을 받을 수 있는 곳이 있습니다. 서버엔 apache2 대신 nginx를 사용합니다.
+date:
+  posted: 2020-04-14T11:31:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - 워드프레스
+  - Ubuntu
+coverImage: /images/2020/04/wordpress.png
+ogImage: /images/2020/04/wordpress.png
+---
+
+설정할 때마다 조금씩 헷갈려 정리용으로 작성하는 글입니다.  
+우분투 18.04에서 터미널만을 이용해 작업합니다.  
+우분투 콘솔, SSH 등의 상황에서도 똑같이 하실 수 있습니다.
+
+가볍게 체험만 하고 싶으시면 [구글 클라우드 플랫폼](https://console.cloud.google.com/compute/) 등 무료로 호스팅을 받을 수 있는 곳이 있습니다.
+
+서버엔 apache2 대신 nginx를 사용합니다.
+
+참고 : 터미널에 입력하는 것 중 한글로 적힌 건 전부 똑같이 적는 게 아니고 본인이 작성하셔야 하는 내용입니다. (eg. DB이름 => myWpDatabase, 도메인.주소 => marshallku.com)
+
+## Nginx와 Mysql 설치
+
+```
+sudo apt install nginx
+sudo apt install mysql-server
+mysql -u root -p
+CREATE DATABASE DB이름 CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+GRANT ALL ON DB이름.* TO '유저'@'localhost' IDENTIFIED BY '비밀번호';
+FLUSH PRIVILEGES;
+```
+
+당연하지만 apt install 전엔 apt update를 진행해주시는 게 좋습니다.  
+가끔 mysql -u root -p가 작동하지 않던데, 대부분 그렇듯 앞에 sudo 붙여주면 됩니다.
+
+## PHP 설치
+
+```
+sudo apt -y install software-properties-common
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt install -y php7.4-{bcmath,bz2,intl,gd,mbstring,mysql,zip,xmlrpc,xml,cli,fpm,json,opcache,curl}
+```
+
+php7.4 기준으로 작성했습니다.  
+필요 없는 모듈은 빼고 설치하셔도 됩니다.
+
+## 워드프레스 설치
+
+```
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+sudo mkdir -p /var/www/html/wordpress
+tar xf latest.tar.gz
+sudo mv /tmp/wordpress/* /var/www/html/wordpress/
+sudo chown -R www-data: /var/www/html/wordpress
+```
+
+파일을 편하게 옮기기 위해 tmp 폴더에 워드프레스를 설치했습니다.  
+워드프레스 파일을 옮길 폴더는 굳이 /var/www/html/wordpress가 아니어도 됩니다.
+
+## Let's Encrypt 인증서 발급
+
+```
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt update
+sudo apt install letsencrypt
+```
+
+Let's Encrypt를 설치할 때 지역을 입력하라고 합니다.  
+6, 엔터, 69, 엔터를 순서대로 입력하면 서울로 설정됩니다.
+
+```
+letsencrypt certonly --webroot --webroot-path=/var/www/html -d 도메인.주소
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+```
+
+마찬가지로 퍼미션 오류가 뜨면 앞에 sudo 붙이고 진행해주세요.  
+최초 발급 시 -d 도메인.주소 -d www.도메인.주소 처럼 여러 도메인의 인증서를 발급받을 수 있습니다.
+
+dhparam.pem 뒤의 숫자는 pem 파일을 몇 비트로 만들지 설정하는 옵션입니다.  
+과거엔 4096 비트로 많이들 만들었는데, 2048 비트로 제작하면 4096 비트보다 훨씬 빠르게 인증을 끝냅니다.
+
+```
+openssl speed rsa2048 rsa4096
+```
+
+위 명령어로 직접 실험해보실 수 있습니다.
+
+## Nginx 설정
+
+```
+sudo vim /etc/nginx/sites-available/도메인.주소
+```
+
+conf 파일을 수정할 차례입니다.
+
+```
+server {
+    listen 80;
+    server_name 도메인.주소 www.도메인.주소;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name 도메인.주소 www.도메인.주소;
+    root /var/www/html;
+    index index.php;
+
+    ssl_certificate "/etc/letsencrypt/live/도메인.주소/fullchain.pem";
+    ssl_certificate_key "/etc/letsencrypt/live/도메인.주소/privkey.pem";
+    ssl_dhparam "/etc/ssl/certs/dhparam.pem";
+
+    client_max_body_size 20M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ^~ /.well-known/acme-challenge/ {
+        allow all;
+        default_type "text/plain";
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location ~* \.(log|binary|pem|enc|crt|conf|cnf|sql|sh|key)$ {
+        deny all;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+    }
+
+    location ~* \.(png|jpg|jpeg|webm|gif|ico|svg|mp4|webp|ttf|eot|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    location ~* \.(js|css)$ {
+        expires 6m;
+        add_header Cache-Control "public, no-transform";
+    }
+}
+
+```
+
+기본적인 설정만 해둔 파일입니다.  
+상술한 내용 외 다양한 설정은 [nginx 홈페이지](https://www.nginx.com/resources/wiki/start/topics/examples/full/)를 참고해봐 주세요.
+
+```
+sudo ln -s /etc/nginx/sites-available/도메인.주소 /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+이제 sites-available에 있는 파일을 sites-enabled로 링크해준 뒤, nginx를 재시작하면 끝납니다.
+
+conf 파일을 업데이트하시려면
+
+```
+sudo vim /etc/nginx/sites-available/도메인.주소
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+이 과정만 거치시면 됩니다.
+
+---
+
+이제 설정한 홈페이지로 가셔서 추가적인 설정만 끝마치시면 워드프레스 설치가 끝납니다.  
+워낙 직관적이라 이 과정은 생략하도록 하겠습니다.

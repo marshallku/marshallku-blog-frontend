@@ -1,0 +1,58 @@
+---
+title: 191216 움짤 갤러리 제작일지
+description: 비디오 제어 버튼 비디오 아래에 비디오를 일시 정지 / 재생하는 버튼과 소음(消音) / 해제하는 버튼을 추가했습니다.소리 토글 버튼은 비디오에 소리가 있을 때만 나타납니다. document.querySelector(&quot;video&quot;).addEventListener(&quot;click&quot;, function() {     if (typeof this.webkitAudioDecodedByteCount !== &quot;undefined&quot;) {         if (this.webkitAudioDecodedByteCount &gt; 0) {             console.log(&quot;소리 있는 비디오임&quot;)         }     }     else if (typeof this.mozHasAudio !== &quot;undefined&quot;) {         if (this.mozHasAudio) {             console.log(&quot;소리 있는 비디오임&quot;)         }     } }) 위 코드를 사용해 비디오에 소리가 있는지 판단합니다.위 코드의 두 if 문에 걸리지 않으면 비디오에 소리가 있는지 없는지 판단할 수 없다는
+date:
+  posted: 2019-12-15T16:29:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 티스토리 스킨
+  - 제작일지
+coverImage: /images/2019/12/gifgallery-buttons.jpg
+ogImage: /images/2019/12/gifgallery-buttons.jpg
+---
+
+## 비디오 제어 버튼
+
+![](/images/2019/12/gifgallery-buttons.jpg)
+
+비디오 아래에 비디오를 일시 정지 / 재생하는 버튼과 소음(消音) / 해제하는 버튼을 추가했습니다.  
+소리 토글 버튼은 비디오에 소리가 있을 때만 나타납니다.
+
+```
+document.querySelector("video").addEventListener("click", function() {
+    if (typeof this.webkitAudioDecodedByteCount !== "undefined") {
+        if (this.webkitAudioDecodedByteCount > 0) {
+            console.log("소리 있는 비디오임")
+        }
+    }
+    else if (typeof this.mozHasAudio !== "undefined") {
+        if (this.mozHasAudio) {
+            console.log("소리 있는 비디오임")
+        }
+    }
+})
+
+```
+
+위 코드를 사용해 비디오에 소리가 있는지 판단합니다.  
+위 코드의 두 if 문에 걸리지 않으면 비디오에 소리가 있는지 없는지 판단할 수 없다는 뜻이니 어지간하면 else if 아래에 else를 추가해 소리가 있다고 판단하는 게 낫지 싶습니다.
+
+## 편한 복사
+
+![](/images/2019/12/gifgallery-copy.jpg)
+
+인덱스 페이지에서도 링크를 복사할 수 있습니다.  
+웹에 첨부하는 게 목적이니 비디오 링크가 복사되도록 해뒀습니다.
+
+## 기타
+
+\- 드로워에 카테고리 목록 추가  
+\- 드로워를 열면 배경이 어두워지도록 수정  
+\- 로고에 hover 애니메이션 추가
+
+## 오류 수정
+
+\- 인덱스 페이지에 글이 꽉 차게 표시되지 않던 오류 수정  
+\- 인덱스 페이지에서 간헐적으로 글이 겹치던 오류 수정  
+\- 드로워의 검색창이 작동하지 않던 오류 수정  
+\- infinite scroll이 한 번에 마지막 페이지까지 불러오는 오류 수정

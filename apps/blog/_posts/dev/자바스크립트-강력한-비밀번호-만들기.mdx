@@ -1,0 +1,130 @@
+---
+title: \[자바스크립트\] 강력한 비밀번호 만들기
+description: 깃허브비밀번호 제작 페이지 무작위로 나열된 문자열을 제작하는 스크립트입니다.비밀번호나, 쿠폰 코드 등에 사용하실 수 있습니다. 전 주로 스킨 다운로드용 쿠폰을 발급할 때 사용합니다. 예전 블로그에 올린 스크립트에 이것저것 업데이트해봤습니다.
+date:
+  posted: 2020-01-15T09:09:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2020/01/password-generator.png
+ogImage: /images/2020/01/password-generator.png
+---
+
+[깃허브](https://github.com/marshallku/Strong-Password-Generator)  
+[비밀번호 제작 페이지](https://marshallku.github.io/Strong-Password-Generator/)
+
+![](/images/2020/01/password-generator.png)
+
+무작위로 나열된 문자열을 제작하는 스크립트입니다.  
+비밀번호나, 쿠폰 코드 등에 사용하실 수 있습니다.
+
+전 주로 스킨 다운로드용 쿠폰을 발급할 때 사용합니다.
+
+예전 블로그에 올린 스크립트에 이것저것 업데이트해봤습니다.
+
+```
+let setting = {
+    "number": true,
+    "symbol": false,
+    "capital": true,
+    "small": true,
+    "removeSimilar": false,
+    "autoCopy": true,
+    "length": 20
+};
+const pwoutput = document.getElementById("password");
+let chars;
+
+function init() {
+    const storage = localStorage.getItem("pw-setting");
+
+    storage && (
+        setting = JSON.parse(storage)
+    ),
+
+    [...document.querySelectorAll("input[type=checkbox]")].forEach(input => {
+        input.checked = setting[input.id]
+    }),
+
+    document.getElementById("pwlength").value = setting.length,
+
+    updateChars()
+}
+
+function createChars() {
+    let tmp = "";
+
+    if (setting.number) {
+        tmp = tmp + "0123456789"
+    }
+    if (setting.symbol) {
+        tmp = tmp + "!@#$%^&*()-_=+"
+    }
+    if (setting.capital) {
+        tmp = tmp + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+    if (setting.small) {
+        tmp = tmp + "abcdefghijklmnopqrstuvwxyz"
+    }
+    if (setting.removeSimilar) {
+        tmp = tmp.replace(/01|i|I|O/g, "")
+    }
+
+    return tmp;
+}
+
+function updateChars() {
+    chars = createChars()
+}
+
+function saveSetting() {
+    localStorage.setItem("pw-setting", JSON.stringify(setting))
+}
+
+init(),
+
+document.getElementById("psbtn").addEventListener("click", () => {
+    const length = chars.length;
+    let password = "",
+        tmp;
+
+    for (let i = 0; i < setting.length; i++) {
+        const random = Math.floor(Math.random() * length);
+        tmp = chars.charAt(random);
+        password = password + tmp
+    }
+
+    pwoutput.innerText = password;
+
+    if (setting.autoCopy) {
+        const select = document.createRange()
+        select.selectNode(pwoutput),
+        window.getSelection().removeAllRanges(),
+        window.getSelection().addRange(select),
+        document.execCommand("copy");
+    }
+}),
+
+[...document.querySelectorAll(".settings")].forEach(a => {
+    a.addEventListener("click", () => {
+        const target = a.querySelector("input");
+
+        setting[target.id] = target.checked,
+        saveSetting(),
+        updateChars()
+    })
+}),
+
+document.getElementById("pwlength").addEventListener("change", function() {
+    setting.length = this.value,
+    saveSetting()
+});
+
+```
+
+예전엔 비밀번호 생성 버튼을 클릭하면 모든 설정 정보를 확인해 비밀번호에 쓸 문자열을 생성하고 비밀번호를 제작하는 과정을 계속 반복했습니다만, 이젠 비밀번호 생성 버튼은 비밀번호의 생성에만 관여합니다.
+
+설정 정보를 변경하면, 변경된 정보를 저장하고, 비밀번호에 쓸 문자열을 업데이트합니다.  
+ex) Number 체크 해제 시 setting의 Number를 false로 바꾸고 저장 후 문자열에서 0123456789를 제거함.
+
+비밀번호 생성 버튼을 클릭하면 이미 생성돼있던 문자열에 접근 후 무작위로 문자를 가져와 비밀번호를 생성합니다.

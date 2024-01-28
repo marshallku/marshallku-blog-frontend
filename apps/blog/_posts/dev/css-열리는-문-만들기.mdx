@@ -1,0 +1,87 @@
+---
+title: \[CSS\] 열리는 문 만들기
+description: CSS로 여닫을 수 있는 문 만들기
+date:
+  posted: 2019-08-06T14:22:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - CSS
+coverImage: /images/2019/08/css-door.jpg
+ogImage: /images/2019/08/css-door.jpg
+---
+
+문을 두드려보세요! (닫으실 때도 문을 누르셔야 닫힙니다.)
+
+---
+
+[깃허브](https://github.com/marshallku/css-3d-door)
+
+갤러리 정리하다 Knock Knock 티저 보고 생각나 급하게 만들어본 문입니다. ㅋㅋㅋ
+
+문은 3d로 만들어보려다 데스크탑에선 딱 맞췄는데 화면이 작아지니까 입체로 만들려고 덧댄 부분들이 뒤틀리더라고요 ㅠㅠ 이건 시간 내서 제대로 해봐야 하지 않을까 싶습니다.
+
+[Knock Knock 티저 비디오](https://youtu.be/EnS%5FgPnx70o)에서 문 두드리는 소리를 가져왔고, 문도 티저 이미지에서 ?만 잘라내서 사용했습니다.
+
+## CSS
+
+```
+body.doorOpened #door {
+    transform: perspective(100vw) rotateY(-80deg)
+}
+
+```
+
+문을 여는데 제일 중요한 CSS만 가져왔습니다.
+
+글 적기 편하려고 transform perspective를 썼는데, 굳이 이렇게 하지 않으시고 부모 요소에 perspective를 주셔도 됩니다.
+
+```
+#doorWrap {
+    position: absolute;
+    bottom: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    z-index: 5;
+    clip: rect(-5vh, auto, 100vh, auto);
+    perspective: 100vw
+}
+
+```
+
+#door 부모 요소에 적용된 CSS입니다.  
+#door을 transform: rotateY(-80deg)만 주시고 perspective를 이렇게 주셔도 됩니다.
+
+clip 부분은 문 여는 거랑은 관련 없고, 문 열면 채영 이미지 나오도록 하는 것 때문에 넣었는데,
+
+![](/images/2019/08/css-door-채영.jpg)
+
+문이 닫혀있을 땐 채영 이미지가 초록색 상자 부근에 있다가 현재 보이는 위치까지 오는데, 문이 닫혀있을 때, 문 밖에 보이면 안 되니 숨겨야 하는데, overflow: hidden을 써버리면 파란 동그라미 부분 (문이 열리며 밖으로 튀어나온 부분)도 같이 숨어버려서 clip을 이용해 잘랐습니다.
+
+## Javascript
+
+```
+const body = document.body;
+let tmp;
+window.onload = function () {
+    document.getElementById("door").addEventListener("click", function () {
+        (body.classList.contains("doorOpened") && tmp !== 1)
+        ? (
+            document.body.classList.remove("doorOpened")
+        )
+        : (
+            tmp = 1,
+            document.getElementById("knockknock").play(),
+            setTimeout(function () {
+                tmp = 0,
+                    document.body.classList.add("doorOpened")
+            }, 3000)
+        )
+    })
+}
+
+```
+
+문 두드리는 소리만 아니었다면 굳이 JS를 쓸 필요가 없었을 텐데, 오디오를 재생하면서 JS를 안 쓸 방법은 딱히 떠오르질 않더라고요.
+
+3초짜리 오디오라 문 두드리면 오디오 재생되고, 3초 후에 문 열리도록 해뒀습니다.

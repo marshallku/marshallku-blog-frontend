@@ -1,0 +1,54 @@
+---
+title: Online Syntax Highlighter 만들어보기
+description: 앞서 작성했던 VSCode를 Syntax Hihglighter로 쓰는 방법에서 cog25 님이 shiki라는 Syntax Highlighter를 추천해주셔서, 이를 이용해 온라인 구문 강조기를 제작해봤습니다. 이제 VSCode 없는 환경에서도 codeblock을 만들 수 있습니다!오타 찾거나 하면 굳이 랩탑이나 데스크탑 켤 것 없이 모바일에서도 간단하게 수정할 수 있겠네요. GithubLive Demo 하이라이팅 된 결과물을 렌더링하는 요소와 textarea를 폰트 등에 관한 옵션은 모두 똑같게 주고,
+date:
+  posted: 2021-09-10T14:10:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - TypeScript
+  - Syntax Highlight
+  - 제작일지
+coverImage: /images/2021/09/syntax-highlighter.png
+ogImage: /images/2021/09/syntax-highlighter.png
+---
+
+앞서 작성했던 [VSCode를 Syntax Hihglighter로 쓰는 방법](https://marshallku.com/web/tips/vscode를-syntax-hihglighter로-쓰는-방법)에서 [cog25](https://github.com/cog25) 님이 [shiki](https://github.com/shikijs/shiki)라는 Syntax Highlighter를 추천해주셔서, 이를 이용해 온라인 구문 강조기를 제작해봤습니다.
+
+이제 VSCode 없는 환경에서도 codeblock을 만들 수 있습니다!  
+오타 찾거나 하면 굳이 랩탑이나 데스크탑 켤 것 없이 모바일에서도 간단하게 수정할 수 있겠네요.
+
+![syntax highlighter](/images/2021/09/syntax-highlighter.png)
+
+[Github](https://github.com/marshallku/syntax-highlighter)  
+[Live Demo](https://marshallku.github.io/syntax-highlighter/)
+
+![textarea](/images/2021/09/textarea.png)
+
+하이라이팅 된 결과물을 렌더링하는 요소와 `textarea`를 폰트 등에 관한 옵션은 모두 똑같게 주고, `textarea`의 폰트 색상만 `-webkit-text-fill-color`으로 투명하게 만들어주면, 위 스크린샷처럼 텍스트 에디터 같은 느낌을 간단하게 줄 수 있습니다.  
+간단하게 짧은 코드를 작성하는 게 주된 목적이니 이 정도면 충분하지 않을까 싶네요.
+
+또 브라우저에선 Tab을 누르면 다음 요소로 포커스(focus)가 넘어가는 게 기본 동작이니
+
+```
+if (code === "Tab") {
+    event.preventDefault();
+
+    const currentStartPosition = textarea.selectionStart;
+    const currentEndPosition = textarea.selectionEnd;
+    const currentValue = textarea.value;
+
+    textarea.value = `${currentValue.slice(
+        0,
+        currentStartPosition
+    )}  ${currentValue.slice(currentStartPosition)}`;
+    textarea.selectionEnd = currentEndPosition + 2;
+    highlightSyntax();
+}
+
+```
+
+기본 동작을 막고 공백 두 칸만 커서 위치에 추가하게 해뒀습니다.
+
+하나 안타까운 건 실행취소가 안 된다는 겁니다...
+
+Syntax Highlighter에 별다른 기능이 필요하진 않으니, 이제 테마 선택 정도만 추가하면 끝이지 않나 싶습니다.

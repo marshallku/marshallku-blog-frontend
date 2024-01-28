@@ -1,0 +1,100 @@
+---
+title: Canvas로 Dynamic Gradient 만들기
+description: Javascript를 이용해 HTML Canvas에 Dynamic Gradient를 그려 이미지로 출력하는
+date:
+  posted: 2021-10-18T11:05:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - canvas
+  - TypeScript
+coverImage: /images/2021/10/dynamic-gradient.png
+ogImage: /images/2021/10/dynamic-gradient.png
+---
+
+특성 이미지를 항상 설정하는 편이긴 하지만, 혹시 특성 이미지가 없을 때 유용하게 사용할 수 있지 않을까 싶어 만들어본 기능입니다.  
+위 데모를 클릭하시면 매번 새 이미지가 생성되는 걸 확인하실 수 있습니다.
+
+```
+function generateDynamicGradient(width: number, height: number): string {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context) return "";
+    // code from https://stackoverflow.com/questions/1484506/random-color-generator#comment6801353_5365036
+    const colors = [...new Array(3)].map(
+        () => `#${((Math.random() * 0xffffff) << 0).toString(16)}`
+    );
+    const randomNumber = (max: number = 1, min: number = 0) =>
+        Math.floor(Math.random() * (max - min)) + min;
+    const circleCount = (width * height) / 2000;
+    const maxRadius = width / 6;
+    const minRadius = randomNumber(maxRadius * 0.9, 20);
+    const drawCircle = (n: number) => {
+        context.beginPath();
+        context.arc(
+            randomNumber(width),
+            randomNumber(height),
+            randomNumber(maxRadius, minRadius),
+            0,
+            Math.PI * 2,
+            false
+        );
+        context.fillStyle = colors[n % 3];
+        context.fill();
+    };
+
+    // Initialize canvas
+    canvas.width = width;
+    canvas.height = height;
+    context.fillStyle = colors[0];
+    context.fillRect(0, 0, width, height);
+
+    // Filter
+    context.filter = "blur(50px) saturate(1.5)";
+
+    // Add circles
+    for (let i = 0; i < circleCount; i++) {
+        drawCircle(i);
+    }
+
+    return canvas.toDataURL();
+}
+
+```
+
+Typescript 코드입니다. 별도의 컴파일러가 없으시다면 [TypeScript playground](https://typescript-play.js.org/)에 위 코드를 입력하시면 Javascript 코드로 변환해줍니다.
+
+canvas에 무작위 색상, 크기, 위치를 갖는 원들을 그리고 블러 처리해 그래디언트처럼 보이게 했습니다.
+
+당연히 제대로 만든 Dynamic Gradient보다 많이 부족하지만, 대충 보고 넘어가는 영역에 추가하면 적당한 시각적 재미를 주는 역할은 충분히 해냅니다.  
+색상을 전부 무작위로 설정하지 말고, 비슷한 계열의 색상을 몇 개 골라두고 그중에서 무작위로 몇 개 뽑아오는 방식으로 제작하면 훨씬 예쁜 그래디언트를 만들 수 있지 않을까 합니다.
+
+---
+
+```
+const randomColor = () => `#${((Math.random() * 0xffffff) << 0).toString(16)}`;
+
+```
+
+코드 중간에 있는 꽤 쓸만한 무작위 색상 출력을 위한 한 줄짜리 코드입니다. ([출처 확인](https://stackoverflow.com/questions/1484506/random-color-generator#comment6801353%5F5365036))
+
+```
+const randomRGB = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+const randomHSL = () => `hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`;
+
+```
+
+RGB나 HSL을 쓰면 시프트 연산자도 쓸 필요 없고 어떻게 동작할지 확실히 보이긴 하지만, 개인적으로 Hex로 색상을 표현하는 걸 좋아해서 위 코드를 가져왔습니다.  
+단순히 제 취향이니 다른 아무 코드로 대체하셔도 상관은 없습니다.
+
+---
+
+```
+const img = document.createElement("img");
+
+img.src = generateDynamicGradient(window.innerWidth, window.innerHeight);
+
+document.getElementById("app").append(img);
+
+```
+
+data URI를 반환하게 해뒀으니, 이미지를 생성하고 src에 입력만 해주면 끝입니다.

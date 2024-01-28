@@ -1,0 +1,456 @@
+---
+title: 브라우저에서 GIF / MP4 변환하기
+description: GithubLive Demo 웹 어셈블리를 통해 브라우저에서 Javascript뿐 아니라 C, C++ 등의 언어로 작성된 프로그램도 돌릴 수 있는 시대가 도래한 지도 꽤 되었습니다.고로, 서버에 파일 업로드 =&gt; 파일 변환 =&gt; 변환된 파일 다운로드라는 번거로운 과정을 거쳤던 파일 변환을 FFmpeg을 통해 클라이언트 혼자서 해낼 수 있게 되었습니다. 앱 생성 snowpack으로 typescript를 이용한 react 앱 템플릿을 생성해줍니다. 물론
+date:
+  posted: 2020-11-20T16:13:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - ReactJS
+  - TypeScript
+  - FFmpeg
+  - WebAssembly
+  - gif
+  - mp4
+coverImage: /images/2020/11/gif-mp4-converter.jpg
+ogImage: /images/2020/11/gif-mp4-converter.jpg
+---
+
+[Github](https://github.com/marshallku/gifconverter)  
+[Live Demo](https://marshallku.com/gifconverter/)
+
+---
+
+웹 어셈블리를 통해 브라우저에서 Javascript뿐 아니라 C, C++ 등의 언어로 작성된 프로그램도 돌릴 수 있는 시대가 도래한 지도 꽤 되었습니다.  
+고로, 서버에 파일 업로드 => 파일 변환 => 변환된 파일 다운로드라는 번거로운 과정을 거쳤던 파일 변환을 FFmpeg을 통해 클라이언트 혼자서 해낼 수 있게 되었습니다.
+
+## 앱 생성
+
+```
+npx create-snowpack-app gifconverter --template @snowpack/app-template-react-typescript
+```
+
+snowpack으로 typescript를 이용한 react 앱 템플릿을 생성해줍니다.
+
+물론 굳이 snowpack, react, typescript를 사용하셔야 하는 건 아닙니다.
+
+```
+npm i @ffmpeg/ffmpeg @ffmpeg/core
+```
+
+그다음, 이 앱의 핵심인 ffmpeg를 설치해줍니다.
+
+```
+npm start
+```
+
+위 커맨드를 입력하시면 snowpack 기준 8080번 포트에서 앱이 실행됩니다.
+
+## FFmpeg 초기 설정
+
+```
+import React, { useState, useEffect } from "react";
+import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
+import "./App.css";
+
+const ffmpeg: FFmpeg = createFFmpeg({ log: true });
+
+function App() {
+    const loadable = !!window.SharedArrayBuffer;
+    const [ready, setReady] = useState<boolean>(false);
+
+    const load = async () => {
+        await ffmpeg.load();
+        setReady(true);
+    };
+
+    useEffect(() => {
+        load();
+    }, []);
+
+    return (
+        <>
+            {ready ? (
+                <></>
+            ) : loadable ? (
+                <div>Loading FFmpeg</div>
+            ) : (
+                <div>지원되지 않는 브라우저입니다.</div>
+            )}
+        </>
+    );
+}
+
+export default App;
+
+```
+
+`App.tsx`의 보일러 플레이트를 제거하고, FFmpeg를 비동기적으로 불러오게 업데이트했습니다.
+
+FFmpeg를 사용하려면 브라우저에서 `window.SharedArrayBuffer`([MDN 참고](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global%5FObjects/SharedArrayBuffer))를 이용할 수 있어야 합니다만, 애석하게도 제대로 지원하는 브라우저가 많지 않아 대부분 브라우저에서 지원되지 않는다는 메시지가 보일 겁니다.
+
+## 파일 업로드
+
+```
+const [input, setInput] = useState<{
+    file: File;
+    type: string;
+}>();
+
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+
+    if (files !== null && files[0]) {
+        const file = files[0];
+        const { type } = file;
+
+        if (type === "image/gif" || type === "video/mp4") {
+            setInput({
+                file,
+                type,
+            });
+        }
+    }
+};
+
+```
+
+업로드한 파일이 gif인지, mp4인지 알아야 하기에 file과 type을 저장하는 state를 추가했습니다.
+
+`input[type="file"]`의 변화를 감지해 상태를 업데이트할 거라, `input[type="file"]`의 변화를 `setInput`을 통해 `input`에 저장하는 함수도 만들었습니다.  
+만약 서버에서 돌아가는 스크립트였다면 파일을 훨씬 까다롭게 검사했겠지만, 파일을 업로드한 사용자의 메모리에 올라갈 파일이라 파일 유형만 검사해 gif나 mp4 파일이면 저장하도록 했습니다.
+
+```
+<input type="file" onChange={handleChange} />
+```
+
+이제 `ready`가 `true`일 때 `input[type="file"]`을 렌더링하도록 `App`의 return 값을 수정해주면 됩니다.
+
+## 파일 변환
+
+```
+const [output, setOutput] = useState<string>("");
+
+const convertFile = async () => {
+    if (input === undefined) return;
+    const { file, type } = input;
+
+    if (type === "image/gif") {
+        // convert gif to mp4
+
+        ffmpeg.FS("writeFile", "input.gif", await fetchFile(file));
+        await ffmpeg.run(
+            "-f",
+            "gif",
+            "-i",
+            "input.gif",
+            "-movflags",
+            "+faststart",
+            "-pix_fmt",
+            "yuv420p",
+            "-vf",
+            "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+            "output.mp4"
+        );
+
+        const data = ffmpeg.FS("readFile", "output.mp4");
+
+        const url = URL.createObjectURL(
+            new Blob([data.buffer], { type: "video/mp4" })
+        );
+
+        setOutput(url);
+    } else {
+        // convert mp4 to gif
+
+        ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
+        await ffmpeg.run(
+            "-f",
+            "mp4",
+            "-i",
+            "input.mp4",
+            "-t",
+            "10",
+            "-loop",
+            "0",
+            "-filter_complex",
+            "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse",
+            "output.gif"
+        );
+
+        const data = ffmpeg.FS("readFile", "output.gif");
+
+        const url = URL.createObjectURL(
+            new Blob([data.buffer], { type: "image/gif" })
+        );
+
+        setOutput(url);
+    }
+};
+
+
+useEffect(() => {
+    convertFile();
+}, [input]);
+
+```
+
+변환된 파일을 저장할 `output`도 만들어주고, `useEffect`를 통해 `input`에 변화가 있을 때마다 파일 변환을 진행하도록 했습니다.
+
+`ffmpeg.FS`를 통해 메모리에 파일을 읽고 씁니다(`window.SharedArrayBuffer`가 필요했던 이유입니다).
+
+`ffmpeg.run`에는 보시다시피 FFmpeg 커맨드를 옵션 하나하나씩 적어주시면 됩니다. 커맨드는 `ffmpeg gif to mp4`등의 키워드로 검색하시면 여기저기 많이 돌아다닙니다. [FFmpeg의 문서](https://ffmpeg.org/ffmpeg.html)와 구글링으로 본인의 커맨드를 완성해가시길 바랍니다.
+
+참고로 mp4를 gif로 변환하는 부분에 들어간 `-t 숫자`는 gif의 시간제한입니다.  
+gif는 나이가 나이다 보니 최적화가 많이 안 좋아 시간제한을 늘리면 메모리가 터져나가 Aw, snap!이 반겨줄지도 몰라 10초로 제한시간을 걸어뒀습니다.
+
+![Aw, snap!](/images/2020/11/Aw-snap.png)
+
+앱 제작하면서도 자주 볼 화면
+
+```
+return (
+    <>
+        {ready ? (
+            <>
+                <input type="file" onChange={handleChange} />
+
+                {input && output && (
+                    <div>
+                        {input.type === "image/gif" ? (
+                            <video
+                                src={output}
+                                autoPlay
+                                muted
+                                playsInline
+                                loop
+                            ></video>
+                        ) : (
+                            <img src={output} />
+                        )}
+                    </div>
+                )}
+            </>
+        ) : loadable ? (
+            <div>Loading FFmpeg</div>
+        ) : (
+            <div>지원되지 않는 브라우저입니다.</div>
+        )}
+    </>
+);
+
+```
+
+파일 변환이 완료되면 output 파일이 출력되게 했습니다.
+
+## 지금까지 작성된 코드
+
+```
+import React, { useState, useEffect } from "react";
+import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
+import "./App.css";
+
+const ffmpeg: FFmpeg = createFFmpeg({ log: true });
+
+function App() {
+    const loadable = !!window.SharedArrayBuffer;
+    const [ready, setReady] = useState<boolean>(false);
+    const [input, setInput] = useState<{
+        file: File;
+        type: string;
+    }>();
+    const [output, setOutput] = useState<string>("");
+
+    const load = async () => {
+        await ffmpeg.load();
+        setReady(true);
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { files } = event.target;
+
+        if (files !== null && files[0]) {
+            const file = files[0];
+            const { type } = file;
+
+            if (type === "image/gif" || type === "video/mp4") {
+                setInput({
+                    file,
+                    type,
+                });
+            }
+        }
+    };
+
+    const convertFile = async () => {
+        if (input === undefined) return;
+        const { file, type } = input;
+
+        if (type === "image/gif") {
+            // convert gif to mp4
+
+            ffmpeg.FS("writeFile", "input.gif", await fetchFile(file));
+            await ffmpeg.run(
+                "-f",
+                "gif",
+                "-i",
+                "input.gif",
+                "-movflags",
+                "+faststart",
+                "-pix_fmt",
+                "yuv420p",
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                "output.mp4"
+            );
+
+            const data = ffmpeg.FS("readFile", "output.mp4");
+
+            const url = URL.createObjectURL(
+                new Blob([data.buffer], { type: "video/mp4" })
+            );
+
+            setOutput(url);
+        } else {
+            // convert mp4 to gif
+
+            ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
+            await ffmpeg.run(
+                "-f",
+                "mp4",
+                "-i",
+                "input.mp4",
+                "-t",
+                "10",
+                "-loop",
+                "0",
+                "-filter_complex",
+                "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse",
+                "output.gif"
+            );
+
+            const data = ffmpeg.FS("readFile", "output.gif");
+
+            const url = URL.createObjectURL(
+                new Blob([data.buffer], { type: "image/gif" })
+            );
+
+            setOutput(url);
+        }
+    };
+
+    useEffect(() => {
+        load();
+    }, []);
+
+    useEffect(() => {
+        convertFile();
+    }, [input]);
+
+    return (
+        <>
+            {ready ? (
+                <>
+                    <input type="file" onChange={handleChange} />
+
+                    {input && output && (
+                        <div>
+                            {input.type === "image/gif" ? (
+                                <video
+                                    src={output}
+                                    autoPlay
+                                    muted
+                                    playsInline
+                                    loop
+                                ></video>
+                            ) : (
+                                <img src={output} />
+                            )}
+                        </div>
+                    )}
+                </>
+            ) : loadable ? (
+                <div>Loading FFmpeg</div>
+            ) : (
+                <div>지원되지 않는 브라우저입니다.</div>
+            )}
+        </>
+    );
+}
+
+export default App;
+
+```
+
+여기까지만 하셔도 기본적인 파일 변환은 끝났습니다.
+
+드래그 & 드랍 업로드, 상황에 맞는 화면(결과 화면 / 업로드 화면 등) 표시, 다운로드 버튼 및 초기화 버튼 추가, 올바르지 않은 파일 알림 등은 [Github](https://github.com/marshallku/gifconverter)을 참고해주세요.
+
+## 보너스 : 진행상태 표시하기
+
+```
+const ffmpeg: FFmpeg = createFFmpeg({ log: true, progress: progressRatio });
+
+function progressRatio(status: { ratio: number }) {
+    console.log(status.ratio);
+}
+
+```
+
+createFFmpeg에 progress란 옵션을 추가하면 FFmpeg의 진행 과정을 0에서 1 사이 값으로 넘겨줍니다.
+
+모양이 이렇다 보니 컴포넌트 밖에서 컴포넌트의 상태를 업데이트해줘야 해서 어떻게 할지 고민을 많이 했습니다.
+
+```
+import React from "react";
+
+declare global {
+    interface Window {
+        displayProgress: React.Component;
+    }
+}
+
+interface DisplayProgressProps {}
+
+export default class DisplayProgress extends React.Component<
+    DisplayProgressProps,
+    { ratio: number }
+> {
+    constructor(props: DisplayProgressProps) {
+        super(props);
+        window.displayProgress = this;
+        this.state = {
+            ratio: 0,
+        };
+    }
+
+    render() {
+        const { ratio } = this.state;
+
+        return (
+            <div className="progress">
+                <div>{Math.round(ratio * 100)} %</div>
+            </div>
+        );
+    }
+}
+
+```
+
+`DisplayProgress.tsx`를 따로 생성했습니다.
+
+`DisplayProgress`란 컴포넌트를 만들고 `window.displayProgress`에 이를 할당해줬습니다.
+
+```
+function progressRatio(status: { ratio: number }) {
+    window.displayProgress.setState({
+        ratio: status.ratio,
+    });
+}
+
+```
+
+이제 `App.tsx`의 `progressRatio`에서 `window.displayProgress`의 state를 업데이트해주면 됩니다.
+
+## Reference
+
+[WASM + React... Easily build video editing software with JS & FFmpeg](https://www.youtube.com/watch?v=-OTc0Ki7Sv0)

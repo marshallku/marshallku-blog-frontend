@@ -1,0 +1,75 @@
+---
+title: \[자바스크립트\] 스와이프 방향 알아내기
+description: 제 블로그에서 드로워를 열거나, 홈 화면 슬라이더를 넘길 때 사용 중인 스와이프 감지 스크립트입니다. 굉장히 단순한 구조지만, 간단한 사용엔 크게 무리가 없습니다.
+date:
+  posted: 2019-10-25T15:43:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/10/swipe-event.png
+ogImage: /images/2019/10/swipe-event.png
+---
+
+제 블로그에서 드로워를 열거나, 홈 화면 슬라이더를 넘길 때 사용 중인 스와이프 감지 스크립트입니다.
+
+굉장히 단순한 구조지만, 간단한 사용엔 크게 무리가 없습니다.
+
+```
+let initialX = null,
+  initialY = null;
+
+function initTouch(e) {
+  initialX = `${e.touches ? e.touches[0].clientX : e.clientX}`;
+  initialY = `${e.touches ? e.touches[0].clientY : e.clientY}`;
+};
+
+function swipeDirection(e) {
+  if (initialX !== null && initialY !== null) {
+    const currentX = `${e.touches ? e.touches[0].clientX : e.clientX}`,
+      currentY = `${e.touches ? e.touches[0].clientY : e.clientY}`;
+
+    let diffX = initialX - currentX,
+      diffY = initialY - currentY;
+
+    Math.abs(diffX) > Math.abs(diffY)
+    ? (
+      0 < diffX
+      ? console.log("to left")
+      : console.log("to right")
+    )
+    : (
+      0 < diffY
+      ? console.log("to top")
+      : console.log("to bottom")
+    )
+
+    initialX = null;
+    initialY = null;
+  }
+}
+
+window.addEventListener("touchstart", initTouch);
+window.addEventListener("touchmove", swipeDirection);
+window.addEventListener("mousedown", (e) => {
+  initTouch(e),
+  window.addEventListener("mousemove", swipeDirection)
+});
+window.addEventListener("mouseup", () => {
+  window.removeEventListener("mousemove", swipeDirection);
+});
+
+```
+
+처음 마우스를 클릭하거나 디스플레이를 터치하면 해당 좌표를 가져오고, 마우스나 손가락을 움직이면 그 움직인 좌표와 첫 좌표의 차이를 비교해서 스와이프 방향을 구합니다.
+
+```
+window.addEventListener("mousedown", (e) => {
+  0 === e.button && (
+    initTouch(e),
+    window.addEventListener("mousemove", swipeDirection)
+  )
+});
+
+```
+
+마우스 좌클릭 시에만 이벤트가 작동하게 하시고 싶으시면 mousedown 이벤트를 위와 같이 수정하시면 됩니다.

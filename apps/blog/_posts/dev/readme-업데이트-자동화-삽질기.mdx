@@ -1,0 +1,258 @@
+---
+title: README 업데이트 자동화 삽질기
+description: 작년 말부터, 제 Github Profile에 태연과 윈터가 손을 흔들며 반겨주기 시작했습니다. 다 좋은데, 매번 똑같은 이미지만 보이는 것보단 다양한 이미지가 보이는 게 낫지 않을까 싶어, 이미지 여러 개를 저장해두고 Github actions를 활용해 매일 자정마다 README.md 파일을 업데이트해보자는 야심 찬 계획을 세웠습니다. Typescript import { readFileSync, writeFileSync } from &quot;fs&quot;; import { resolve } from &quot;path&quot;;
+date:
+  posted: 2022-02-03T12:00:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - TypeScript
+  - C++
+  - Shell Script
+  - 제작일지
+coverImage: /images/2022/02/README-자동화-삽질기.png
+ogImage: /images/2022/02/README-자동화-삽질기.png
+---
+
+![Readme 이미지](/images/2022/02/Screen-Shot-2022-02-03-at-7.01.32-PM.png)
+
+결과물
+
+작년 말부터, [제 Github Profile](https://github.com/marshallku)에 태연과 윈터가 손을 흔들며 반겨주기 시작했습니다.
+
+다 좋은데, 매번 똑같은 이미지만 보이는 것보단 다양한 이미지가 보이는 게 낫지 않을까 싶어, 이미지 여러 개를 저장해두고 Github actions를 활용해 매일 자정마다 `README.md` 파일을 업데이트해보자는 야심 찬 계획을 세웠습니다.
+
+## Typescript
+
+```
+import { readFileSync, writeFileSync } from "fs";
+import { resolve } from "path";
+
+const FILE_TO_UPDATE = resolve(__dirname, "../README.md");
+const TAENGOO_MAX = 9;
+const WINTER_MAX = 9;
+const data = readFileSync(FILE_TO_UPDATE, "utf-8")
+    .replace(
+        /images\/taengoo[0-9]+/,
+        `images/taengoo${Math.floor(Math.random() * TAENGOO_MAX) + 1}`
+    )
+    .replace(
+        /images\/winter[0-9]+/,
+        `images/winter${Math.floor(Math.random() * WINTER_MAX) + 1}`
+    );
+
+writeFileSync(FILE_TO_UPDATE, data, "utf-8");
+
+```
+
+아무래도 이런 건 Python이나 Javascript를 쓰는 게 제일 만만하니, Javascript로 짰다가 Typescript로 변경했습니다.  
+사실 굳이 Typescript를 쓸 이유도 없고, 확장자 바꾸고 의존성이랑 시작 스크립트 조금 수정한 거 말곤 한 게 없습니다만, 저장소에 `Javascript 100%`가 뜨는 걸 딱히 보고 싶지 않아 Typescript를 썼습니다.
+
+* nodejs 설치
+* npm 모듈 설치
+* `ts-node-dev`으로 스크립트 실행
+
+실행에 0.85초 정도 걸리는 스크립트 하나 실행하자고 불필요하게 많은 작업을 수행해야 합니다.  
+아무 생각도 없이 간단하게 코딩을 끝낼 수 있었고 아무튼 잘 작동은 합니다만, 아무래도 이건 아닌 것 같아 다른 방법을 모색하기 시작했습니다.
+
+## C++
+
+```
+#include <iostream>
+#include <fstream>
+#include <random>
+
+#define FILE_TO_REPLACE "README.md"
+#define FILE_TO_WRITE "README.bak.md"
+#define TAENGOO_MAX 18
+#define WINTER_MAX 23
+
+using namespace std;
+
+int main()
+{
+    random_device rd;
+    mt19937 gen(rd());
+    string filePath = FILE_TO_REPLACE;
+    string tmpPath = FILE_TO_WRITE;
+    ifstream openFile(filePath.data());
+    ofstream writeFile(tmpPath.data());
+    uniform_int_distribution<int> taeng_random(1, TAENGOO_MAX);
+    uniform_int_distribution<int> winter_random(1, WINTER_MAX);
+
+    if (!openFile || !writeFile)
+    {
+        printf("Can't open files\n");
+        return 1;
+    }
+
+    string line;
+    while (getline(openFile, line))
+    {
+        if (line.find("alt=\"탱구\"", 0) != string::npos)
+        {
+            line.reserve(256);
+            line = "<img src=\"https://marshallku.github.io/marshallku/assets/images/taengoo" + to_string(taeng_random(gen)) + ".gif\" alt=\"탱구\" height=\"150\" /><img src=\"https://marshallku.github.io/marshallku/assets/images/winter" + to_string(winter_random(gen)) + ".gif\" alt=\"윈터\" height=\"150\" />";
+        }
+
+        writeFile << line << "\n";
+    }
+
+    writeFile.close();
+    openFile.close();
+
+    remove(FILE_TO_REPLACE);
+    rename(FILE_TO_WRITE, FILE_TO_REPLACE);
+
+    return 0;
+}
+
+```
+
+마음속에 끓어 오르는 실행 속도에 대한 불만을 잠재워줄 수 있지 않을까 싶어 C++를 사용해 다시 짰습니다.  
+'README 파일 하나 수정하자고 굳이?'란 생각이 들어도 이미 늦었습니다.
+
+* g++ 설치
+* 빌드
+* 실행
+
+`String::reserve` 덕분에 실행 시간은 0.3초 대로 줄었고, 설치해야 할 것도 g++ 하나로 줄어 Ubuntu와 Git 세팅이 완료되고 작업을 수행하는 데 걸리는 시간도 10초가량에서 5초가량으로 줄었습니다.
+
+```
+while (getline(openFile, line))
+{
+    if (line.rfind("![탱구]", 0) == 0)
+    {
+        line = "![탱구](https://marshallku.github.io/marshallku/assets/images/taengoo";
+        line += to_string(taeng_random);
+        line += ".gif)![윈터](https://marshallku.github.io/marshallku/assets/images/winter";
+        line += to_string(winter_random);
+        line += ".gif)";
+        cout << line << endl;
+    }
+
+    line += "\n";
+    writeFile << line;
+}
+
+```
+
+처음 C++ 코드를 짰을 때, 제가 봐도 코드가 많이 이상해서 C++를 다루던 분께 코드 한 번만 봐달라고 요청했더니, 아니나 다를까 '고수준 언어 다루던 사람이 짠 코드 같다'는 평가를 들었습니다. '저런 식으로 짜면 Node나 Python으로 돌린 것과 실행 속도 차이도 얼마 안 나지 않냐'는 질문과 함께요.  
+제가 보기에도 위 코드 같은 건 불필요하게 reallocate가 많이 일어날 것 같아 많이 구려 보이는데, C++ 다루던 사람이 봤으면 오죽했을까 싶긴 합니다.
+
+사실 실행 속도에 관한 질문을 듣기 전엔 일단 설치할 파일이 줄어서 전체적인 실행 시간이 줄었기에 크게 신경 쓰지 않았는데, 테스트해보니 충격적이게도 실제로 코드 실행은 Node가 빨리 끝낼 때도 있었습니다.
+
+'`String::reserve`등으로 최소한의 관리는 하고, 더 나아가고 싶으면 `string` 객체 대신 `char` 배열 써서 할당해보라'는 조언을 듣고 `line.reserve(256)` 코드 한 줄 추가하니 실행 속도가 1/3로 줄었습니다.
+
+* string 같은 객체 마구잡이로 갖다 써서 막코딩 하려면 쓸데없는 고생 말고 그냥 고수준 언어 쓰자
+* C++ 같은 언어 쓰려면 메모리 관리를 확실히 하자
+
+같은 맥락 같긴 합니다만, 두 가지 교훈을 얻을 수 있었습니다.
+
+아무래도 고수준 언어만 다루다 보니, '다양한 상황에 잘 작동할 수 있는 것'을 만드는 것만 중점적으로 생각해온 것 같습니다.  
+조언해주신 분이 첨언하시길, 본인이 생각하기에 C++에서 중요한 건 메모리 관리니 데이터의 크기가 크게 늘거나 줄지 않는다면 그에 맞는 범위만 할당해주라고 하셨는데, 그 말을 듣고 돌이켜보니 실행 속도 운운하면서 C++로 짜기 시작했는데 왜 최적화는 저따위로 해뒀을까 싶었습니다.
+
+## Shell Script
+
+빠릿빠릿하게 끝나는 걸 보니 흐뭇하긴 한데, 여전히 g++를 설치해야 하는 게 마음 한구석에 걸립니다.  
+그렇다고 빌드한 파일을 올려두자니, 그건 또 그것대로 이상해 고민하던 찰나에 '쉘 스크립트'란 단어가 머리를 스쳤습니다.
+
+![vim에서 작업 중](/images/2022/02/Screenshot-from-2022-02-02-02-06-10.png)
+
+하필 랩탑을 작업실에 두고 집에 갔을 때 저런 게 머리에 스치는 바람에, 집에 있는 구형 랩탑으로 열악한 환경에서 작업했습니다.
+
+이런 상황에서도 꾸역꾸역 새벽까지 붙잡고 있었던 걸 보면, 역시 사람은 좋아하는 걸 해야 하는구나 싶기도 합니다.
+
+```
+#!/bin/bash
+taengoo_index="$(($RANDOM % 18 + 1))"
+winter_index="$(($RANDOM % 23 + 1))"
+now="$(echo $(TZ=Asia/Seoul date +"%Y/%m/%d %H:%M") | perl -pe "s/ /%20/g")"
+while IFS= read -r line
+do
+    if grep -q alt=\"탱구\" <<< $line 
+    then
+        echo $line | perl -pe "s/taengoo[0-9]+/taengoo$taengoo_index/g and s/winter[0-9]+/winter$winter_index/g"
+    elif grep -q "Last Modified" <<< $line
+    then
+        echo "![Last Modified](<https://img.shields.io/badge/Last%20Modified-$now%20(KST)-%23121212?style=flat>)"
+    else
+        echo $line
+    fi
+done < "./README.md" > "tmp.md"
+mv tmp.md ./README.md
+
+```
+
+스페이스 조금만 틀려도 뻗고, 오류 메시지도 친절하지 않아 내가 도대체 뭘 잘못한 건지 잘 모르겠는 상황에 어찌저찌 완성한 스크립트입니다.
+
+실행 시간대는 다시 0.8초 중반대로 늘었지만, 우분투에서 추가로 무언갈 설치할 필요 없이 바로 실행할 수 있기에, Github Actions에서 모든 작업을 수행하는 데 걸리는 시간은 3초가량으로 줄었습니다.
+
+매일 업데이트되고 있단 사실도 어필하고 싶어 배지를 하나 추가했는습니다. URI에서 공백 문자는 `%20`이기에, 날짜를 출력하는 부분(`%Y/%m/%d %H:%M`)에서 날짜와 시간 사이 공백에 `%20`을 출력해야 하는데, 보시다시피 `%`가 변수를 출력할 때 쓰는 문자라 그냥 쓰면 이상한 문자열을 뱉어버립니다. 심지어 역슬래쉬를 앞에 붙여줘도 일반 문자열로 인식하지 않습니다.
+
+* 출력할 때마다 `$(date +"%Y")`처럼 `date +`를 앞에 붙이기
+* 전부 출력한 뒤 공백 문자를 `%20`으로 바꾸기
+
+중 후자가 더 간단할 것 같아 후자를 택했고, 그 결과 4번 라인의 기괴한 변수가 탄생했습니다.  
+이게 맞나 싶네요…
+
+```
+#!/bin/bash
+function test() {
+    echo "First: $1"
+    echo "Second: $2"
+    echo "Third: $3"
+}
+
+test "FOO" "BAR" "BAZ"
+
+```
+
+쉘 스크립트 문법이 기괴한 부분이 비단 저기서 끝나는 게 아니라, 매개변수도 이런 해괴한 방식으로 작성하더라고요.
+
+![쉘 스크립트 실행 결과](/images/2022/02/bash.png)
+
+저만 어지럽나요?
+
+## YML
+
+```
+name: Set random image in README with Shell Script
+on:
+    schedule:
+        - cron: "0 15 * * *"
+    workflow_dispatch:
+jobs:
+    update-readme-image:
+        name: Update greeting image
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set permission
+              run: chmod +x ./scripts/random-image.sh
+            - name: Run script
+              run: ./scripts/random-image.sh
+            # Code from https://stackoverflow.com/a/58393457
+            - name: load to github
+              run: |
+                  git config --global user.name 'image-updater'
+                  git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
+                  git commit -am "Update image"
+                  git push
+
+```
+
+YML 파일은 매번 크게 바뀌지도 않았고 별다른 내용도 없긴 한데, Github Actions 얘기하면서 언급도 안 하고 넘어가면 서운해 몇 자 적어봅니다.
+
+먼저 cron에 입력하는 시간은 UTC 시간 기준이기에, KST에서 9시간을 뺀 시간(전 자정에 작동하게 하고 싶으니 24 - 9인 15)을 입력해줘야 합니다.  
+물론 제시간에 실행 안 될 때가 많긴 한데, 요즘은 예전처럼 몇 시간까지 밀리고 그런 일은 잘 없습니다.
+
+나머지는 단순히 저장소에서 파일 내용 가져오고, 작성한 코드를 실행하고, 저장소를 업데이트하는 게 끝입니다.
+
+## 아무튼 결론
+
+먼저 제가 조금만 더 통찰력이 있었어도 실행 시간 줄이자고 C++를 선택할 게 아니라, 조금 꼴 보기 싫어도 Javascript 등의 고수준 언어로 짜고 내버려두거나, 쉘 스크립트로 짰을 텐데 아직 어디에 어떤 기술을 써야 하는지 잘 모르는 것 같네요. 갈 길이 멉니다.
+
+더불어 쉘 스크립트도 조금 익숙해지면 활용할 수 있는 곳이 많겠다 싶은데, 너무 변태 같아서 익숙해질 수 있을지 모르겠네요.
+
+마지막으로 **가장 중요한 건**, 매일 Github 들어갈 때마다 새로운 태연과 윈터 움짤이 반겨주니 접속할 때마다 즐겁네요.  
+뭐하자고 이 고생 했나 싶다가도, 움짤 보면 풀리니, 그거면 된 거 아닐까요?

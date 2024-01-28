@@ -1,0 +1,110 @@
+---
+title: 블로그에 투 두 리스트 추가하기
+description: 블로그 등의 html, css가 수정 가능한 웹 사이트에 할 일 목록을 추가하는 방법입니다. 블로그에선 포스트 수정이라는 좋은 수단이 이미 존재하니, html과 css만 작업했습니다.
+date:
+  posted: 2019-07-13T16:11:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - CSS
+  - html
+coverImage: /images/2019/07/todolist.png
+ogImage: /images/2019/07/todolist.png
+---
+
+![](/images/2019/07/todolist.png)
+
+블로그 등의 html, css가 수정 가능한 웹 사이트에 할 일 목록을 추가하는 방법입니다.  
+블로그에선 포스트 수정이라는 좋은 수단이 이미 존재하니, html과 css만 작업했습니다.
+
+**HTML**
+
+```
+<div class="m_todo">
+  <h1>할 일 목록</h1>
+  <ul>
+    <li>
+      <span>장보기</span>
+      <div class="checkbox"></div>
+    </li>
+    <li done>
+      <span>호텔 델루나 시청</span>
+      <div class="checkbox"></div>
+    </li>
+  </ul>
+</div>
+
+```
+
+**CSS**
+
+```
+.m_todo {
+  margin: 0 auto;
+  background: #4DD0E1;
+  padding: 10px;
+  border-radius: 10px
+}
+
+.m_todo h1 {
+  font-size: 2rem;
+  text-align: center;
+  background: #4DD0E1;
+  padding: 10px 0 20px 0;
+  color: #fff
+}
+
+.m_todo ul {
+  padding: 20px;
+  background: #eee;
+  border-radius: 10px
+}
+
+.m_todo li {
+  display: flex;
+  justify-content: space-between;
+  line-height: 1.5rem;
+  padding: 1rem;
+  cursor: auto;
+  color: #000;
+  align-items: center
+}
+
+.m_todo .checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #000;
+  border-radius: 50%;
+  flex-shrink: 0
+}
+
+.m_todo li[done] span {
+  text-decoration: line-through
+}
+
+.m_todo li[done] .checkbox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: #000
+}
+
+.m_todo li[done] .checkbox::before {
+  content: "";
+  width: .45rem;
+  height: .7rem;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+```
+
+완성된 투 두 리스트
+
+# 할 일 목록
+
+* 장보기
+* 호텔 델루나 시청

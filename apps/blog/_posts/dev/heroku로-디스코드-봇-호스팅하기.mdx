@@ -1,0 +1,137 @@
+---
+title: Heroku로 디스코드 봇 호스팅하기
+description: Discord.js로 만든 봇을 Heroku에 호스팅하는 방법입니다.어떤 언어로 작성한 봇이건 호스팅 과정은 크게 다르지 않긴 합니다만, 세세한 부분은 다를 수 있으니 참고해주세요. 파일에 개별적인 접근이 불가능하단 치명적인 단점이 있긴 하지만, 아무래도 무료 호스팅에 많은 걸 바라긴 힘들지 싶네요.아이유 봇은 파일에 종종 개별적인 접근이 필요해 헤로쿠에 올리지 못하고 있습니다. 준비물 디스코드 계정 헤로쿠 계정 깃허브 계정 (선택)
+date:
+  posted: 2020-05-16T14:59:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - Node.js
+  - 디스코드 봇
+  - Heroku
+coverImage: /images/2020/05/Deploy.png
+ogImage: /images/2020/05/Deploy.png
+---
+
+Discord.js로 만든 봇을 Heroku에 호스팅하는 방법입니다.  
+어떤 언어로 작성한 봇이건 호스팅 과정은 크게 다르지 않긴 합니다만, 세세한 부분은 다를 수 있으니 참고해주세요.
+
+파일에 개별적인 접근이 불가능하단 치명적인 단점이 있긴 하지만, 아무래도 무료 호스팅에 많은 걸 바라긴 힘들지 싶네요.  
+아이유 봇은 파일에 종종 개별적인 접근이 필요해 헤로쿠에 올리지 못하고 있습니다.
+
+## 준비물
+
+* [디스코드](https://discordapp.com/) 계정
+* [헤로쿠](https://www.heroku.com/) 계정
+* [깃허브](https://github.com/) 계정 (선택)
+
+git을 이용하면 굳이 깃허브가 없어도 봇을 업로드할 수 있습니다.
+
+## 패키지 파일 추가
+
+```
+{
+    "name": "discord-iu-bot",
+    "version": "1.0.0",
+    "description": "iu chatbot runs with discord",
+    "main": "app.js",
+    "dependencies": {
+      "axios": "^0.19.2",
+      "discord.js": "^12.0.1",
+      "mathjs": "^6.6.4",
+      "node-fetch": "^2.6.0",
+      "ytdl-core": "^2.0.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/marshallku/Discord-IU-Bot.git"
+    },
+    "keywords": [
+      "discord",
+      "javascript",
+      "nodejs"
+    ],
+    "author": "Marshall K",
+    "bugs": {
+      "url": "https://github.com/marshallku/Discord-IU-Bot/issues"
+    },
+    "homepage": "https://github.com/marshallku/Discord-IU-Bot#readme"
+  }
+
+```
+
+봇 개발을 시작할 당시에 작업을 제대로 하셨다면 `package.json`이란 파일이 폴더에 있을 겁니다.  
+만약 없다면 반드시 만들어주세요.  
+위 파일은 아이유 봇의 `package.json` 파일입니다.
+
+크게 어려울 것 없이 해당 폴더에서 `npm init`이란 명령어만 입력하셔도 위 파일이 자동으로 생성됩니다.
+
+## 봇의 코드 수정
+
+```
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('message', msg => {
+  if (msg.content === 'ping') {
+    msg.reply('Pong!');
+  }
+});
+
+client.login(process.env.TOKEN);// 토큰 수정
+
+```
+
+토큰만 있으면 누구나 봇으로 로그인이 가능하므로, 반드시 토큰은 숨기셔야 합니다.  
+위 코드처럼 토큰을 숨기고, 헤로쿠에서 토큰을 전달해줄 수 있습니다.
+
+## Procfile 추가
+
+```
+worker: node app.js
+```
+
+봇이 있는 폴더에 `Procfile`(대소문자 주의)이란 파일을 생성하시고 `worker: 봇 시작 명령어` 형식으로 내용을 채워주세요.
+
+## 봇 업로드
+
+헤로쿠에 회원가입을 완료하셨다면 헤로쿠 대시보드로 가셔서 우측 상단의 `New > Create new app`을 선택해 앱을 만들어주세요. 이름은 아무렇게나 지으셔도 상관없습니다.
+
+![Deploy Heroku](/images/2020/05/Deploy.png)
+
+앱을 만드신 후 Deploy를 클릭하시면 Heroku Git, Github, Container Registry를 이용해 파일을 업로드하는 방법을 소개해줍니다.
+
+Github을 이용하시려면 미리 Github에 봇을 업로드해두시고, 레포지토리를 연결하면 끝납니다.  
+Heroku Git을 이용하시려면 Heroku CLI를 설치하시고, 아래에 뜨는 명령어를 침착하게 따라치시면 끝납니다.
+
+## 토큰 설정
+
+![토큰 설정](/images/2020/05/Config-Vars.png)
+
+업로드가 끝나면 `process.env.TOKEN`값을 헤로쿠에 입력해줘야 합니다.  
+상단에 있는 메뉴 중 제일 오른쪽에 Settings를 클릭하시면 Config Vars란 메뉴가 있습니다.  
+`Reveal Config Vars`를 클릭하신 후 KEY에 TOKEN을, VALUE에 봇의 토큰을 입력해주시면 됩니다.
+
+## 봇 실행
+
+![봇 실행하기](/images/2020/05/run-bot.png)
+
+상단에 있는 메뉴에서 Resources를 클릭해 npm start를 끄고, 본인의 봇 구동 명령어는 켜주세요.  
+우측의 연필 아이콘을 클릭하시면 상태를 변경할 수 있습니다.
+
+worker 메뉴가 보이지 않으시면 `Procfile`을 잘못 설정하신 겁니다.  
+파일명의 대소문자는 틀리지 않았는지, 내용은 올바르게 입력했는지 다시 한 번 확인해주세요.
+
+---
+
+모든 과정을 제대로 진행하셨다면, 24시간 실행되는 디스코드 봇을 성공적으로 만드신 겁니다!
+
+헤로쿠 무료 계정은 한 달에 1,000시간 동안 앱을 구동할 수 있습니다.  
+31일간 24시간 구동하면 744시간이니 하나의 봇을 가동하는 덴 아무런 무리가 없지만, 외에 무언가 더 하고 싶으실 땐 이 점 반드시 유념해주세요.

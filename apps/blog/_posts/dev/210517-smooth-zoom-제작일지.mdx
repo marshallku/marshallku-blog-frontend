@@ -1,0 +1,73 @@
+---
+title: 210517 Smooth Zoom 제작일지
+description: 간만의 Smooth Zoom 업데이트입니다. 아쉽게도 아직 마음에 드는 빌더는 못 찾았네요. 언제까지 수동으로 빌드해야 할지 의문입니다… 다양한 Argument // HTMLElement || HTMLElement[] Zoom(document.querySelector(&quot;.zoomable&quot;)); Zoom([     document.querySelector(&quot;.foo&quot;),     ...document.querySelectorAll(&quot;.zoomable&quot;), ]); // NodeList Zoom(document.querySelectorAll(&quot;.zoomable&quot;)); 기존엔 CSS 선택자만 문자열로 넘길 수 있었는데, 이젠 HTMLElement, HTMLElement[], NodeList 모두 넘길 수 있습니다.Method를 사용할 목적으로 만들 땐 아무것도 넘기지 않으셔도 문제가 생기지 않게도
+date:
+  posted: 2021-05-17T08:21:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - Smooth Zoom
+  - 제작일지
+coverImage: /images/2021/05/210517_Smooth-Zoom-제작일지.png
+ogImage: /images/2021/05/210517_Smooth-Zoom-제작일지.png
+---
+
+간만의 Smooth Zoom 업데이트입니다.
+
+아쉽게도 아직 마음에 드는 빌더는 못 찾았네요. 언제까지 수동으로 빌드해야 할지 의문입니다…
+
+## 다양한 Argument
+
+```
+// HTMLElement || HTMLElement[]
+Zoom(document.querySelector(".zoomable"));
+
+Zoom([
+    document.querySelector(".foo"),
+    ...document.querySelectorAll(".zoomable"),
+]);
+
+// NodeList
+Zoom(document.querySelectorAll(".zoomable"));
+
+```
+
+기존엔 CSS 선택자만 문자열로 넘길 수 있었는데, 이젠 HTMLElement, HTMLElement\[\], NodeList 모두 넘길 수 있습니다.  
+Method를 사용할 목적으로 만들 땐 아무것도 넘기지 않으셔도 문제가 생기지 않게도 해뒀습니다.
+
+## Method 추가
+
+### zoom(img: HTMLImageElement) => void
+
+```
+const zoom = Zoom();
+
+zoom.zoom(document.querySelector("img"));
+
+```
+
+HTMLImage를 넘겨주면 해당 이미지를 확대합니다.
+
+### attach(target: string | HTMLElement | NodeList | HTMLElement\[\]) => void
+
+```
+const myZoom = Zoom();
+
+const addImage = (src) => {
+    const img = document.createElement("img");
+
+    img.src = src;
+    document.body.append(img);
+    myZoom.attach(img);
+};
+
+[
+    "https://i.imgur.com/aDdEIEd.jpg",
+    "https://i.imgur.com/3QAvHr2.jpg",
+    "https://i.imgur.com/uXjFAJc.gif",
+].forEach(addImage);
+
+```
+
+최초에 `Zoom`을 호출할 때와 마찬가지로 CSS 선택자(String), HTMLElement, HTMLElement\[\], NodeList를 넘겨주면 요소를 클릭했을 때 이미지가 확대되도록 합니다.
+
+동적으로 DOM을 업데이트할 일이 있을 때 이제 별도의 class를 추가하지 않아도 `attach` method를 이용하시면 간편하게 이벤트 리스너를 추가하실 수 있습니다.

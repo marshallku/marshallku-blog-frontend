@@ -1,0 +1,68 @@
+---
+title: 200405 블로그 제작일지
+description: Make Website Faster 더욱 빠른 웹사이트를 구축하는 방법을 찾아가는 중입니다. 확실히 알게 된 건, 역시 돈이 최고입니다.서버 여러 대 구축해서 할 일을 분산시키니 훨씬 빨라지네요. 캐시 서버 추가 예전에도 언급했지만, 제 서버는 HDD를 사용합니다.서버 특성상 읽기 / 쓰기가 굉장히 자주 일어나 언제 데이터가 날아갈지 몰라 HDD로 구성했는데, 물리적인 한계로 아무래도 방문자가 몰리면 몰릴수록 많이 느려집니다.
+date:
+  posted: 2020-04-05T05:23:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 워드프레스
+  - 캐시 서버
+  - 제작일지
+coverImage: /images/2020/04/desktop-speed-insights.png
+ogImage: /images/2020/04/desktop-speed-insights.png
+---
+
+> Make Website Faster
+
+더욱 빠른 웹사이트를 구축하는 방법을 찾아가는 중입니다.
+
+확실히 알게 된 건, 역시 돈이 최고입니다.  
+서버 여러 대 구축해서 할 일을 분산시키니 훨씬 빨라지네요.
+
+## 캐시 서버 추가
+
+![cdn server](/images/2020/04/cache-server.png)
+
+예전에도 언급했지만, 제 서버는 HDD를 사용합니다.  
+서버 특성상 읽기 / 쓰기가 굉장히 자주 일어나 언제 데이터가 날아갈지 몰라 HDD로 구성했는데, 물리적인 한계로 아무래도 방문자가 몰리면 몰릴수록 많이 느려집니다.
+
+그래서 js, css, 웹폰트, 배경 이미지 등을 올려두는 CDN 서버(cdn.marshallku.com)와 블로그의 이미지를 저장하는 이미지 캐시 서버(img.marshallku.com) 두 대의 서버를 증설해봤습니다.  
+CDN 서버는 그냥 제가 수동으로 파일을 추가해서 사용 중이고, 이미지 캐시 서버는 라엘 님의 [이미지 캐시 서버 구축 강좌](https://blog.lael.be/post/7605)를 참고해 제작했습니다.
+
+모조리 SSD를 사용했고, 원본 데이터는 제 서버에 보관되니 날아갈 걱정도 안 해도 됩니다.  
+각각 6개월, 1년 호스팅을 받아뒀는데, 아무래도 블로그 하나 돌리자고 서버 3 대가 돌아가는 건 좀 아니지 싶어 끝나면 연장하진 않을 것 같네요.  
+캐시 서버를 구축해봤다는데 의의를 둘 생각입니다.
+
+![speed insights desktop score](/images/2020/04/desktop-speed-insights.png)
+
+Speed Insights 데스크탑 점수
+
+![speed insights mobile score](/images/2020/04/mobile-speed-insights.png)
+
+Speed Insights 모바일 점수
+
+오랜만에 Speed Insights 점수 확인해보니 99점이 나오네요.  
+이런 점수는 난생처음 받아봅니다.
+
+## php 최적화
+
+이런저런 php 관련 팁을 찾아보며 php를 최적화하는 중입니다.  
+최적화하기 전보다 php의 동작 속도가 최소 2배 이상 빨라졌습니다.
+
+## infinite scroll 최적화
+
+![infinite scroll response](/images/2020/04/infinite-scroll-response.png)
+
+지금까진 다음 페이지를 요청했을 때, 페이지를 모두 작성해서 응답했으나, 이젠 글 목록 부분만 응답합니다.  
+서버가 할 일도 줄었고, 클라이언트에서 DOMParser가 할 일도 줄었습니다.
+
+## Lazy Load Everywhere
+
+지금까진 본문 이미지, 댓글에 첨부한 이미지 / 비디오만 Lazy Load를 해왔는데, 이젠 댓글 프로필 사진 등의 이미지에도 Lazy Load를 적용했습니다.  
+차차 뷰포트에 없는 모든 이미지에 적용할 예정입니다.
+
+## scroll indicator
+
+![scroll indicator](/images/2020/04/scroll-indicator.png)
+
+이젠 글을 읽는 도중에만 스크롤 인디케이터가 올라갑니다.

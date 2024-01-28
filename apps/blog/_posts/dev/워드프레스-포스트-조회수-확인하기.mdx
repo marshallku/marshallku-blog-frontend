@@ -1,0 +1,88 @@
+---
+title: 워드프레스 포스트 조회수 확인하기
+description: 들어가며 참고한 글 개인적으로 플러그인 사용을 선호하지 않아서, 플러그인 없이 개별 포스트에 카운터를 달 수 있게 작업했습니다. 위 글에 나온 소스를 적용하면, F5 누르면 누를 때마다 조회수가 올라가는 불상사가 벌어지기에, 그 부분만 수정했습니다. functions.php 수정 function getPostViews($postID) { $count_key = &quot;post_views_count&quot;; $count = get_post_meta($postID, $count_key, true); if ($count == &quot;&quot;) { delete_post_meta($postID, $count_key); add_post_meta($postID, $count_key,
+date:
+  posted: 2019-08-16T03:08:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - 워드프레스
+  - PHP
+coverImage: /images/2019/08/카운터-코드.png
+ogImage: /images/2019/08/카운터-코드.png
+---
+
+### 들어가며
+
+[참고한 글](http://rubelmiah.com/display-wordpress-post-view-count-without-plugin/)
+
+개인적으로 플러그인 사용을 선호하지 않아서, 플러그인 없이 개별 포스트에 카운터를 달 수 있게 작업했습니다.
+
+위 글에 나온 소스를 적용하면, F5 누르면 누를 때마다 조회수가 올라가는 불상사가 벌어지기에, 그 부분만 수정했습니다.
+
+### functions.php 수정
+
+```
+function getPostViews($postID) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+
+    if ($count == '') {
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+        return '읽음 0';
+    }
+
+    return '읽음 '.$count;
+}
+
+function setPostViews($postID) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+
+    if ($count == '') {
+        $count = 0;
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+    }
+    else {
+        if (!isset($_COOKIE['read'.$postID])) {
+            setcookie('read'.$postID, 'read', time() + 86400);
+            $count++;
+            update_post_meta($postID, $count_key, $count);
+        }
+    }
+}
+
+```
+
+setPostViews() 함수에서 쿠키를 체크하는 과정을 거쳐 카운트를 올리도록 했습니다.
+
+getPostViews()에서 읽음 이란 단어가 적힌 두 부분을 적절히 수정하시면 조회수가 표시되는 부분이 변경됩니다.
+
+### header.php 수정
+
+```
+<?php if (is_single()) {setPostViews(get_the_ID());} ?>
+```
+
+<head> 태그에 해당 내용을 집어넣으시면 됩니다.
+
+간혹 head 태그 내부에 해당 코드를 넣은 위치에 따라 쿠키를 생성 못 하기도 하던데, 계속 안 되면 title 태그 바로 아래에 붙여 넣으시면 쿠키가 생성될 겁니다.
+
+![](/images/2019/08/쿠키.png)
+
+주소 표시 줄에 url 왼쪽에 있는 자물쇠 (보안 연결을 사용하지 않는다면 i 모양 아이콘)을 클릭하시면 위와 같은 창이 뜹니다.
+
+![](/images/2019/08/쿠키2.png)
+
+Cookies 클릭하시고 도메인 > cookies 경로로 들어왔을 때 readID란 쿠키가 생성되어 있으면 제대로 작동 중인 겁니다.
+
+굳이 복잡하게 찾고 싶지 않으시면 f5 몇 번 해보시고 카운트가 계속 올라가지 않으면 제대로 작동 중인 겁니다.
+
+### 조회수 표시
+
+```
+echo getPostViews(get_the_ID());
+```
+
+single.php를 수정하셔도 되고, footer.php나 header.php에 is\_single() 태그를 사용하셔 추가하셔도 됩니다.

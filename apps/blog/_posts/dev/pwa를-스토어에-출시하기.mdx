@@ -1,0 +1,127 @@
+---
+title: PWA를 스토어에 출시하기
+description: 웹 사이트를 PWA로 업데이트하기에서 PWA가 된 웹 앱 / 웹 사이트(이하 웹 앱)를 스토어에 출시하는 간단한 방법입니다. 코드는 한 줄도 더 쓰실 필요 없습니다.Bubblewrap, PWA Builder 등의 선택지가 있으며, Bubblewrap은 커맨드 라인에서, PWA Builder는 웹에서 앱을 제작합니다. 이 글에선 조금 더 간단한 PWA Builder로 구글 플레이 스토어에 출시하는 것을 기준으로 설명하겠습니다. 완성된 앱은 제 블로그
+date:
+  posted: 2020-12-12T11:20:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - PWA
+  - Native App
+coverImage: /images/2020/12/release-pwa.png
+ogImage: /images/2020/12/release-pwa.png
+---
+
+[웹 사이트를 PWA로 업데이트하기](https://marshallku.com/web/tips/%ec%9b%b9-%ec%82%ac%ec%9d%b4%ed%8a%b8%eb%a5%bc-pwa%eb%a1%9c-%ec%97%85%eb%8d%b0%ec%9d%b4%ed%8a%b8%ed%95%98%ea%b8%b0)에서 PWA가 된 웹 앱 / 웹 사이트(이하 웹 앱)를 스토어에 출시하는 간단한 방법입니다. 코드는 한 줄도 더 쓰실 필요 없습니다.  
+[Bubblewrap](https://www.npmjs.com/package/@bubblewrap/cli), [PWA Builder](https://www.pwabuilder.com/) 등의 선택지가 있으며, Bubblewrap은 커맨드 라인에서, PWA Builder는 웹에서 앱을 제작합니다.
+
+이 글에선 조금 더 간단한 PWA Builder로 구글 플레이 스토어에 출시하는 것을 기준으로 설명하겠습니다.
+
+완성된 앱은 [제 블로그 앱](https://play.google.com/store/apps/details?id=com.marshall%5Fku.twa)에서 확인해보실 수 있습니다. 마찬가지로 PWA Builder를 통해 만든 앱입니다.  
+브라우저에서 홈 화면에 추가해 설치한 PWA와 크게 다른 경험을 제공하진 않지만, 앱을 스토어에 배포할 목적이라면 번거롭게 웹뷰를 이용하는 것보단 훨씬 간단하게 하실 수 있습니다.
+
+## 웹 앱 빌드
+
+![PWA 테스트](/images/2020/12/pwa-test.png)
+
+PWA Builder 홈페이지에서 본인의 웹 앱의 주소를 입력하면 올바른 PWA인지 검사를 진행합니다.
+
+전 글을 따라 PWA를 올바르게 제작했으면 별다른 문제 없이 "Build My PWA" 버튼이 활성화됩니다. 클릭해주세요.
+
+![PWA 앱으로 빌드](/images/2020/12/build-pwa.png)
+
+출시할 플랫폼의 카드에 있는 화살표를 클릭해주세요.
+
+![앱 다운로드](/images/2020/12/download.png)
+
+기본적으로 옵션은 Manifest 파일을 토대로 자동으로 생성됩니다. 애플리케이션 ID(com.example.app) 등을 수정하시려면 "Options"를 클릭하셔서 설정을 손보시고 "Download" 버튼을 클릭하시면 zip 파일이 내려받아 집니다.
+
+내려받은 zip 파일 내부의 `signing-key-info.txt`와 `signing.keystore`은 앱 업데이트에 필요한 키가 있으니 반드시 안전한 곳에 백업해둬 주세요.
+
+## 인증 코드 추가
+
+zip 파일 내부에 `assetlinks.json`이란 파일이 있을 겁니다.  
+웹 루트에 `.well-known`이란 폴더를 제작하시고, 그 안에 위 파일을 넣어주세요.
+
+`https://example.com/.well-known/assetlinks.json`이란 주소로 위 파일에 접근할 수 있어야 합니다.
+
+## 테스트
+
+zip 파일에 포함된 `.apk`파일을 안드로이드 기기에 설치해서 올바르게 작동하는지 테스트해주세요.  
+안드로이드 기기가 없으면 [Run apps on the Android Emulator](https://developer.android.com/studio/run/emulator)를 참고하셔서 에뮬레이터에서 실행해보시면 됩니다.
+
+플레이 스토어에 올바르게 등록되기 전까진 앱 상단에 크롬 UI가 표시됩니다. 등록 및 심사가 끝나면 사라지니 참고해주세요.
+
+## 플레이 스토어에 배포
+
+![개발자 계정 생성](/images/2020/12/create-developer-account.png)
+
+[Google Play Console](https://play.google.com/console/)로 이동하셔서, 개발자 계정이 없다면 개발자 계정을 만들어주세요. $25를 한 번만 내시면 개발자로 등록됩니다.
+
+![앱 생성](/images/2020/12/create-app.png)
+
+개발자 계정 등록이 완료됐으면, 우측 상단의 "앱 만들기(Create app)" 버튼을 클릭하셔서 정보를 채워주세요.
+
+![앱 업로드](/images/2020/12/upload-app.png)
+
+그다음 zip 파일에 포함돼있던 `.aab`(android app build) 파일을 올려주세요.
+
+![오류 해결](/images/2020/12/errors.png)
+
+앱의 구체적인 정보가 입력되지 않았다고 오류를 띄울 겁니다.  
+좌측에서 대시보드와 프로덕션을 오가시면서 침착하게 채우란 정보를 다 채우기만 하시면 됩니다.
+
+개인적으로 스크린샷도 만들어 올려야 되고 해서 제일 귀찮았던 부분이네요.
+
+## 인증 코드 업데이트
+
+![인증 키](/images/2020/12/App-Signing.png)
+
+좌측 메뉴에서 설정 > 앱 서명을 클릭하시면 위 화면이 보입니다. SHA-256 인증서 지문을 복사해주세요.
+
+```
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.marshall_ku.twa",
+            "sha256_cert_fingerprints": [
+                "1F:81:6E:AF:DB:D5:0F:4A:E3:A4:26:3B:5E:EF:1B:63:A5:A2:BD:D1:FA:86:8F:40:18:41:95:0D:67:E3:B9:65"
+            ]
+        }
+    },
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.marshall_ku.twa",
+            "sha256_cert_fingerprints": [
+                "F0:8B:6A:95:33:92:66:EE:0F:01:1F:7A:3B:43:08:01:8B:D3:3C:AD:31:70:31:65:CE:B1:5F:3F:F6:6B:A7:D4"
+            ]
+        }
+    }
+]
+
+```
+
+`assetlinks.json`을 수정하셔야 합니다. 위 예제처럼, Array 안의 오브젝트를 통째로 복사하셔서 `sha256_cert_fingerprints`만 다른 오브젝트를 하나 더 생성해주시면 됩니다.
+
+이제 인고의 시간만 가지시면 플레이 스토어에 앱이 출시되고, 크롬의 UI 없이 앱을 이용할 수 있게 됩니다.
+
+## 앱 업데이트
+
+![앱 다운로드](/images/2020/12/download.png)
+
+다시 PWA Builder로 돌아가셔서 주소를 입력, 테스트, "Build My PWA"까지 완료하셔서 위 화면까지 오신 뒤, "Options"를 클릭해주세요.
+
+![안드로이드 패키지 옵션](/images/2020/12/Android-package-options.png)
+
+`App version`과 `App version code`를 모두 수정해주세요.
+
+![키](/images/2020/12/signing-key.png)
+
+스크롤을 조금 더 내리시면 "Signing key"란 옵션이 보입니다. "Use mine"을 클릭하셔서 Key file엔 `signing.keystore` 파일을, 아래엔 `signing-key-info.txt`에 적힌 정보들을 입력해주시면 됩니다. 요구하는 것과 똑같은 이름으로 적혀있으니 헷갈릴 일은 없습니다.
+
+![프로덕션 릴리즈 생성](/images/2020/12/create-production-release.png)
+
+Google Play Console에서 앱을 선택하신 뒤, 좌측의 "프로덕션"에 새로 빌드된 `.aab` 파일을 올리시면 됩니다.

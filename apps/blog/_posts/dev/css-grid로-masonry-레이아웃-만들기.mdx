@@ -1,0 +1,114 @@
+---
+title: CSS Grid로 Masonry 레이아웃 만들기
+description: grid-template-rows:masonry란 스펙이 작년에 추가되어 이제 자바스크립트 한 줄 없이도 Masonry 레이아웃을 구현할 수 있는 시대가 오긴 했지만, 크롬 최신 버전에서도 layout.css.grid-template-masonry-value.enabled를 활성화해야 작동할 정도로 브라우저 지원율이 처참한 수준입니다. 모든 요소의 position을 absolute로 준 뒤 JS에서 위치 지정 (CSS + JS) (세로로 요소가 정렬되어도 상관없다면) Flex box 등으로 레이아웃 지정 (CSS) grid-auto-rows와 grid-row-end를 활용해 레이아웃
+date:
+  posted: 2021-03-17T06:09:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - CSS
+  - masonry
+  - layout
+coverImage: /images/2021/03/CSS-Grid로_Masonry-레이아웃-만들기.png
+ogImage: /images/2021/03/CSS-Grid로_Masonry-레이아웃-만들기.png
+---
+
+`grid-template-rows: masonry`란 스펙이 작년에 추가되어 이제 자바스크립트 한 줄 없이도 Masonry 레이아웃을 구현할 수 있는 시대가 오긴 했지만, 크롬 최신 버전에서도 `layout.css.grid-template-masonry-value.enabled`를 활성화해야 작동할 정도로 브라우저 지원율이 처참한 수준입니다.
+
+* 모든 요소의 position을 absolute로 준 뒤 JS에서 위치 지정 (CSS + JS)
+* (세로로 요소가 정렬되어도 상관없다면) Flex box 등으로 레이아웃 지정 (CSS)
+* `grid-auto-rows`와 `grid-row-end`를 활용해 레이아웃 지정 (CSS + JS)
+
+그래서 보통 위 세 가지 방법을 활용해 Masonry 레이아웃을 구현하는데, 지금까지 쭉 1번 방식을 사용하다가 이번에 3번 방식을 사용해보며 꽤 괜찮은 방식 같아 방법을 간단히 공유하고자 합니다.
+
+## 구현
+
+```
+.masonry-container {
+    --gap: 10px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--gap);
+    grid-auto-rows: 10px;
+}
+
+@media screen and (max-width: 720px) {
+    .masonry-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .masonry-container {
+        display: block;
+    }
+
+    .masonry-item {
+        margin-bottom: var(--gap);
+    }
+}
+
+```
+
+720px 초과에선 3열, 이하에선 2열, 400px 이하에선 1열로 표시되게 제작해뒀습니다.  
+`--gap`과 `grid-template-columns` 두 값을 적절히 조절하셔서 원하는 레이아웃을 제작하시면 됩니다.
+
+```
+function masonryLayout() {
+    const masonryContainerStyle = getComputedStyle(
+        document.querySelector(".masonry-container")
+    );
+    const columnGap = parseInt(
+        masonryContainerStyle.getPropertyValue("column-gap")
+    );
+    const autoRows = parseInt(
+        masonryContainerStyle.getPropertyValue("grid-auto-rows")
+    );
+
+    document.querySelectorAll(".masonry-item").forEach((elt) => {
+        elt.style.gridRowEnd = `span ${Math.ceil(
+            elt.querySelector(".pseudo-img").scrollHeight / autoRows +
+                columnGap / autoRows
+        )}`;
+    });
+}
+
+masonryLayout();
+window.addEventListener("resize", masonryLayout);
+
+```
+
+JS에선 `.masonry-item`의 `grid-row-end`값만 수정해주면 됩니다.
+
+아래에 많은 요소가 들어갈 땐 `div`하나로 감싸고 `scrollHeight` 값을 가져오는 게 편했습니다.  
+더 확실한 값을 원하시면 `getBoundingClientRect().height`을 사용하시면 됩니다.
+
+```
+function masonryLayout() {
+    document.querySelectorAll(".masonry-item").forEach((elt) => {
+        elt.style.gridRowEnd = `span ${Math.ceil(elt.querySelector(".pseudo-img").scrollHeight / 10 + 1)}`;
+    });
+}
+
+masonryLayout();
+window.addEventListener("resize", masonryLayout);
+
+```
+
+`column-gap`과 `grid-auto-rows`의 값을 하드코딩하시면 이렇게 짧게도 만드실 수 있습니다.
+
+## 결과
+
+## 장점
+
+굉장히 간편하게 구현할 수 있습니다.  
+상술한 Masonry 구현 방식 중 JS에서 위치를 지정하는 방식은 모든 요소의 높이를 저장하고, 다음 요소를 배치할 때마다 저장된 위치를 탐색해 최적의 위치를 찾아줘야 합니다만 이 방식을 이용하면 자식 요소의 높이만 감지해주면 끝납니다.
+
+모든 요소의 position이 static이란 것도 소소한 장점 중 하나입니다.
+
+## 단점
+
+row가 1,000개를 넘어가기 시작하면 grid가 제대로 작동하지 않습니다.  
+예시에선 `grid-auto-rows`를 10px로 잡았으니, `.masonry-container`의 높이가 10000px 이상이 되면 그 뒤론 제대로 작동하지 않는단 뜻입니다.
+
+Masonry는 Infinite Scroll과 동시에 쓰는 경우가 많은데, 이 방식은 상술한 이유로 Infinite Scroll과 함께 쓰긴 힘듭니다.

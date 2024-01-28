@@ -1,0 +1,36 @@
+---
+title: \[CSS\] 텍스트 꾸미기
+description: 텍스트에 배경 이미지를 삽입하여 꾸며보기
+date:
+  posted: 2019-08-03T11:56:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - CSS
+coverImage: /images/2019/08/background-clip.jpg
+ogImage: /images/2019/08/background-clip.jpg
+---
+
+TWICE
+
+  
+TWICE  
+CHAEYOUNG
+
+  
+위 예시처럼 텍스트 배경에 그래디언트를 넣거나 이미지를 넣을 때 사용합니다.
+
+```
+#element {
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+```
+
+보이는 것처럼, 꽤 간단하게 사용할 수 있습니다.
+
+\-webkit-background-clip이지만, Firefox에서도 작동합니다.
+
+텍스트를 선택하면 배경이 변경되니, 위 예시처럼 user-select: none과 함께 사용하시는 걸 추천합니다.
+
+또한, 위 예시처럼 복잡한 이미지를 배경으로 넣으면 굉장히 산만한 효과를 연출할 수 있기 때문에, 단순한 패턴이 반복되는 이미지를 사용하시는 게 제일 무난하지 싶습니다.

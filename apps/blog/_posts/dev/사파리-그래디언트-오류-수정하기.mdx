@@ -1,0 +1,45 @@
+---
+title: 사파리 그래디언트 오류 수정하기
+description: 애플의 사파리(Safari) 브라우저에서 그래디언트를 넣을 때, 다른 색은 괜찮지만, 투명(transparent)색을 그래디언트에 추가하면 그래디언트가 망가지는 오류가 있습니다. 사파리를 제외한 브라우저 대부분에선 위아래 전부 아래와 같은 색의 그래디언트가 들어가는데, 사파리는 transparent를 넣으면 검은색을 잔뜩 끼얹어버립니다. #first {     background: linear-gradient(transparent, red) } #second {     background: linear-gradient(rgba(255, 255, 255, 0), red) } 위 #second에 적용한 예시처럼 transparent 대신 색의 alpha 값을 0으로 설정한 후 그래디언트를 넣으시면 해결됩니다. #first {
+date:
+  posted: 2019-10-21T14:03:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - CSS
+  - safari
+coverImage: /images/2019/10/Safari-Gradient.jpg
+ogImage: /images/2019/10/Safari-Gradient.jpg
+---
+
+애플의 사파리(Safari) 브라우저에서 그래디언트를 넣을 때, 다른 색은 괜찮지만, 투명(transparent)색을 그래디언트에 추가하면 그래디언트가 망가지는 오류가 있습니다.
+
+![](/images/2019/10/Safari-Gradient.jpg)
+
+사파리를 제외한 브라우저 대부분에선 위아래 전부 아래와 같은 색의 그래디언트가 들어가는데, 사파리는 transparent를 넣으면 검은색을 잔뜩 끼얹어버립니다.
+
+```
+#first {
+    background: linear-gradient(transparent, red)
+}
+
+#second {
+    background: linear-gradient(rgba(255, 255, 255, 0), red)
+}
+
+```
+
+위 #second에 적용한 예시처럼 transparent 대신 색의 alpha 값을 0으로 설정한 후 그래디언트를 넣으시면 해결됩니다.
+
+```
+#first {
+    background: linear-gradient(transparent, red);
+    background: -webkit-linear-gradient(rgba(255, 255, 255, 0), red)
+}
+
+```
+
+물론 이렇게 -webkit-linear-gradient만 따로 지정해주셔도 됩니다.
+
+주의하셔야 할 점은, 색의 알파 값이 0이어도 그래디언트 중간에 해당 색이 들어가기 때문에, 배경 색과 동일한 RGB 값을 갖되, 알파 값만 0인 색을 그래디언트에 넣으셔야 합니다.
+
+찾아보니 2014년에도 있던 버근데, 아직 수정하지 않은 걸 보면 수정할 생각이 딱히 없는 게 분명합니다…

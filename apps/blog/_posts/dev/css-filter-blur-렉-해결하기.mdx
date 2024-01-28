@@ -1,0 +1,32 @@
+---
+title: CSS filter blur 렉 해결하기
+description: css의 filter blur의 렉이 생각보다 심하더라고요.평상시엔 렉이 전혀 없는데, 이미지를 불러오는 등 특정 작업을 하고 있을 땐 꽤 심하게 버벅댑니다. #element { transform: translateZ(0); will-change: transform; backface-visibility: hidden; transition: .5s } #element:hover { filter: blur(5px) } 위 코드를 사용해 어느 정도 해결했습니다. 항상 생기는 렉도 아니고, 테스트 중인 GPU도 1660TI로 그리 나쁜 제품은 또 아니라서,
+date:
+  posted: 2019-07-06T01:36:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - CSS
+coverImage: /images/2019/07/1-2.png
+ogImage: /images/2019/07/1-2.png
+---
+
+css의 filter blur의 렉이 생각보다 심하더라고요.  
+평상시엔 렉이 전혀 없는데, 이미지를 불러오는 등 특정 작업을 하고 있을 땐 꽤 심하게 버벅댑니다. 
+
+```
+#element {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  transition: .5s
+}
+
+#element:hover {
+  filter: blur(5px)
+}
+
+```
+
+위 코드를 사용해 어느 정도 해결했습니다. 
+
+항상 생기는 렉도 아니고, 테스트 중인 GPU도 1660TI로 그리 나쁜 제품은 또 아니라서, 모든 기기에서 해결되었는진 아직 테스트를 더 해봐야 하지만, 렉은 확실히 줄었습니다. 

@@ -1,0 +1,170 @@
+---
+title: \[티스토리\] 태그로 글 가져오기
+description: 위 사진처럼 같은 태그를 가진 글을 불러오는 스크립트입니다. 워드프레스에선 꽤 간단하게 되는데, 티스토리엔 그런 기능이 없어 아쉬워서 만들어봤습니다. 1. Array를 반환하는 버전 async function getPostsByTag({ tag, selector, title, date, desc, thumbnail }) { &#160; &#160; const tagArray = await Promise.all( &#160; &#160; &#160; &#160; tag.map((tagString) =&gt; &#160; &#160; &#160; &#160; &#160; &#160; getPosts({ &#160; &#160;
+date:
+  posted: 2019-09-05T10:59:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+  - Tistory
+coverImage: /images/2019/09/get-posts-by-tag.png
+ogImage: /images/2019/09/get-posts-by-tag.png
+---
+
+![](/images/2019/09/get-post-by-tag.png)
+
+위 사진처럼 같은 태그를 가진 글을 불러오는 스크립트입니다.
+
+워드프레스에선 꽤 간단하게 되는데, 티스토리엔 그런 기능이 없어 아쉬워서 만들어봤습니다.
+
+## 1\. Array를 반환하는 버전
+
+```
+async function getPostsByTag({ tag, selector, title, date, desc, thumbnail }) {
+    const tagArray = await Promise.all(
+        tag.map((tagString) =>
+            getPosts({
+                tag: tagString,
+                selector,
+                title,
+                date,
+                desc,
+                thumbnail,
+            })
+        )
+    );
+
+    if (!date || Number.isNaN(new Date(tagArray[0].date).getTime())) {
+        return tagArray;
+    }
+
+    return tagArray.sort(
+        (tag1, tag2) => new Date(tag1.date) - new Date(tag2.date)
+    );
+}
+
+async function getPosts({ tag, selector, title, date, desc, thumbnail }) {
+    const response = await fetch(`/tag/${encodeURI(tag)}`);
+    const html = await response.text();
+    const domParser = new DOMParser().parseFromString(html, "text/html");
+
+    return [...domParser.querySelectorAll(selector)].map((element) => ({
+        uri: `${element.href || element.querySelector("a").href}`,
+        title: element.querySelector(title)?.innerText,
+        date: element.querySelector(date)?.innerText,
+        desc: element.querySelector(desc)?.innerText,
+        thumbnail: element.querySelector(thumbnail)?.src,
+    }));
+}
+
+```
+
+Array를 반환하는 버전입니다.
+
+### 코드 예시
+
+```
+getPostsByTag({
+    tag: ["티스토리", "제작일지"],
+    selector: ".indexArticle",
+    title: ".tit_post",
+    date: ".date",
+    desc: ".desc",
+}).then((tags) => {
+    console.log(tags);
+});
+
+```
+
+tag 이외의 옵션에 들어가는 문자열(String)은 모두 CSS 선택자입니다.  
+어떤 것의 선택자를 넣어야 하는지만 적어뒀으니 참고해주세요.
+
+* tag(string\[\], 필수) : 포스트를 가져올 태그
+* selector(string, 필수) : 인덱스 페이지에 표시되는 아이템의 선택자
+* title(string) : 글의 제목(\[##\_article\_rep\_title\_##\])이 들어간 요소의 선택자
+* date(string) : 글의 발행 날짜(\[##\_article\_rep\_date\_##\])가 들어간 요소의 선택자, 이 요소가 없으면 여러 개의 태그를 가져왔을 때 시간순으로 정렬하지 못합니다.
+* desc(string) : 글의 내용 요약(\[##\_article\_rep\_summary\_##\])이 들어간 요소의 선택자
+* thumbnail(string): 글의 대표 이미지가 표시되는 이미지 요소의 선택자, `src`를 가져오기 때문에 `background-image` 등을 활용했다면 올바르게 가져오지 못합니다.
+
+```
+[
+    {
+        uri: "https://marshall-ku.tistory.com/172",
+        title: "티스토리 404 페이지에서 메인 화면으로 리다이렉트",
+        date: "2018. 10. 12. 13:08",
+        desc:
+            "404 페이지 확인 이 글 뒤에 이어서 작성하는 글입니다. 404 페이지를 꾸미는 방법은 …게 하는 스크립트입니다.5000을 수정하시면 리다이렉션되는 시간을 조절하실 수 있습니다.",
+    },
+];
+
+```
+
+이런 Array가 반환되니, 참고하셔서 활용하시면 됩니다.
+
+## 2\. 원본 형태로 특정 요소에 아이템들 추가하는 버전
+
+```
+async function getPostsByTag({ tag, selector, appendTo, maxLength }) {
+    const container = document.querySelector(appendTo);
+    const fragment = document.createDocumentFragment();
+
+    if (!container) {
+        throw new Error("아이템을 추가할 요소가 필요합니다.");
+    }
+
+    const tagArray = [
+        ...(await Promise.all(
+            tag.map((tagString) =>
+                getPosts({
+                    tag: tagString,
+                    selector,
+                })
+            )
+        )),
+    ].flatMap((x) => [...x]);
+
+    if (
+        !Number.isNaN(new Date(tagArray[0]?.querySelector("time")?.innerText))
+    ) {
+        tagArray.sort(
+            (tag1, tag2) =>
+                new Date(tag1.querySelector("time").innerText) -
+                new Date(tag2.querySelector("time").innerText)
+        );
+    }
+
+    tagArray.slice(0, maxLength).forEach((element) => {
+        fragment.append(element);
+    });
+
+    container.append(fragment);
+}
+
+async function getPosts({ tag, selector }) {
+    const response = await fetch(`/tag/${encodeURI(tag)}`);
+    const html = await response.text();
+    const domParser = new DOMParser().parseFromString(html, "text/html");
+
+    return domParser.querySelectorAll(selector);
+}
+
+```
+
+크게 손댈 필요 없이 자동으로 글 목록을 추가해주는 버전입니다.
+
+### 코드 예시
+
+```
+getPostsByTag({
+    tag: ["티스토리", "제작일지"],
+    selector: ".indexArticle",
+    appendTo: ".postList",
+    restrict: 4,
+});
+
+```
+
+* tag(string\[\], 필수) : 포스트를 가져올 태그
+* selector(string, 필수) : 인덱스 페이지에 표시되는 아이템의 선택자
+* appendTo(string, 필수) : 아이템을 추가할 요소의 선택자
+* _maxLength_(number) : 글 목록 개수 제한

@@ -1,0 +1,122 @@
+---
+title: 200212 블로그 제작일지
+description: 스크린샷에 담기 힘든 효과가 많은 날이네요. 홈 화면 슬라이더 업데이트 창 크기를 변경하면 슬라이더의 위치도 변경되도록 업데이트했습니다. 창 크기가 1920px인 기기에서 접속했다 치면, 예전엔 창 크기를 800px로 줄여도 한 페이지의 크기가 1920px이라 생각하고 1920px씩 페이지를 넘겼다면, 이젠 800px씩 넘깁니다. 댓글 입력 효과음 댓글을 입력하면 위 효과음이 재생됩니다! Lazy Load 업데이트 [...document.querySelectorAll(&quot;.lazyLoad&quot;)].forEach(img =&gt; {         const fullH = window.scrollY - (img.parentNode.offsetTop);         !img.classList.contains(&quot;loaded&quot;) &amp;&amp; -(windowHeight * 1.5) &lt; fullH &amp;&amp; img.offsetHeight * 1.5 &gt; fullH &amp;&amp; (             loadImg()         )
+date:
+  posted: 2020-02-11T16:51:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 워드프레스
+  - 제작일지
+coverImage: /images/2020/02/home-slider-resize-event.png
+ogImage: /images/2020/02/home-slider-resize-event.png
+---
+
+스크린샷에 담기 힘든 효과가 많은 날이네요.
+
+## 홈 화면 슬라이더 업데이트
+
+![](/images/2020/02/home-slider-resize-event.png)
+
+창 크기를 변경하면 슬라이더의 위치도 변경되도록 업데이트했습니다.
+
+창 크기가 1920px인 기기에서 접속했다 치면, 예전엔 창 크기를 800px로 줄여도 한 페이지의 크기가 1920px이라 생각하고 1920px씩 페이지를 넘겼다면, 이젠 800px씩 넘깁니다.
+
+## 댓글 입력 효과음
+
+댓글을 입력하면 위 효과음이 재생됩니다!
+
+## Lazy Load 업데이트
+
+```
+[...document.querySelectorAll(".lazyLoad")].forEach(img => {
+        const fullH = window.scrollY - (img.parentNode.offsetTop);
+        !img.classList.contains("loaded") && -(windowHeight * 1.5) < fullH && img.offsetHeight * 1.5 > fullH && (
+            loadImg()
+        )
+    })
+
+```
+
+앞서 만들었던 lazy load 스크립트가 조금 부정확한 느낌이라, 업데이트했습니다.
+
+스크롤을 위에서 아래로 내릴 땐 문제가 없고, 아래에서 위로 올릴 때만 문제가 있었던 터라, 문제가 있단 걸 찾기도 힘들었네요.
+
+## 날짜 표시 방식 변경
+
+날짜를 2020.02.11 같은 방식이 아닌, 1일 전으로 표시하기 위해 워드프레스에서 기본적으로 [human\_time\_diff](https://developer.wordpress.org/reference/functions/human%5Ftime%5Fdiff/)란 함수를 제공해줍니다.  
+문제는, 영어에선 2 days ago처럼 2와 days를 띄우지만, 한국어는 2일 전으로 표기하는데, 워드프레스는 여기서 "days"만 "일"로 변경해서 출력해줘서 2 일 전이라는 틀린 맞춤법이 출력됩니다.
+
+```
+function time_diff($from, $to) {
+    $diff = (int) abs($to - $from);
+
+    if ($diff < 86400) {
+        if ($diff < 240) {
+            return "방금";
+        }
+        elseif ($diff < 3600) {
+            return floor($diff/60)."분 전";
+        }
+        else {
+            return floor($diff/3600)."시간 전";
+        }
+    }
+
+    else {
+        $dayDiff = floor($diff / 86400);
+
+        if ($dayDiff < 7) {
+            return $dayDiff."일 전";
+        }
+        elseif ($dayDiff < 60) {
+            return floor($dayDiff / 7)."주 전";
+        }
+        elseif ($dayDiff < 365) {
+            return floor($dayDiff / 30.5)."개월 전";
+        }
+        else {
+            return floor($dayDiff / 365)."년 전";
+        }
+    }
+}
+
+```
+
+딱히 큰 문제는 아니라 참고 쓰다, 영 불편해서 그냥 간단하게 함수를 만들었습니다.
+
+이제 댓글 입력일, 글 작성일 모두 맞춤법에 문제없이 표시됩니다.
+
+## 본문 이미지에 시각적 효과 추가
+
+![](/images/2020/02/scroll-img-animation-1.png)
+
+![](/images/2020/02/scroll-img-animation-2.png)
+
+이미지가 화면 안에 들어오면 애니메이션과 함께 표시되도록 업데이트해봤습니다.  
+좀 난잡한 느낌도 들어서 없앨까 고민도 하는 중입니다. 😅
+
+## 카테고리 다른 글
+
+![](/images/2020/02/related-articles.png)
+
+가장 먼저, 카테고리 다른 글 목록 아래에 "관련 글 더 보기"란 버튼을 추가해 카테고리로 가는 버튼을 추가했습니다.  
+예전부터 카테고리 이름을 클릭하면 (스크린샷에선 Tips 카테고리) 해당 카테고리로 이동할 수 있었는데, 버튼이 따로 있는 게 직관적이리라 생각해 따로 추가했습니다.
+
+카테고리 다른 글 목록에 마우스를 올렸을 때 나타나는 효과도 손봤습니다.  
+기존에 사용하던 효과가 쓸데없이 거창하고 막상 제목 글자는 잘 안 보이는 느낌이라…
+
+이왕 손보는 김에 마우스를 올리지 않은 아이템의 썸네일은 블러 처리가 되도록 해봤습니다.
+
+## 기타
+
+\* 댓글 말풍선의 여백을 좀 줄여봤습니다.  
+\* [링크 디자인](https://marshallku.com/)을 변경했습니다.  
+\* 폰트를 변경했습니다. (Rix 오늘의 만화 => 마포한아름)
+
+## 실패한 것
+
+PHP 7.3.14 => PHP 7.4 업그레이드를 진행했으나, 로그인이 정상적으로 이루어지지 않는 오류가 발생해 PHP 7.3.14로 다시 내려왔습니다.  
+플러그인 꺼보고, 테마도 바꿔보고, 쿠키 경로를 직접 지정해줘도 해결되질 않더라고요.  
+워드프레스 코어 업데이트가 있을 때까지 기다려봐야겠습니다.
+
+php -v와 phpinfo();가 각기 다른 PHP 버전을 출력하던데, 이건 또 무슨 문젠지…

@@ -1,0 +1,46 @@
+---
+title: \[wip\] 티스토리 스킨 #12 배포 버전
+description: Summer Nights ver.2에서 큰 틀만 가져오고 싹 갈아엎어서 만들었던 12번째 스킨입니다.해당 스킨의 레이아웃을 거의 그대로 빌려와 다듬은 게 지금 제가 사용 중인 워드프레스 테마고요. 반 년이 넘게 머리를 굴려도 이 틀에서 벗어나지 않는 걸 보면, 아마 제 취향들이 점철된 테마가 이게 아닐까 싶어 혼자 사용 중이던 티스토리 스킨도 배포용 버전을 준비하는 중입니다. 일단 지금은 스크립트를
+date:
+  posted: 2019-10-06T15:32:00.000Z
+  modified: 2023-11-19T07:29:00.000Z
+tags:
+  - 티스토리 스킨
+  - 제작일지
+coverImage: /images/2019/10/tistory-skin-12-1.png
+ogImage: /images/2019/10/tistory-skin-12-1.png
+---
+
+![](/images/2019/10/tistory-skin-12-1.png)
+
+포스트 목록
+
+![](/images/2019/10/tistory-skin-12-2.png)
+
+포스트 화면
+
+Summer Nights ver.2에서 큰 틀만 가져오고 싹 갈아엎어서 만들었던 12번째 스킨입니다.  
+해당 스킨의 레이아웃을 거의 그대로 빌려와 다듬은 게 지금 제가 사용 중인 워드프레스 테마고요.
+
+반 년이 넘게 머리를 굴려도 이 틀에서 벗어나지 않는 걸 보면, 아마 제 취향들이 점철된 테마가 이게 아닐까 싶어 혼자 사용 중이던 티스토리 스킨도 배포용 버전을 준비하는 중입니다.
+
+일단 지금은 스크립트를 갈아엎는 중입니다.  
+군데군데 jQuery 가져다가 발로 쓴 코드들이 난무하는 터라, 바로잡는 것보다 다시 쓰는 게 빠를듯하여, 스크립트 반 이상을 새로 쓰는 중입니다.
+
+스크립트 다듬은 후에, 지금 사용 중인 워드프레스 테마와 비교하며 최근에 익힌 기술이나 최근에 바꾼 디자인도 차차 추가할 예정입니다.
+
+```
+const A = document.documentElement,
+    B = document.body,
+    C = "reveal",
+    D = window,
+    E = document,
+    F = $("html, body"),
+    G = $("#tt-body-index .article-wrapper, #tt-body-category .article-wrapper, #tt-body-search .article-wrapper, #tt-body-tag .article-wrapper, #tt-body-archive .article-wrapper, #tt-body-notice .article-wrapper, .cover-masonry .cover-inner"),
+    H = "href",
+    I = "src";
+
+```
+
+여담으로, 예전에 [땀똔](https://ddamddon.tistory.com) 님이 변수 좀 제대로 선언하고 주석 좀 달라고 하셨는데, 이유를 이제야 알겠네요…ㅋㅋㅋ  
+그나마 규모가 작아서 코드 좀 보다 보니 다 기억은 나는데, 저 말고 다른 사람더러 수정하라고 했으면 뒤도 안 돌아보고 때려치웠지 싶습니다.

@@ -1,0 +1,31 @@
+---
+title: 브라우저에서 jpeg가 jfif로 저장되는 현상 해결하기
+description: 사진을 저장하려 보니 jfif란 확장자로 이미지가 저장되기에 무슨 최적화 용으로 나온 확장잔가 싶었는데, 그냥 레지스트리 문제로 jpeg를 jfif로 저장 중인 거였습니다. 윈도우 키 + R을 누르시면 위 창이 뜹니다.regedit이라 입력해줍니다. 혹은 윈도우 키를 누르시고 reg 정도만 입력하셔도 &quot;레지스트리 편집기&quot;란 이름의 프로그램이 뜰 겁니다.실행해주시면 됩니다. HKEY_CLASSES_ROOT&#92;MIME&#92;Database&#92;Content Type&#92;image/jpeg 편집기가 실행되면 위 경로를 침착하게 찾아가주세요.꽤 많은 폴더가 있으니
+date:
+  posted: 2020-01-24T15:40:00.000Z
+  modified: 2020-01-31T15:02:00.000Z
+coverImage: /images/2020/01/regedit-jpeg.png
+ogImage: /images/2020/01/regedit-jpeg.png
+---
+
+사진을 저장하려 보니 jfif란 확장자로 이미지가 저장되기에 무슨 최적화 용으로 나온 확장잔가 싶었는데, 그냥 레지스트리 문제로 jpeg를 jfif로 저장 중인 거였습니다.
+
+![](/images/2020/01/execute-regedit.png)
+
+윈도우 키 + R을 누르시면 위 창이 뜹니다.  
+regedit이라 입력해줍니다.
+
+혹은 윈도우 키를 누르시고 reg 정도만 입력하셔도 "레지스트리 편집기"란 이름의 프로그램이 뜰 겁니다.  
+실행해주시면 됩니다.
+
+![](/images/2020/01/regedit-jpeg.png)
+
+**HKEY\_CLASSES\_ROOT\\MIME\\Database\\Content Type\\image/jpeg**
+
+편집기가 실행되면 위 경로를 침착하게 찾아가주세요.  
+꽤 많은 폴더가 있으니 미아가 되기 쉽습니다.
+
+![](/images/2020/01/jfif-to-jpg.png)
+
+혹여 이상한 걸 수정하실 수 있으니 .jfif라 적힌 걸 확인하시고 해당 항목을 우클릭 > 수정하기를 누르시면 위 창이 뜹니다.  
+jpg로 수정하시고 확인 누르시면 끝납니다.

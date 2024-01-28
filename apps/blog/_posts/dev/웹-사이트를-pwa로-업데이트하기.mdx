@@ -1,0 +1,257 @@
+---
+title: 웹 사이트를 PWA로 업데이트하기
+description: PWA(Progressive Web App)란 웹은 높은 접근성을 가진 매력적인 플랫폼입니다.한 번의 코딩으로 거의 모든 기기에서 접근할 수 있고, 검색이나 주소의 공유로 누구나 어디에서나 접속할 수 있습니다. 별도의 업데이트 또한 필요없이 접속할 때마다 최신 상태를 보여줍니다. 하지만 유저를 묶어두기 힘들단 단점이 있습니다.앱을 설치하면 단순히 아이콘 한 번 클릭하면 앱을 실행시킬 수 있지만, 웹은 브라우저를 켜고 사이트에 접속하는
+date:
+  posted: 2020-08-30T07:22:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - PWA
+coverImage: /images/2020/08/Screen-Shot-2020-08-30-at-11.45.39-AM.png
+ogImage: /images/2020/08/Screen-Shot-2020-08-30-at-11.45.39-AM.png
+---
+
+### PWA(Progressive Web App)란
+
+웹은 높은 접근성을 가진 매력적인 플랫폼입니다.  
+한 번의 코딩으로 거의 모든 기기에서 접근할 수 있고, 검색이나 주소의 공유로 누구나 어디에서나 접속할 수 있습니다. 별도의 업데이트 또한 필요없이 접속할 때마다 최신 상태를 보여줍니다.
+
+하지만 유저를 묶어두기 힘들단 단점이 있습니다.  
+앱을 설치하면 단순히 아이콘 한 번 클릭하면 앱을 실행시킬 수 있지만, 웹은 브라우저를 켜고 사이트에 접속하는 등 한 단계 이상을 더 거쳐야 합니다.  
+사용할 수 없는 기능이 많단 것도 단점이고요.
+
+---
+
+PWA는 웹의 높은 접근성을 유지하며 이를 해결하기 위한 하나의 방법입니다.
+
+웹사이트 혹은 웹 앱을 설치할 수 있도록 하는 것을 시작으로, 오프라인에서 페이지 표시, 푸시 알림 등 다양한 기능을 사용할 수 있게 해줍니다.  
+네이티브 앱의 탈을 쓰고 웹 사이트 혹은 웹 앱이 작동하게 한다고 생각하시면 편하겠네요.
+
+자세한 설명은 web.dev의 [What are Progressive Web Apps](https://web.dev/what-are-pwas/) 글을 참고해주세요.
+
+후술할 글을 통해 만든 PWA를 네이티브 앱으로 제작하시려면 [PWA를 스토어에 출시하기](https://marshallku.com/web/tips/pwa%eb%a5%bc-%ec%8a%a4%ed%86%a0%ec%96%b4%ec%97%90-%ec%b6%9c%ec%8b%9c%ed%95%98%ea%b8%b0)를 참고해주세요.
+
+### 필요한 것
+
+* 웹 사이트 혹은 웹 앱
+* https 연결
+* 파일 업로드 권한
+
+PWA 자체가 https를 요구하기도 하고, PWA에 쓰는 많은 기술이 localhost 혹은 127.0.0.1 등 로컬 환경이 아니면 https로 연결되었을 때만 작동합니다.  
+반드시 https 연결이 필요합니다.
+
+파일 업로드 권한도 반드시 필요합니다.  
+root에 업로드할 권한이 있으셔야 합니다.  
+예 : "https://사이트.주소/파일.txt"
+
+![Lighthouse PWA](/images/2020/08/Screen-Shot-2020-08-30-at-11.45.39-AM.png)
+
+크롬에서 개발자 도구를 켜시고 "Lighthouse" 탭에서 검사를 진행하시면 위 사진처럼 PWA 조건 충족 여부에 대해서도 알려줍니다.  
+아직 많은 부분에 체크가 되어있지 않으실 겁니다. 위 스크린샷처럼 모든 부분에 체크되도록 하는 게 이 글의 목표입니다.
+
+## manifest 추가
+
+앱이 어떻게 보일지 설정합니다.
+
+##### 아이콘 추가
+
+앱의 아이콘을 제작할 차례입니다.  
+되도록 png 파일 사용을 권장합니다.
+
+크기는 128x128, 144x144, 152x152, 192x192, 256x256, 512x512로 제작하시는 걸 권장합니다.  
+[Maskable.app editor](https://maskable.app/editor)를 사용하시면 PWA용 Maskable 아이콘을 제작하실 수 있습니다.  
+굳이 사용하지 않으셔도 되긴 됩니다만, 아이콘을 업로드하셔서 minimum safe area 등의 상황에서도 아이콘이 제대로 보이는지 확인해주세요.
+
+제작하신 후, icon-128x128.png 등 크기를 알아보기 편하게 저장해주시고, 웹에 업로드해주세요.
+
+images/icon 등의 폴더를 제작하셔서 넣어두시는 걸 추천합니다.
+
+##### manifest.json 추가 및 연결
+
+```
+{
+    "name": "앱 이름",
+    "short_name": "앱 이름",
+    "icons": [
+        {
+            "src": "/images/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/images/icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#f1718c"
+}
+
+```
+
+name은 설치 페이지, 웹 스토어, 앱 관리 페이지 등에서 표시되는 이름입니다. (최대 45글자)  
+short\_name은 앱을 설치했을 때 런처에서 보이는 이름입니다. (최대 12글자 권장)  
+icons에는 위에서 추가한 아이콘을 넣으시면 필요한 상황에 맞는 크기의 아이콘을 자동으로 가져갑니다.  
+start\_url은 문자 그대로 앱을 실행하면 표시되는 주소입니다.  
+display는 앱이 표시되는 모드입니다. browser, standalone, minimal-ui, fullscreen 네 가지가 있으며, browser는 일반적인 브라우저와 같고, standalone은 여기서 주소창이 사라진 형태, minimal-ui는 standalone에서 뒤로 가기, 새로 고침 등의 키가 추가된 형태, fullscreen은 전체 화면으로 앱이 표시됩니다.  
+background\_color는 앱이 로딩되는 동안 배경에 표시되는 색입니다. 웹 사이트의 배경 색과 같은 색을 사용하면 부드러운 트랜지션 효과를 주실 수 있습니다.  
+theme\_color는 툴바, 상단바 등에 표시되는 색입니다.
+
+더 자세한 내용은 제 블로그의 [PWA의 Manifest 작성하기](https://marshallku.com/web/tips/pwa%ec%9d%98-manifest-%ec%9e%91%ec%84%b1%ed%95%98%ea%b8%b0)를 참고해주세요.
+
+---
+
+작성을 완료하시면 root에 업로드하시고, 웹 사이트의 모든 페이지의 head 태그에 아래 코드처럼 manifest.json을 추가해주세요.  
+반드시 root에 업로드하셔야 하는 건 아니지만, root에 업로드하지 않으시면 start\_url 등에 적으신 상대 주소가 manifest.json이 업로드 된 경로를 기준으로 잡기 때문에, root에 업로드하시는 게 여러모로 편할 겁니다.
+
+```
+<link rel="manifest" href="/manifest.json" />
+```
+
+![Manifest 확인](/images/2020/08/Screen-Shot-2020-08-30-at-12.55.20-PM.png)
+
+제대로 manifest.json이 적용되었다면, 개발자 도구의 Application 탭에서 Manifest를 확인하실 수 있습니다.
+
+##### iOS용 메타 태그 업데이트
+
+아직도 iOS의 사파리는 manifest.json을 완벽히 지원하지 않기 때문에([확인](https://webkit.org/status/#specification-web-app-manifest)), 별도의 메타 태그를 head 태그에 추가해주셔야 합니다.
+
+```
+<link rel="apple-touch-icon" href="/images/icons/icon-152x152.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="앱 이름" />
+
+```
+
+##### 기타 메타 태그 업데이트
+
+```
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="사이트 설명" />
+<meta name="theme-color" content="#f1718c" />
+
+```
+
+viewport 태그는 어지간하면 HTML5 템플릿을 만드시면서 생성되지만, 혹여 삭제하셨으면 추가해주세요.  
+meta\[name="description"\]엔 사이트 (혹은 페이지)의 설명이 들어가면 됩니다.  
+meta\[name="theme-color"\]엔 manifest.json의 theme\_color를 적어주시면 됩니다. 모바일 브라우저의 주소창에 표시되는 색상입니다.
+
+## 오프라인 업데이트
+
+PWA의 필수 조건 중 하나인 "오프라인에서도 페이지가 응답 코드 200을 보낼 것(페이지가 작동할 것)"을 만족하게 하기 위한 업데이트입니다.  
+fetch 해오는 내용을 죄다 캐싱하는 방법도 있지만, 이 글에선 PWA 조건 충족을 위해 간단하게 오프라인 페이지를 따로 제작하는 과정만 다뤄보겠습니다. fetch 해오는 내용을 모두 저장하는 오프라인 경험을 제공하고 싶으시다면 codelabs의 PWA 강좌 중 [Provide a full offline experience](https://codelabs.developers.google.com/codelabs/your-first-pwapp/#5)를 참고해주세요.
+
+##### offline.html 추가
+
+오프라인일 때 보여줄 페이지를 작업해 root에 업로드해주세요.  
+전 [이렇게](https://marshallku.com/offline.html) 작업했습니다.
+
+##### service-worker.js 추가
+
+```
+// 캐시 이름
+const CACHE_NAME = "cache-v1";
+
+// 캐싱할 파일
+const FILES_TO_CACHE = [
+    "/offline.html",
+    "/favicon.ico"
+];
+
+// 상술한 파일 캐싱
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    );
+});
+
+// CACHE_NAME이 변경되면 오래된 캐시 삭제
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys().then((keyList) =>
+            Promise.all(
+                keyList.map((key) => {
+                    if (CACHE_NAME !== key) return caches.delete(key);
+                })
+            )
+        )
+    );
+});
+
+// 요청에 실패하면 오프라인 페이지 표시
+self.addEventListener("fetch", (event) => {
+    if ("navigate" !== event.request.mode) return;
+
+    event.respondWith(
+        fetch(event.request).catch(() =>
+            caches
+                .open(CACHE_NAME)
+                .then((cache) => cache.match("/offline.html"))
+        )
+    );
+});
+
+```
+
+브라우저와 다른 스레드에서 돌아갈 서비스 워커입니다.  
+상술한 이유로 DOM에 접근은 불가능하고, 푸시 알람 처리 등의 작업을 진행합니다.
+
+\* 간혹 구형 브라우저 지원을 위해 화살표 함수 (`=>`)를 `function`으로 변경하시는 분이 있는데, 화살표 함수가 serviceworker보다 먼저 나왔습니다.
+
+##### service-worker.js 등록
+
+```
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js");
+    });
+}
+
+```
+
+index.html에 script 태그로 삽입하시거나, js 파일에 위 코드를 추가해주세요.  
+당연히 window에 이미 load 이벤트 리스너를 추가하셨으면 거기에 load 이벤트 리스너 추가하는 스크립트를 제외하고 추가하셔도 됩니다.
+
+![오프라인 체크](/images/2020/08/Screen-Shot-2020-08-30-at-4.10.33-PM.png)
+
+강력한 새로고침을 한 번 하시고(Ctrl 혹은 Command + Shift + R), 개발자 도구를 여신 뒤, Application 탭에서 Service Workers를 선택하시고 오프라인에 체크하신 후 페이지를 새로고침하셨을 때, 공룡이 보이지 않고 설정하신 페이지가 보인다면 성공하신 겁니다.
+
+\+ 네트워크 탭에서도 온라인, 3G, 오프라인 등의 환경으로 놓고 테스트하실 수 있습니다.
+
+## 마지막 테스트
+
+![Lighthouse PWA](/images/2020/08/Screen-Shot-2020-08-30-at-11.45.39-AM.png)
+
+다시 개발자 도구의 Lighthouse 탭으로 오신 후 새로 측정을 시작하셔서 PWA 조건을 완벽히 충족하는지 확인해주세요.  
+만약 모든 조건이 충족되면 데스크탑에선 주소창에 + 아이콘이, 안드로이드에선 하단 혹은 팝업으로 홈 화면에 추가란 메뉴가 뜹니다.  
+"+" 아이콘 클릭 혹은 "추가" 버튼 클릭으로도 설치할 수 있고, 수동으로 홈 화면에 추가해도 PWA 앱을 설치하실 수 있습니다. 안드로이드 한정으로 설치 버튼도 추가할 수 있습니다. codelabs의 PWA 강좌 중 [Add install experience](https://codelabs.developers.google.com/codelabs/your-first-pwapp/#6) 를 확인해주세요.
+
+---
+
+긴 과정 끝에 PWA에 첫발을 디뎠습니다.  
+다음번엔 푸시 알림 등 PWA가 할 수 있는 다양한 일에 대해 다뤄보겠습니다.

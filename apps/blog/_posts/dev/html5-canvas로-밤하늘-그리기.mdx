@@ -1,0 +1,114 @@
+---
+title: HTML5 Canvas로 밤하늘 그리기
+description: https://codesandbox.io/s/z68y1012yl 참고한 글 https://github.com/marshallku/canvas-night-sky 깃허브 땐나의 계절인 여름도 왔고, 호텔 델루나 보다 보니 보름달이 뜬 밤하늘이 예뻐서 인터넷 뒤적이며 만들어 봤습니다.어디에 써먹을지 고민을 좀 해봤는데, 막상 써먹을 데가 없는 게 아쉽네요. ㅠㅠ HTML에 nightsky란 ID를 지닌 canvas 추가하시고 아래 스크립트만 붙여 넣으셔도 작동합니다. const width = window.innerWidth, height = window.innerHeight, stars = createStars(width, height, 30),
+date:
+  posted: 2019-07-18T07:48:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - JavaScript
+  - canvas
+  - 밤 하늘
+  - 달
+coverImage: /images/2019/07/nightsky.jpg
+ogImage: /images/2019/07/nightsky.jpg
+---
+
+<https://codesandbox.io/s/z68y1012yl> 참고한 글  
+<https://github.com/marshallku/canvas-night-sky> 깃허브
+
+땐나의 계절인 여름도 왔고, 호텔 델루나 보다 보니 보름달이 뜬 밤하늘이 예뻐서 인터넷 뒤적이며 만들어 봤습니다.  
+어디에 써먹을지 고민을 좀 해봤는데, 막상 써먹을 데가 없는 게 아쉽네요. ㅠㅠ
+
+HTML에 nightsky란 ID를 지닌 canvas 추가하시고 아래 스크립트만 붙여 넣으셔도 작동합니다.
+
+```
+const width = window.innerWidth,
+  height = window.innerHeight,
+  stars = createStars(width, height, 30),
+  moon = {
+    x: 0,
+    y: height / 2,
+    r: 45
+  },
+  canvas = document.getElementById("nightsky"),
+  ctx = canvas.getContext("2d");
+let counter = 0,
+  time = 0;
+
+function random(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function createStars(width, height, spacing) {
+  const stars = [];
+
+  for (let x = 0; x < width; x += spacing) {
+    for (let y = 0; y < height; y += spacing) {
+      const star = {
+        x: x + random(spacing),
+        y: y + random(spacing),
+        r: Math.random() * 1.5
+      };
+      stars.push(star);
+    }
+  }
+  return stars;
+}
+
+function fillCircle(ctx, x, y, r, fillStyle) {
+  ctx.beginPath(),
+  ctx.fillStyle = fillStyle,
+  ctx.arc(x, y, r, 0, Math.PI * 2),
+  ctx.fill();
+}
+
+function getOpacity(factor) {
+  const opacityIncrement = 0.6 * Math.abs(Math.sin(factor)),
+    opacity = 0.1 + opacityIncrement;
+  return opacity;
+}
+
+function render() {
+  const gradient = ctx.createLinearGradient(0, 0, 0, height);
+  let newX = time / 10 - 45;
+  gradient.addColorStop(0, "#00111e");
+  gradient.addColorStop(1, "#0a2342");
+  //배경 그래디언트
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+  stars.forEach(function (star, i) {
+    const factor = counter * i,
+        x = star.x,
+        y = star.y,
+        opacity = getOpacity(factor),
+        randomColor = Math.floor((Math.random()*360)+1);
+
+    fillCircle(ctx, x, y, star.r, `hsla(${randomColor}, 30%, 80%, ${opacity})`); //별 그리기
+  });
+
+  newX <= width + 90 // window 너비에 달 지름 추가
+  ? (
+    moon.x = newX,
+    moon.y = newY(newX),
+    time += 5
+  ) : time = 0,
+  // 달에 애니메이션 추가
+
+  fillCircle(ctx, moon.x, moon.y, moon.r, "#f5f3ce"); // 달 그리기
+
+  counter++;
+  requestAnimationFrame(render);
+}
+
+function newY(x) {
+  return Math.pow(x - width / 2, 2) / 9000 + height / 2 + 1
+}
+
+canvas.width = width,
+canvas.height = height,
+render();
+
+```
+
+살면서 2차 함수 그래프를 다시 그릴 날이 올 줄 누가 알았겠습니까…ㅋㅋㅋ  
+달 애니메이션엔 2차 함수 그래프가 제일 어울릴 것 같아 2차 함수 그래프 모양으로 움직이도록 해뒀습니다.

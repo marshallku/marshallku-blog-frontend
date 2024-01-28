@@ -1,0 +1,113 @@
+---
+title: 201226 잡다한 제작일지
+description: 블로그 검색 취소 버튼 &amp;&amp; 햄버거 버튼 검색 취소 버튼도 햄버거 버튼과 똑같은 스타일을 적용해, 통일감을 높였습니다. 또한, 버튼이 화살표로 변경됐을 때 1px 정도 오차가 있길래 수정했습니다.몇몇 브라우저에선 1px이 어긋나니 뭔가 이상한 게 눈에 보일 정도로 뒤틀리더라고요. 페이지네이션 버튼 4페이지 이상(1페이지 버튼이 안 보이는 상황)에선 첫 페이지로 가는 버튼을 추가하고, 마지막 페이지 버튼이 안 보이는
+date:
+  posted: 2020-12-26T14:43:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 워드프레스
+  - ReactJS
+  - TypeScript
+  - 제작일지
+coverImage: /images/2020/12/201226-이것저것-제작일지.png
+ogImage: /images/2020/12/201226-이것저것-제작일지.png
+---
+
+## 블로그
+
+### 검색 취소 버튼 && 햄버거 버튼
+
+검색 취소 버튼도 햄버거 버튼과 똑같은 스타일을 적용해, 통일감을 높였습니다.
+
+또한, 버튼이 화살표로 변경됐을 때 1px 정도 오차가 있길래 수정했습니다.  
+몇몇 브라우저에선 1px이 어긋나니 뭔가 이상한 게 눈에 보일 정도로 뒤틀리더라고요.
+
+### 페이지네이션 버튼
+
+![페이지네이션 버튼](/images/2020/12/pagination.png)
+
+4페이지 이상(1페이지 버튼이 안 보이는 상황)에선 첫 페이지로 가는 버튼을 추가하고, 마지막 페이지 버튼이 안 보이는 상황에선 마지막 페이지로 가는 버튼을 추가했습니다.
+
+처음에 infinite scroll에서 페이지네이션으로 넘어올 땐 좀 회의적이었는데, 확실히 원하는 구역으로 갈 땐 편하고, 페이지가 많이 쌓여도 기기에 큰 부담도 없어서 좋긴 하네요.
+
+### 로고 업데이트
+
+![로고](/images/2020/12/logo-512.png)
+
+좌우대칭을 완벽하게 맞추고, 모서리를 조금 더 각지게 수정했습니다.  
+또한 파비콘처럼 아이콘이 작아졌을 때도 형태가 일그러지지 않도록 좌측 끝과 우측 끝의 선을 조금 더 두껍게 변경했습니다.
+
+### manifest.json 업데이트
+
+![Context Menu](/images/2020/12/menu.png)
+
+[PWA의 Manifest 작성하기](https://marshallku.com/web/tips/pwa%ec%9d%98-manifest-%ec%9e%91%ec%84%b1%ed%95%98%ea%b8%b0)를 적으며 제 manifest.json도 업데이트를 좀 해봤습니다.  
+shortcuts도 추가하고, categories 등도 추가해봤는데, categories, lang 같은 건 솔직히 크게 의미가 있나 싶긴 하네요.
+
+### <article>
+
+```
+<article class="indexArticle reveal" style="top: 50px; left: 10px">
+    <a
+        href="https://marshallku.com/web/tips/%ec%9b%8c%eb%93%9c%ed%94%84%eb%a0%88%ec%8a%a4-%eb%8c%93%ea%b8%80-%ed%85%9c%ed%94%8c%eb%a6%bf-%eb%a7%8c%eb%93%a4%ea%b8%b0"
+    >
+        <figure class="thumbnail_wrapper">
+            <img
+                class="index_thumbnail"
+                src="https://i1.marshallku.com/wp-content/uploads/2020/12/댓글-템플릿-제작하기-400x400.png"
+                alt="워드프레스 댓글 템플릿 만들기"
+            />
+        </figure>
+        <header class="index_information">
+            <h2 class="title">워드프레스 댓글 템플릿 만들기</h2>
+            <p class="desc">wp_list_comments의 html 구조를 변경하는 방법</p>
+            <time class="date" datetime="2020-12-20 00:32">6일 전</time>
+        </header>
+    </a>
+</article>
+
+```
+
+포스트 페이지에서 본문에만 `article` 태그를 사용하고 있었는데, 이젠 글 목록 등 글 정보가 들어가는 부분도 `article`태그로 업데이트했습니다.
+
+작성하면서 보니 class에 CamelCase랑 snake\_case가 혼용된 게 보기 몹시 불편하네요.  
+날 잡고 싹 고쳐야겠습니다...
+
+### 기타
+
+* 세피아, 라이트 테마에서 폰트 색상을 더 어둡게 변경했습니다.
+* 이미지 캐시 서버를 구글 클라우드에서 오라클 클라우드로 변경했습니다.
+* 본문에 `script` 태그가 있을 땐 페이지를 새로고침합니다.
+* 쿠키에 유저 정보가 없음에도 로컬 스토리지에 저장하려는 오류를 수정했습니다.
+* 링크를 클릭하고 컨테이너가 페이드아웃 됐을 때 오류가 발생하면 컨테이너가 페이드인 되지 않던 오류를 수정했습니다.
+* 검색 취소 버튼 클릭 시 입력된 검색어가 삭제되도록 업데이트했습니다.
+* 폰트를 스포카 한 산스로 변경했습니다.
+* 푸시 알림 서버에 사용한 코드를 업데이트했습니다. 이 과정에서 undefined란 알림이 굉장히 많이 전송됐었는데, 죄송합니다. 😥
+
+## React 앱들
+
+![리액트 앱 업데이트](/images/2020/12/react-apps-to-typescript.png)
+
+만들었던 React 앱들을 모조리 타입스크립트로 업데이트했습니다.
+
+![사용한 언어](/images/2020/12/most-used-languages.png)
+
+타입스크립트를 조금 더 능숙하게 사용하고자 하는 목적도 있었지만, 위 그래프에서 Typescript 순위 올릴 목적도 있었습니다.  
+이제 토이 프로젝트 한 두어 개만 더 만들면 1위를 차지할 수 있지 않을까 싶네요.
+
+## 만들고 있는 것
+
+### Parallax Effect
+
+![장만월](/images/2020/12/fullmoonlong.png)
+
+[Github](https://github.com/marshallku/Parallax-Effect)  
+[라이브 데모](https://marshallku.github.io/Parallax-Effect/)
+
+유튜브에서 웹사이트 이펙트들 둘러보다 [Simple Parallax Scrolling Effect with CSS & Vanilla Javascript](https://youtu.be/QNTeq4QdOsQ?t=57)라는 걸 보고 보름달만 보면 척수 반사 급으로 떠오르는 장만월 사장님으로 스크롤 효과들 좀 만들어봤습니다.
+
+3D 갤러리에서 벡터한테 괴롭힘 받다 2D로 내려오니 한결 편안하긴 하지만, 포토샵에서 테두리 따느라 꽤 많은 시간을 투자해야 한단 단점은 있네요.
+
+이대로 끝내긴 뭔가 아쉬워서 델루나 설명 같은 것 추가해보는 중인데, 코딩이 아니라 디자인이랑 기획에서 발목을 잡히고 있습니다.
+
+잡힌 발목 풀리고 완성하면 스크롤 애니메이션에 관한 것도 좀 다뤄보겠습니다.

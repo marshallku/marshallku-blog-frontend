@@ -1,0 +1,136 @@
+---
+title: CSS Mask 이용하기
+description: 스크롤을 내려 확인해보세요!페이지 링크 위 데모처럼 특정 오브젝트 뒤로 글자가 넘어가게 하고 싶을 때 쓸 수 있는 CSS의 마스크(mask)입니다.아이러니하게도 CSS보단 포토샵에 능해야 깔끔하게 만들 수 있긴 합니다. 포토샵 글자 아래에 표시될 부분만 선택해줍니다.글자 위에 표시될 부분을 선택하는 게 편하시면 그 부분을 선택하시고 우클릭 &gt; 반전 선택하셔도 무관합니다. 우클릭 &gt; 작업 패스 만들기 &gt; 허용치 1픽셀위
+date:
+  posted: 2020-02-07T13:55:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - CSS
+coverImage: /images/2020/02/CSS-MASK.jpg
+ogImage: /images/2020/02/CSS-MASK.jpg
+---
+
+스크롤을 내려 확인해보세요!  
+[페이지 링크](https://marshall-ku.github.io/simple-css-mask/)
+
+위 데모처럼 특정 오브젝트 뒤로 글자가 넘어가게 하고 싶을 때 쓸 수 있는 CSS의 마스크(mask)입니다.  
+아이러니하게도 CSS보단 포토샵에 능해야 깔끔하게 만들 수 있긴 합니다.
+
+## 포토샵
+
+![](/images/2020/02/select-area.png)
+
+글자 아래에 표시될 부분만 선택해줍니다.  
+글자 위에 표시될 부분을 선택하는 게 편하시면 그 부분을 선택하시고 우클릭 > 반전 선택하셔도 무관합니다.
+
+![](/images/2020/02/path.png)
+
+우클릭 > 작업 패스 만들기 > 허용치 1픽셀  
+위 과정을 거치시면 위 사진처럼 선택 영역이 점선이 아닌 파란 실선으로 바뀝니다.
+
+![](/images/2020/02/new-fill-layer.png)
+
+상단 메뉴에서 레이어 > 새 칠 레이어 > 단색을 선택해 새로운 레이어를 만들어주세요.
+
+![](/images/2020/02/black-fill-layer.png)
+
+해당 레이어의 색을 검은색으로 바꿔주세요.
+
+![](/images/2020/02/export-as-svg.png)
+
+검은색의 레이어만 svg 혹은 png로 저장해주세요.
+
+## HTML
+
+```
+<div class="maskWrap">
+    <header class="titleWrap">
+        <h1 class="title">꽃갈피 - 둘</h1>
+    </header>
+</div>
+
+```
+
+html 구조는 별것 없습니다.
+
+이미지를 표시할 엘리먼트  
+마스크를 씌울 엘리먼트  
+글자가 들어갈 엘리먼트
+
+세 가지면 됩니다.
+
+## CSS
+
+```
+@font-face {
+    font-family: 'HSBombaram';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSBombaram.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body,
+h1 {
+    margin: 0;
+}
+
+body {
+    width: 100%;
+    font-family: 'HSBombaram';
+}
+
+.maskWrap {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url(iu.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.title {
+    position: fixed;
+    top: 10vh;
+    left: 0;
+    width: 100%;
+    color: white;
+    font-size: calc(30px + 10vw);
+    text-align: center;
+    text-shadow: 1px 1px 10px black;
+}
+
+.titleWrap {
+    mask: url(mask.png);
+    -webkit-mask: url(mask.png);
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-position: center;
+    -webkit-mask-position: center;
+    width: 100%;
+    height: 100%;
+}
+
+.content {
+    width: 100%;
+    text-align: center;
+    text-shadow: 1px 1px 10px black;
+}
+
+```
+
+다른 부분은 필요 없고
+
+.maskWrap에선 position, background, background-size  
+.title에선 position  
+.titleWrap의 내용 전부
+
+이 세 가지만 유지해주시면서 디자인하시면 됩니다.
+
+## 끝!
+
+![](/images/2020/02/CSS-MASK.jpg)
+
+스크롤을 내려보시면 오브젝트 뒤로 글자가 넘어가는 걸 확인하실 수 있습니다!
+
+\* 참고 : html 파일을 더블 클릭해서 열면 제대로 동작하지 않을 수 있습니다. localhost에서 html을 열어주세요.

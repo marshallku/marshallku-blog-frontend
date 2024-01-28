@@ -1,0 +1,206 @@
+---
+title: 스도쿠 풀어주는 프로그램 만들기
+description: 평소 즐기는 게임인 스도쿠를 푸는 앱을 만들어봤습
+date:
+  posted: 2021-01-25T13:11:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - TypeScript
+  - 스도쿠
+  - cpp
+coverImage: /images/2021/01/sudoku.png
+ogImage: /images/2021/01/sudoku.png
+---
+
+[Github](https://github.com/marshallku/Sudoku-Solver)  
+[웹 앱](https://marshallku.com/sudo-ku/)
+
+평소 즐기는 게임인 스도쿠를 푸는 앱을 만들어봤습니다.  
+C++로 작업했다가, 아무래도 접근성이 많이 떨어져 웹 앱으로도 만들었습니다.
+
+나중에 좀 더 실력이 늘면 카메라로 스도쿠 문제를 스캔해서 자동으로 풀어주는 수준까지 업데이트해보고 싶네요.
+
+## C++
+
+```
+#include <iostream>
+const int g_max = 9;
+const int g_subMax = g_max / 3;
+int grid[g_max][g_max];
+
+```
+
+스도쿠 칸의 크기를 `g_max`에, 작은 칸(Subgrid)의 크기를 `g_subMax`에 담아뒀습니다.  
+이후, 스도쿠 칸이 담길 배열을 만들어줍니다.
+
+```
+bool isSolvable()
+{
+    int row, col;
+    int filled = 0;
+
+    for (row = 0; row < g_max; row++)
+    {
+        for (col = 0; col < g_max; col++)
+        {
+            if (grid[row][col] != 0)
+                filled++;
+        }
+    }
+
+    return filled >= 17;
+}
+
+```
+
+스도쿠가 하나의 해만 갖기 위해선 최소 17개의 칸이 채워져 있어야 합니다.  
+풀이를 시작하기 전에 풀 수 있는 최소한의 조건이 충족됐는지 검사하도록 했습니다.
+
+스도쿠 판 크기가 달라지면 조건이 바뀌기도 하고, 어차피 검사하지 않아도 조건이 충족되지 않으면 높은 확률로 풀다가 던져버리니 빼도 무관한 부분이긴 합니다.
+
+```
+bool isInRow(int row, int num)
+{
+    for (int i = 0; i < g_max; i++)
+    {
+        if (num == grid[row][i])
+            return true;
+    }
+
+    return false;
+}
+
+bool isInCol(int col, int num)
+{
+    for (int i = 0; i < g_max; i++)
+    {
+        if (num == grid[i][col])
+            return true;
+    }
+
+    return false;
+}
+
+bool isInSubGrid(int startRow, int startCol, int num)
+{
+    int i, j;
+
+    for (i = startRow; i < startRow + g_subMax; i++)
+    {
+        for (j = startCol; j < startCol + g_subMax; j++)
+        {
+            if (grid[i][j] == num)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool isValid(int row, int col, int num)
+{
+    return !isInRow(row, num) && !isInCol(col, num) && !isInSubGrid(row - row % g_subMax, col - col % g_subMax, num);
+}
+
+```
+
+스도쿠 풀이에 핵심이 되는 부분입니다.  
+행, 열, 작은 칸에 같은 숫자가 있는지 확인하고, 어디에도 같은 숫자가 없으면 참을 반환합니다.
+
+```
+bool hasEmptyBox(int &row, int &col)
+{
+    for (row = 0; row < g_max; row++)
+    {
+        for (col = 0; col < g_max; col++)
+        {
+            if (grid[row][col] == 0)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool solve()
+{
+    int row, col;
+
+    if (!hasEmptyBox(row, col))
+        return true;
+
+    for (int num = 1; num <= g_max; num++)
+    {
+        if (isValid(row, col, num))
+        {
+            grid[row][col] = num;
+            if (solve())
+                return true;
+            grid[row][col] = 0;
+        }
+    }
+
+    return false;
+}
+
+```
+
+스도쿠를 풀이하는 부분입니다.  
+0(풀이되지 않은 부분)인 칸을 찾아서, 1부터 최댓값(9)까지 숫자를 넣어보며 유효성을 확인하고, 유효한 값이 나오지 않으면 0으로 재설정합니다.
+
+```
+int main(void)
+{
+    for (int i = 0; i < g_max; i++)
+    {
+        for (int j = 0; j < g_max; j++)
+        {
+            scanf("%d", &grid[i][j]);
+        }
+    }
+
+    if (!isSolvable())
+    {
+        printf("It's undefeatable!");
+    }
+    else
+    {
+        if (solve())
+            printGrid();
+        else
+            printf("Oops! I can't solve this.");
+    }
+
+    return 0;
+}
+
+```
+
+이제 입력을 받고 스도쿠를 풀게 하기만 하면 됩니다.
+
+![C++ 스도쿠 실행 결과](/images/2021/01/sudoku-cli.png)
+
+`g++ -o sudoku sudoku.cpp`로 빌드 후 실행하면, 위 사진처럼 스도쿠를 자동으로 풀어주기 시작합니다.
+
+## Typescript
+
+[solver.ts 확인](https://github.com/marshallku/Sudoku-Solver/blob/master/src/util/solver.ts)
+
+아무래도 C++로만 만들어두면 접근성이 굉장히 떨어지기에, 편하게 실행할 수 있도록 웹으로 옮겼습니다.
+
+처음엔 웹 어셈블리를 사용해볼까 하다가, 스도쿠 풀이는 계산량이 적어서 시간이 오래 걸리지 않는데 웹 어셈블리를 쓰면 wasm 파일 불러오는 데만 시간이 더 들 것 같아 타입스크립트로 만들었습니다. 포인터를 활용할 수가 없어서, 객체를 사용해 비슷하게 작동하도록 수정한 것만 제외하면, C++로 만든 코드와 똑같이 작동합니다.
+
+그 다음, [app.ts](https://github.com/marshallku/Sudoku-Solver/blob/master/src/app.ts)에 작업한 것처럼 9 \* 9 스도쿠 그리드를 배열에 넣어주고, 배열을 전부 탐색하며 `input`을 생성하게 하여 웹 앱을 완성했습니다.
+
+![풀이 안 된 스도쿠](/images/2021/01/unsolved-sudoku.png)
+
+모르는 칸은 0으로 채우거나 빈칸으로 남겨두고 "Solve" 버튼을 클릭하면
+
+![스도쿠 풀이 완료](/images/2021/01/solved-sudoku.png)
+
+순식간에 풀어줍니다. 제 기기 기준으론 14ms 내외로 걸리네요.
+
+## Reference
+
+[Sudoku Solver in C++](https://www.tutorialspoint.com/sudoku-solver-in-cplusplus)  
+[\[지식in\] 스도쿠와 라틴방진](https://youtu.be/JI0I13r7oB0)

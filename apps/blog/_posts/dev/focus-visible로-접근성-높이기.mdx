@@ -1,0 +1,119 @@
+---
+title: :focus-visible로 접근성 높이기
+description: 접근성 높은 웹사이트를 만들기 위해 고려해야 하는 것 중 하나는 키보드 &quot;만&quot; 이용해도 사이트를 정상적으로 이용할 수 있어야 한단 것입니다. 시각장애나 신체장애를 가진 사용자는 키보드(혹은 그와 비슷한 장치)만 이용해 웹사이트를 이용해야 하는 경우가 많기에, 키보드로 선택한 요소에 하이라이트를 줄 필요가 있습니다. 크롬 86 버전에 추가된 :focus-visible이란 의사 클래스(가상 클래스 / pseudo class)를 통해 이를 디자인을
+date:
+  posted: 2020-10-19T10:08:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - html
+  - Accessibility
+coverImage: /images/2020/10/focus-visible.png
+ogImage: /images/2020/10/focus-visible.png
+---
+
+접근성 높은 웹사이트를 만들기 위해 고려해야 하는 것 중 하나는 키보드 '만' 이용해도 사이트를 정상적으로 이용할 수 있어야 한단 것입니다. 시각장애나 신체장애를 가진 사용자는 키보드(혹은 그와 비슷한 장치)만 이용해 웹사이트를 이용해야 하는 경우가 많기에, 키보드로 선택한 요소에 하이라이트를 줄 필요가 있습니다. 크롬 86 버전에 추가된 `:focus-visible`이란 의사 클래스(가상 클래스 / pseudo class)를 통해 이를 디자인을 해치지 않고 구현할 수 있습니다.
+
+## :focus
+
+그럼 키보드로 선택한 요소를 하이라이트 처리할 방법이 크롬 86버전에 없었나 물으면 당연히 아닙니다. 무려 IE 8에도 존재하던 `:focus`란 의사 클래스가 있으나, 여기에 스타일을 추가해버리면 마우스 클릭, 터치 등 모든 환경에서 해당 스타일이 표시됩니다. 심지어 `:focus`가 가장 필요한 `a` 태그는 거의 클릭 / 터치와 동시에 외곽선이 표시되며 다른 페이지로 넘어가기에, 찰나의 순간에 깜빡이는 외곽선이 디자인을 해친다는 생각을 넘어서 뭔가 잘못됐단 생각마저 하게 할 수 있습니다.
+
+```
+a,
+input,
+button {
+    outline: 0;
+}
+
+:focus {
+    outline: none;
+}
+
+```
+
+그래서 꽤 많은 디자이너나 개발자가 위 CSS처럼 특정 엘리먼트나 `:focus`의 `outline`을 지워버리는 방식을 선택하곤 합니다만, 이런 행위는 상술한 것처럼 키보드만으로 브라우저를 조작해야 하는 사람을 완전히 배제해버리는 디자인입니다.
+
+**절대 아무런 대체재 없이 외곽선을 지워버리지 마세요.**
+
+## :focus-visible
+
+이제 다행히도 :focus-visible의 추가로, 굉장히 간단하게 디자인과 접근성을 함께 살릴 수 있게 되었습니다. 이 의사 클래스는 :focus와 달리 키보드로 해당 엘리먼트를 선택해야만 적용됩니다.
+
+---
+
+예외로, `input` 등과 같이 키보드 입력을 지원하는 요소는 마우스 클릭 시에도 `:focus-visible`이 적용됩니다. ([스펙 참조](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo))
+
+```
+:focus-visible {
+    outline: 3px solid #aaa;
+}
+
+```
+
+놀랍게도 이 짧은 한 줄로 접근성을 높일 수 있습니다. 물론 짧은 한 줄이라도 저시력자나 맑은 날 야외에서 보는 환경을 고려해야 합니다. [WCAG 2.1 SC 1.4.11 Non-Text Contrast](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)를 참고하셔서, 이를 통과하게 제작하시면 됩니다. 짧게 요약하자면, 외곽선의 색상은 배경색과 최소 3:1 이상의 대비를 갖는 색으로 제작해주세요.
+
+```
+:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+```
+
+위 스펙을 고려하기 귀찮으면 그냥 이렇게 `:focus-visible`이 아닌 `:focus`의`outline`만 날리셔도 됩니다.
+
+```
+:focus {
+    outline: 3px solid #aaa;
+}
+
+:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+```
+
+혹은 이렇게 `:focus`에 스타일을 추가하시고 `:focus-visible`이 아닐 땐 표시되지 않게 하셔도 됩니다.
+
+### Polyfill
+
+아직 `:focus-visible`을 지원하는 브라우저가 많이 없습니다([Can I Use](https://caniuse.com/?search=focus-visible)).  
+WICG의 [focus visible](https://github.com/WICG/focus-visible)을 이용하시면 지원 범위를 넓히실 수 있습니다. 라이브러리를 추가만 하시면 CSS는 상술한 내용과 크게 다르지 않습니다.
+
+```
+.js-focus-visible :focus:not(.focus-visible) {
+    outline: none;
+}
+
+```
+
+## :focus-within
+
+Dropdown 메뉴처럼 마우스를 올려야 표시되는 메뉴도 `:focus-within`을 이용해 접근성을 높일 수 있습니다.
+
+```
+.dropdown {
+    display: none;
+}
+
+.dropdown:hover {
+    display: block;
+}
+
+.dropdown.hover {
+    display: block;
+}
+
+```
+
+CSS 선택자나 JS를 이용해 마우스를 감지해 대충 상술한 것과 비슷한 CSS가 있다고 가정합시다.  
+Dropdown 메뉴 안에 있는 요소에 `outline`을 아무리 추가해도 마우스를 올리지 않으면 메뉴가 표시조차 되질 않으니, 키보드론 절대 선택할 수 없는 요소가 탄생해버립니다.  
+심지어 `display: none`이 아니라 `opacity: 0` 등으로 숨겨뒀으면 키보드로 선택은 되는데 어딨는지 보이지 않는 요소가 탄생해버립니다.
+
+```
+.dropdown:focus,
+.dropdown:focus-within {
+    display: block;
+}
+
+```
+
+이렇게 해당 메뉴에 포커스가 가거나, 해당 메뉴의 자식에 포커스가 가면 메뉴를 표시하는 방법으로 접근성을 높이실 수 있습니다.

@@ -1,0 +1,168 @@
+---
+title: Twip Chat Box 커스텀 CSS - 대화형
+description: 트위치 스트리머용 도구인 Twip의 커스텀 CSS입니다.메신저와 비슷한 디자인으로 제작했습니다. 좌우 반전은 아직 지원하지 않으며, 배경 색상, 폰트에 관한 설정은 Twip에서 한 설정을 따르도록 해뒀습니다.+ 권장 글자 크기는 16px입니다. 191210 23:52 업데이트 - 스트리머 채팅 우측 정렬 업데이트200408 19:11 업데이트 - 스트리머 채팅 잘리던 오류 수정201102 20:07 업데이트 - 말풍선 여백 수정(10px -&gt; 5px), 말풍선 꼬리
+date:
+  posted: 2019-12-10T12:34:00.000Z
+  modified: 2023-12-02T23:58:00.000Z
+tags:
+  - Twip
+coverImage: /images/2019/12/twip_chatbox.png
+ogImage: /images/2019/12/twip_chatbox.png
+---
+
+![](/images/2019/12/twip_chatbox.png)
+
+트위치 스트리머용 도구인 Twip의 커스텀 CSS입니다.  
+메신저와 비슷한 디자인으로 제작했습니다.
+
+좌우 반전은 아직 지원하지 않으며, 배경 색상, 폰트에 관한 설정은 Twip에서 한 설정을 따르도록 해뒀습니다.  
+\+ 권장 글자 크기는 16px입니다.
+
+191210 23:52 업데이트 - 스트리머 채팅 우측 정렬 업데이트  
+200408 19:11 업데이트 - 스트리머 채팅 잘리던 오류 수정  
+201102 20:07 업데이트 - 말풍선 여백 수정(10px -> 5px), 말풍선 꼬리 수정, 관리자 우측 정렬 업데이트  
+201103 16:08 업데이트 - 스트리머, 시청자, 관리자 이미지 분리
+
+### 적용
+
+> 별도 문의 없이 사용하셔도 됩니다
+
+```
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}
+body {
+    background: $background_color;
+}
+#log {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 10px 10px;
+    overflow: hidden;
+    font: 600 $font_sizepx $font_face;
+}
+#log > div {
+    position: relative;
+    margin-top: 20px;
+    padding-left: 56px;
+    animation: fadeInUp 0.5s ease, fadeOut 0.5s ease $message_hide_delays forwards ;
+}
+#log > div.broadcaster,
+#log > div.moderator {
+    padding: 0 56px 0 0;
+    text-align: right;
+}
+#log > div.deleted {
+    visibility: hidden;
+}
+#log > div::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background: url(https://marshall-ku-tgd.github.io/tmpImages/cat.png) center
+        no-repeat;
+    background-size: cover;
+    border-radius: 5px;
+}
+#log > div.broadcaster::before {
+    /* 스트리머 사진 */
+    background: url(https://marshall-ku-tgd.github.io/tmpImages/cat.png) center
+        no-repeat;
+}
+#log > div.moderator::before {
+    /* 관리자 사진 */
+    background: url(https://marshall-ku-tgd.github.io/tmpImages/cat.png) center
+        no-repeat;
+}
+#log > div.broadcaster::before,
+#log > div.moderator::before {
+    left: auto;
+    right: 0;
+}
+#log > div .colon {
+    display: none;
+}
+#log > div .meta {
+    display: block;
+    font-size: $font_sizepx;
+    line-height: 1.3;
+}
+#log > div.broadcaster .meta,
+#log > div.moderator .meta {
+    text-align: right;
+}
+#log > div .meta {
+    margin-bottom: 3px;
+}
+#log > div .meta > img {
+    display: inline-block;
+    height: $font_sizepx;
+    width: auto;
+    margin-right: 4.5px;
+    float: none !important;
+}
+#log > div .message {
+    position: relative;
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    border-radius: 0.4em;
+    padding: 5px;
+}
+#log > div .message::after {
+    content: "";
+    box-sizing: content-box;
+    position: absolute;
+    width: 17.5px;
+    height: 25px;
+    border: 0 solid #fff;
+    border-width: 0 20px;
+    border-radius: 50%;
+    clip: rect(0, 38px, 14px, 29px);
+    display: block;
+    z-index: 1;
+    left: -37.5px;
+    top: 5px;
+}
+#log > div.broadcaster .message::after,
+#log > div.moderator .message::after {
+    left: auto;
+    right: -37.3px;
+    clip: rect(0, 28px, 10px, 20px);
+}
+
+```
+
+위 코드를 커스텀 CSS에 추가하시면 됩니다.
+
+"https://marshall-ku-tgd.github.io/tmpImages/cat.png"를 수정해 본인이 원하시는 이미지를 추가하실 수도 있습니다.  
+반드시 외부에서 접속할 수 있는 \[이미지의 링크\]여야 합니다!  
+(권장 크기 : 40px \* 40px)

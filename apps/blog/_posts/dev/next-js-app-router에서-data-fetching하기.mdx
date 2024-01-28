@@ -1,0 +1,160 @@
+---
+title: Next.js app router에서 data fetching하기
+description: 어느덧 App Router가 업데이트된 지도 좀 되었습니다. 솔직히 마음에 안 드는 부분이 꽤 있고, 당장 저도 쓰기 불편할 때가 많아 차마 팀에 도입하자는 얘기를 못 꺼내고 있습니다.OS 이미지도 매번 나오자마자 최신으로 업데이트하고, 검증된 라이브러리보단 날것의 새로 나온 라이브러리를 좋아하는 힙스터 개발자에겐 꽤 시리게 추운❄️ 겨울입니다. 이번에 간단하게 채팅 서비스 PoC를 진행하면서, Front-end 애플리케이션이 필요해졌습니다.초반엔 그냥
+date:
+  posted: 2023-11-20T13:23:00.000Z
+tags:
+  - Next.js
+  - App Router
+coverImage: /images/2023/11/Next.js-data-fetching.png
+ogImage: /images/2023/11/Next.js-data-fetching.png
+---
+
+어느덧 App Router가 업데이트된 지도 좀 되었습니다.
+
+솔직히 마음에 안 드는 부분이 꽤 있고, 당장 저도 쓰기 불편할 때가 많아 차마 팀에 도입하자는 얘기를 못 꺼내고 있습니다.  
+OS 이미지도 매번 나오자마자 최신으로 업데이트하고, 검증된 라이브러리보단 날것의 새로 나온 라이브러리를 좋아하는 힙스터 개발자에겐 꽤 시리게 추운❄️ 겨울입니다.
+
+이번에 간단하게 [채팅 서비스](https://github.com/marshallku/nestjs-chat-api) PoC를 진행하면서, Front-end 애플리케이션이 필요해졌습니다.  
+초반엔 그냥 Vanilla JS로 만들다가, 디자인 시스템 도입할 때 만들어둔 [Turborepo 테스트용 repository](https://github.com/marshallku/ui-playground)에 간단하게 [애플리케이션 하나 ](https://github.com/marshallku/ui-playground/tree/master/apps/chat)추가해 제작 중입니다.  
+너무 나오자마자 간단하게 써봐서 마음에 안 들었던 거겠지…하는 일말의 기대와 함께 만들기 시작했는데, 여전한 부분이 많더라고요.
+
+---
+
+아무튼, 제 지병 탓에 새 프로젝트를 pages router에서 할 순 없으니, app router로 간단하게 제작해봤습니다.
+
+caching, ridating 등의 기능을 axios에선 사용할 수 없으니 사용하지 않기로 했습니다.  
+아직 React Query만큼 성숙하진 않았고, 앞으로도 React Query가 제공해주는 만큼의 다양한 편의성을 제공해주진 않겠지만, React Server Component와 함께라면 hydration 등 핵심적인 기능은 지금도 충분히 대체할 수 있을 거로 생각해 React Query도 사용하지 않기로 했습니다.
+
+이렇게 둘을 제외하면 사실 남는 것도 별로 없거니와 찾아봐도 마음에 드는 게 없어, 오랜만에 fetcher를 간단하게 구현해보기로 했습니다.
+
+```
+export default function createInstance({ baseUrl, timeOut }: InstanceOptions) {
+    const fetcher: Instance = {
+        baseUrl,
+        error(message = "Failed to fetch") {
+            return {
+                error: true,
+                message,
+            };
+        },
+        _dummyPromise: new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    error: true,
+                    message: "Took too long to fetch",
+                });
+            }, timeOut);
+        }),
+        async fetch(resource: string, init?: RequestInit) {
+            try {
+                const response = timeOut
+                    ? await Promise.race([this._dummyPromise, fetch(`${baseUrl}${resource}`, init)])
+                    : await fetch(`${baseUrl}${resource}`, init);
+                if ("ok" in response && response.status === 204) return { success: true };
+                if ("error" in response) throw new Error(response.message);
+                const json = await response.json();
+
+                return json;
+            } catch (err) {
+                if (typeof err === "string") return this.error(err);
+                console.log(err);
+                return this.error();
+            }
+        },
+        async get(resource: string, init?: RequestInit) {
+            return this.fetch(resource, init);
+        },
+        async post(resource: string, init: RequestInit = {}) {
+            // eslint-disable-next-line no-param-reassign
+            init.method = "POST";
+            return this.fetch(resource, init);
+        },
+        async delete(resource: string, init: RequestInit = {}) {
+            // eslint-disable-next-line no-param-reassign
+            init.method = "DELETE";
+            return this.fetch(resource, init);
+        },
+        async put(resource: string, init: RequestInit = {}) {
+            // eslint-disable-next-line no-param-reassign
+            init.method = "PUT";
+            return this.fetch(resource, init);
+        },
+    };
+
+    return fetcher;
+}
+
+```
+
+약 2년 전쯤 프로젝트를 진행할 때 간단하게 만들었던 유틸리티입니다.  
+꽤 많은 부분을 공통화하려 노력한 게 보여서 가상하긴 하지만…아래와 같은 단점이 있습니다.
+
+* 아직 코드가 많지 않아 크게 문제 되진 않지만…`fetch`로 작성한 코드를 대체할 수 없습니다.
+* interceptor를 추가해 request, response에 공통적인 로직을 적용할 수가 없습니다.
+* fetcher가 에러 핸들링까지 해버립니다.
+
+위 단점을 해결하면서, 몇 안 되는 장점 중 하나인 `baseUrl`을 살릴 방법이 없나 고민하던 와중에
+
+```
+type FetchParameters = Parameters<typeof fetch>;
+type Promiseable<T> = T | Promise<T>;
+export type HTTPClient<R = Response> = ReturnType<typeof httpClient<R>>;
+
+export interface HTTPClientOption<T = Response> extends Omit<NonNullable<FetchParameters[1]>, "body"> {
+    baseUrl?: string;
+    interceptors?: {
+        request?(
+            input: NonNullable<FetchParameters[0]>,
+            init: NonNullable<FetchParameters[1]>,
+        ): Promiseable<FetchParameters[1]>;
+        response?(response: Response): Promiseable<T>;
+    };
+}
+
+const applyBaseUrl = (input: FetchParameters[0], baseUrl?: string) => {
+    if (!baseUrl) {
+        return input;
+    }
+
+    if (typeof input === "object" && "url" in input) {
+        return new URL(input.url, baseUrl);
+    }
+
+    return new URL(input, baseUrl);
+};
+
+export default function httpClient<T = Response>({
+    baseUrl,
+    interceptors = {},
+    ...requestInit
+}: HTTPClientOption<T> = {}) {
+    return async function <R = T extends Response ? Response : T>(
+        input: FetchParameters[0],
+        init?: FetchParameters[1],
+    ): Promise<R> {
+        const url = applyBaseUrl(input, baseUrl);
+        const option = { ...requestInit, ...init };
+        const interceptorAppliedOption = interceptors.request ? await interceptors.request(url, option) : option;
+        const response = await fetch(url, interceptorAppliedOption);
+
+        if (interceptors.response) {
+            return (await interceptors.response(response)) as R;
+        }
+
+        return response as R;
+    };
+}
+```
+
+[Github에서 코드 확인](https://github.com/marshallku/ui-playground/blob/master/apps/chat/src/utils/lib/httpClient.ts)
+
+잠결에 생각난 코드를 새벽에 허겁지겁 작성해봤습니다.
+
+* `baseUrl`을 추가할 수 있습니다
+* interceptor를 사용해, request init과 response body를 공통으로 조작할 수 있습니다
+* `fetch`하고 그 결과를 return만 합니다. 데이터를 가공하거나, 에러를 핸들링하는 건 interceptor로 작업하면 됩니다
+
+가볍게 쓰기엔 충분한 형태가 아닐까 싶습니다.
+
+이후로는, request interceptor에서 공통된 헤더 추가, 인증 토큰 관련 작업 등을 진행하고, response interceptor에선 Unauthorized 에러 등 공통된 오류 처리, response body json 파싱 등 매번 해오던 작업을 진행하면 됩니다.

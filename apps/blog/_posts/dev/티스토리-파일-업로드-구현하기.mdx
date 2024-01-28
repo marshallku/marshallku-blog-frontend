@@ -1,0 +1,131 @@
+---
+title: \[티스토리\] 파일 업로드 구현하기
+description: 확인해보니 티스토리 Access Token의 유효 기간이 1시간밖에 되질 않습니다. 늘릴 방법은 없고요. 만약 이 방법을 사용하시려면 1시간마다 토큰을 갱신해야 합니다. 얼마 전 제 블로그에 구현한 댓글 이미지 첨부와 비슷한 기능을 티스토리 API로 구현하는 방법입니다. 시작하기 전 기본적으로 티스토리는 모든 댓글을 텍스트 취급하기 때문에, 이미지 링크 등을 찾아 이미지로 변환해주는 작업이 필요합니다.이 포스트를 참고하시면
+date:
+  posted: 2020-06-19T12:41:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - 티스토리
+  - API
+coverImage: /images/2020/06/upload-success.png
+ogImage: /images/2020/06/upload-success.png
+---
+
+참고 : 확인해보니 티스토리 Access Token의 유효 기간이 1시간밖에 되질 않습니다. 늘릴 방법은 없고요. 만약 이 방법을 사용하시려면 1시간마다 토큰을 갱신해야 합니다.
+
+얼마 전 제 블로그에 구현한 [댓글 이미지 첨부](https://marshallku.com/notice/%eb%8c%93%ea%b8%80-%ec%9d%b4%eb%af%b8%ec%a7%80-%ec%b2%a8%eb%b6%80-%ec%97%85%eb%8d%b0%ec%9d%b4%ed%8a%b8)와 비슷한 기능을 티스토리 API로 구현하는 방법입니다.
+
+## 시작하기 전
+
+기본적으로 티스토리는 모든 댓글을 텍스트 취급하기 때문에, 이미지 링크 등을 찾아 이미지로 변환해주는 작업이 필요합니다.  
+[이 포스트](https://marshallku.com/web/tips/%ed%8b%b0%ec%8a%a4%ed%86%a0%eb%a6%ac-%eb%8c%93%ea%b8%80%ec%97%90-%eb%a7%81%ed%81%ac-%eb%b0%8f-%ec%9d%b4%eb%af%b8%ec%a7%80-%ec%b6%94%ea%b0%80%ed%95%98%ea%b8%b0)를 참고하시면 해당 기능을 추가하실 수 있습니다.
+
+## API 등록
+
+![API 등록](/images/2020/06/api.png)
+
+[오픈 API 앱 등록 페이지](https://www.tistory.com/guide/api/manage/register)에서 위 사진처럼 입력창을 채웁니다.  
+서비스 URL은 본인 블로그의 주소를 입력하시면 되고, CallBack은 아무런 주소나 사용하셔도 됩니다.
+
+![앱 아이디 확인](/images/2020/06/app.png)
+
+ 등록이 끝나면 App ID를 확인하실 수 있습니다.
+
+```
+https://www.tistory.com/oauth/authorize?client_id={client-id}&redirect_uri={redirect-uri}&response_type=token
+```
+
+{client-id}는 App ID로  
+{redirect-uri}는 CallBack에 입력한 주소로 변경하시고 위 주소로 들어가시면 CallBack에 입력한 주소로 리다이렉트되며 주소 끝에 `#access_token={token}&state=` 란 형식으로 Access Token이 반환됩니다. 토큰을 복사해둬 주세요.
+
+## HTML 업데이트
+
+```
+<div>
+  <textarea name="[##_rp_input_comment_##]" id="commentTextarea" placeholder="댓글을 입력해주세요."></textarea>
+</div>
+<div class="attach-wrapper">
+  <label for="fileUpload" class="attach-btn">업로드</label>
+  <input type="file" name="uploadedfile" id="fileUpload" style="display:none">
+</div>
+
+```
+
+스킨 편집 > HTML에서 _rp\_input\_comment_를 검색하면 textarea가 하나 나올 겁니다. 해당 textarea에 id가 없다면 commentTextarea라는 id를 추가해주세요.
+
+그 아래 보이는 것처럼 label과 input#fileUpload도 추가해주세요.  
+굳이 .attach-wrapper 안에 추가하실 필요 없이 본인의 재량껏 하시면 됩니다.  
+input#fileUpload는 display: none으로 숨기시는 걸 추천합니다. 가능하면 위에 작성한 것처럼 인라인 스타일보단 CSS를 수정해서 숨겨주세요.
+
+![댓글 입력창 업데이트](/images/2020/06/comment-field.png)
+
+제 티스토리 댓글 창입니다. 위에서 보실 수 있듯 input#fileUpload는 숨겨주시는 게 미관상 훨씬 좋습니다.
+
+## Javascript 추가
+
+```
+document.getElementById("fileUpload") && document.getElementById("fileUpload").addEventListener("change", (e) => {
+    e.preventDefault();
+
+    const input = document.getElementById("fileUpload");
+    const data = new FormData();
+    data.append("uploadedfile", input.files[0]);
+
+    fetch(
+        "https://www.tistory.com/apis/post/attach?access_token={access-token}&blogName={blog-name}&output=json",
+        {
+            method: "POST",
+            body: data,
+        }
+    )
+        .then((response) => {
+            return response.json();
+        })
+        .then((response) => {
+            const { tistory } = response;
+
+            if (tistory.status === "200") {
+                const { url } = tistory;
+                const fileId = url.slice(
+                    url.lastIndexOf("/") + 1,
+                    url.length - 4
+                );
+                const newUrl = `https://t1.daumcdn.net/cfile/tistory/${fileId}?original`;
+                // https 주소로 이미지 주소 변경
+
+                const commentTextarea = document.getElementById(
+                    "commentTextarea"
+                ); // 본인 상황에 맞게 수정
+
+                commentTextarea.value = `${
+                    commentTextarea.value === ""
+                        ? newUrl
+                        : `${commentTextarea.value}\n${newUrl}`
+                }`;
+            } else {
+                console.error(`오류 : ${tistory.status}`);
+            }
+            // 댓글 입력란에 쓴 내용이 없으면 입력란의 내용을 이미지 주소로 수정, 쓴 내용이 있으면 엔터 한 번 후 이미지 주소 입력
+        });
+});
+
+
+```
+
+input#fileUpload의 변화를 감지해 파일이 추가되면 업로드하는 스크립트입니다.  
+{access-token}엔 Access Token을  
+{blog-name}엔 블로그 이름(xxx.tistory.com에서 xxx)을 넣으시면 됩니다.
+
+\* Access Token이 노출되는 건 여러모로 좋지 않으니, [난독화 사이트](https://obfuscator.io/) 등을 이용해 암호화를 한 번 하시는 걸 추천합니다. 난독화 사이트에서 String Array Encoding을 Base64로 변경하시면 스트링이 Base64로 인코딩됩니다.
+
+심지어 https가 없는 `cfile{숫자}.uf.tistory.com`란 주소를 반환해서, `t1.daumcdn.net`으로 수정해주는 과정을 거쳐야 합니다.
+
+이미지의 주소가 `cfile6.uf.tistory.com/image/1328CE504DB79F5932B13F`라 가정하면 제일 마지막에 `132…` 부분에서 제일 마지막 4글자를 제외한 문자를 `t1.daumcdn.net/cfile/tistory/` 뒤에 넣어주면 https로 암호화된 주소를 사용하실 수 있습니다.
+
+## 확인
+
+![업로드 성공](/images/2020/06/upload-success.png)
+
+성공적으로 모든 과정을 마치셨으면 파일 업로드 버튼을 클릭하셔서 사진을 올려보세요.  
+모든 게 정상적으로 진행됐다면 위 사진처럼 댓글 창에 이미지 주소가 추가될 겁니다.

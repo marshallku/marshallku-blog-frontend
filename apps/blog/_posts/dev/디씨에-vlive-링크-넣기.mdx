@@ -1,0 +1,41 @@
+---
+title: 디씨에 vlive 링크 넣기
+description: V LIVE - 소이 브이앱이라 부르는 - 의 비디오 링크 구조는https://vlive.tv/video/(비디오 ID)이런 형식입니다. 디씨인사이드에선 video가 금칙어라, 위 링크를 첨부하면 https://vlive.tv//(비디오 ID)만 남게 됩니다.결과적으론 없는 링크가 되는 거죠. 그래서 vlive.gq란 무료 도메인을 받아, video란 단어 없는 링크를 첨부하면 V LIVE로 리다이렉트되는 사이트를 만들었습니다.https://vlive.gq/(비디오 ID)를 입력하면 https://vlive.tv/video/(비디오 ID)로 접속합니다. 예시) https://www.vlive.tv/video/5204 =&gt; https://vlive.gq/5204 &lt;!doctype html&gt; &lt;html lang=&quot;ko&quot;&gt;
+date:
+  posted: 2020-01-09T08:09:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+coverImage: /images/2020/01/vlive.jpg
+ogImage: /images/2020/01/vlive.jpg
+---
+
+V LIVE - 소이 브이앱이라 부르는 - 의 비디오 링크 구조는  
+https://vlive.tv/video/(비디오 ID)  
+이런 형식입니다.
+
+디씨인사이드에선 video가 금칙어라, 위 링크를 첨부하면 https://vlive.tv//(비디오 ID)만 남게 됩니다.  
+결과적으론 없는 링크가 되는 거죠.
+
+그래서 vlive.gq란 무료 도메인을 받아, video란 단어 없는 링크를 첨부하면 V LIVE로 리다이렉트되는 사이트를 만들었습니다.  
+https://vlive.gq/(비디오 ID)를 입력하면 https://vlive.tv/video/(비디오 ID)로 접속합니다.
+
+예시) <https://www.vlive.tv/video/5204> \=> <https://vlive.gq/5204>
+
+```
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <title>v앱 리다이렉트</title>
+    <script>location.pathname!=="/"?(location.href=`https://www.vlive.tv/video${location.pathname}`):(location.href="https://www.vlive.tv")</script>
+</head>
+<body>
+    <div id="redirect"></div>
+    <script>const a=document.createElement("a");a.href=`https://www.vlive.tv/video${location.pathname}`,a.textContent="v앱 열기",document.getElementById("redirect").append(a);</script>
+</body>
+</html>
+
+```
+
+HTML 소스.  
+굉장히 단순합니다.

@@ -1,0 +1,193 @@
+---
+title: 티스토리 새 글 발행시 브라우저 알림 보내기
+description: 티스토리에서 새 글을 발행할 때마다 웹 푸시 알림을 보내는 방법입니다.브라우저에서 알림을 보내니, 구독자가 굳이 피드에 접속하지 않아도 새 글 발행 여부를 파악할 수 있게 됩니다! 티스토리에는 루트에 파일을 올릴 권한이 없어, One Signal과 Zapier 두 개를 조합해서 사용해야 합니다.초기 설정은 다소 번거로워도 한 번 설정해두면 알림이 계속 가니 처음 한 번만 좀 고생하시면 됩니다. One
+date:
+  posted: 2020-02-20T15:44:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - 티스토리
+  - 푸시 알림
+coverImage: /images/2020/02/Screenshot-from-2020-02-20-23-42-44.png
+ogImage: /images/2020/02/Screenshot-from-2020-02-20-23-42-44.png
+---
+
+티스토리에서 새 글을 발행할 때마다 웹 푸시 알림을 보내는 방법입니다.  
+브라우저에서 알림을 보내니, 구독자가 굳이 피드에 접속하지 않아도 새 글 발행 여부를 파악할 수 있게 됩니다!
+
+티스토리에는 루트에 파일을 올릴 권한이 없어, One Signal과 Zapier 두 개를 조합해서 사용해야 합니다.  
+초기 설정은 다소 번거로워도 한 번 설정해두면 알림이 계속 가니 처음 한 번만 좀 고생하시면 됩니다.
+
+## One Signal
+
+[One Signal 가입 페이지](https://app.onesignal.com/signup)에 접속 후 회원가입을 진행해주세요.  
+이미 계정이 있으시면 [앱 페이지](https://app.onesignal.com/)로 가시면 됩니다.
+
+![](/images/2020/02/new-app.png)
+
+가입 진행 후, 앱 페이지로 가면 이런 화면이 보일 겁니다.  
+NEW APP/WEBSITE를 클릭해주세요.
+
+![](/images/2020/02/add-app.png)
+
+앱의 이름을 설정합니다.  
+이 이름은 단순히 One Signal 홈페이지에서 앱을 구분하기 위한 용도로 사용되니, 아무렇게 지으셔도 크게 상관은 없습니다.
+
+![](/images/2020/02/web-push.png)
+
+Web Push를 선택해주세요.
+
+![](/images/2020/02/site-setup.png)
+
+사이트의 이름과 URL을 정확히 입력해주세요.  
+이 이름은 알림으로 가는 이름입니다.
+
+블로그의 아이콘을 업로드하시거나, 아이콘의 주소를 입력해주세요.
+
+마지막으로 아래에 My site is not fully HTTPS를 클릭해주세요.  
+티스토리도 https를 지원하긴 하지만, 루트 권한이 없어 어쩔 수 없습니다.  
+CHOOSE A LABEL 칸에 사용하실 도메인을 입력해주세요.  
+알림을 해당 도메인에서 보냈다고 표시되지만, 알림을 클릭하면 문제없이 티스토리 블로그로 갑니다.
+
+![](/images/2020/02/prompt-setup.png)
+
+이제 구독 알림 창을 손볼 차례입니다.  
+이 화면을 몇 번 봐야 하니 잘 기억해주세요.
+
+제일 먼저 Slide Prompt 제일 오른쪽의 연필 모양을 클릭해주세요.
+
+![](/images/2020/02/edit-slide-prompt.png)
+
+오른쪽에 표시되는 사진처럼 대문짝만 하게 알림을 보내고 싶다고 창이 뜨는데, 개인적으로 스팸 같아서 왼쪽 아래의 Delete Prompt로 지웁니다.
+
+![](/images/2020/02/customize-slide-prompt.png)
+
+사용하고 싶으시면 왼쪽에 Customize 버튼 클릭하셔서 영어는 한국어로 변경해주세요.  
+안 그래도 스팸 같이 생겼는데 영어로 뜨면 다들 그냥 스팸으로 확신하지 않을까 싶습니다.
+
+![](/images/2020/02/subscribe-bell.png)
+
+Slide Prompt를 삭제하시거나 한글로 바꾸고 저장하셨다면 다시 상술한 자주 볼 창이 나오는데, Add a prompt 버튼을 클릭해주시면 위 창이 뜹니다.
+
+Subscription bell 클릭하시고, 원하시는 위치에 원하시는 색상과 크기로 배치해주세요.
+
+![](/images/2020/02/customize-bell-text.png)
+
+이것도 customize 버튼을 클릭해 한글화가 가능합니다.
+
+![](/images/2020/02/custom-http-popup.png)
+
+저장하신 후 다시 상술한 화면에서 Click here to configure http pop-up 버튼 클릭해주시면 위 창이 뜹니다.  
+구독을 진행할 때 뜨는 팝업창이니, 이것도 customize 버튼을 클릭해 한글화해주세요.
+
+![](/images/2020/02/welcome-notification.png)
+
+이제 스크롤을 내리시면 구독했을 때 보내는 Welcome notification을 설정하실 수 있습니다.
+
+Title과 Message 설정하신 후, Link 아래 버튼을 클릭하시면 Welcome 알림 클릭 시 설정한 링크로 이동합니다.
+
+![](/images/2020/02/advanced.png)
+
+높은 확률로 여기서 건드리실 건 Persistence 하나가 끝일 겁니다.  
+체크해두면 클릭하거나 알림을 지울 때까지 알림이 떠있습니다.  
+취향껏 켜거나 꺼주세요.
+
+![](/images/2020/02/configure.png)
+
+설정을 끝내면 위 창이 뜰 겁니다.  
+Copy code 버튼을 클릭해주시고, One Signal을 종료하진 말아 주세요.
+
+![](/images/2020/02/add-before-head-ends.png)
+
+관리 페이지에서 스킨 편집 > HTML 편집 클릭하시고 HTML의 </head> 위에 코드를 붙여 넣어주세요.
+
+![](/images/2020/02/safari.png)
+
+Setting 클릭하시고 사파리 클릭하신 뒤 사이트의 주소만 적고 저장하시면 사파리(iOS 제외)에서도 작동 시작합니다.
+
+일단 여기까지만 하셔도 블로그의 알림을 수신으로 발송하실 수 있습니다.  
+글을 발행하면 자동으로 알림이 가도록 설정하려면 One Signal을 끄지 않은 채로 아래로 계속 진행해주세요.
+
+## Zapier
+
+[Zapier](https://zapier.com/app/dashboard)에서 작업을 진행할 차례입니다.
+
+![](/images/2020/02/zapier.png)
+
+ 마찬가지로 로그인 혹은 가입 후 Home > Dashboard로 가주세요. 
+
+![](/images/2020/02/rss-onesignal.png)
+
+Connect this app… 아래의 검색 상자에 Onesignal을 검색하시면 위 창이 뜹니다.  
+제일 위의 Send OneSignal push notifications for new RSS items에 있는 Try This 버튼을 클릭해주세요.
+
+![](/images/2020/02/add-rss.png)
+
+Feed URL만 입력하시고 Continue를 누르셔도 됩니다.  
+Feed URL은 https://본인의 티스토리 주소/feed입니다.
+
+예) https://html-test.tistory.com/feed
+
+![](/images/2020/02/data.png)
+
+Test & Continue를 클릭해주세요.
+
+![](/images/2020/02/sign-in-one-signal.png)
+
+Sign in to OneSignal 버튼을 클릭해주세요.
+
+![](/images/2020/02/keys-and-ids.png)
+
+One Signal로 돌아가셔서 Settings > Keys & IDs로 가시면 위 화면이 뜹니다.
+
+![](/images/2020/02/zapier-onesignal.png)
+
+App ID와 REST API Key를 입력하시고, 아래의 Yes, Continue 버튼을 클릭해주세요.
+
+![](/images/2020/02/customize-notification.png)
+
+푸쉬 알림을 수정할 수 있는 화면이 뜹니다.  
+RSS를 확인해 제일 최근에 발행한 글을 예시로 어디에 뭘 넣을지 설명해주니, 그리 어렵지 않게 설정하실 수 있을 겁니다.
+
+전 Send Time만 Pub Date로 설정해뒀습니다.  
+굳이 설정하지 않으셔도 글을 발행하는 즉시 (라고 하기엔 조금 후에) 알림이 전송되긴 합니다.
+
+![](/images/2020/02/done-zapier.png)
+
+고지가 눈앞입니다!  
+Done Editing을 눌러주세요.
+
+![](/images/2020/02/turn-zap-on.png)
+
+TURN ZAP ON을 클릭하시면 모든 설정이 끝납니다!
+
+## 구독 테스트
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-39-31.png)
+
+블로그로 가시면 설정하신 종(혹은 슬라이드 레이어)이 새로이 추가되어 있을 겁니다.
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-39-40.png)
+
+클릭하시면 위 알림창이 뜹니다.  
+(전 이 창을 설정해두지 않고 테스트를 진행해 영어입니다. 문제없이 설정하신 대로 표시될 겁니다.)
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-39-47.png)
+
+파란 버튼(Continue)을 누르고, 알림 보낼 권한을 허용하면 구독이 끝납니다.
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-40-02.png)
+
+알림이 반겨주기 시작합니다.
+
+![](/images/2020/02/test.png)
+
+이제부터 새 글을 발행하시면
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-42-44.png)
+
+위 스크린샷처럼 구독자에게 알림이 전송되고
+
+![](/images/2020/02/Screenshot-from-2020-02-20-23-44-08.png)
+
+알림을 클릭하면 해당 글을 확인할 수 있게 됩니다!

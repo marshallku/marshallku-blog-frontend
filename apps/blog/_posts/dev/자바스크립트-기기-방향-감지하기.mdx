@@ -1,0 +1,63 @@
+---
+title: \[자바스크립트\] 기기 방향 감지하기
+description:             기기를 회전해 테스트해보세요! 이런 정보도 가져올 수 있을지 몰랐는데, 자이로 센서를 이용해 기기의 방향도 가져올 수 있더라고요. const box = document.getElementById(&quot;testBox&quot;); function handleOrientation(event) { const alpha = event.alpha, beta = event.beta, gamma = event.gamma; if (!beta) { addMouseEvent() } document.getElementById(&quot;alpha&quot;).innerText = alpha, document.getElementById(&quot;beta&quot;).innerText = beta, document.getElementById(&quot;gamma&quot;).innerText = gamma, box.style.transform
+date:
+  posted: 2019-07-01T12:35:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/06/0-1.png
+ogImage: /images/2019/06/0-1.png
+---
+
+기기를 회전해 테스트해보세요!
+
+---
+
+이런 정보도 가져올 수 있을지 몰랐는데, 자이로 센서를 이용해 기기의 방향도 가져올 수 있더라고요.
+
+```
+const box = document.getElementById("testBox");
+
+function handleOrientation(event) {
+    const alpha = event.alpha,
+        beta = event.beta,
+        gamma = event.gamma;
+
+    if (!beta) {
+        addMouseEvent()
+    }
+
+    document.getElementById("alpha").innerText = alpha,
+    document.getElementById("beta").innerText = beta,
+    document.getElementById("gamma").innerText = gamma,
+
+    box.style.transform = `rotateX(${-beta}deg) rotateY(${gamma}deg)`
+}
+
+function handleMouseMove(event) {
+    const x = event.clientX,
+        y = event.clientY,
+        w = window.outerWidth / 2,
+        h = window.outerHeight / 2;
+
+    document.getElementById("x").innerText = x,
+    document.getElementById("y").innerText = y,
+
+    box.style.transform = `rotateX(${y - h}deg) rotateY(${x - w}deg)`
+}
+
+function addMouseEvent() {
+    window.addEventListener("mousemove", handleMouseMove);
+}
+
+window.addEventListener("deviceorientation", handleOrientation);
+
+```
+
+사용한 소스입니다.
+
+alpha값은 책상 위에 휴대폰을 두시고 팽이 돌리듯 돌려보시면 변합니다.  
+beta와 gamma는 그냥 조금만 돌려보시면 느낌이 오실 겁니다.
+
+만약 자이로 센서가 없어서 beta 값을 받아오지 못하면 마우스의 움직임을 감지해 상자가 움직이도록 했습니다.

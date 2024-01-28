@@ -1,0 +1,261 @@
+---
+title: Before / After 이미지 슬라이더
+description: Github 요즘 간간이 포토샵도 만지작거리는데, 보정 열심히 끝내면 원본이랑 비교해보는 재미가 쏠쏠하더라고요. 그러다 이미지 비교엔 슬라이더만 한 게 없단 생각에, 슬라이더를 한 번 제작해봤습니다.이래저래 찾아보니 죄다 jQuery로 만든 것뿐이더라고요. 외부 라이브러리에 의존하지 않게 제작해봤습니다. HTML &lt;div class=&quot;comparison-slider&quot;&gt;     &lt;figure&gt;         &lt;img src=&quot;./images/before.jpg&quot; alt=&quot;before&quot; /&gt;         &lt;figcaption&gt;Before&lt;/figcaption&gt;     &lt;/figure&gt;     &lt;figure&gt;         &lt;img src=&quot;./images/after.jpg&quot; alt=&quot;after&quot; /&gt;         &lt;figcaption&gt;After&lt;/figcaption&gt;     &lt;/figure&gt; &lt;/div&gt; .comparison-slider 안에 두 개의 figure를 추가하고, 그 안에 img와 figcaption을
+date:
+  posted: 2020-09-26T10:50:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - CSS
+coverImage: /images/2020/09/image-comparison-slider.png
+ogImage: /images/2020/09/image-comparison-slider.png
+---
+
+[Github](https://github.com/marshallku/Image-Comparison-Slider)
+
+요즘 간간이 포토샵도 만지작거리는데, 보정 열심히 끝내면 원본이랑 비교해보는 재미가 쏠쏠하더라고요.
+
+그러다 이미지 비교엔 슬라이더만 한 게 없단 생각에, 슬라이더를 한 번 제작해봤습니다.  
+이래저래 찾아보니 죄다 jQuery로 만든 것뿐이더라고요. 외부 라이브러리에 의존하지 않게 제작해봤습니다.
+
+## HTML
+
+```
+<div class="comparison-slider">
+    <figure>
+        <img src="./images/before.jpg" alt="before" />
+        <figcaption>Before</figcaption>
+    </figure>
+    <figure>
+        <img src="./images/after.jpg" alt="after" />
+        <figcaption>After</figcaption>
+    </figure>
+</div>
+
+```
+
+`.comparison-slider` 안에 두 개의 `figure`를 추가하고, 그 안에 `img`와 `figcaption`을 추가했습니다.  
+`figcaption`의 추가 여부는 선택입니다.
+
+## CSS
+
+```
+.comparison-slider {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    user-select: none;
+    overflow: hidden;
+    touch-action: pan-x;
+}
+
+.comparison-slider > figure {
+    margin: 0;
+}
+
+.comparison-slider > figure:last-of-type {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+}
+
+.comparison-slider > figure > img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.comparison-slider > figure > figcaption {
+    position: absolute;
+    bottom: 0;
+    display: inline-block;
+    padding: 5px 10px;
+    line-height: 1.5;
+    background: rgba(30, 30, 30, 0.7);
+    max-width: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #f1f1f1;
+    transition: opacity 0.35s, transform 0.35s;
+}
+
+.comparison-slider > figure:last-of-type > figcaption {
+    right: 0;
+}
+
+.comparison-slider > figure > figcaption.hide {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+}
+
+.comparison-slider > figure:last-of-type > figcaption.hide {
+    transform: translate3d(10px, 0, 0);
+}
+
+.comparison-slider > .slider {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: 50%;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transform: translate3d(-20px, 0, 0);
+    background: #f1f1f1;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    cursor: grab;
+}
+
+.comparison-slider.dragging,
+.comparison-slider.dragging > .slider {
+    cursor: grabbing;
+}
+
+.comparison-slider.dragging > .slider {
+    background: #d2abff;
+}
+
+.comparison-slider > .slider > svg {
+    pointer-events: none;
+}
+
+
+```
+
+`.comparison-slider`에 `touch-action: pan-x`를 추가해 y축으론 터치가 작동하지 않게 했습니다.  
+반드시 화면을 꽉 채우지 않게 해야 모바일에서 스크롤이 가능합니다.  
+만약 모바일에서 화면을 꽉 채울 여지가 있다면 좀 못났더라도 touch-action을 제거해주셔야 합니다.
+
+---
+
+이미지의 크기 조절은
+
+1. before 이미지의 크기를 기준으로 after 이미지를 맞출 것
+2. before 이미지가 왼쪽, after 이미지가 오른쪽에 표시될 것
+3. window에 resize 이벤트를 추가할 필요가 없게 할 것
+
+위 조건을 다 만족하려니 after 이미지를 clip-path를 이용해 자르는 게 최선이더라고요.
+
+![clip-path polygon](/images/2020/09/polygon.png)
+
+clip-path: polygon에서 polygon 내부의 좌표가 4개일 땐 위 그림처럼 작동합니다.
+
+굳이 퍼센티지 계산하기 귀찮으시면 [clip-path maker](https://bennettfeely.com/clippy/)를 이용하시면 편하게 제작하실 수 있을 겁니다.  
+심지어 폴리곤은 만드시기 나름이기에 내부의 점이 꼭 4개란 법도 없고, 5개 넘어가기 시작하면 어지러워서 머리만 굴려선 만들기 힘들더라고요.
+
+## Javascript
+
+```
+document.querySelectorAll(".comparison-slider").forEach((element) => {
+    const slider = document.createElement("div");
+    const resizeElement = element.getElementsByTagName("figure")[1];
+    if (!resizeElement) return;
+    const figcaption = {
+        first: element.getElementsByTagName("figcaption")[0],
+        second: element.getElementsByTagName("figcaption")[1],
+    };
+    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+    let ticking = false;
+
+    const slide = (event) => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+                ticking = false;
+
+                // sliding image
+                const clientX = event.clientX ?? event.touches[0].clientX;
+                const x = clientX - element.offsetLeft;
+                let percentage = ((x / element.offsetWidth) * 10000) / 100;
+
+                if (percentage >= 100) {
+                    percentage = 100;
+                }
+                if (percentage <= 0) {
+                    percentage = 0;
+                }
+
+                slider.style.left = `${percentage}%`;
+                resizeElement.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+
+                // hiding figcaption
+                if (figcaption.first) {
+                    if (x <= figcaption.first.offsetWidth) {
+                        figcaption.first.classList.add("hide");
+                    } else {
+                        figcaption.first.classList.remove("hide");
+                    }
+                }
+
+                if (figcaption.second) {
+                    if (
+                        element.offsetWidth - x <=
+                        figcaption.second.offsetWidth
+                    ) {
+                        figcaption.second.classList.add("hide");
+                    } else {
+                        figcaption.second.classList.remove("hide");
+                    }
+                }
+            });
+        }
+    };
+    const dragStart = () => {
+        element.addEventListener("mousemove", slide, { passive: true });
+        element.addEventListener("touchmove", slide, { passive: true });
+        element.classList.add("dragging");
+    };
+    const dragDone = () => {
+        element.removeEventListener("mousemove", slide);
+        element.removeEventListener("touchmove", slide);
+        element.classList.remove("dragging");
+    };
+
+    slider.addEventListener("mousedown", dragStart, { passive: true });
+    slider.addEventListener("touchstart", dragStart, { passive: true });
+
+    document.addEventListener("mouseup", dragDone, { passive: true });
+    document.addEventListener("touchend", dragDone, { passive: true });
+    document.addEventListener("touchcancel", dragDone, { passive: true });
+
+    slider.classList.add("slider");
+    arrow.setAttribute("width", "20");
+    arrow.setAttribute("height", "20");
+    arrow.setAttribute("viewBox", "0 0 30 30");
+    path.setAttribute(
+        "d",
+        "M1,14.9l7.8-7.6v4.2h12.3V7.3l7.9,7.6l-7.9,7.7v-4.2H8.8v4.2L1,14.9z"
+    );
+    arrow.append(path);
+    slider.append(arrow);
+
+    element.append(slider);
+});
+
+```
+
+slide를 그냥 호출하면 초당 450번까지도 레이아웃이 일어나길래 `requestAnimationFrame`을 이용해 디스플레이의 주사율에 맞게 레이아웃이 업데이트되게 최적화를 진행했습니다.
+
+마우스를 클릭하거나 터치를 시작한 상태에선 좌우로 아무리 크게 움직여도 슬라이더를 움직일 수 있게 `mousemove`과 `touchmove`는 `element`에 이벤트를 추가했지만 `mouseup`, `touchend`는 `document`에 이벤트를 추가했습니다.
+
+화살표 이모지 하나 추가하는데 굳이 svg를 썼습니다. 폰트마다 화살표 높이가 이상하게 달라 화살표가 정중앙에 오지 않는 폰트가 많더라고요.
+
+---
+
+여담으로, `createElement`로는 svg와 path를 만들 수 없더라고요. `createElementNS`를 처음 써봤습니다.
+
+---
+
+## 사족
+
+슬라이더에 넣은 이미지가 태어나서 처음 해본 인물 보정인데, 개인적으로 꽤 괜찮게 결과가 나온 것 같네요.  
+4x 업스케일, 색감 보정, 입술 덧칠, 치마 색 수정 등을 진행했습니다.

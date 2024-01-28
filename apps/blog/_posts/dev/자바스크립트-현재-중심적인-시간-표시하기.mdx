@@ -1,0 +1,79 @@
+---
+title: \[자바스크립트\] 현재 중심적인 시간 표시하기
+description: &quot;2019.12.04 23:00&quot; 처럼 표기된 시간을 현재 시각을 기준으로 &quot;13분 전&quot; 처럼 변경하는 스크립트입니다. export const SECOND_TO_MS = 1000; export const MINUTE_TO_SECOND = 60; export const HOUR_TO_SECOND = MINUTE_TO_SECOND * 60; export const DAY_TO_SECOND = HOUR_TO_SECOND * 24; export const WEEK_TO_DAY = 7; export const WEEK_TO_SECOND = WEEK_TO_DAY * DAY_TO_SECOND; // (365.24 / 12).toFixed(2) export const
+date:
+  posted: 2019-12-04T15:16:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/12/date.jpeg
+ogImage: /images/2019/12/date.jpeg
+---
+
+"2019.12.04 23:00" 처럼 표기된 시간을 현재 시각을 기준으로 "13분 전" 처럼 변경하는 스크립트입니다.
+
+```
+export const SECOND_TO_MS = 1000;
+export const MINUTE_TO_SECOND = 60;
+export const HOUR_TO_SECOND = MINUTE_TO_SECOND * 60;
+export const DAY_TO_SECOND = HOUR_TO_SECOND * 24;
+export const WEEK_TO_DAY = 7;
+export const WEEK_TO_SECOND = WEEK_TO_DAY * DAY_TO_SECOND;
+// (365.24 / 12).toFixed(2)
+export const MONTH_TO_DAY = 30.43;
+export const MONTH_TO_SECOND = MONTH_TO_DAY * DAY_TO_SECOND;
+// Consider leap year
+export const YEAR_TO_DAY = 365.24;
+export const YEAR_TO_SECOND = YEAR_TO_DAY * DAY_TO_SECOND;
+
+export default function formatToReadableTime(dateString: string): string {
+    const now = new Date().getTime();
+    const date = new Date(dateString).getTime();
+    if (Number.isNaN(date)) {
+        return "어떤 오후";
+    }
+
+    const { floor } = Math;
+    const diffToSeconds = (now - date) / SECOND_TO_MS;
+    const diffToDay = floor(diffToSeconds / DAY_TO_SECOND);
+    const lessThanDay = diffToSeconds < DAY_TO_SECOND;
+
+    if (lessThanDay) {
+        if (diffToSeconds < 5 * MINUTE_TO_SECOND) {
+            return "방금";
+        }
+
+        if (diffToSeconds < HOUR_TO_SECOND) {
+            return `${floor(diffToSeconds / MINUTE_TO_SECOND)}분 전`;
+        }
+
+        return `${floor(diffToSeconds / HOUR_TO_SECOND)}시간 전`;
+    }
+
+    if (diffToDay < WEEK_TO_DAY) {
+        return `${diffToDay}일 전`;
+    }
+
+    if (diffToDay < 2 * MONTH_TO_DAY) {
+        return `${floor(diffToDay / WEEK_TO_DAY)}주 전`;
+    }
+
+    if (diffToDay < YEAR_TO_DAY) {
+        return `${floor(diffToDay / MONTH_TO_DAY)}개월 전`;
+    }
+
+    return `${floor(diffToDay / YEAR_TO_DAY)}년 전`;
+}
+
+```
+
+new Date()를 이용해 구한 현재 시각과 전달받은 시각을 빼 차이를 구하는 방법을 이용합니다.
+
+[Date() MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global%5FObjects/Date/Date)을 참고하셔서 올바른 값을 전달해주셔야 `어떤 오후`란 오류가 출력되는 걸 막으실 수 있습니다.
+
+---
+
+번들러를 사용하고 계신단 가정하에 작성한 스크립트입니다.  
+매직넘버를 없애기 위해 선언해둔 상수가 많으니, 번들러를 사용하지 않으시면 `export default`만 지우는 게 아니라 [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)를 사용하거나, 매직 넘버를 코드에 직접 추가해 전역 객체를 더럽히지 않게 주의해주세요.
+
+가능하면 이른 시일 내로 라이브러리를 제작해보거나 하겠습니다.

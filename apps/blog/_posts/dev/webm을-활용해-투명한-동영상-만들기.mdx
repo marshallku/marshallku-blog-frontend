@@ -1,0 +1,119 @@
+---
+title: webm을 활용해 투명한 동영상 만들기
+description: 가끔 웹사이트에 투명한 배경화면을 넣고 싶을 때가 있는데, 웹에 널리 쓰이는 mp4는 알파 값(rgba 할 때 a)이 없어 투명한 색을 넣을 수 없습니다.mp4는 IE 9부터 어지간한 브라우저는 다 지원하는 반면, webm은 지원하는 브라우저는 좀 적어도(Can I Use), 훨씬 높은 압축률과 알파 채널이 있어 투명한 색을 넣을 수 있단 장점이 있습니다. 이번엔 간단하게 크로마키 등을 이용해
+date:
+  posted: 2020-10-22T15:03:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - AR
+  - webm
+coverImage: /images/2020/10/ar-taengoo-pc.png
+ogImage: /images/2020/10/ar-taengoo-pc.png
+---
+
+가끔 웹사이트에 투명한 배경화면을 넣고 싶을 때가 있는데, 웹에 널리 쓰이는 mp4는 알파 값(rgba 할 때 a)이 없어 투명한 색을 넣을 수 없습니다.  
+mp4는 IE 9부터 어지간한 브라우저는 다 지원하는 반면, webm은 지원하는 브라우저는 좀 적어도([Can I Use](https://caniuse.com/webm)), 훨씬 높은 압축률과 알파 채널이 있어 투명한 색을 넣을 수 있단 장점이 있습니다.
+
+이번엔 간단하게 크로마키 등을 이용해 단색 배경으로 촬영한 mp4 비디오를 webm으로 변환하며 배경을 날리는 방법을 간단히 알아보겠습니다.  
+단순한 AR도 구현할 수 있습니다.
+
+## ffmpeg 설치
+
+반드시 ffmpeg를 사용하실 필요는 없습니다. Adobe Media Encoder 등의 프로그램도 webm으로 인코딩할 수 있습니다.
+
+### Ubuntu
+
+```
+sudo apt install ffmpeg
+```
+
+군말 필요 없는 간단한 설치입니다.  
+물론 [WSL](https://marshallku.com/web/tips/%ec%9c%88%eb%8f%84%ec%9a%b0%ec%97%90-%ec%9a%b0%eb%b6%84%ed%88%ac-%ec%84%a4%ec%b9%98%ed%95%98%ea%b8%b0)에서도 잘 돌아갑니다.
+
+### MacOS
+
+Homebrew란 패키지 관리자를 먼저 설치하셔야 됩니다.  
+[Homebrew 홈페이지](https://brew.sh/)에서 설치 방법을 확인하실 수 있습니다.
+
+```
+brew install ffmpeg
+```
+
+Homebrew만 설치하면 마찬가지로 ffmpeg의 설치는 쉽습니다.
+
+### Windows
+
+시작하기 전에 솔직히 얘기하자면 WSL 설치하고 우분투에 ffmpeg 설치하는 것보다 귀찮습니다.
+
+먼저, [FFmpeg 홈페이지](https://www.ffmpeg.org/download.html)에 접속해, Windows 아이콘을 클릭한 뒤, 최상단의 Windows builds from gyan.dev을 클릭해주세요.
+
+![ffmpeg release](/images/2020/10/ffmpeg-release.png)
+
+release를 찾으신 뒤, 압축 파일을 받고, 원하는 위치에 압축을 풀어주세요.  
+루트 디렉토리나 Program Files 폴더 등 찾고 관리하기 편한 위치로 하시는 걸 추천합니다.
+
+![시스템 설정](/images/2020/10/시스템-설정.png)
+
+Windows 키 + R로 실행창을 여시고, control 입력 후 엔터치시면 제어판이 열립니다. 제어판에서 '변수'라고만 검색하셔도 환경 변수 편집 항목이 보이실 겁니다.
+
+클릭하시면 위 창이 뜹니다. 제일 아래 환경 변수(Environment Variables) 버튼 클릭해주세요.
+
+![환경 변수](/images/2020/10/환경_변수.png)
+
+클릭하시면 위 창이 뜹니다.  
+Path 클릭하시고 편집(Edit) 클릭해주세요.
+
+![환경 변수 편집](/images/2020/10/환경-변수-편집.png)
+
+새로 만들기(New) 클릭하시고, ffmpeg의 압축을 푼 경로에 bin을 추가하셔서 경로를 작성하시고 확인을 눌러주세요.  
+예를 들어 `C:\ffmpeg`에 압축을 푸셨다면 `C:\ffmpeg\bin`을 입력하시면 됩니다.
+
+마지막으로 터미널에 ffmpeg를 입력해보시고, 오류가 뜨면 재부팅을 한 번 하시면 ffmpeg를 사용하실 수 있을 겁니다.
+
+## MP4에서 WEBM으로 변환
+
+쓸데없이 Windows에 ffmpeg 설치하는 거로 스크롤을 엄청나게 잡아먹었네요.
+
+```
+cd /path/to/input.mp4
+```
+
+먼저 입력 파일이 있는 경로로 가주세요.
+
+```
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -b:v 2M -vf "colorkey=0x010101:0.01:0.1,format=yuva420p" -auto-alt-ref 0 output.webm
+```
+
+\-i input.mp4 : 입력 파일입니다.
+
+\-c:v libvpx-vp9 : vp9 코덱으로 인코딩합니다.
+
+아웃풋 영상의 퀄리티입니다. -lossless 1이라고 입력하시면 무손실로 인코딩하실 수 있으나, 제가 해보니 12.4MB짜리 mp4 파일이 132MB가 되어 돌아옵니다. 근데 무손실 아니면 이래저래 깨지는 게 보기 싫긴 하더라고요…적절히 타협을 잘 하셔야 하는 부분이지 싶습니다. 더욱 자세한 건 [관련 위키](https://trac.ffmpeg.org/wiki/Encode/VP9)를 참조해주세요.
+
+\-vf "colorkey=0x010101:0.01:0.1, format=yuva420p" : 0x010101:0.01:0.1 순서대로 크로마키의 색상(배경색), 지울 색상과 배경색의 유사도(0.01 \~ 1.0), 혼합 정도(높을수록 불투명)입니다. 자세한 건 홈페이지의 [colorkey](https://ffmpeg.org/ffmpeg-filters.html#colorkey) 항목을 참고해주세요.
+
+\-auto-alt-ref 0 : 나머지 필요한 항목은 알아서 채웁니다.
+
+output.webm : 출력 파일입니다.
+
+---
+
+기기의 사양에 따라 꽤 긴 시간을 기다려야 하실 수 있습니다. 침착하게 기다리시다 보면 output.webm이 반겨줄 겁니다.
+
+---
+
+투명한 배경의 비디오 제작은 끝났고, 제가 예전에 제작한 [카메라 앱](https://marshallku.com/work/web-application/twice-%ec%9b%b9-%ec%b9%b4%eb%a9%94%eb%9d%bc)을 참고하시면 카메라에 접근해 canvas에 그릴 수 있습니다. 그 canvas 위에 다시 webm 비디오를 그리거나, webm 비디오의 z-index가 더 높게 표시되게 하면,
+
+이런 간단한 AR도 구현할 수 있습니다. ([원본 비타500 비디오](https://www.youtube.com/watch?v=umLGB8Ot9Gw))
+
+저도 배경 투명인 webm 만드는 게 어려웠지, AR 구현은 크게 어렵지 않았기에 그냥 코드는 건너뛰겠습니다. 카메라 앱에서 카메라 canvas에 옮기는 것만 복사해다 webm 비디오만 얹으셔도 쉽게 됩니다.
+
+![AR 탱구](/images/2020/10/ar-taengoo.jpg)
+
+웹캠 화질도 별로고, 카메라도 위 방식으로 하면 화질을 100% 뽑아내질 못해서 그냥 사진 찍어다 위에 webm 얹어서 비디오를 촬영했는데, 휴대폰으로 그냥 보면 이런 느낌입니다.
+
+---
+
+본문과 크게 관련 없지만, 만들면서 크로마키의 배경이 초록이나 파랑인 이유를 절실히 깨달았습니다.  
+상술한 유사도를 0.1로 올리니, 외곽선은 없지만, 티랑 머리카락이 많이 날아가고, 0.01로 줄이니 티랑 머리카락은 많이 안 날아가지만, 외곽선이 생겨버리네요.  
+다 좋은데 하필 배경을 #010101로 바꿔서 올리는 바람에…

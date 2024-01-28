@@ -1,0 +1,144 @@
+---
+title: Node.js 크롤러 제작 후기
+description: 개인적으로 배경화면을 굉장히 자주 바꾸는 편인데, 자주 가는 배경화면 줍는 블로그가 역병 때문에 문을 잠깐 닫았던 터라 요즘 여기저기 돌아다니며 배경화면거리를 찾고 있었습니다.헌데 배경화면을 다루는 사이트 대부분이 접근성이 굉장히 떨어지더라고요. 한 포스트에 한 장의 사진만 올리거나, 80장의 사진을 한 포스트에 쓰는데 그 포스트를 다시 여러 페이지로 쪼개서 한 페이지에 두 장씩 보여준다거나 하는 식으로요.참고 참으며
+date:
+  posted: 2020-05-04T15:43:00.000Z
+  modified: 2023-11-19T07:27:00.000Z
+tags:
+  - 제작일지
+coverImage: /images/2020/05/nodejs-crawler.png
+ogImage: /images/2020/05/nodejs-crawler.png
+---
+
+개인적으로 배경화면을 굉장히 자주 바꾸는 편인데, 자주 가는 [배경화면 줍는 블로그](https://kissme2145.tistory.com/)가 역병 때문에 문을 잠깐 닫았던 터라 요즘 여기저기 돌아다니며 배경화면거리를 찾고 있었습니다.  
+헌데 배경화면을 다루는 사이트 대부분이 접근성이 굉장히 떨어지더라고요. 한 포스트에 한 장의 사진만 올리거나, 80장의 사진을 한 포스트에 쓰는데 그 포스트를 다시 여러 페이지로 쪼개서 한 페이지에 두 장씩 보여준다거나 하는 식으로요.  
+참고 참으며 쓰다 프로그래밍의 본질이라 할 수 있는 '귀찮음의 해결'을 위해 Node.js로 크롤러를 제작해봤습니다.  
+최근에 친구들 과제 대신해주느라 파이썬도 많이 다뤄서 파이썬으로 해볼까 싶었는데, Node.js 공부도 조금 더 해볼 겸 Node.js를 썼습니다.
+
+메인 컴퓨터나 서버 컴퓨터를 이용하면 저장장치에 무리가 많이 가지 않을까 싶어 크롤링용 프로그램을 돌리는 서버는 따로 두고, 결과 저장용 서버는 우분투가 깔린 구형 랩탑을 이용했습니다.  
+3일여간 총 30만 장 가량의 사진을 가져왔고, 수동으로 거르는 작업을 진행하고 있습니다. 대충 13만 장 가량만 살아남았고, 여기서 다시 거르고 걸러 휴대폰에 저장하는 중인데, 대충 거르는 데 너무 많은 힘을 소진해버려 정작 휴대폰엔 아직 1,000장도 저장하질 못했네요.
+
+---
+
+## 시작하기 전
+
+웹페이지를 가져오는 덴 axios를, 가져온 페이지를 파싱하는 덴 jsdom을, 크롤링한 내용을 워드프레스에 저장하기 위해 (편리한 카테고리 분류를 위해 워드프레스 이용) wpapi를 이용했습니다.
+
+비슷한 목적으로 사용하실 분을 위해 첨언하면, 정말 특수한 경우가 아니면 그냥 wpapi는 사용하지 않으시는 걸 추천합니다. 포스팅 여러 개 하면 블로그 자체가 504 오류 뿜으며 뻗어버립니다. nginx 재시작해도 달라지는 게 없고, 그냥 서버 시스템 재시작 외엔 답이 없었습니다.
+
+## 크롤링할 사이트 파악
+
+사이트 대부분은 반드시 내용이 유기적으로 연결되어 있습니다.
+
+제 블로그를 예로 들자면, 포스팅 페이지에 .prevPost, .nextPost란 div에 이전, 다음 글의 링크가 들어있습니다.  
+카테고리는 /category/name/page/(페이지 숫자) 로 이루어져 있습니다.
+
+포스팅을 긁어가려면 첫 번째 글부터 크롤링을 시작해서 .nextPost의 href를 .nextPost가 존재하지 않을 때까지 크롤링하거나, 마지막 글부터 .prevPost의 href를 .prevPost가 존재하지 않을 때까지 크롤링하면 됩니다.  
+카테고리를 긁어가려면 \`\`https://marshallku.com/category/name/page/${i}\`\`란 주소에 i에 1부터 서버가 404로 응답하기 전까지 1씩 추가하며 크롤링하면 됩니다.
+
+주소 파악이 끝났으면, 크롤링할 내용이 어떤 div에 어떻게 들어가 있는지 html 구조를 파악하시면 됩니다.  
+처음엔 정규표현식을 이용했는데, 사이트 바꿀 때마다 정규표현식 수정하려니 귀찮아서 그냥 두 번째 사이트부턴 jsdom을 이용해 그냥 프론트엔드에서 DOM에 접근하듯 코드를 짰습니다.
+
+## 크롤러 제작
+
+예제용으로 제 티스토리 블로그에 저장된 모든 사진을 저장하는 스크립트를 짜봤습니다. (주소 파악이 쉬워서 티스토리 블로그가 희생양이 되었습니다.)
+
+```
+const axios = require("axios");
+const jsdom = require("jsdom");
+const fs = require("fs");
+const request = require("request");
+const readline = require("readline");
+
+const {JSDOM} = jsdom;
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+let id = 315;
+// 블로그 제일 최신 글
+
+const get = number => {
+    axios
+        .get(`https://marshall-ku.tistory.com/${number}`)
+        .then((response) => {
+            const dom = new JSDOM(response.data);
+            const title = dom.window.document.title;
+            const article = dom.window.document.querySelector(".article");
+            const img = [...article.querySelectorAll("img")];
+            let i = 0; // 파일 이름용
+
+            const imgLength = img.length;
+            let j = 0; // 모든 이미지 저장 확인용
+
+            if (article) {
+                img.forEach(img => {
+                    download(`${img.src}?original`, `./images/${title}-${i}.${img.getAttribute("filemime").replace("image/", "")}`, () => {
+                        console.log(`${title} - ${i} saved.`);
+                        i++;
+                        j++;
+
+                        if (j === imgLength) update();
+                    });
+                });
+            }
+            else {
+                console.log(id, "has no article");
+                update();
+            }
+
+        })
+        .catch((error) => {
+            if (!error.response) {
+                console.log(id, "skipped");
+                update();
+            }
+            // 가끔 error.response가 undefined라 추가 
+            if (error.response.status === 404) {
+                console.log(id, "doesn't exist");
+                update();
+            }
+            else {
+                console.log(error.status, "retry after 20 seconds");
+                setTimeout(() => {
+                    get(id)
+                }, 20000);
+            }
+            // 오류가 있으면 20초 후 다시 페이지 요청.
+        });
+};
+
+const download = (url, path, callback) => {
+    request.head(url, () => {
+        request(url)
+            .pipe(fs.createWriteStream(path))
+            .on('close', callback)
+    })
+};
+
+const update = () => {
+    id--;
+    get(id);
+};
+
+rl.question("Post ID ", postid => {
+    id = +postid;
+    rl.close();
+});
+// 크롤러 재시작할 일 있을 때 편하려고 크롤링할 주소 입력받음
+
+rl.on("close", () => {
+    get(id);
+});
+
+```
+
+전 상술했듯 저장용 서버를 4분마다 재시작하느라 404 외의 오류가 발생하면 무조건 서버가 껐다 켜지는 중이라 생기는 오류였기에 20초 후 다시 페이지를 요청하게 해뒀는데, 그런 게 아니라면 그냥 에러를 감지하면 바로 update()를 실행하게 하셔도 됩니다.
+
+---
+
+편하자고 시작한 크롤링인데, 결과적으로 30만 장의 이미지 분류라는 과업을 떠맡게 되었습니다. 😂  
+지금 저장된 1,000장 외의 이미지는 버려지지 않을까 심히 걱정되네요.
+
+\+ 후기나 써보자고 시작한 글인데 쓰다 보니 내용이 너무 빈약해 크롤러 제작 방식이 되어버렸습니다. 카테고리 분류가 심히 혼란스럽지만, 일단 제작 후기니 제작일지로 분류해두려 합니다.

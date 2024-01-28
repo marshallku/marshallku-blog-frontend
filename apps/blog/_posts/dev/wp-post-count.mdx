@@ -1,0 +1,35 @@
+---
+title: \[워드프레스\] 하위 카테고리를 포함한 카테고리의 포스트 개수 구하기
+description: 워드프레스에서 카테고리의 포스트 개수를 표현하고 싶을 때 $category-&gt;count 혹은 $category-&gt;category_count 를 사용하면 해당 카테고리의 포스트 개수가 출력됩니다. 하지만, 위와 같은 코드는 하위 카테고리의 포스트는 세지 않고, 순수하게 해당 카테고리의 포스트 개수만 출력합니다. function postCount($id) { $count = get_category($id)-&gt;count; foreach (get_categories(array(&quot;child_of&quot; =&gt; $id)) as $category) { $count += $category-&gt;count; } return $count; } function.php에 위 함수를
+date:
+  posted: 2019-07-15T05:32:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - 워드프레스
+  - PHP
+coverImage: /images/2019/07/postcount.png
+ogImage: /images/2019/07/postcount.png
+---
+
+워드프레스에서 카테고리의 포스트 개수를 표현하고 싶을 때 $category->count 혹은 $category->category\_count 를 사용하면 해당 카테고리의 포스트 개수가 출력됩니다.
+
+하지만, 위와 같은 코드는 하위 카테고리의 포스트는 세지 않고, 순수하게 해당 카테고리의 포스트 개수만 출력합니다.
+
+```
+function postCount($id) {
+    $count = get_category($id)->count;
+    foreach (get_categories(array('child_of' => $id)) as $category) {
+      $count += $category->count;
+    }
+    return $count;
+}
+
+```
+
+function.php에 위 함수를 추가하시고, 포스트 개수를 출력하고 싶은 부분에
+
+```
+postCount($category->term_id)
+```
+
+위와 같이 카테고리의 id를 집어넣으셔서 함수를 호출하시면, 해당 카테고리와 하위 카테고리 전체의 포스트 개수를 출력하실 수 있습니다.

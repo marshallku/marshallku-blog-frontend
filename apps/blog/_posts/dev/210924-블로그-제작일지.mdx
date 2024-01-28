@@ -1,0 +1,120 @@
+---
+title: 210924 블로그 제작일지
+description: 블로그 글로벌 네비게이션 다크 모드 설정 버튼이 드로어에만 숨어있는 건 접근성이 떨어지지 않을까 항상 고민이 많았는데, 눈에 보이는 곳 중 적당히 넣을만한 데가 없어서 해결은 못 하고 있었습니다.결국 좌우대칭을 포기하고 글로벌 네비게이션에 넣어봤는데, 나름 적당한 위치인 것 같네요. 버튼은 하난데 테마는 셋(라이트, 세피아, 다크)이라 토글을 어떻게 해야 할지도 고민거리였는데, 단순하게 라이트 -&gt; 세피아 -&gt; 다크
+date:
+  posted: 2021-09-25T13:06:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 제작일지
+coverImage: /images/2021/09/210924-블로그-제작일지.png
+ogImage: /images/2021/09/210924-블로그-제작일지.png
+---
+
+## 블로그
+
+### 글로벌 네비게이션
+
+![글로벌 네비게이션 다크 모드 버튼](/images/2021/09/global-nav.png)
+
+다크 모드 설정 버튼이 드로어에만 숨어있는 건 접근성이 떨어지지 않을까 항상 고민이 많았는데, 눈에 보이는 곳 중 적당히 넣을만한 데가 없어서 해결은 못 하고 있었습니다.  
+결국 좌우대칭을 포기하고 글로벌 네비게이션에 넣어봤는데, 나름 적당한 위치인 것 같네요.
+
+버튼은 하난데 테마는 셋(라이트, 세피아, 다크)이라 토글을 어떻게 해야 할지도 고민거리였는데, 단순하게 라이트 -> 세피아 -> 다크 순으로 전환되게 해뒀습니다.
+
+SVG 아이콘도 하나 제작해 마이크로 인터랙션을 만들어봤는데, 꽤 만족스럽게 잘 뽑혔습니다.  
+Adobe Illustrator로 틀을 잡고, 크롬 개발자도구와 VSCode로 가다듬는 방식으로 제작했습니다.
+
+### BGM 플레이어
+
+![bgm 플레이어](/images/2021/09/bgm-player.png)
+
+BGM 플레이어의 디자인을 가다듬고 자동 재생 여부를 사용자가 결정할 수 있게 업데이트했습니다.  
+더해, BGM을 추가해뒀던 모든 게시글을 업데이트해뒀습니다.
+
+```
+@keyframes marquee {
+    0%,
+    5%,
+    95%,
+    100% {
+        transform: translateX(0);
+    }
+    45%,
+    55% {
+        transform: translateX(var(--transform-value));
+    }
+}
+
+```
+
+```
+const title = document.createElement("h2");
+const titleText = document.createElement("span");
+
+...
+
+// Check If title overflows
+const textWidth = titleText.offsetWidth;
+const titleWidth = title.offsetWidth;
+
+if (textWidth > titleWidth) {
+    title.classList.add("bgm__title--marquee");
+    title.style.setProperty(
+        "--transform-value",
+        `calc(${titleWidth}px - 100%)`
+    );
+    titleText.style.animation = `marquee ${
+        (textWidth / titleWidth) * 10
+    }s infinite linear`;
+}
+
+```
+
+아무래도 노래 제목은 한 줄로 표시되는 게 나을 것 같아 marquee 애니메이션을 간단히 구현해봤습니다.
+
+`h2`에 제목이 있는 `span`을 추가하고 줄 바꿈을 방지한 뒤, `span`의 너비가 `h2`의 너비보다 넓으면 애니메이션을 추가하게 해뒀습니다.
+
+### 배너 이미지
+
+페이지를 넘어다닐 때마다 배너 이미지가 트랜지션 없이 확확 바뀌는 게 별로라 불투명도를 이용해 이미지가 천천히 바뀌는 것 같은 효과를 추가해봤습니다.
+
+### 방명록
+
+![방명록](/images/2021/09/guestbook.png)
+
+방명록에선 헤더가 끝나는 부분에 있는 곡선을 제거해, 요소 위에 **요정**이 걸터앉은 느낌이 살게 해뒀습니다.
+
+### 제목 글꼴
+
+![홈 화면](/images/2021/09/home-page.png)
+
+제목 등을 글자의 굵기로만 강조하니 제목이 강조된단 느낌이 살지 않아 시범적으로 폰트를 달리해봤습니다.  
+천편일률적인 느낌은 벗어난 듯하나 아무래도 한글 글꼴은 용량이 커 득보단 실이 클까 걱정이네요.
+
+일단 최적화가 잘 된 구글 폰트에서 폰트를 하나 집어와 봤는데, 마음에 드는 글꼴도 없거니와 고른 글꼴이 본문의 글꼴과 비슷해 확실히 강조되는 느낌은 아니네요.
+
+적당한 글꼴을 골라 다듬어볼 예정입니다.
+
+### 기타
+
+* 카테고리 페이지와 글 페이지에서 해당 카테고리 / 글의 카테고리를 가져오는 방법 최적화
+* 인사말 제거
+* 클립보드 복사 시 `document.execCommand` 대신 클립보드 API를 이용하도록 업데이트
+* 기타 리팩토링 및 최적화
+
+## GIF Converter
+
+![GIF Converter](/images/2021/09/gif-converter.png)
+
+```
+location ~ /gifconverter/ {
+    ...
+    add_header Cross-Origin-Opener-Policy "same-origin";
+    add_header Cross-Origin-Embedder-Policy "require-corp";
+    ...
+}
+
+```
+
+위 두 헤더를 추가해 사이트를 격리해야 `SharedArrayBuffer`를 사용할 수 있도록 업데이트되어, Github에서 홈 서버로 해당 앱을 옮겼습니다.  
+<https://marshallku.com/gifconverter/> 에서 계속 이용하실 수 있습니다.

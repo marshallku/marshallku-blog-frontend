@@ -1,0 +1,130 @@
+---
+title: React 테스트 환경 구축하기
+description: create react app으로 react 애플리케이션을 생성하면 이런 문제에 관해 크게 고민할 일이 없으나, 전 cra에서 snowpack을 거쳐 요즘은 vite를 쓰고 있기에, 테스트 환경을 알아서 구축해줘야 합니다. 참고로 vite는 Vue.js를 만든 Evan You가 제작한 빌드 도구로, Esbuild를 사용해 제작되었습니다.Webpack 등으로 개발 서버를 시작해 HMR을 사용해도, 코드 양이 늘어나기 시작하면 병목이 나타나기 마련입니다. Vite는 ES Modules, Esbuild를
+date:
+  posted: 2022-01-25T14:23:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - ReactJS
+  - Jest
+coverImage: /images/2022/01/React-테스트-환경-구축.png
+ogImage: /images/2022/01/React-테스트-환경-구축.png
+---
+
+create react app으로 react 애플리케이션을 생성하면 이런 문제에 관해 크게 고민할 일이 없으나, 전 cra에서 [snowpack](https://www.snowpack.dev/)을 거쳐 요즘은 [vite](https://vitejs.dev/)를 쓰고 있기에, 테스트 환경을 알아서 구축해줘야 합니다.
+
+참고로 vite는 Vue.js를 만든 Evan You가 제작한 빌드 도구로, Esbuild를 사용해 제작되었습니다.  
+Webpack 등으로 개발 서버를 시작해 HMR을 사용해도, 코드 양이 늘어나기 시작하면 병목이 나타나기 마련입니다. Vite는 ES Modules, Esbuild를 활용한 pre-bundling 등으로 빠른 개발을 가능하게 해줍니다.  
+조금 더 자세한 내용은 [Why Vite](https://vitejs.dev/guide/why.html)를 참고해주세요.  
+
+## 패키지 설치
+
+```
+npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-library/user-event @babel/preset-react @babel/preset-typescript @babel/preset-env identity-obj-proxy
+```
+
+설치할 게 하나둘이 아닙니다.
+
+* [jest](https://github.com/facebook/jest) : 테스트 프레임워크
+* [ts-jest](https://github.com/kulshekhar/ts-jest) : Jest에서 Typescript를 사용할 수 있게 해주는 도구
+* [@testing-library/react](https://github.com/testing-library/react-testing-library) : React DOM 테스팅 유틸리티
+* [@testing-library/jest-dom](https://github.com/testing-library/jest-dom) : DOM 상태 테스트용 도구
+* [@testing-library/user-event](https://github.com/testing-library/user-event) : 사용자처럼 이벤트 발생시키는 도구
+* [identity-obj-proxy](https://github.com/keyz/identity-obj-proxy) : import한 CSS 모듈 등을 mock 데이터로 사용할 수 있게 해주는 도구
+
+## package.json
+
+```
+"scripts": {
+  "prebuild": "npm run test",
+  "test": "jest"
+},
+
+```
+
+`prebuild`와 `test` 두 스크립트를 추가해줬습니다.
+
+## jest.config.json
+
+```
+{
+    "roots": ["<rootDir>/test/"],
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+        "\\.(css|less|svg)$": "identity-obj-proxy"
+    },
+    "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"],
+    "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+    }
+}
+
+```
+
+테스트 환경은 `jsdom`으로 변경하고, `css`와 `svg` 파일은 `identity-obj-proxy`가 처리하도록 했습니다.  
+마지막으로 `ts`, `tsx` 파일은 `ts-jest`가 처리하도록 설정해줬습니다.
+
+## babel.config.json
+
+```
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "current"
+                }
+            }
+        ],
+        "@babel/preset-react",
+        "@babel/preset-typescript"
+    ]
+}
+
+```
+
+## test/setup.ts
+
+```
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "@testing-library/jest-dom";
+
+```
+
+(test 폴더 내부에 넣어주세요)
+
+`jest.config.json`에서 `setupFilesAfterEnv`에 들어있던 파일입니다.  
+상술한 것처럼 DOM 상태를 테스트하려면 `jest-dom`이 반드시 필요하니, import 하기 위한 파일을 따로 만들어줬습니다.
+
+혹시 eslint를 사용 중이시라면 설정에 따라 개발 의존성에 추가된 파일 import 하지 말라고 잔소리할 겁니다.  
+어차피 test는 개발 과정에서만 진행할 거니 조용히 하라고 각주를 추가해줍니다.
+
+## test/App.test.tsx
+
+```
+import { render, screen } from "@testing-library/react";
+import App from "../src/App";
+
+test("Renders main element", () => {
+    render(<App />);
+    const mainElement = screen.getByRole("main");
+    expect(mainElement).toBeInTheDocument();
+});
+
+```
+
+ (test 폴더 내부에 넣어주세요) 
+
+간단하게 `main` 엘리먼트가 있는지 확인하는 테스트 코드를 작성했습니다.
+
+## 마무리
+
+![npm run test 결과](/images/2022/01/npm-run-test.png)
+
+`npm run test`를 입력해보고 제대로 작동하는 걸 확인한 뒤, 즐거운 마음으로 테스트 코드를 작성하러 가면 끝입니다.
+
+## Reference
+
+* [Adding Jest with TypeScript Support to a Vite Application](https://egghead.io/lessons/jest-adding-jest-with-typescript-support-to-a-vite-application)
+* [Configuring Jest](https://jestjs.io/docs/configuration)

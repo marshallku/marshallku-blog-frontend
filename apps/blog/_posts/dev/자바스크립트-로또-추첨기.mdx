@@ -1,0 +1,72 @@
+---
+title: \[자바스크립트\] 로또 추첨기
+description: 우연히 새로 발견한 개발자 커뮤니티를 둘러보다 발견한 프로젝트에서 아쉬운 점이 보여 후다닥 만들어봤습니다. 개선하고 싶었던 점은 1 - 버튼을 연타하면 애니메이션이 진행되는 중에도 결과가 바뀐다.2 - 새로운 숫자를 부여받을 때 조금 더 역동적인 애니메이션이 표시됐으면 좋겠다. 이 두 가지 사항입니다. let tmp = 1; let numbers; function decryptEffect(element, time) { const effect = setInterval(() =&gt;
+date:
+  posted: 2019-07-20T01:18:00.000Z
+  modified: 2023-11-19T07:57:00.000Z
+tags:
+  - JavaScript
+  - 로또
+coverImage: /images/2019/07/lotto.jpg
+ogImage: /images/2019/07/lotto.jpg
+---
+
+ 우연히 새로 발견한 [개발자 커뮤니티](https://velog.io)를 둘러보다 발견한 [프로젝트](https://hongku-lotto.netlify.com/lotto.html)에서 아쉬운 점이 보여 후다닥 만들어봤습니다. 
+
+개선하고 싶었던 점은
+
+1 - 버튼을 연타하면 애니메이션이 진행되는 중에도 결과가 바뀐다.  
+2 - 새로운 숫자를 부여받을 때 조금 더 역동적인 애니메이션이 표시됐으면 좋겠다.
+
+이 두 가지 사항입니다.
+
+```
+let tmp = 1;
+let numbers;
+
+function decryptEffect(element, time) {
+    const effect = setInterval(() => {
+        element.innerText = Math.floor(Math.random() * 44 + 1);
+    }, 10);
+
+    setTimeout(() => {
+        const random = Math.floor(Math.random() * numbers.length);
+
+        clearInterval(effect);
+        element.classList.add("done");
+        element.innerText = numbers[random];
+        numbers.splice(random, 1);
+    }, time * 1000 + 1000);
+}
+
+function lottery() {
+    document.querySelectorAll(".ball").forEach((element, index) => {
+        element.classList.remove("done");
+        decryptEffect(element, index);
+    });
+}
+
+document.getElementById("btn").addEventListener("click", function () {
+    if (tmp !== 1) return;
+
+    numbers = Array.from({ length: 45 }, (_, i) => i + 1);
+    tmp = 0;
+    btn.classList.add("hide");
+    lottery();
+    setTimeout(function () {
+        tmp = 1;
+        btn.classList.remove("hide");
+    }, 7500);
+});
+
+
+```
+
+1번은 tmp란 항목을 만들어서 해결했습니다.
+
+tmp가 1이면 애니메이션을 실행합니다.  
+애니메이션이 실행되면 tmp는 0으로 변경되고, 애니메이션이 끝나면 tmp가 1로 다시 변경됩니다.
+
+2번은 텍스트를 복호화하는듯한 애니메이션을 만들어 해결했습니다.
+
+숫자가 0.01초에 한 번씩 계속 바뀌다가 첫 번째 항목부터 숫자가 정해지며 공이 살짝 커졌다가 작아지는 애니메이션이 표시됩니다.

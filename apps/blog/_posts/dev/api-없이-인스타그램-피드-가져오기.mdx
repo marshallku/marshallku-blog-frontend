@@ -1,0 +1,61 @@
+---
+title: API 없이 인스타그램 피드 가져오기
+description: 일반적으론 인스타그램 API를 이용해 피드를 가져오는 게 맞지만, 본인이 소유하지 않은 계정의 피드는 가져올 수가 없더라고요. 이러면 남은 방법은 해당 페이지의 내용을 긁어오는 방법뿐인데, 다행히도 인스타그램은 Cross Origin Resource Sharing을 허용해둬서 다른 도메인에서도 인스타그램 페이지를 긁어올 수 있습니다.* PC / 모바일 크롬, iOS 사파리 등에선 모두 성공했지만, 파이어폭스에선 요청을 차단했습니다. const wrapper = document.getElementById(&quot;instagram&quot;); fetch(&quot;https://www.instagram.com/twicetagram/&quot;) .then(a =&gt; {     return a.text(); }).then(a =&gt; {
+date:
+  posted: 2019-12-22T09:32:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/12/fetch-feed.jpg
+ogImage: /images/2019/12/fetch-feed.jpg
+---
+
+![](/images/2019/12/fetch-feed.jpg)
+
+일반적으론 인스타그램 API를 이용해 피드를 가져오는 게 맞지만, 본인이 소유하지 않은 계정의 피드는 가져올 수가 없더라고요.
+
+이러면 남은 방법은 해당 페이지의 내용을 긁어오는 방법뿐인데, 다행히도 인스타그램은 Cross Origin Resource Sharing을 허용해둬서 다른 도메인에서도 인스타그램 페이지를 긁어올 수 있습니다.  
+\* PC / 모바일 크롬, iOS 사파리 등에선 모두 성공했지만, 파이어폭스에선 요청을 차단했습니다.
+
+```
+const wrapper = document.getElementById("instagram");
+fetch("https://www.instagram.com/twicetagram/")
+.then(a => {
+    return a.text();
+}).then(a => {
+    const media = JSON.parse(a.slice(a.indexOf("edge_owner_to_timeline_media") + 30, a.indexOf("edge_saved_media") - 2));
+    media.edges.forEach(m => {
+        const node = m.node,
+            a = document.createElement("a"),
+            img = document.createElement("img");
+        
+        a.target="_blank",
+        a.href = `https://www.instagram.com/p/${node.shortcode}/`,
+        img.src = node.display_url,
+        a.append(img),
+        wrapper.append(a)
+    })
+})
+
+```
+
+먼저, 원하는 사람의 인스타그램 링크를 fetch합니다(위 코드에선 트와이스 인스타그램).
+
+인스타그램 소스를 보시면 아시겠지만, React를 사용해서 fetch로 받아온 텍스트를 Dom Parser에 집어넣으면 별다른 결과를 얻기 힘듭니다.
+
+소스를 보시다 보면 window.\_sharedData = 으로 시작하는 부분이 있는데, 여기에 정보 대부분이 들어있습니다. 피드는 edge\_owner\_to\_timeline\_media라는 Object에 들어있으니, 이 부분만 가져오면 됩니다.
+
+```
+"edge_owner_to_timeline_media":{...},"edge_saved_media":{...}
+```
+
+붉은 부분만 가져오기 위해 edge\_owner\_to\_timeline\_media의 인덱스에서 30을 더한 값(해당 스트링 제거를 위해), edge\_saved\_media의 인덱스에서 2를 뺀 값(," 제거를 위해)을 JSON.parse() 안에 집어넣어 오브젝트로 변환했습니다.
+
+edge\_owner\_to\_timeline\_media 내부에 edges란 Array가 있고, 그 안에 최근 올린 포스트 12개의 정보가 들어있습니다.  
+edges란 Array 안에 다시 Object가 있어서 위 코드처럼 media.edges의 모든 Object에서 node란 항목의 정보를 불러오도록 해주면 포스트의 정보에 접근할 수 있습니다.
+
+![](/images/2019/12/edges-node.png)
+
+Object 내부 모습
+
+전 #instagram이란 div 안에 제목이랑 이미지만 가져와서 뿌리도록 해뒀는데, 이미지에 사람이 나오는지 좋아요는 몇 개인지 등 다양한 정보가 들어있어서, 원하시면 위 소스를 수정하셔서 훨씬 다양한 정보를 출력하도록 하실 수 있습니다.

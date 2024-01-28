@@ -1,0 +1,221 @@
+---
+title: Imgur API로 이미지 업로드하기
+description: Imgur API를 사용해 이미지를 업로드하는 방법을 알아봅니다.
+date:
+  posted: 2020-08-20T13:52:00.000Z
+  modified: 2023-11-19T07:55:00.000Z
+tags:
+  - JavaScript
+  - Imgur
+coverImage: /images/2020/08/upload-image.png
+ogImage: /images/2020/08/upload-image.png
+---
+
+## 시작하기 전에
+
+[Imgur](https://imgur.com/)에서 앱을 추가하시고 클라이언트 ID를 발급받으셔야 합니다.  
+회원가입을 진행하셨으면 [클라이언트 추가 페이지](https://api.imgur.com/oauth2/addclient)로 가주세요.
+
+![클라이언트 추가](/images/2020/08/Imgur-Add-Client.png)
+
+Authorization callback URL은 API 키를 발급받을 때 쓰는 주소입니다.  
+그냥 운영하시는 웹사이트의 주소를 써넣으시면 됩니다만, 그냥 네이버 주소 같은 것 치셔도 작동은 합니다.
+
+![클라이언트 ID](/images/2020/08/Client-ID.png)
+
+성공적으로 클라이언트 추가를 마치시면 위 페이지가 나옵니다.  
+Client ID: 아래에 적힌 문자열을 복사해둬 주세요.  
+혹시 Client ID를 잊으시거나 클라이언트 설정을 변경하시려면 [Applications 설정](https://imgur.com/account/settings/apps) 페이지로 가시면 됩니다.
+
+## 파일 업로드
+
+```
+<input type="file" name="image" id="upload">
+```
+
+일단 input 엘리먼트를 하나 생성해주세요.  
+앞으로 이 input의 변화를 감지해 파일을 업로드할 겁니다.
+
+```
+function uploadFile() {
+    const fileInput = document.getElementById("upload");
+    const upload = (file) => {
+        if (file && file.size < 5000000) {
+            const formData = new FormData();
+
+            formData.append("image", file);
+            fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: {
+                    Authorization: "Client-ID <클라이언트 ID>",
+                    Accept: "application/json",
+                },
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log(response);
+                    // do Something
+                });
+        } else {
+            console.error("파일 용량 초과");
+        }
+    };
+
+    fileInput &&
+        fileInput.addEventListener("change", () => {
+            upload(fileInput.files[0]);
+        });
+}
+
+uploadFile();
+
+```
+
+`<클라이언트 ID>`를 본인의 클라이언트 ID로 변경해주세요.
+
+이제 이미지를 선택해 Input의 파일이 변경될 때마다 Imgur에 업로드합니다.  
+console.log(response)는 응답이 어떤 형태로 오는지 참고하시라고 추가해뒀으니, 해당 코드와 아래 줄의 do Something을 수정하시면 됩니다.
+
+```
+{
+    "data": {
+        "id": "vZhkDah",
+        "title": null,
+        "description": null,
+        "datetime": 1597929085,
+        "type": "image/jpeg",
+        "animated": false,
+        "width": 256,
+        "height": 256,
+        "size": 18088,
+        "views": 0,
+        "bandwidth": 0,
+        "vote": null,
+        "favorite": false,
+        "nsfw": null,
+        "section": null,
+        "account_url": null,
+        "account_id": 0,
+        "is_ad": false,
+        "in_most_viral": false,
+        "has_sound": false,
+        "tags": [],
+        "ad_type": 0,
+        "ad_url": "",
+        "edited": "0",
+        "in_gallery": false,
+        "deletehash": "u92F6eMKNenMMKg",
+        "name": "",
+        "link": "https://i.imgur.com/vZhkDah.jpg"
+    },
+    "success": true,
+    "status": 200
+}
+
+```
+
+응답 예시입니다.
+
+## 각종 이벤트 추가
+
+매번 Input을 클릭해 파일을 추가하는 건 번거로우니, 드래그 & 드랍이나 클립보드 복사 등의 이벤트를 추가해주시면 훨씬 편하게 이미지 업로드가 가능합니다.
+
+아래에선 예시로 textarea를 하나 추가하고, 그 textarea에 각종 이벤트를 추가해서, 업로드가 성공적으로 완료되면 textarea에 이미지 링크를 추가하는 기능을 구현해보겠습니다.
+
+```
+<textarea name="textarea" id="myTextarea" cols="30" rows="10"></textarea>
+<label for="upload">업로드</label>
+<input type="file" id="upload" hidden/>
+
+```
+
+html 구조입니다.  
+저는 개인적으로 input은 예쁘게 꾸미기 힘들어서 숨겨버리고 label을 꾸미는 방법을 선호합니다.
+
+```
+function uploadFile() {
+    const textarea = document.getElementById("myTextarea");
+    const fileInput = document.getElementById("upload");
+
+    const upload = (file) => {
+        if (file && file.size < 5e6) {
+            const formData = new FormData();
+
+            formData.append("image", file);
+            fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: {
+                    Authorization: "Client-ID <클라이언트 ID>",
+                    Accept: "application/json",
+                },
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.success) {
+                        const { data } = response;
+                        textarea.value += `${textarea.value ? "\n" : ""}${
+                            data.animated && data.mp4 ? data.mp4 : data.link
+                        }`;
+                    } else {
+                        console.error("업로드 실패");
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            console.error("파일 용량 초과");
+        }
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+
+        const { files } = event.dataTransfer;
+
+        if (files.length) {
+            upload(files[0]);
+        }
+    };
+
+    const handlePaste = (event) => {
+        event.preventDefault();
+
+        const { files } = event.clipboardData;
+
+        if (files.length) {
+            upload(files[0]);
+        }
+    };
+
+    const preventDefault = (event) => {
+        event.preventDefault();
+    };
+
+    if (fileInput) {
+        fileInput.addEventListener("change", () => {
+            upload(fileInput.files[0]);
+        });
+    }
+
+    if (textarea) {
+        textarea.addEventListener("dragenter", preventDefault);
+        textarea.addEventListener("dragleave", preventDefault);
+        textarea.addEventListener("dragover", preventDefault);
+        textarea.addEventListener("drop", handleDrop);
+        textarea.addEventListener("paste", handlePaste);
+    }
+}
+
+uploadFile();
+
+```
+
+gif 이미지를 업로드하면 자동으로 mp4로 변환해주니, 움짤을 업로드하면 비디오 링크를 첨부하도록 해뒀습니다.
+
+---
+
+성공적으로 Imgur에 이미지 업로드를 마쳤습니다!  
+5MB가 넘는 파일은 첨부가 안 되고, Imgur 자체가 느리단 단점은 있지만, 간단한 서비스엔 요긴하게 써먹을 데가 많습니다.

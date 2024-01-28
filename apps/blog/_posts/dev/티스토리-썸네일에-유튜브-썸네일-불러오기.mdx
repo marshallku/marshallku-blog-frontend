@@ -1,0 +1,101 @@
+---
+title: 티스토리 썸네일에 유튜브 썸네일 불러오기
+description: 위 이미지처럼 티스토리 썸네일이 아무것도 없을 때, 만약 글에 유튜브 영상이 포함되어 있다면 자동으로 해당 유튜브의 썸네일을 썸네일로 표시하는 스크립트입니다. 대부분 스킨 제작자가 썸네일을 첨부하지 않았을 때를 대비해 짜둔 스크립트가 존재할 텐데, 이 스크립트는 해당 스크립트와 충돌할 가능성이 있으니 주의해주세요. HTML &lt;a href=&quot;[##_article_rep_link_##]&quot; class=&quot;indexArticle&quot;&gt;   &lt;div class=&quot;index_thumbnail&quot;&gt;       &lt;img src=&quot;&lt;s_article_rep_thumbnail&gt;https://i1.daumcdn.net/thumb/R700x0/?fname=[##_article_rep_thumbnail_raw_url_##]&lt;/s_article_rep_thumbnail&gt;&quot; class=&quot;index_img&quot; alt=&quot;[##_article_rep_title_##]&quot; data-href=&quot;[##_article_rep_link_##]&quot;&gt;   &lt;/div&gt;   &lt;div class=&quot;tit_post&quot;&gt;[##_article_rep_title_##]&lt;/div&gt;   &lt;div class=&quot;detail&quot;&gt;       &lt;div class=&quot;category&quot;&gt;[##_article_rep_category_##]&lt;/div&gt;       &lt;div class=&quot;cnt-wrap&quot;&gt;&lt;img class=&quot;heart&quot; src=&quot;./images/heart.svg&quot;&gt;           &lt;s_rp_count&gt;&lt;span class=&quot;cnt&quot;&gt;[##_article_rep_rp_cnt_##]&lt;/span&gt;&lt;/s_rp_count&gt;       &lt;/div&gt;   &lt;/div&gt;   &lt;div class=&quot;date hidden&quot;&gt;[##_article_rep_date_##]&lt;/div&gt; &lt;/a&gt; 임의로
+date:
+  posted: 2019-09-10T16:19:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/09/유튜브-썸네일.png
+ogImage: /images/2019/09/유튜브-썸네일.png
+---
+
+![](/images/2019/09/유튜브-썸네일.png)
+
+위 이미지처럼 티스토리 썸네일이 아무것도 없을 때, 만약 글에 유튜브 영상이 포함되어 있다면 자동으로 해당 유튜브의 썸네일을 썸네일로 표시하는 스크립트입니다.
+
+대부분 스킨 제작자가 썸네일을 첨부하지 않았을 때를 대비해 짜둔 스크립트가 존재할 텐데, 이 스크립트는 해당 스크립트와 충돌할 가능성이 있으니 주의해주세요.
+
+## HTML
+
+```
+<a href="[##_article_rep_link_##]" class="indexArticle">
+  <div class="index_thumbnail">
+      <img src="<s_article_rep_thumbnail>https://i1.daumcdn.net/thumb/R700x0/?fname=[##_article_rep_thumbnail_raw_url_##]</s_article_rep_thumbnail>" class="index_img" alt="[##_article_rep_title_##]" data-href="[##_article_rep_link_##]">
+  </div>
+  <div class="tit_post">[##_article_rep_title_##]</div>
+  <div class="detail">
+      <div class="category">[##_article_rep_category_##]</div>
+      <div class="cnt-wrap"><img class="heart" src="./images/heart.svg">
+          <s_rp_count><span class="cnt">[##_article_rep_rp_cnt_##]</span></s_rp_count>
+      </div>
+  </div>
+  <div class="date hidden">[##_article_rep_date_##]</div>
+</a>
+
+```
+
+임의로 제가 사용했던 인덱스 포스트의 HTML 태그입니다.
+
+다른 건 제쳐놓고, <s\_article\_rep\_thumbnail> 이 들어가는 부분과 data-href는 반드시 위와 같이 수정해주셔야 합니다.  
+보통 <s\_article\_rep\_thumbnail>은 외부로 빠져있을 건데, img src 안에 전부 구겨 넣어주세요.
+
+ <s\_article\_rep\_thumbnail>이 두 번 들어가면 스킨이 깨집니다. 필히 src 안에 한 번만 집어넣으셔야 아무런 오류 없이 사용하실 수 있습니다.
+
+## Javascript
+
+```
+function thumbErr(elem, url, callback) {
+    fetch(url)
+    .then(response => {
+      if(response.status === 200) {
+        return response.text()
+      }
+      else {
+        return !1
+      }
+    })
+    .then(a => {
+      const parser = new DOMParser().parseFromString(a.replace(/src/g, "NOsrc"), "text/html");
+      const target = parser.querySelector("iframe[NOsrc*='youtube']");
+  
+      elem.src = `${target !== null ? `https://i.ytimg.com/vi/${target.getAttribute("NOsrc").replace("https://www.youtube.com/embed/", "")}/original.jpg` : "https://i.imgur.com/I0QZbvs.png"}`,
+  
+      callback && (
+        elem.addEventListener("load", () => {
+          callback()
+        }, {once: !0})
+      )
+  
+    })
+  }
+
+```
+
+위 함수가 썸네일이 없을 때 실행될 함수입니다.  
+js 파일에 추가하시거나 별도의 js 파일을 만들어 붙여 넣어주세요.
+
+</body> 앞에 script 태그를 만드셔서 집어넣으셔도 됩니다.
+
+응용하면 네이버 TV, 카카오 TV, 사운드 클라우드 등 다양한 썸네일을 가져올 수 있겠지만, 일단 전 유튜브만 작업해뒀습니다.
+
+```
+[...document.querySelectorAll(".index_img")].forEach(a => {
+    a.addEventListener("error", () => {thumbErr(a, a.dataset.href)}, {once:true})
+})
+
+```
+
+이미지를 불러오지 못하면 함수가 실행되도록 작업해주시면 끝납니다.  
+index\_img를 본인 스킨의 이미지 class로 변경해주세요.
+
+```
+[...document.querySelectorAll(".index_img")].forEach(a => {
+    a.addEventListener("error", () => {thumbErr(a, a.dataset.href, $(".article-wrapper").masonry("layout"))}, {once:true})
+})
+
+```
+
+Masonry 등의 스크립트를 사용하시면, 유튜브 썸네일을 불러왔을 때 레이아웃이 깨질 수 있으므로, callback 함수도 추가할 수 있도록 해뒀습니다.
+
+유튜브 썸네일 로딩이 끝났을 때 callback 함수를 실행합니다. 본인이 사용하는 스킨에 맞게 위 코드처럼 작업하시면 됩니다.

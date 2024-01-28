@@ -1,0 +1,41 @@
+---
+title: \[티스토리\] 원하는 태그만 랜덤으로 출력하기
+description: 티스토리에서 기본적으로 랜덤 태그 치환자를 제공해줍니다만, 원하는 태그 몇 개 안에서만 랜덤으로 태그를 출력하고 싶으실 때 이 스크립트를 사용하시면 됩니다.
+date:
+  posted: 2019-11-26T02:14:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/11/random-tag.png
+ogImage: /images/2019/11/random-tag.png
+---
+
+티스토리에서 기본적으로 랜덤 태그 치환자를 제공해줍니다만, 원하는 태그 몇 개 안에서만 랜덤으로 태그를 출력하고 싶으실 때 이 스크립트를 사용하시면 됩니다.  
+\*주의 : 티스토리 치환자와 달리 cloud(숫자) class를 추가하실 수 없습니다.
+
+```
+const randomTag = (tags, element, count) => {
+  const target = document.getElementById(element);
+  let i = 0;
+  for (i; i <= count; i++) {
+    const random = Math.floor(Math.random() * tags.length),
+      a = document.createElement('a');
+    
+    tags[random] !== undefined && (
+      a.href = `/tags/${encodeURI(tags[random])}`,
+      a.innerHTML = tags[random],
+      tags.splice(random, 1),
+      target.append(a)
+    )
+  }
+};
+
+```
+
+위 스크립트를 </body> 앞에 추가하신 뒤
+
+```
+randomTag(['원하는', '태그를', '여기에', '입력'], '태그가 들어갈 요소 ID', 10)
+```
+
+제일 마지막에 들어간 숫자는 출력할 태그의 개수입니다.

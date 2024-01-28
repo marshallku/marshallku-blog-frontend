@@ -1,0 +1,36 @@
+---
+title: 워드프레스 5.6, PHP 8.0 업데이트
+description: 분명 12월 8일에 출신데 몇 시인지(기준 시간은 언젠지)가 안 적혀있어서 어제부터 계속 시간이 날 때마다 업데이트 안 떴나 확인하고 있었습니다.오늘도 아침 6시 반에 일어나서 한 시간 간격으로 확인해보다가 8시 반에 확인해보니 업데이트가 드디어 뜨길래 워드프레스와 PHP 버전 업데이트를 마쳤습니다. 사실 워드프레스 5.6이 기다려진 이유는 워드프레스의 신기능보단 PHP 8 때문이었는데, 이제 nginx에서 fastcgi_pass unix:/run/php/php8.0-fpm.sock;를 입력해도 사이트가
+date:
+  posted: 2020-12-09T00:16:00.000Z
+  modified: 2023-11-19T07:26:00.000Z
+tags:
+  - 워드프레스
+  - PHP
+  - 업데이트
+  - 제작일지
+coverImage: /images/2020/12/wordpress-php.png
+ogImage: /images/2020/12/wordpress-php.png
+---
+
+분명 12월 8일에 출신데 몇 시인지(기준 시간은 언젠지)가 안 적혀있어서 어제부터 계속 시간이 날 때마다 업데이트 안 떴나 확인하고 있었습니다.  
+오늘도 아침 6시 반에 일어나서 한 시간 간격으로 확인해보다가 8시 반에 확인해보니 업데이트가 드디어 뜨길래 워드프레스와 PHP 버전 업데이트를 마쳤습니다.
+
+사실 워드프레스 5.6이 기다려진 이유는 워드프레스의 신기능보단 [PHP 8](https://www.php.net/releases/8.0/en.php) 때문이었는데, 이제 nginx에서 `fastcgi_pass unix:/run/php/php8.0-fpm.sock;`를 입력해도 사이트가 깨지지 않고 잘 작동하네요.
+
+```
+// PHP 7
+$id = null;
+
+if ($post !== null) {
+    $id = $post->id;
+}
+
+// PHP 8
+$id = $post?->id;
+
+```
+
+중에서도 제일 반가운 건 이 Nullsafe operator입니다. 드디어 이걸 PHP에서도 쓸 수 있게 되었네요.
+
+더 자세한 PHP 8.0 업데이트 내용은 [PHP 8.0.0 Release Announcement](https://www.php.net/releases/8.0/en.php)를, 워드프레스 5.6 업데이트 내용은 [WordPress 5.6 "Simone"](https://wordpress.org/news/2020/12/simone/)나 [What's New in WordPress 5.6](https://kinsta.com/blog/wordpress-5-6/)을 참고해주세요.

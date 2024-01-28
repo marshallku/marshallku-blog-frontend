@@ -1,0 +1,146 @@
+---
+title: 티스토리에서 Lazy Load 사용하기
+description: Lazy Load(레이지 로드)란? 오프스크린 이미지(사용자가 보고 있는 화면에 보이지 않는 이미지)를 로딩하지 않고 있다가, 사용자가 스크롤을 움직여서 해당 이미지가 보여야 할 시점에 이미지를 로딩하는 기술입니다. 완벽하게 작동하기 위해선 서버사이드에서 이미지의 경로를 삽입하지 않거나, loading=&quot;lazy&quot;란 옵션을 줘야 하기 때문에, 티스토리에선 완벽하게 작동하기 힘듭니다. 투명 이미지 업로드 이미지에 오류가 발생하면 티스토리에서 위 이미지를 집어넣습니다.굳이 로딩하지 않아도 될
+date:
+  posted: 2019-10-12T07:59:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+  - Tistory
+coverImage: /images/2019/10/티스토리-Lazy-Load-2.png
+ogImage: /images/2019/10/티스토리-Lazy-Load-2.png
+---
+
+## Lazy Load(레이지 로드)란?
+
+![](/images/2019/10/티스토리-Lazy-Load-1.png)
+
+![](/images/2019/10/티스토리-Lazy-Load-2.png)
+
+오프스크린 이미지(사용자가 보고 있는 화면에 보이지 않는 이미지)를 로딩하지 않고 있다가, 사용자가 스크롤을 움직여서 해당 이미지가 보여야 할 시점에 이미지를 로딩하는 기술입니다.
+
+완벽하게 작동하기 위해선 서버사이드에서 이미지의 경로를 삽입하지 않거나, loading="lazy"란 옵션을 줘야 하기 때문에, 티스토리에선 완벽하게 작동하기 힘듭니다.
+
+## 투명 이미지 업로드
+
+![](/images/2019/10/티스토리-Lazy-Load-Error.png)
+
+이미지에 오류가 발생하면 티스토리에서 위 이미지를 집어넣습니다.  
+굳이 로딩하지 않아도 될 이미지를 로딩할 필요가 없으니, 이미지의 src에 1px \* 1px짜리 이미지를 하나 넣어줘서 이미지에 아무런 오류가 발생하지 않도록 합니다.
+
+[ blank .png](/images/2019/10/blank.png)
+
+1px \* 1px에 아무런 색상 정보도 들어있지 않은 이미지입니다.  
+95바이트밖에 되지 않으니, 로딩 속도에 큰 영향을 끼치지 않습니다.
+
+위 파일을 내려받아, 관리자 페이지 > 스킨 편집 > 파일업로드에서 이미지를 업로드합니다.
+
+![](/images/2019/10/티스토리-Lazy-Load-blank-src.png)
+
+이미지 업로드가 끝나셨으면, 해당 이미지를 우클릭해서 이미지의 경로를 복사해주세요.
+
+## 자바스크립트
+
+```
+document.addEventListener("DOMContentLoaded", () => {
+    let TICKING = false;
+
+    const loadImg = (img) => {
+        if (img.classList.contains("loaded")) return;
+
+        img.src = img.dataset.src;
+        img.removeAttribute("data-src");
+
+        if (img.dataset.srcset) {
+            img.srcset = img.dataset.srcset;
+            img.removeAttribute("data-srcset");
+        }
+
+        img.classList.add("loaded");
+    };
+
+    const removeImgSrc = (img) => {
+        img.dataset.src = img.src;
+
+        if (img.dataset.srcset) {
+            img.dataset.srcset = img.srcset;
+            img.removeAttribute("srcset");
+        }
+
+        img.src = "복사한_이미지_경로";
+    };
+
+    if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const target = entry.target;
+
+                    loadImg(target);
+
+                    observer.unobserve(target);
+                });
+            },
+            {
+                root: null,
+                rootMargin: "200px",
+            }
+        );
+
+        document.querySelectorAll(".imageblock img,.imagegridblock img").forEach((img) => {
+            removeImgSrc(img);
+            io.observe(img);
+        });
+    } else {
+        const scrollEvent = () => {
+            const { scrollY } = window;
+
+            document.querySelectorAll(".imageblock img,.imagegridblock img").forEach((img) => {
+                if (img.classList.contains("loaded")) return;
+
+                const offsetTop = img.parentNode.offsetTop;
+
+                if (
+                    offsetTop + img.offsetHeight > scrollY &&
+                    scrollY + window.innerHeight > offsetTop
+                ) {
+                    loadImg(img);
+                }
+            });
+        };
+
+        document.querySelectorAll(".imageblock img,.imagegridblock img").forEach((img) => {
+            removeImgSrc(img);
+
+            scrollEvent();
+
+            window.addEventListener(
+                "scroll",
+                () => {
+                    TICKING ||
+                        (window.requestAnimationFrame(() => {
+                            loadImg();
+                            TICKING = false;
+                        }),
+                        (TICKING = true));
+                },
+                { passive: true }
+            );
+        });
+    }
+});
+
+```
+
+복사한 이미지 경로를 위 스크립트에 있는 "복사한\_이미지\_경로"에 붙여 넣으신 후, 위 스크립트를 앞에 삽입합니다.
+
+```
+document.addEventListener("DOMContentLoaded",()=>{let e=!1;const t=e=>{e.classList.contains("loaded")||(e.src=e.dataset.src,e.removeAttribute("data-src"),e.dataset.srcset&&(e.srcset=e.dataset.srcset,e.removeAttribute("data-srcset")),e.classList.add("loaded"))},s=e=>{e.dataset.src=e.src,e.dataset.src&&(e.dataset.srcset=e.srcset,e.removeAttribute("srcset")),e.src="복사한_이미지_경로"};if("IntersectionObserver"in window){const e=new IntersectionObserver((e,s)=>{e.forEach(e=>{if(!e.isIntersecting)return;const r=e.target;t(r),s.unobserve(r)})},{root:null,rootMargin:"200px"});document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(t=>{s(t),e.observe(t),t.classList.add("observing")})}else{const r=()=>{const{scrollY:e}=window;document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(s=>{if(s.classList.contains("loaded"))return;const r=s.parentNode.offsetTop;r+s.offsetHeight>e&&e+window.innerHeight>r&&t(s)})};document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(o=>{s(o),r(),window.addEventListener("scroll",()=>{e||(window.requestAnimationFrame(()=>{t(),e=!1}),e=!0)},{passive:!0})})}});
+```
+
+똑같은 스크립트를 압축한 스크립트입니다. 마찬가지로 "복사한\_이미지\_경로" 를 복사하신 이미지 경로로 바꾸신 후 사용해주세요.
+
+## 끝!
+
+이제 다시 본인의 블로그로 돌아가셔서, 아무 글이나 클릭하신 후, Ctrl Shift R을 누르시거나 캐쉬를 초기화하신 후 페이지를 불러와 보시면 정상적으로 이미지의 로딩이 지연되고 있는 걸 확인하실 수 있을 겁니다.

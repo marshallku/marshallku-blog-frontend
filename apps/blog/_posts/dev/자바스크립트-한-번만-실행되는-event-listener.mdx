@@ -1,0 +1,75 @@
+---
+title: \[자바스크립트\] 한 번만 실행되는 Event Listener
+description: 가끔 onclick, onerror 등의 이벤트가 한 번만 실행돼야 할 때가 있습니다. 가령 이미지에 에러가 있을 때 그 이미지를 다른 이미지로 교체하는 함수를 만들었을 때, 교체된 이미지에도 에러가 있다면 여러분은 콘솔에 찍히는 어마어마한 양의 404 에러를 보실 수 있을 겁니다.잡렉은 덤이고요. 다행히도, 위와 비슷한 상황을 예방할 수 있도록 이벤트 리스너가 한 번만 작동하게 할 수 있는 간단한 방법이
+date:
+  posted: 2019-10-28T16:46:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/10/one-time-listener.png
+ogImage: /images/2019/10/one-time-listener.png
+---
+
+가끔 onclick, onerror 등의 이벤트가 한 번만 실행돼야 할 때가 있습니다.
+
+가령 이미지에 에러가 있을 때 그 이미지를 다른 이미지로 교체하는 함수를 만들었을 때, 교체된 이미지에도 에러가 있다면 여러분은 콘솔에 찍히는 어마어마한 양의 404 에러를 보실 수 있을 겁니다.  
+잡렉은 덤이고요.
+
+다행히도, 위와 비슷한 상황을 예방할 수 있도록 이벤트 리스너가 한 번만 작동하게 할 수 있는 간단한 방법이 많습니다.
+
+## jQuery
+
+```
+$("#foo").one("click", function() {
+  console.log("두 번째 클릭부턴 표시되지 않습니다.")
+});
+
+```
+
+꽤 간단하지만, jQuery를 써야 한다는 단점이 있는 스크립트입니다.  
+혹 jQuery를 이미 사용 중이셔서 위 단점이 무의미하다면, 제일 간단한 스크립트입니다.
+
+## 바닐라 (함수 사용하기)
+
+```
+function oneTimeListener(element, type, callback) {
+  element.addEventListener(type, function() {
+    element.removeEventListener(type, arguments.callee);
+    return callback();
+  });
+}
+
+```
+
+함수 하나만 추가하시면 바닐라 자바스크립트에서도 jQuery의 one()을 구현하실 수 있습니다.
+
+```
+oneTimeListener(document.getElementById("foo"), "click", function() {
+  console.log("두 번째 클릭부턴 표시되지 않습니다.")
+});
+
+```
+
+함수만 추가하시면 활용은 굉장히 간단합니다.
+
+```
+function bar() {
+  console.log("두 번째 클릭부턴 표시되지 않습니다.")
+}
+
+oneTimeListener(document.getElementById("foo"), "click", bar);
+
+```
+
+익명 함수를 사용하지 않으실 땐 위와 같이 코드를 작성합니다.
+
+## 바닐라 (Event Listener에 옵션 추가하기)
+
+```
+document.getElementById("foo").addEventListener("click", () => {
+  console.log("두 번째 클릭부턴 표시되지 않습니다.")
+}, {once: true})
+
+```
+
+최신 자바스크립트를 사용한다면 굳이 oneTimeListener 같은 함수를 만드실 필요 없이, once: true란 옵션 하나로 간단하게 이벤트 리스너가 한 번만 동작하도록 하실 수 있습니다.

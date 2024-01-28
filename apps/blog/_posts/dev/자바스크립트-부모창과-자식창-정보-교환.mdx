@@ -1,0 +1,87 @@
+---
+title: \[자바스크립트\] 부모창과 자식창 정보 교환
+description: window.open() 혹은 a (anchor) 태그에 target=&quot;_blank&quot; 어트리븃을 붙여서 연 윈도우와 원래 윈도우 간 정보 교환하는 방법입니다. 새 윈도우를 연 창을 부모창, 부모창에 의해 window.open()이나 a 태그로 열린 창을 자식창이라 칭하겠습니다. 부모창에서 자식창 접근 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt;     &lt;title&gt;부모창&lt;/title&gt; &lt;/head&gt; &lt;body&gt;     &lt;input type=&quot;text&quot; id=&quot;parentInput&quot;&gt;     &lt;div id=&quot;childOutput&quot;&gt;&lt;/div&gt;&lt;button id=&quot;getChildOutput&quot;&gt;자식창 입력 가져오기&lt;/button&gt;     &lt;script&gt;         const newWindow = window.open(&quot;tmp-child.html&quot;);                      document.getElementById(&quot;getChildOutput&quot;).addEventListener(&quot;click&quot;, () =&gt; {             document.getElementById(&quot;childOutput&quot;).innerText = newWindow.document.getElementById(&quot;childInput&quot;).value         })     &lt;/script&gt; &lt;/body&gt; &lt;/html&gt; window.open() 함수를 변수에 집어넣고(예시에선 newWindow),
+date:
+  posted: 2019-09-23T16:19:00.000Z
+  modified: 2023-11-19T07:56:00.000Z
+tags:
+  - JavaScript
+coverImage: /images/2019/09/window.opener.png
+ogImage: /images/2019/09/window.opener.png
+---
+
+![](/images/2019/09/window.opener.png)
+
+window.open() 혹은 a (anchor) 태그에 target="\_blank" 어트리븃을 붙여서 연 윈도우와 원래 윈도우 간 정보 교환하는 방법입니다.
+
+새 윈도우를 연 창을 부모창, 부모창에 의해 window.open()이나 a 태그로 열린 창을 자식창이라 칭하겠습니다.
+
+## 부모창에서 자식창 접근
+
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>부모창</title>
+</head>
+
+<body>
+    <input type="text" id="parentInput">
+    <div id="childOutput"></div><button id="getChildOutput">자식창 입력 가져오기</button>
+    <script>
+        const newWindow = window.open('tmp-child.html');
+            
+        document.getElementById("getChildOutput").addEventListener("click", () => {
+            document.getElementById("childOutput").innerText = newWindow.document.getElementById("childInput").value
+        })
+    </script>
+</body>
+
+</html>
+
+```
+
+window.open() 함수를 변수에 집어넣고(예시에선 newWindow), 해당 변수에서 정보를 가져옵니다.
+
+변수명.document.querySelector(".element")와 같은 방식입니다.
+
+## 자식창에서 부모창 접근
+
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>자식창</title>
+</head>
+
+<body>
+    <input type="text" id="childInput">
+    <div id="parentOutput"></div><button id="getParentOutput">부모창 입력 가져오기</button>
+    <script>
+        document.getElementById("getParentOutput").addEventListener("click", () => {
+            document.getElementById("parentOutput").innerText = opener.document.getElementById("parentInput").value
+        })
+    </script>
+</body>
+
+</html>
+
+```
+
+따로 변수는 필요 없이 opener가 부모창을 리턴합니다
+
+opener.document.querySelector(".element")와 같이 사용하실 수 있습니다.
+
+---
+
+길게 설명할 필요가 크게 없는 것들이라, 구구절절한 설명은 생략했습니다.
+
+예시에서 보여 드린 것처럼 일반적으로 읽는 것만 가능한 게 아니라
+
+```
+opener.document.documentElement.classList.add("hello")
+```
+
+이렇게 부모창의 돔을 자식창에서 직접 조작할 수도 있습니다.
