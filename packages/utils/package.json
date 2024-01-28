@@ -1,0 +1,27 @@
+{
+    "name": "@marshallku/utils",
+    "version": "0.0.1",
+    "main": "./dist/index.mjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "sideEffects": false,
+    "license": "MIT",
+    "files": [
+        "dist/**"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts --format esm --dts",
+        "dev": "tsup src/index.ts --format esm --watch --dts",
+        "lint": "eslint \"src/**/*.ts*\"",
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    },
+    "devDependencies": {
+        "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/typescript-config": "workspace:*",
+        "@types/node": "^20.11.5",
+        "typescript": "^5.3.3"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
