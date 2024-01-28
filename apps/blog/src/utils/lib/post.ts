@@ -25,7 +25,7 @@ export function getPostBySlug(slug: string): Post {
     return {
         data: {
             title: data.title,
-            excerpt: data.excerpt,
+            description: data.description,
             coverImage: data.coverImage,
             date: new Date(data.date),
             ogImage: data.ogImage,

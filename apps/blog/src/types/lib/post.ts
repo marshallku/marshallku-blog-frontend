@@ -1,7 +1,7 @@
 export interface Post {
     data: {
         title: string;
-        excerpt: string;
+        description: string;
         coverImage: string;
         date: Date;
         ogImage: {

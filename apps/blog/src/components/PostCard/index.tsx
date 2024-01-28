@@ -25,8 +25,8 @@ export default function PostCard({ post }: PostCardProps) {
                     </Typography>
                 </Link>
                 <Link href={post.slug}>
-                    <Typography component="p" className={cx("__excerpt")}>
-                        {post.data.excerpt}
+                    <Typography component="p" className={cx("__description")}>
+                        {post.data.description}
                     </Typography>
                 </Link>
                 <Typography
