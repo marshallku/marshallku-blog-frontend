@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PAGE_SIZE } from "#constants";
 import { getGroupedPostByCategory, getPosts } from "#utils";
+import { PostCard } from "#components";
 
 export const dynamic = "error";
 
@@ -28,12 +29,8 @@ export default async function Archive({ params: { category } }: ArchiveProps) {
         <section>
             <h2>Recent posts</h2>
             <section>
-                {postsInPage.map(({ data, slug }, i) => (
-                    <article key={i}>
-                        <Link href={slug}>
-                            <h2>{data.title}</h2>
-                        </Link>
-                    </article>
+                {postsInPage.map((post) => (
+                    <PostCard key={post.slug} post={post} />
                 ))}
             </section>
             <ul>
