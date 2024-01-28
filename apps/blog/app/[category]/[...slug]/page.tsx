@@ -33,7 +33,9 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 <figure>
                     <img src={post.data.coverImage} alt={post.data.title} />
                 </figure>
-                <time dateTime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString("ko-KR")}</time>
+                <time dateTime={post.data.date.posted.toISOString()}>
+                    {post.data.date.posted.toLocaleDateString("ko-KR")}
+                </time>
             </header>
             <section>
                 <MDXRemote
