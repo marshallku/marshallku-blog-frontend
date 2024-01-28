@@ -1,3 +1,9 @@
 export { default as MDXComponents } from "./MDXComponents";
-export { default as PostCard } from "./PostCard";
-export { default as Typography } from "./Typography";
+export { default as PostCard, type PostCardProps } from "./PostCard";
+export {
+    default as Typography,
+    type TypographyComponent,
+    type TypographyVariant,
+    type TypographyFontWeight,
+    type TypographyProps,
+} from "./Typography";

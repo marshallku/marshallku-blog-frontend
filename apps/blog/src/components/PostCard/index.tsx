@@ -4,7 +4,7 @@ import { Post } from "#types";
 import { Typography } from "#components";
 import styles from "./index.module.scss";
 
-interface PostCardProps {
+export interface PostCardProps {
     post: Post;
 }
 
