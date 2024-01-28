@@ -44,3 +44,12 @@ html[data-theme="sepia"] {
     background-color: get-color($sepia-palette, background);
     color: get-color($sepia-palette, text);
 }
+
+a {
+    text-decoration: none;
+    color: color(text);
+
+    &:hover {
+        color: color(highlight);
+    }
+}

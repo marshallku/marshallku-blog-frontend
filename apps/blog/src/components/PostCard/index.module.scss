@@ -1,2 +1,35 @@
 .post-card {
+    display: flex;
+    padding: 16px 20px;
+
+    &__image {
+        position: relative;
+        width: 20%;
+        height: 0;
+        margin-right: 16px;
+        padding-bottom: 20%;
+        flex-shrink: 0;
+
+        > img {
+            display: block;
+            height: 100%;
+            left: 0;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            transition: transform 0.15s ease-in-out;
+            width: 100%;
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__time {
+        display: block;
+        margin-top: auto;
+        text-align: right;
+    }
 }

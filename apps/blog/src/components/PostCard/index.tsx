@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { classNames } from "@marshallku/utils";
 import { Post } from "#types";
+import { Typography } from "#components";
 import styles from "./index.module.scss";
 
 interface PostCardProps {
@@ -13,20 +14,29 @@ export default function PostCard({ post }: PostCardProps) {
     return (
         <article className={cx()}>
             {post.data.ogImage?.url && (
-                <Link href={post.slug}>
-                    <figure>
-                        <img src={post.data.ogImage.url} alt={post.data.title} />
-                    </figure>
-                </Link>
+                <figure className={cx("__image")}>
+                    <img src={post.data.ogImage.url} alt={post.data.title} />
+                </figure>
             )}
-            <header>
+            <header className={cx("__header")}>
                 <Link href={post.slug}>
-                    <h2>{post.data.title}</h2>
+                    <Typography component="h2" variant="h2" fontWeight={700} className={cx("__title")}>
+                        {post.data.title}
+                    </Typography>
                 </Link>
                 <Link href={post.slug}>
-                    <p>{post.data.excerpt}</p>
+                    <Typography component="p" className={cx("__excerpt")}>
+                        {post.data.excerpt}
+                    </Typography>
                 </Link>
-                <time dateTime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString("ko-KR")}</time>
+                <Typography
+                    component="time"
+                    className={cx("__time")}
+                    variant="c1"
+                    dateTime={post.data.date.toISOString()}
+                >
+                    {post.data.date.toLocaleDateString("ko-KR")}
+                </Typography>
             </header>
         </article>
     );
