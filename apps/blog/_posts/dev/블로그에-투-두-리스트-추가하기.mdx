@@ -102,7 +102,17 @@ ogImage: /images/2019/07/todolist.png
 
 완성된 투 두 리스트
 
-# 할 일 목록
-
-* 장보기
-* 호텔 델루나 시청
+<style dangerouslySetInnerHTML={{ __html: ".m_todo{margin:0 auto;background:#4dd0e1;padding:10px;border-radius:10px}.m_todo h1{font-size:2rem;text-align:center;background:#4dd0e1;padding:10px 0 20px 0;color:#fff}.m_todo ul{padding:20px;background:#eee;border-radius:10px}.m_todo li{display:flex;justify-content:space-between;line-height:1.5rem;padding:1rem;cursor:auto;color:#000;align-items:center}.m_todo .checkbox{display:flex;justify-content:center;align-items:center;width:1.5rem;height:1.5rem;border:2px solid #000;border-radius:50%;flex-shrink:0}.m_todo li[done] span{text-decoration:line-through}.m_todo li[done] .checkbox{display:inline-flex;justify-content:center;align-items:center;background:#000}.m_todo li[done] .checkbox::before{content:'';width:.45rem;height:.7rem;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}" }} />
+<div class="m_todo">
+  <h1>할 일 목록</h1>
+  <ul>
+    <li>
+      <span>장보기</span>
+      <div class="checkbox"></div>
+    </li>
+    <li done="">
+      <span>호텔 델루나 시청</span>
+      <div class="checkbox"></div>
+    </li>
+  </ul>
+</div>

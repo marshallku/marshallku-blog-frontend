@@ -17,6 +17,8 @@ input과 label, 그리고 CSS 선택자인 \~만 적절히 조합하면 요소�
 먼저 CSS 선택자인 \~ 는 elem1 \~ elem2 와 같은 방식으로 사용하며, elem1 뒤에 있는 elem2 모두를 선택합니다.  
 여기서 중요한 건, elem 1과 elem 2의 부모는 같은 요소여야 합니다.
 
+<iframe allowfullscreen="true" frameborder="0" width="560" height="315" src="https://codepen.io/marshall-ku/embed/xebVLe?default-tab=css%2Cresult" title="Pure CSS Drawer" loading="lazy" />
+
 당연히 label::before를 클릭해도 label을 클릭한 것처럼 행동하니, 드로어가 발생했을 때 label::before가 온 페이지를 덮도록 바꿔 빈 화면을 클릭하면 드로어가 사라질 수 있도록 했습니다.
 
 여담이지만, transform을 사용한 부모의 자식들은 position: fixed가 제대로 작동하지 않습니다.  

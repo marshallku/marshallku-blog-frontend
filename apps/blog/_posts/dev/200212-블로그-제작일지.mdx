@@ -1,6 +1,6 @@
 ---
 title: 200212 블로그 제작일지
-description: 스크린샷에 담기 힘든 효과가 많은 날이네요. 홈 화면 슬라이더 업데이트 창 크기를 변경하면 슬라이더의 위치도 변경되도록 업데이트했습니다. 창 크기가 1920px인 기기에서 접속했다 치면, 예전엔 창 크기를 800px로 줄여도 한 페이지의 크기가 1920px이라 생각하고 1920px씩 페이지를 넘겼다면, 이젠 800px씩 넘깁니다. 댓글 입력 효과음 댓글을 입력하면 위 효과음이 재생됩니다! Lazy Load 업데이트 [...document.querySelectorAll(&quot;.lazyLoad&quot;)].forEach(img =&gt; {         const fullH = window.scrollY - (img.parentNode.offsetTop);         !img.classList.contains(&quot;loaded&quot;) &amp;&amp; -(windowHeight * 1.5) &lt; fullH &amp;&amp; img.offsetHeight * 1.5 &gt; fullH &amp;&amp; (             loadImg()         )
+description: 스크린샷에 담기 힘든 효과가 많은 날이네요. 홈 화면 슬라이더 업데이트 창 크기를 변경하면 슬라이더의 위치도 변경되도록 업데이트했습니다. 창 크기가 1920px인 기기에서 접속했다 치면, 예전엔 창 크기를 800px로 줄여도 한 페이지의 크기가 1920px이라 생각하고 1920px씩 페이지를 넘겼다면, 이젠 800px씩 넘깁니다.
 date:
   posted: 2020-02-11T16:51:00.000Z
   modified: 2023-11-19T07:27:00.000Z
@@ -23,7 +23,7 @@ ogImage: /images/2020/02/home-slider-resize-event.png
 
 ## 댓글 입력 효과음
 
-댓글을 입력하면 위 효과음이 재생됩니다!
+댓글을 입력하면 효과음이 재생됩니다!
 
 ## Lazy Load 업데이트
 
@@ -43,7 +43,7 @@ ogImage: /images/2020/02/home-slider-resize-event.png
 
 ## 날짜 표시 방식 변경
 
-날짜를 2020.02.11 같은 방식이 아닌, 1일 전으로 표시하기 위해 워드프레스에서 기본적으로 [human\_time\_diff](https://developer.wordpress.org/reference/functions/human%5Ftime%5Fdiff/)란 함수를 제공해줍니다.  
+날짜를 2020.02.11 같은 방식이 아닌, 1일 전으로 표시하기 위해 워드프레스에서 기본적으로 [human_time_diff](https://developer.wordpress.org/reference/functions/human%5Ftime%5Fdiff/)란 함수를 제공해줍니다.  
 문제는, 영어에선 2 days ago처럼 2와 days를 띄우지만, 한국어는 2일 전으로 표기하는데, 워드프레스는 여기서 "days"만 "일"로 변경해서 출력해줘서 2 일 전이라는 틀린 맞춤법이 출력됩니다.
 
 ```php
@@ -108,9 +108,9 @@ function time_diff($from, $to) {
 
 ## 기타
 
-\* 댓글 말풍선의 여백을 좀 줄여봤습니다.  
-\* [링크 디자인](https://marshallku.com/)을 변경했습니다.  
-\* 폰트를 변경했습니다. (Rix 오늘의 만화 => 마포한아름)
+* 댓글 말풍선의 여백을 좀 줄여봤습니다.  
+* [링크 디자인](https://marshallku.com/)을 변경했습니다.  
+* 폰트를 변경했습니다. (Rix 오늘의 만화 => 마포한아름)
 
 ## 실패한 것
 
@@ -118,4 +118,4 @@ PHP 7.3.14 => PHP 7.4 업그레이드를 진행했으나, 로그인이 정상적
 플러그인 꺼보고, 테마도 바꿔보고, 쿠키 경로를 직접 지정해줘도 해결되질 않더라고요.  
 워드프레스 코어 업데이트가 있을 때까지 기다려봐야겠습니다.
 
-php -v와 phpinfo();가 각기 다른 PHP 버전을 출력하던데, 이건 또 무슨 문젠지…
+`php -v`와 `phpinfo();`가 각기 다른 PHP 버전을 출력하던데, 이건 또 무슨 문젠지…
