@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Pagination, PostCard } from "#components";
 import { PAGE_SIZE } from "#constants";
-import { getGroupedPostByCategory, getPosts } from "#utils";
+import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils";
 
 export const dynamic = "error";
 
@@ -33,15 +33,15 @@ export default async function Archive({ params: { category, index } }: ArchivePr
         return notFound();
     }
 
+    const categoryInfo = getCategoryBySlug(`/${category}`);
     const actualIndex = pageIndex - 1;
     const start = actualIndex * PAGE_SIZE;
     const end = start + PAGE_SIZE;
     const postsInPage = posts.slice(start, end);
-    const maxPage = Math.ceil(posts.length / PAGE_SIZE);
 
     return (
         <section>
-            <h2>Recent posts</h2>
+            <h1>{categoryInfo?.name || "카테고리 최근 글"}</h1>
             <section>
                 {postsInPage.map((post) => (
                     <PostCard key={post.slug} post={post} />
