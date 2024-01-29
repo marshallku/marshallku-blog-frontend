@@ -1,4 +1,4 @@
-@import "./palette.scss";
+@import "./abstracts/_palette.scss";
 
 html {
     @each $key, $value in $light-palette {
