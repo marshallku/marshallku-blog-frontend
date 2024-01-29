@@ -1,0 +1,69 @@
+---
+title: 도메인 변경
+description: marshallku.com을 10년 치 결제했습니다
+date:
+  posted: 2022-01-23T11:34:00.000Z
+  modified: 2022-01-26T05:26:00.000Z
+coverImage: /images/2022/01/new-domain.png
+ogImage: /images/2022/01/new-domain.png
+---
+
+사이트 주소에 있는 대시(-)가 눈에 거슬린 지는 꽤 됐습니다.  
+쓰기도, 보기도 불편한데, 요즘 도메인을 직접 입력해 사이트에 접속하는 사람이 줄고 있는 건 사실이니, 굳이 귀찮은 데다 쌓여가는 백링크 등까지 모조리 포기해야 하는 수는 두지 말자는 마음으로 외면해왔습니다.
+
+![도메인 이름 지을 때 피해야 할 사항](/images/2022/01/Things-to-avoid.png)
+
+출처: [효과적인 도메인 선택](https://support.google.com/domains/answer/6388481)
+
+이 문구를 보기 전까지는요.
+
+안 그래도 눈엣가시던 대시를 없애는 게 좋다는 합당한 이유까지 생겨 곧바로 `marshallku.com`을 10년 치 결제했고, 급한 대로 이전도 어느 정도 마쳤습니다.  
+Github 계정명도 `marshall-ku`에서 [marshallku](https://github.com/marshallku)로 변경했습니다.
+
+인터넷 여기저기 벌여둔 링크들도 하나씩 수정하고 있는데, 아직 완벽히 수정하지 못한 부분이 있을 수 있습니다.  
+혹 발견하시면 알려주시면 감사하겠습니다.
+
+```
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name marshall-ku.com www.marshall-ku.com;
+    server_tokens off;
+
+    include /etc/nginx/conf.d/blacklist.conf;
+    error_page 403 https://error.marshall-ku.com;
+
+    if ($block_ua) {
+        return 444;
+    }
+
+    ssl_certificate "/etc/letsencrypt/live/marshall-ku.com-0001/fullchain.pem";
+    ssl_certificate_key "/etc/letsencrypt/live/marshall-ku.com-0001/privkey.pem";
+    ssl_dhparam "/etc/ssl/certs/dhparam.pem";
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m; # about 40000 sessions
+    ssl_session_tickets off;
+    
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+
+    # HSTS
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    return 301 https://marshallku.com$request_uri;
+}
+
+```
+
+`marshall-ku.com`으로 들어오는 요청은 모두 새 링크로 리다이렉트되도록 수정해뒀습니다.
+
+nginx 설정 파일이 날이 갈수록 길어지네요.
+
+![2019년 1월...이러지 말 걸](/images/2022/01/shdnt-do-this.png)
+
+2019년 초에 처음 도메인을 구매하고 올린 글인데, 저 때 주소 중간에 `tistory`를 없애는 김에 `-`까지 함께 없앴으면 Github도 수정할 일 없었을 테고, 블로그 주소도 수정할 일 없었을 텐데 여러모로 아쉽네요.
