@@ -7,3 +7,36 @@
 @function toPx($size) {
     @return $size * 16px;
 }
+
+$typography-size: (
+    h1: toRem(32.44px),
+    h2: toRem(28.83px),
+    h3: toRem(25.63px),
+    h4: toRem(22.78px),
+    h5: toRem(20.25px),
+    h6: toRem(18px),
+    b1: toRem(16px),
+    b2: toRem(14.22px),
+    c1: toRem(12.64px),
+);
+
+$typography-height: (
+    h1: 150%,
+    h2: 150%,
+    h3: 150%,
+    h4: 150%,
+    h5: 150%,
+    h6: 150%,
+    b1: 150%,
+    b2: 150%,
+    c1: 130%,
+);
+
+@mixin typography($key) {
+    @if map-has-key($typography-size, $key) {
+        font-size: map-get($typography-size, $key);
+        line-height: map-get($typography-height, $key);
+    }
+
+    @warn "`#{$key}` doesn't exist in typography";
+}
