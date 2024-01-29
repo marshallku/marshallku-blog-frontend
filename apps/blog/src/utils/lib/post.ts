@@ -1,8 +1,8 @@
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join, parse } from "path";
 import matter from "gray-matter";
 import { POSTS_DIRECTORY } from "#constants";
-import { Post } from "#types";
+import { Category, Post } from "#types";
 import { walk } from "./file";
 
 export function getPostSlugs(subDirectory?: string) {
@@ -56,13 +56,6 @@ export function getPosts(category?: string) {
         });
 }
 
-export function getAllCategories() {
-    const posts = getPosts();
-    const categories = new Set(posts.map((post) => post.category));
-
-    return [...categories];
-}
-
 export function getGroupedPostByCategory() {
     const posts = getPosts();
     const groupedPosts: Record<string, typeof posts> = {};
@@ -76,4 +69,33 @@ export function getGroupedPostByCategory() {
     }
 
     return groupedPosts;
+}
+
+export function getCategoryBySlug(slug: string): Category | undefined {
+    const fullPath = join(POSTS_DIRECTORY, slug, "_category.json");
+
+    if (!existsSync(fullPath)) {
+        return;
+    }
+
+    const fileContents = readFileSync(fullPath, "utf8");
+    const data = JSON.parse(fileContents);
+
+    return data;
+}
+
+export function getCategorySlugs(subDirectory?: string) {
+    const files: string[] = [];
+
+    walk(subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY, (path) => {
+        if (path.endsWith("_category.json")) {
+            files.push(path);
+        }
+    });
+
+    return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\/_category\.json$/, ""));
+}
+
+export function getAllCategories() {
+    return getCategorySlugs();
 }

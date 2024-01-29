@@ -14,3 +14,9 @@ export interface Post {
     slug: string;
     category: string;
 }
+
+export interface Category {
+    name: string;
+    hidden?: boolean;
+    coverImage?: string;
+}
