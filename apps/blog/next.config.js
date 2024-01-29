@@ -12,7 +12,8 @@ const nextConfig = {
         outputFileTracingRoot: path.join(__dirname, "../../"),
     },
     sassOptions: {
-        prependData: '@import "src/styles/palette.scss";@import "src/styles/abstracts/_font.scss";',
+        prependData:
+            '@import "src/styles/abstracts/_palette.scss";@import "src/styles/abstracts/_fonts.scss";@import "src/styles/abstracts/_breakpoints.scss";',
     },
 };
 
