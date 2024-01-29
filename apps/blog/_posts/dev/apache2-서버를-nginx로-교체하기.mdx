@@ -21,7 +21,7 @@ PHP를 사용하지 않으신다면 모듈 설치는 건너뛰시면 됩니다.
 
 ## Ngnix 및 PHP 모듈 설치
 
-```
+```bash
 sudo apt update
 sudo apt install nginx
 ```
@@ -29,7 +29,7 @@ sudo apt install nginx
 아마 설치를 진행하시면 Apache2가 80번 포트를 쓰고 있어 Nginx는 시작하지 못하고 오류를 뿜을 겁니다.  
 괘념치 마시고 다음 단계로 진행하시면 됩니다.
 
-```
+```bash
 sudo apt install php7.4-fpm #본인 PHP 버전에 맞게 설치
 ```
 
@@ -37,14 +37,14 @@ nginx는 php-fpm이 있어야 php를 구동할 수 있습니다. 반드시 설�
 
 ## PHP 설정 수정
 
-```
+```bash
 sudo vim /etc/php/버전/fpm/php.ini
 ```
 
 본인이 사용 중인 php 버전을 "버전"에 입력하시면 됩니다.  
 잘 모르시겠다면 `cd /etc/php` 를 입력하신 후 `ls` 를 입력하시면 폴더 목록이 출력됩니다. 해당 폴더로 가시면 됩니다.
 
-```
+```ini
 max_execution_time = 180
 memory_limit = 15000M
 post_max_size = 20M
@@ -56,7 +56,7 @@ upload_max_filesize = 20M
 
 ## dhparam.pem 생성 (선택)
 
-```
+```bash
 openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 # 퍼미션 오류 나면 sudo로 실행
 ```
 
@@ -65,7 +65,7 @@ ssl을 사용할 의향이 있으시면 [우분투에 워드프레스 설치하�
 
 ## conf 파일 생성 및 설정
 
-```
+```bash
 sudo vim /etc/nginx/sites-available/config
 ```
 
@@ -73,7 +73,7 @@ sudo vim /etc/nginx/sites-available/config
 
 아파치의 000-default.conf 등의 파일과 같이 사이트가 어떻게 작동할지 설정하는 파일입니다.
 
-```
+```nginx
 server {
     listen 80;
     server_name 도메인.주소 www.도메인.주소;
@@ -134,7 +134,6 @@ server {
         add_header Cache-Control "public, no-transform";
     }
 }
-
 ```
 
 간단한 설정을 해둔 설정 파일입니다.  
@@ -144,7 +143,7 @@ ssl을 사용하지 않으시면 `listen 80;` 아래에 ssl과 관련된 내용�
 
 설정 파일 작성을 완료하신 뒤, `sudo nginx -t` 란 명령어를 이용하시면 문제없이 작성했는지 확인하실 수 있습니다.
 
-```
+```bash
 sudo ln -s /etc/nginx/sites-available/config /etc/nginx/sites-enabled
 ```
 
@@ -154,13 +153,13 @@ config 파일 작성 후 `sites-available` 폴더에서 `sites-enabled` 폴더�
 
 이제 Apache2에서 80번 포트와 443번 포트를 탈취해 Nginx에게 줄 차례입니다.
 
-```
+```bash
 sudo vim /etc/apache2/ports.conf
 ```
 
 위 파일을 여신 뒤 아래 내용을 수정해주세요.
 
-```
+```apache
 Listen 8080
 
 <IfModule ssl_module>
@@ -170,29 +169,26 @@ Listen 8080
 <IfModule mod_gnutls.c>
     Listen 4433
 </IfModule
-
 ```
 
 단순히 80번 포트를 8080으로, 443번 포트를 4433으로 수정했습니다.
 
-```
+```bash
 sudo vim /etc/apache2/sites-available/000-default.conf
 ```
 
 이제 기존에 쓰던 아파치의 설정 파일에서도 포트를 수정하시면 됩니다.
 
-```
+```apache
 <VirtualHost *:8080>
-...
 <VirtualHost *:4433>
-...
 ```
 
 똑같이 80번 포트를 8080번으로, 443번 포트를 4433번으로 수정했습니다.
 
 이젠 Apache2를 종료하고 Nginx를 가동할 수 있습니다!
 
-```
+```bash
 sudo systemctl reload apache2
 sudo systemctl stop apache2
 sudo systemctl start nginx
@@ -205,13 +201,13 @@ sudo systemctl start nginx
 
 정들었던 아파치를 보내줄 차례입니다.
 
-```
+```bash
 dpkg --get-selections | grep apache
 ```
 
 위 명령어를 입력하면 apache와 관련된 패키지 목록이 나옵니다.
 
-```
+```bash
 sudo apt remove something somethingElse ...
 ```
 

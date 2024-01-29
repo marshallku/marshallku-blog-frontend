@@ -31,7 +31,7 @@ Adobe Illustrator로 틀을 잡고, 크롬 개발자도구와 VSCode로 가다�
 BGM 플레이어의 디자인을 가다듬고 자동 재생 여부를 사용자가 결정할 수 있게 업데이트했습니다.  
 더해, BGM을 추가해뒀던 모든 게시글을 업데이트해뒀습니다.
 
-```
+```css
 @keyframes marquee {
     0%,
     5%,
@@ -44,10 +44,9 @@ BGM 플레이어의 디자인을 가다듬고 자동 재생 여부를 사용자�
         transform: translateX(var(--transform-value));
     }
 }
-
 ```
 
-```
+```js
 const title = document.createElement("h2");
 const titleText = document.createElement("span");
 
@@ -67,7 +66,6 @@ if (textWidth > titleWidth) {
         (textWidth / titleWidth) * 10
     }s infinite linear`;
 }
-
 ```
 
 아무래도 노래 제목은 한 줄로 표시되는 게 나을 것 같아 marquee 애니메이션을 간단히 구현해봤습니다.
@@ -106,15 +104,14 @@ if (textWidth > titleWidth) {
 
 ![GIF Converter](/images/2021/09/gif-converter.png)
 
-```
+```nginx
 location ~ /gifconverter/ {
-    ...
+    # ...
     add_header Cross-Origin-Opener-Policy "same-origin";
     add_header Cross-Origin-Embedder-Policy "require-corp";
-    ...
+    # ...
 }
-
 ```
 
 위 두 헤더를 추가해 사이트를 격리해야 `SharedArrayBuffer`를 사용할 수 있도록 업데이트되어, Github에서 홈 서버로 해당 앱을 옮겼습니다.  
-<https://marshallku.com/gifconverter/> 에서 계속 이용하실 수 있습니다.
+[https://marshallku.com/gifconverter/](https://marshallku.com/gifconverter/) 에서 계속 이용하실 수 있습니다.

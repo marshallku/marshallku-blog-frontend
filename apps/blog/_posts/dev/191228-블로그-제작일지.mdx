@@ -36,7 +36,7 @@ fetch()를 이용해 작업했고, 제 로컬 테스트 환경에서 일어날 �
 
 ## 검색 결과에 페이지 제거
 
-```
+```php
 function filterSearch($query) {
     if ($query->is_search) {
         $query->set('post_type', 'post');
@@ -44,7 +44,6 @@ function filterSearch($query) {
         return $query;
     }
 add_filter('pre_get_posts','filterSearch');
-
 ```
 
 functions.php에 위 코드를 추가해 검색 결과에서 페이지를 제거하고 포스트 목록만 출력하도록 했습니다.

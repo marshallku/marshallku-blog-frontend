@@ -22,7 +22,7 @@ webpack으로 빌드해보려다 계속 실패해서 일단 수동으로 작업�
 
 ## 설치
 
-```
+```bash
 npm install smooth-zoom
 # or
 yarn add smooth-zoom
@@ -30,37 +30,33 @@ yarn add smooth-zoom
 
 ## 사용법
 
-```
+```html
 <script src="node_modules/smooth-zoom/dist/zoom.min.js"></script>
 <!-- or -->
 <script src="https://cdn.jsdelivr.net/npm/smooth-zoom@latest/dist/zoom.min.js"></script>
-
 ```
 
 설치 후 스크립트 태그를 추가하셔도 되고, 설치 없이 사용하시려면 jsdelivr 링크를 추가하시면 됩니다.
 
-```
+```js
 import Zoom from "smooth-zoom";
-
 ```
 
 혹은 모듈로 가져오실 수도 있습니다.
 
-```
+```js
 Zoom(".zoomable");
-
 ```
 
 그다음, CSS 셀렉터를 담아 호출해주시면 끝입니다.
 
 ## 옵션
 
-```
+```js
 Zoom(".zoomable", {
     originalizer: (src) => src.replace(/-[0-9]+\.jpg/, ".jpg"),
     background: "auto",
 });
-
 ```
 
 ### originalizer

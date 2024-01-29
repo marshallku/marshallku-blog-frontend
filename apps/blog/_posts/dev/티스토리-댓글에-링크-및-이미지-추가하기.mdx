@@ -33,7 +33,7 @@ ogImage: /images/2020/06/comment-updated.png
 
 ## Javascript 작업
 
-```
+```js
 const autoWrap = (containerId, selector) => {
   const wrapping = async () => {
     const link = /(\b(https?|ftp|file):\/\/[-A-Z0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|+&@#\/%?=~_|!:,.;]*[-A-Z0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|+&@#\/%=~_|])/gi; // 링크 찾기
@@ -192,17 +192,16 @@ const autoWrap = (containerId, selector) => {
     })
   );
 };
-
 ```
 
 예전 스크립트는 0.5초마다 한 번씩 함수를 실행하게 해뒀는데, 이젠 MutationObserver를 이용해 변화를 감지하게 해뒀습니다.
 
 위 스크립트를 별도로 js 파일로 작성해 스킨 편집에서 업로드하셔서 사용하시거나, 아래 주소를 사용하시면 업로드 필요 없이 압축된 js 파일을 사용하실 수 있습니다.
 
-jsdelivr : <https://cdn.jsdelivr.net/gh/marshall-ku/update-tistory-comments@latest/dist/autoWrap.js>  
-github : <https://marshall-ku.github.io/update-tistory-comments/dist/autoWrap.js>
+jsdelivr : [https://cdn.jsdelivr.net/gh/marshall-ku/update-tistory-comments@latest/dist/autoWrap.js](https://cdn.jsdelivr.net/gh/marshall-ku/update-tistory-comments@latest/dist/autoWrap.js)  
+github : [https://marshall-ku.github.io/update-tistory-comments/dist/autoWrap.js](https://marshall-ku.github.io/update-tistory-comments/dist/autoWrap.js)
 
-```
+```js
 autoWrap("comment-list", ".comment-text");
 ```
 
@@ -211,7 +210,7 @@ autoWrap("comment-list", ".comment-text");
 
 ## CSS 작업 (선택)
 
-```
+```css
 /* 이미지 비디오 최대 너비 설정 */
 img,
 video {
@@ -237,7 +236,6 @@ video {
     width: 100%;
     height: 100%;
 }
-
 ```
 
 이미지나 비디오가 댓글 창을 벗어나는 걸 방지하기 위해 최대 너비를 설정해주는 스타일과, 추가된 유튜브 비디오를 반응형으로 수정하는 스타일입니다. 필요하시면 추가해주세요.

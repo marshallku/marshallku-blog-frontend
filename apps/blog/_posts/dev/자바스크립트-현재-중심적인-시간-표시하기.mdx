@@ -12,7 +12,7 @@ ogImage: /images/2019/12/date.jpeg
 
 "2019.12.04 23:00" 처럼 표기된 시간을 현재 시각을 기준으로 "13분 전" 처럼 변경하는 스크립트입니다.
 
-```
+```js
 export const SECOND_TO_MS = 1000;
 export const MINUTE_TO_SECOND = 60;
 export const HOUR_TO_SECOND = MINUTE_TO_SECOND * 60;
@@ -64,7 +64,6 @@ export default function formatToReadableTime(dateString: string): string {
 
     return `${floor(diffToDay / YEAR_TO_DAY)}년 전`;
 }
-
 ```
 
 new Date()를 이용해 구한 현재 시각과 전달받은 시각을 빼 차이를 구하는 방법을 이용합니다.

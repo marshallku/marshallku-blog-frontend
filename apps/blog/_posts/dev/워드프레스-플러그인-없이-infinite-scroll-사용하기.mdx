@@ -22,7 +22,7 @@ ogImage: /images/2019/07/infinite-scroll.png
 
 ## PHP
 
-```
+```php
 <?php get_header(); ?>
 
 <main id="main" class="postList<?php echo postListStyle() ?>">
@@ -70,7 +70,6 @@ ogImage: /images/2019/07/infinite-scroll.png
 </div>
 
 <?php get_footer(); ?>
-
 ```
 
 먼저 제 category.php 파일의 모습입니다.  
@@ -81,7 +80,7 @@ ogImage: /images/2019/07/infinite-scroll.png
 
 ## css
 
-```
+```css
 #loading {
     display: none;
     position: absolute;
@@ -99,7 +98,6 @@ ogImage: /images/2019/07/infinite-scroll.png
 #loading.reveal {
     display: block
 }
-
 ```
 
 #paging은 그냥 display: none으로 숨겨주세요.
@@ -108,7 +106,7 @@ ogImage: /images/2019/07/infinite-scroll.png
 
 ## Javascript
 
-```
+```js
 const loading = document.getElementById("loading");
 let isld, ispld;
 
@@ -186,7 +184,6 @@ function loadPrev() {
 
 loadPrev(),
 window.addEventListener("scroll", loadNext)
-
 ```
 
 대망의 자바스크립트입니다.

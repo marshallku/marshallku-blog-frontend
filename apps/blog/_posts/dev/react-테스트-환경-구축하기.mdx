@@ -19,7 +19,7 @@ Webpack 등으로 개발 서버를 시작해 HMR을 사용해도, 코드 양이 
 
 ## 패키지 설치
 
-```
+```bash
 npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-library/user-event @babel/preset-react @babel/preset-typescript @babel/preset-env identity-obj-proxy
 ```
 
@@ -34,19 +34,18 @@ npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-
 
 ## package.json
 
-```
+```json
 "scripts": {
   "prebuild": "npm run test",
   "test": "jest"
 },
-
 ```
 
 `prebuild`와 `test` 두 스크립트를 추가해줬습니다.
 
 ## jest.config.json
 
-```
+```json
 {
     "roots": ["<rootDir>/test/"],
     "testEnvironment": "jsdom",
@@ -58,7 +57,6 @@ npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-
         "^.+\\.tsx?$": "ts-jest"
     }
 }
-
 ```
 
 테스트 환경은 `jsdom`으로 변경하고, `css`와 `svg` 파일은 `identity-obj-proxy`가 처리하도록 했습니다.  
@@ -66,7 +64,7 @@ npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-
 
 ## babel.config.json
 
-```
+```json
 {
     "presets": [
         [
@@ -81,15 +79,13 @@ npm i -D jest ts-jest @testing-library/react @testing-library/jest-dom @testing-
         "@babel/preset-typescript"
     ]
 }
-
 ```
 
 ## test/setup.ts
 
-```
+```ts
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "@testing-library/jest-dom";
-
 ```
 
 (test 폴더 내부에 넣어주세요)
@@ -102,7 +98,7 @@ import "@testing-library/jest-dom";
 
 ## test/App.test.tsx
 
-```
+```tsx
 import { render, screen } from "@testing-library/react";
 import App from "../src/App";
 
@@ -111,7 +107,6 @@ test("Renders main element", () => {
     const mainElement = screen.getByRole("main");
     expect(mainElement).toBeInTheDocument();
 });
-
 ```
 
  (test 폴더 내부에 넣어주세요) 

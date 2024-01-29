@@ -22,7 +22,7 @@ ogImage: /images/2021/03/CSS-Grid로_Masonry-레이아웃-만들기.png
 
 ## 구현
 
-```
+```css
 .masonry-container {
     --gap: 10px;
 
@@ -47,13 +47,12 @@ ogImage: /images/2021/03/CSS-Grid로_Masonry-레이아웃-만들기.png
         margin-bottom: var(--gap);
     }
 }
-
 ```
 
 720px 초과에선 3열, 이하에선 2열, 400px 이하에선 1열로 표시되게 제작해뒀습니다.  
 `--gap`과 `grid-template-columns` 두 값을 적절히 조절하셔서 원하는 레이아웃을 제작하시면 됩니다.
 
-```
+```ts
 function masonryLayout() {
     const masonryContainerStyle = getComputedStyle(
         document.querySelector(".masonry-container")
@@ -75,7 +74,6 @@ function masonryLayout() {
 
 masonryLayout();
 window.addEventListener("resize", masonryLayout);
-
 ```
 
 JS에선 `.masonry-item`의 `grid-row-end`값만 수정해주면 됩니다.
@@ -83,7 +81,7 @@ JS에선 `.masonry-item`의 `grid-row-end`값만 수정해주면 됩니다.
 아래에 많은 요소가 들어갈 땐 `div`하나로 감싸고 `scrollHeight` 값을 가져오는 게 편했습니다.  
 더 확실한 값을 원하시면 `getBoundingClientRect().height`을 사용하시면 됩니다.
 
-```
+```ts
 function masonryLayout() {
     document.querySelectorAll(".masonry-item").forEach((elt) => {
         elt.style.gridRowEnd = `span ${Math.ceil(elt.querySelector(".pseudo-img").scrollHeight / 10 + 1)}`;
@@ -92,7 +90,6 @@ function masonryLayout() {
 
 masonryLayout();
 window.addEventListener("resize", masonryLayout);
-
 ```
 
 `column-gap`과 `grid-auto-rows`의 값을 하드코딩하시면 이렇게 짧게도 만드실 수 있습니다.

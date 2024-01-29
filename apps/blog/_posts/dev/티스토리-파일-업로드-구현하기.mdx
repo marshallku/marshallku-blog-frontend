@@ -32,16 +32,16 @@ ogImage: /images/2020/06/upload-success.png
 
  등록이 끝나면 App ID를 확인하실 수 있습니다.
 
-```
+```txt
 https://www.tistory.com/oauth/authorize?client_id={client-id}&redirect_uri={redirect-uri}&response_type=token
 ```
 
-{client-id}는 App ID로  
-{redirect-uri}는 CallBack에 입력한 주소로 변경하시고 위 주소로 들어가시면 CallBack에 입력한 주소로 리다이렉트되며 주소 끝에 `#access_token={token}&state=` 란 형식으로 Access Token이 반환됩니다. 토큰을 복사해둬 주세요.
+`{client-id}`는 App ID로  
+`{redirect-uri}`는 CallBack에 입력한 주소로 변경하시고 위 주소로 들어가시면 CallBack에 입력한 주소로 리다이렉트되며 주소 끝에 `#access_token={token}&state=` 란 형식으로 Access Token이 반환됩니다. 토큰을 복사해둬 주세요.
 
 ## HTML 업데이트
 
-```
+```html
 <div>
   <textarea name="[##_rp_input_comment_##]" id="commentTextarea" placeholder="댓글을 입력해주세요."></textarea>
 </div>
@@ -49,22 +49,21 @@ https://www.tistory.com/oauth/authorize?client_id={client-id}&redirect_uri={redi
   <label for="fileUpload" class="attach-btn">업로드</label>
   <input type="file" name="uploadedfile" id="fileUpload" style="display:none">
 </div>
-
 ```
 
-스킨 편집 > HTML에서 _rp\_input\_comment_를 검색하면 textarea가 하나 나올 겁니다. 해당 textarea에 id가 없다면 commentTextarea라는 id를 추가해주세요.
+스킨 편집 > HTML에서 `_rp_input_comment_`를 검색하면 textarea가 하나 나올 겁니다. 해당 textarea에 id가 없다면 commentTextarea라는 id를 추가해주세요.
 
-그 아래 보이는 것처럼 label과 input#fileUpload도 추가해주세요.  
-굳이 .attach-wrapper 안에 추가하실 필요 없이 본인의 재량껏 하시면 됩니다.  
-input#fileUpload는 display: none으로 숨기시는 걸 추천합니다. 가능하면 위에 작성한 것처럼 인라인 스타일보단 CSS를 수정해서 숨겨주세요.
+그 아래 보이는 것처럼 label과 `input#fileUpload`도 추가해주세요.  
+굳이 `.attach-wrapper` 안에 추가하실 필요 없이 본인의 재량껏 하시면 됩니다.  
+`input#fileUpload`는 `display: none`으로 숨기시는 걸 추천합니다. 가능하면 위에 작성한 것처럼 인라인 스타일보단 CSS를 수정해서 숨겨주세요.
 
 ![댓글 입력창 업데이트](/images/2020/06/comment-field.png)
 
-제 티스토리 댓글 창입니다. 위에서 보실 수 있듯 input#fileUpload는 숨겨주시는 게 미관상 훨씬 좋습니다.
+제 티스토리 댓글 창입니다. 위에서 보실 수 있듯 `input#fileUpload`는 숨겨주시는 게 미관상 훨씬 좋습니다.
 
 ## Javascript 추가
 
-```
+```js
 document.getElementById("fileUpload") && document.getElementById("fileUpload").addEventListener("change", (e) => {
     e.preventDefault();
 
@@ -109,13 +108,11 @@ document.getElementById("fileUpload") && document.getElementById("fileUpload").a
             // 댓글 입력란에 쓴 내용이 없으면 입력란의 내용을 이미지 주소로 수정, 쓴 내용이 있으면 엔터 한 번 후 이미지 주소 입력
         });
 });
-
-
 ```
 
 input#fileUpload의 변화를 감지해 파일이 추가되면 업로드하는 스크립트입니다.  
-{access-token}엔 Access Token을  
-{blog-name}엔 블로그 이름(xxx.tistory.com에서 xxx)을 넣으시면 됩니다.
+`{access-token}`엔 Access Token을  
+`{blog-name}`엔 블로그 이름(xxx.tistory.com에서 xxx)을 넣으시면 됩니다.
 
 \* Access Token이 노출되는 건 여러모로 좋지 않으니, [난독화 사이트](https://obfuscator.io/) 등을 이용해 암호화를 한 번 하시는 걸 추천합니다. 난독화 사이트에서 String Array Encoding을 Base64로 변경하시면 스트링이 Base64로 인코딩됩니다.
 

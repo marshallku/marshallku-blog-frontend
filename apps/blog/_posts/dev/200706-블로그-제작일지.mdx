@@ -29,20 +29,20 @@ ogImage: /images/2020/07/lighthouse-score.png
 
 ## 프론트엔드 보안 및 성능
 
-\- 터치, 스크롤, 휠 이벤트 중 event.preventDefault()를 사용하지 않는 이벤트엔 {passive: true}를 추가했습니다.
+- 터치, 스크롤, 휠 이벤트 중 event.preventDefault()를 사용하지 않는 이벤트엔 `{passive: true}`를 추가했습니다.
 
-```
+```js
 document.getElementById("element").addEventListener("scroll", myFunction, { passive: true})
 ```
 
 passive: true 옵션은 위와 같이 사용할 수 있고, 해당 옵션이 있는 이벤트 리스너는 event.preventDefault()를 호출할 수 없습니다.  
 터치, 스크롤, 휠 모두 사용자의 스크롤에 관여하는 이벤트입니다. 만약 passive: true 옵션이 없다면 브라우저는 스크롤을 진행하기 전 이벤트 리스너가 모든 작업을 마치길 기다려야 하고, 이는 사용자가 스크롤이 버벅인다고 생각할 수 있게 만듭니다.
 
-\- target="\_blank" 속성을 갖는 a 태그에 rel="noopener"를 추가했습니다.  
-target="\_blank"로 열린 탭은 opener(그 탭을 연 탭 - 이하 '부모 탭'이라 서술함)에 대한 참조가 가능하고, 이는 보안과 성능의 문제를 야기할 수 있습니다.
+- `target="_blank"` 속성을 갖는 a 태그에 rel="noopener"를 추가했습니다.  
+  - `target="_blank"`로 열린 탭은 opener(그 탭을 연 탭 - 이하 '부모 탭'이라 서술함)에 대한 참조가 가능하고, 이는 보안과 성능의 문제를 야기할 수 있습니다.
 
-1\. 보안 - 열린 새 탭에서 부모 탭을 피싱용 페이지로 리다이렉트시킬 수 있습니다.  
-2\. 성능 - 열린 새 탭에서 많은 리소스를 사용하면 참조를 위해 같은 스레드에서 동작 중인 부모 탭의 성능도 함께 저하됩니다.
+1. 보안 - 열린 새 탭에서 부모 탭을 피싱용 페이지로 리다이렉트시킬 수 있습니다.  
+2. 성능 - 열린 새 탭에서 많은 리소스를 사용하면 참조를 위해 같은 스레드에서 동작 중인 부모 탭의 성능도 함께 저하됩니다.
 
 ![Lighthouse 점수](/images/2020/07/lighthouse-score.png)
 
@@ -72,7 +72,7 @@ apache2에서 nginx로 엔진을 변경하며 악성 봇을 차단하던 conf �
 
 apache2에서 차단하던 봇의 목록이 남아있기에, 그를 기반으로 다시 차단 목록을 만들었습니다.
 
-```
+```nginx
 # 메인 설정 파일
 include /etc/nginx/ua_blacklist;
 
@@ -85,7 +85,6 @@ map $http_user_agent $ua_blacklist {
         default 0;
         ~*(360Spider|AhrefBot|BaiduSpider|bitlybot) 1;
 }
-
 ```
 
 위처럼 - /etc/nginx/sites-available/에 있는 - 메인 설정 파일에서 블랙리스트 파일을 include하고 블랙리스트가 참이면 444로 응답하는 코드를 작성하시고, 블랙리스트 파일을 제작하시면 특정 user-agent만 차단하실 수 있습니다.

@@ -27,14 +27,14 @@ ogImage: /images/2020/02/home-slider-resize-event.png
 
 ## Lazy Load 업데이트
 
-```
+```js
 [...document.querySelectorAll(".lazyLoad")].forEach(img => {
-        const fullH = window.scrollY - (img.parentNode.offsetTop);
-        !img.classList.contains("loaded") && -(windowHeight * 1.5) < fullH && img.offsetHeight * 1.5 > fullH && (
-            loadImg()
-        )
-    })
+    const fullH = window.scrollY - (img.parentNode.offsetTop);
 
+    !img.classList.contains("loaded") && -(windowHeight * 1.5) < fullH && img.offsetHeight * 1.5 > fullH && (
+        loadImg()
+    )
+});
 ```
 
 앞서 만들었던 lazy load 스크립트가 조금 부정확한 느낌이라, 업데이트했습니다.
@@ -46,7 +46,7 @@ ogImage: /images/2020/02/home-slider-resize-event.png
 날짜를 2020.02.11 같은 방식이 아닌, 1일 전으로 표시하기 위해 워드프레스에서 기본적으로 [human\_time\_diff](https://developer.wordpress.org/reference/functions/human%5Ftime%5Fdiff/)란 함수를 제공해줍니다.  
 문제는, 영어에선 2 days ago처럼 2와 days를 띄우지만, 한국어는 2일 전으로 표기하는데, 워드프레스는 여기서 "days"만 "일"로 변경해서 출력해줘서 2 일 전이라는 틀린 맞춤법이 출력됩니다.
 
-```
+```php
 function time_diff($from, $to) {
     $diff = (int) abs($to - $from);
 
@@ -79,7 +79,6 @@ function time_diff($from, $to) {
         }
     }
 }
-
 ```
 
 딱히 큰 문제는 아니라 참고 쓰다, 영 불편해서 그냥 간단하게 함수를 만들었습니다.

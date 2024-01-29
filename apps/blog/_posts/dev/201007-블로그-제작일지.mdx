@@ -114,11 +114,10 @@ clamp(최솟값, 실제 값, 최댓값)를 이용하면 font-size, width 등을 
 
 요소까지 부드럽게 스크롤 해주는 함수의 easing function을 업데이트했습니다.
 
-```
+```js
 const transition = (x) => {
     return -0.5 * (Math.cos(Math.PI * x) - 1);
 };
-
 ```
 
 ![f(x)=-0.5(cos(pi*x)-1)](/images/2020/04/graph.png)
@@ -127,14 +126,13 @@ const transition = (x) => {
 
 여기서
 
-```
+```js
 const { sqrt, pow } = Math;
 const transition = (x) => {
     return x < 0.5
         ? (1 - sqrt(1 - pow(2 * x, 2))) / 2
         : (sqrt(1 - pow(-2 * x + 2, 2)) + 1) / 2;
 };
-
 ```
 
 ![easing function](/images/2020/10/easing-function.png)
@@ -145,12 +143,11 @@ const transition = (x) => {
 
 ## 워드프레스 기능 제거
 
-```
+```php
 remove_action('wp_head', 'wp_resource_hints', 2);
 remove_action('wp_head', 'rest_output_link_wp_head');
 remove_action('wp_head', 'rsd_link');
 remove_action('wp_head', 'wlwmanifest_link');
-
 ```
 
 제발 이런 기능은 굳이 functions.php에서 억지로 제거하는 게 아니라, 어디 아예 꺼버릴 수 있는 옵션이라도 있으면 좋을 텐데 아쉽습니다.  

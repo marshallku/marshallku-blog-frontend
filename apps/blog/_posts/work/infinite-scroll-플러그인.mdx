@@ -22,12 +22,11 @@ ogImage: /images/2020/03/infinite-scroll.png
 
 #### CDN
 
-```
+```html
 <!-- 압축 -->
 <script src="https://cdn.jsdelivr.net/gh/marshallku/infinite-scroll/dist/infiniteScroll.min.js"></script>
 <!-- 원본 -->
 <script src="https://cdn.jsdelivr.net/gh/marshallku/infinite-scroll/dist/infiniteScroll.js"></script>
-
 ```
 
 #### 다운로드
@@ -39,7 +38,7 @@ ogImage: /images/2020/03/infinite-scroll.png
 
 #### JS 파일 삽입
 
-```
+```html
 <script src="파일/경로/infiniteScroll.js"></script>
 ```
 
@@ -47,14 +46,13 @@ cdn을 사용하시면 cdn 경로를, 본인이 js 파일을 업로드해 사용
 
 #### 기본적인 HTML 구조
 
-```
+```html
 <article id="container">
     <div class="item">내용</div>
     <div class="item">내용</div>
     <div class="item">내용</div>
     <div class="item">내용</div>
 </article>
-
 ```
 
 해당 플러그인은 다음 페이지의 내용을 컨테이너에 계속 추가해가는 방식으로 작동합니다.  
@@ -62,13 +60,12 @@ cdn을 사용하시면 cdn 경로를, 본인이 js 파일을 업로드해 사용
 
 #### 초기 내용 설정
 
-```
+```js
 infiniteScroll({
     container: "#container",
     item: ".item",
     next: ".next"
 })
-
 ```
 
 기본적으로 플러그인을 사용하기 위해선 container, item, next 세 가지 옵션이 필요합니다.
@@ -96,7 +93,7 @@ detectLoad : (Boolean, 기본값 : true) 참이면 다음 / 이전 페이지를 
 nextCallback : (함수) 다음 페이지를 불러왔을 때 실행되는 콜백입니다. 각각 아이템에 개별적으로 실행되는 콜백입니다. 매개변수를 하나 추가하시면 아이템에 접근하실 수 있습니다.  
 prevCallback : (함수) 이전 페이지를 불러왔을 때 실행되는 콜백입니다. 각각 아이템에 개별적으로 실행되는 콜백입니다. 매개변수를 하나 추가하시면 아이템에 접근하실 수 있습니다.
 
-```
+```js
 infiniteScroll({
     container: "#container",
     item: ".item",
@@ -112,7 +109,6 @@ infiniteScroll({
         newElement.style.opacity = "0.5"
     }
 })
-
 ```
 
 간단한 콜백 예시입니다.  
@@ -132,7 +128,7 @@ onLoadFinish : (함수) 다음 / 이전 페이지를 불러왔을 때 실행되�
 
 #### Masonry 등 사용 가능
 
-```
+```js
 const msnry = new Masonry(document.getElementById("container"), {
     itemSelector: ".item",
     columnWidth: ".item",
@@ -161,14 +157,13 @@ infiniteScroll({
 window.addEventListener("load", () => {
     msnry.layout()
 })
-
 ```
 
 위 페이지를 제작하는 데 사용한 자바스크립트입니다. callback 함수를 추가해 간단하게 masonry 등의 플러그인도 사용하실 수 있습니다.
 
 #### 버튼 이용하기
 
-```
+```js
 infiniteScroll({
     container: "#container",
     item: ".item",
@@ -180,7 +175,6 @@ infiniteScroll({
     prevLoader: ".prevLoader",
     pushHistory: true
 })
-
 ```
 
 자동으로 다음 페이지를 불러오는 게 마음에 들지 않으시면 위 예제처럼 버튼을 이용하실 수 있습니다.  

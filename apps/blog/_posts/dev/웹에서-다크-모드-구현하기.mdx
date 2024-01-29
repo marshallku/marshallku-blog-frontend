@@ -21,11 +21,10 @@ ogImage: /images/2020/10/dark-theme.png
 
 ### CSS
 
-```
+```css
 @media (prefers-color-scheme: dark) {
     /* Your CSS */
 }
-
 ```
 
 `prefers-color-scheme`을 이용하시면 사용자가 어떤 테마를 선호하는지 알아낼 수 있습니다.  
@@ -33,7 +32,7 @@ ogImage: /images/2020/10/dark-theme.png
 
 ### Javascript
 
-```
+```js
 window.matchMedia("(prefers-color-scheme: dark)").matches
 ```
 
@@ -46,7 +45,7 @@ window.matchMedia("(prefers-color-scheme: dark)").matches
 
 테마를 변경하지 않고 시스템 테마만 따르려면 CSS로만 작업하셔도 충분합니다.
 
-```
+```css
 a {
     color: #0000ee;
 }
@@ -61,18 +60,16 @@ a {
         color: #3ea6ff;
     }
 }
-
 ```
 
 CSS는 스타일이 겹치면 더 아래에 있는 걸 적용하기 때문에, 반드시 다크 테마의 스타일이 아래로 오게만 해주시면 됩니다.
 
 ### Class
 
-```
+```js
 if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     document.documentElement.classList.add("dark");
 }
-
 ```
 
 사용자가 다크 테마를 사용하면 `html`(body도 무관)에 dark란 class를 추가하게 했습니다.
@@ -80,7 +77,7 @@ if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 이 스크립트를 `body` 태그가 끝나는 지점 앞에 추가하면 렌더링을 차단하진 않지만, 사용자가 다크 테마를 사용해도 스크립트를 불러오기 전까진 밝은 배경이 보일 겁니다.  
 `head` 태그 내부에 추가하면 밝은 배경은 보이지 않지만, 렌더링을 차단합니다.
 
-```
+```css
 html {
     color: #343434;
 }
@@ -93,16 +90,14 @@ html.dark {
 html.dark a {
     color: #3ea6ff;
 }
-
 ```
 
 CSS는 Pure CSS로 작성한 것과 크게 다르지 않지만
 
-```
+```js
 document.getElementById("toggleTheme").addEventListener("click", () => {
     document.documentElement.classList.toggle("dark");
 });
-
 ```
 
 `button#toggleTheme`을 추가하시고 위 스크립트를 추가하시면 이제 라이트와 다크 테마를 토글할 수 있게 되었습니다.
@@ -111,7 +106,7 @@ document.getElementById("toggleTheme").addEventListener("click", () => {
 
 위의 `html` class를 토글한 것과 똑같이 `html`의 class를 토글하지만,
 
-```
+```css
 html {
     --bg-color: #fff;
     --text-color: #343434;
@@ -132,7 +127,6 @@ body {
 a {
     color: var(--link-color);
 }
-
 ```
 
 CSS 변수를 이용해 `html`에 색상 값을 선언해두고, `body`와 `a` 태그의 스타일은 한 번씩만 작성했습니다.
@@ -148,7 +142,7 @@ CSS 변수를 이용해 `html`에 색상 값을 선언해두고, `body`와 `a` �
 
 \* 본문과 크게 관련 없지만, localStorage엔 문자열만 저장할 수 있고, 메인 쓰레드를 차단할 여지도 있기에, 큰 데이터를 다루실 땐 IndexedDB를 이용하시는 걸 추천합니다.
 
-```
+```js
 document.getElementById("toggleTheme").addEventListener("click", () => {
     const html = document.documentElement;
 
@@ -160,12 +154,11 @@ document.getElementById("toggleTheme").addEventListener("click", () => {
         localStorage.setItem("darkTheme", "true");
     }
 });
-
 ```
 
 버튼을 클릭할 때, `html`의 class만 토글하지 않고, localStorage에 darkTheme의 활성화 여부를 저장하게 했습니다.
 
-```
+```js
 const storedTheme = localStorage.getItem("darkTheme");
 
 if (storedTheme !== null) {
@@ -175,7 +168,6 @@ if (storedTheme !== null) {
 } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     document.documentElement.classList.add("dark");
 }
-
 ```
 
 다음에 테마를 확인할 때 localStorage에 저장된 게 있는지 확인을 우선 해주고, 저장된 게 없다면 prefers-color-scheme을 확인하시면 됩니다.
@@ -187,7 +179,7 @@ if (storedTheme !== null) {
 사실상 위에서 끝이긴 합니다만, 혹 테마 토글 기능 없이 시스템의 테마를 따르면서 웹사이트를 제작하시려면 추가하시는 게 좋은 메타 태그입니다.  
 아무것도 하지 않아도 브라우저에서 추가하는 CSS(User Agent Stylesheet)가 시스템의 테마에 맞게 조정됩니다.
 
-```
+```html
 <meta name="color-scheme" content="dark light" />
 ```
 

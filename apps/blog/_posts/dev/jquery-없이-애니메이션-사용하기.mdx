@@ -15,9 +15,9 @@ ogImage: /images/2020/04/js-animation.png
 하지만, 엘리먼트의 width나 height을 변경하거나, 특정 엘리먼트까지 부드럽게 스크롤 하는 덴 위 방식으로 한계가 있습니다.  
 엘리먼트의 width나 height을 css의 transition으로 변경하면 60FPS 보장이 굉장히 힘들어지고, scroll-behavior은 사파리에서 지원하지 않기 때문입니다.
 
-jQuery에선 .animate() .slideToggle() 등으로 간단히 작업할 수 있는데, 이를 바닐라로 비슷하게 구현해봤습니다.
+jQuery에선 `.animate()`, `.slideToggle()` 등으로 간단히 작업할 수 있는데, 이를 바닐라로 비슷하게 구현해봤습니다.
 
-```
+```js
 function animateScroll(to) {
     function animation() {
         const now = (performance.now() - startTime) / time,
@@ -41,7 +41,6 @@ function animateScroll(to) {
         startTime = performance.now();
     animation()
 }
-
 ```
 
 특정 위치까지 부드럽게 스크롤 해주는 스크립트입니다.  
@@ -59,7 +58,7 @@ f(x) = -0.5(cos(pi\*x)-1)
 
 위 함수에서 animation() 함수에 들어있는 window.scrollTo와 from, to를 수정하시면 원하는 애니메이션을 제작하실 수 있습니다.
 
-```
+```js
 function slideToggle(element) {
     function animation() {
         const now = (performance.now() - startTime) / time,
@@ -97,7 +96,6 @@ function slideToggle(element) {
         startTime = performance.now();
     animation()
 }
-
 ```
 
 다른 예시로 jQuery의 slideToggle()을 구현해봤습니다.  

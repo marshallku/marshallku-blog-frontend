@@ -13,7 +13,7 @@ ogImage: /images/2019/07/slideToggle.png
 jQuery의 slideToggle()이란 함수를 바닐라 자바스크립트로 구현하는 방법입니다.  
 최소한의 코드로 동작하게 해뒀으며, jQuery의 slideToggle과는 달리 대상 요소만 지정하고 애니메이션 진행 시간은 자바스크립트에서 작성하지 않습니다.
 
-```
+```js
 function toggleSlide(element) {
     let a;
     0 === element.offsetHeight ? (
@@ -24,7 +24,6 @@ function toggleSlide(element) {
         element.style.height = `${a}px`
     ) : element.style.height = 0
 }
-
 ```
 
 함수를 실행하면 요소의 높이를 변경합니다. 요소에 transition을 원하는 값만큼 주시면 애니메이션 진행 시간을 변경하실 수 있습니다.

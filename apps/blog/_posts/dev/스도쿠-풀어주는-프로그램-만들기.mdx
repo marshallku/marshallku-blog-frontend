@@ -22,18 +22,17 @@ C++로 작업했다가, 아무래도 접근성이 많이 떨어져 웹 앱으로
 
 ## C++
 
-```
+```cpp
 #include <iostream>
 const int g_max = 9;
 const int g_subMax = g_max / 3;
 int grid[g_max][g_max];
-
 ```
 
 스도쿠 칸의 크기를 `g_max`에, 작은 칸(Subgrid)의 크기를 `g_subMax`에 담아뒀습니다.  
 이후, 스도쿠 칸이 담길 배열을 만들어줍니다.
 
-```
+```cpp
 bool isSolvable()
 {
     int row, col;
@@ -50,7 +49,6 @@ bool isSolvable()
 
     return filled >= 17;
 }
-
 ```
 
 스도쿠가 하나의 해만 갖기 위해선 최소 17개의 칸이 채워져 있어야 합니다.  
@@ -58,7 +56,7 @@ bool isSolvable()
 
 스도쿠 판 크기가 달라지면 조건이 바뀌기도 하고, 어차피 검사하지 않아도 조건이 충족되지 않으면 높은 확률로 풀다가 던져버리니 빼도 무관한 부분이긴 합니다.
 
-```
+```cpp
 bool isInRow(int row, int num)
 {
     for (int i = 0; i < g_max; i++)
@@ -101,13 +99,12 @@ bool isValid(int row, int col, int num)
 {
     return !isInRow(row, num) && !isInCol(col, num) && !isInSubGrid(row - row % g_subMax, col - col % g_subMax, num);
 }
-
 ```
 
 스도쿠 풀이에 핵심이 되는 부분입니다.  
 행, 열, 작은 칸에 같은 숫자가 있는지 확인하고, 어디에도 같은 숫자가 없으면 참을 반환합니다.
 
-```
+```cpp
 bool hasEmptyBox(int &row, int &col)
 {
     for (row = 0; row < g_max; row++)
@@ -142,13 +139,12 @@ bool solve()
 
     return false;
 }
-
 ```
 
 스도쿠를 풀이하는 부분입니다.  
 0(풀이되지 않은 부분)인 칸을 찾아서, 1부터 최댓값(9)까지 숫자를 넣어보며 유효성을 확인하고, 유효한 값이 나오지 않으면 0으로 재설정합니다.
 
-```
+```cpp
 int main(void)
 {
     for (int i = 0; i < g_max; i++)
@@ -173,7 +169,6 @@ int main(void)
 
     return 0;
 }
-
 ```
 
 이제 입력을 받고 스도쿠를 풀게 하기만 하면 됩니다.

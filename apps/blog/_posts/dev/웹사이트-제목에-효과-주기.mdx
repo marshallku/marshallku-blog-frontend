@@ -16,7 +16,7 @@ ogImage: /images/2020/01/title-bar.png
 
 또한, Array뿐 아니라 String도 사용할 수 있도록 업데이트했습니다.
 
-```
+```js
 function typeTitle(title, animation, speed) {
   const isString = typeof(title) === "string";
   let i = 0, j = 0;
@@ -72,24 +72,21 @@ function typeTitle(title, animation, speed) {
   document.title = "\u200E",
   type();
 }
-
 ```
 
 title 태그가 텅 비어있으면 주소를 표시하기 때문에, u200E라는 아무것도 표시되지 않는 유니코드를 집어넣었습니다.
 
-```
+```js
 typeTitle("title")
 typeTitle(["first", "second", "third"])
-
 ```
 
 타이틀을 집어넣어 함수를 호출만 해도 애니메이션이 적용됩니다.  
 String, Array 두 가지만 사용하셔야 오류가 없습니다.
 
-```
+```js
 typeTitle("title", "type-once")
 typeTitle("title", "type-500")
-
 ```
 
 세 가지 애니메이션이 있습니다.
@@ -98,7 +95,7 @@ typeTitle("title", "type-500")
 type-once : 한 글자씩 적고 작동을 멈춥니다.  
 type-(숫자) : 한 글자씩 적고, (숫자)밀리초 이후에 글자를 모두 지우고 한 글자씩 적습니다.
 
-```
+```js
 typeTitle("title", "", 500)
 ```
 

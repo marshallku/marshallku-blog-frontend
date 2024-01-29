@@ -13,11 +13,10 @@ ogImage: /images/2019/11/PreventRightClick.png
 가끔 웹서핑하다 보면 텍스트를 복사해가라고 해뒀는데, context menu를 막아둬서 모바일에선 복사할 수 없을 때가 있습니다.  
 무분별하게 퍼진 우클릭 방지 스크립트 때문이지 싶은데, 원하시는 게 이미지의 우클릭 방지라면 이미지의 우클릭만 막을 수 있습니다.
 
-```
+```js
 document.addEventListener("contextmenu", e => {
     e.target.matches("img") && e.preventDefault()
 })
-
 ```
 
 ### 심화
@@ -28,7 +27,7 @@ document.addEventListener("contextmenu", e => {
 
 ## HTML
 
-```
+```html
 <div id="rightClick" class="hidden">© Marshall K</div>
 ```
 
@@ -37,7 +36,7 @@ document.addEventListener("contextmenu", e => {
 
 ## CSS
 
-```
+```css
 #rightClick {
     position: absolute;
     padding: 5px 10px;
@@ -49,14 +48,13 @@ document.addEventListener("contextmenu", e => {
 #rightCLick.hidden {
     display: none
 }
-
 ```
 
 자바스크립트에서 left와 top 값을 줄 예정이니, CSS에선 아무런 작업을 하지 않으셔도 됩니다.
 
 ## Javascript
 
-```
+```js
 const rightClickElem = document.getElementById("rightClick");
 
 document.addEventListener("contextmenu", e => {
@@ -83,7 +81,6 @@ document.addEventListener("mousedown", () => {
     rightClickElem.style.left = 0,
     rightClickElem.style.top = 0;
 });
-
 ```
 
 contextmenu가 활성화될 때, 타겟이 이미지면 이벤트의 실행을 방지합니다.

@@ -37,7 +37,7 @@ ogImage: /images/2019/11/scrollRestoration.png
 
 ## 다크 모드
 
-```
+```js
 window.matchMedia("(prefers-color-scheme: dark)").matches
 ```
 
@@ -50,7 +50,7 @@ window.matchMedia("(prefers-color-scheme: dark)").matches
 
 ## 터치 감지
 
-```
+```js
 (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) ||  (navigator.msMaxTouchPoints > 0)) ? HTML.classList.add("touchable") : HTML.classList.add("untouchable")
 ```
 

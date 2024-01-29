@@ -15,7 +15,7 @@ ogImage: /images/2020/10/details-summary.png
 
 ## HTML
 
-```
+```html
 <details>
     <summary>Click me</summary>
     <div>
@@ -42,7 +42,7 @@ ogImage: /images/2020/10/details-summary.png
 
 ## CSS
 
-```
+```css
 details {
     margin-bottom: 1rem;
 }
@@ -87,13 +87,12 @@ details[open] > summary ~ * {
         transform: translate3d(0, 0, 0);
     }
 }
-
 ```
 
 summary 태그에 표시되는 삼각형은 summary::-webkit-details-marker 혹은 summary::marker로 수정하실 수 있습니다.  
 반드시 두 개에 대한 스타일은 아래와 같이 따로 작성해주셔야 합니다.
 
-```
+```css
 details > summary::marker {
     /* styles */
 }
@@ -101,7 +100,6 @@ details > summary::marker {
 details > summary::-webkit-details-marker {
     /* styles */
 }
-
 ```
 
 `details` 내부의 요소가 표시될 땐 animation을 추가했습니다.  

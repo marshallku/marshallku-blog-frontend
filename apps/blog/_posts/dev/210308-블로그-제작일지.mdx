@@ -24,7 +24,7 @@ ogImage: /images/2021/03/210308-블로그-제작일�
 
 ## Debounce
 
-```
+```ts
 export function debounce(func: Function, wait: number) {
     let debouncing: ReturnType<typeof setTimeout>;
 
@@ -35,7 +35,6 @@ export function debounce(func: Function, wait: number) {
         }, wait);
     };
 }
-
 ```
 
 Resize 이벤트 리스너 등은 종종 모든 작동이 끝났을 때 한 번만 작동하면 되는 경우가 많습니다.  

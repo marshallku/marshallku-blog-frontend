@@ -23,7 +23,7 @@ mp4는 IE 9부터 어지간한 브라우저는 다 지원하는 반면, webm은 
 
 ### Ubuntu
 
-```
+```bash
 sudo apt install ffmpeg
 ```
 
@@ -35,7 +35,7 @@ sudo apt install ffmpeg
 Homebrew란 패키지 관리자를 먼저 설치하셔야 됩니다.  
 [Homebrew 홈페이지](https://brew.sh/)에서 설치 방법을 확인하실 수 있습니다.
 
-```
+```bash
 brew install ffmpeg
 ```
 
@@ -74,13 +74,13 @@ Path 클릭하시고 편집(Edit) 클릭해주세요.
 
 쓸데없이 Windows에 ffmpeg 설치하는 거로 스크롤을 엄청나게 잡아먹었네요.
 
-```
+```bash
 cd /path/to/input.mp4
 ```
 
 먼저 입력 파일이 있는 경로로 가주세요.
 
-```
+```bash
 ffmpeg -i input.mp4 -c:v libvpx-vp9 -b:v 2M -vf "colorkey=0x010101:0.01:0.1,format=yuva420p" -auto-alt-ref 0 output.webm
 ```
 

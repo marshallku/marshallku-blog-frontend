@@ -30,22 +30,20 @@ highlight.js
 
 ## Powershell
 
-```
+```powershell
 $text = Get-Clipboard -TextFormatType Html
 $regex = "<div.*?>(.*)<\/div>"
 $text = "<code class=""codeblock"">$(([regex]($regex)).match($text).groups[1].value)</code>"
 
 Set-Clipboard -value $text
-
 ```
 
 ## Bash
 
-```
+```sh
 clipboard=$(osascript -e 'the clipboard as «class HTML»' |   perl -ne 'print chr foreach unpack("C*",pack("H*",substr($_,11,-3)))')
 [[ $clipboard =~ (<meta charset=\'utf-8\'>)(<div)(.*)(<\/div>) ]]
 echo '<code'${BASH_REMATCH[3]}'</code>' | pbcopy
-
 ```
 
 난생처음 짜본 쉘 스크립트입니다.
@@ -57,9 +55,8 @@ macOS에선 Bash 코드를 `vscCopyHtml.bash`처럼 `.bash` 파일로 저장하�
 
 홈 디렉토리에 파일을 생성하시고 `~/vscCopyHtml.ps1(bash)`로 실행하시는 게 가장 편할 겁니다.
 
-```
+```html
 <code class="codeblock"><div><span style="color: #e5c07b;">console</span><span style="color: #abb2bf;">.</span><span style="color: #61afef;">log</span><span style="color: #abb2bf;">(</span><span style="color: #98c379;">"Hello&#160;World!"</span><span style="color: #abb2bf;">);</span></div></code>
-
 ```
 
 예시로 `console.log("Hello World!");`를 복사하신 후 쉘 스크립트를 실행하시면 위와 같은 텍스트로 변경되어 클립 보드에 저장됩니다.
@@ -68,7 +65,7 @@ macOS에선 Bash 코드를 `vscCopyHtml.bash`처럼 `.bash` 파일로 저장하�
 
 추가로, Bash에선 정규표현식에 `.*?`란 식을 넣으면 아무것도 매치가 안 돼서 VSCode의 배경색 등이 `code` 태그의 style에 들어가 있지만, Powershell에선 스타일을 모두 지워버리고 `code.codeblock`으로 대체하게 해둬서
 
-```
+```css
 .codeblock {
     position: relative;
     display: block;
@@ -80,7 +77,6 @@ macOS에선 Bash 코드를 `vscCopyHtml.bash`처럼 `.bash` 파일로 저장하�
     border-radius: 2px;
     margin-bottom: 2rem;
 }
-
 ```
 
 이런 CSS를 추가하셔야 제대로 표시됩니다.
@@ -91,7 +87,7 @@ macOS에선 Bash 코드를 `vscCopyHtml.bash`처럼 `.bash` 파일로 저장하�
 
 클립보드에 접근할 권한이 없어서 `textarea`에 코드를 붙여 넣는 작업을 한 번 더 하셔야 하긴 하지만, OS에 크게 구애받지 않고 Javascript로도 상술한 과정을 진행하실 수 있습니다.
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -110,10 +106,9 @@ macOS에선 Bash 코드를 `vscCopyHtml.bash`처럼 `.bash` 파일로 저장하�
         <script src="app.js"></script>
     </body>
 </html>
-
 ```
 
-```
+```js
 const textarea = document.getElementById("pasteHere");
 
 function handlePaste(event) {
@@ -130,7 +125,6 @@ function handlePaste(event) {
 }
 
 textarea.addEventListener("paste", handlePaste);
-
 ```
 
 쉘 스크립트와 달리 VSCode에서 코드를 복사하신 뒤, `textarea`에 붙여 넣기를 진행하셔야 하이라이팅 된 html을 클립보드에 넣을 수 있습니다.

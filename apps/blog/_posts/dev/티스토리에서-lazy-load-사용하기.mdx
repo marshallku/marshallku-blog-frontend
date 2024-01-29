@@ -28,7 +28,7 @@ ogImage: /images/2019/10/티스토리-Lazy-Load-2.png
 이미지에 오류가 발생하면 티스토리에서 위 이미지를 집어넣습니다.  
 굳이 로딩하지 않아도 될 이미지를 로딩할 필요가 없으니, 이미지의 src에 1px \* 1px짜리 이미지를 하나 넣어줘서 이미지에 아무런 오류가 발생하지 않도록 합니다.
 
-[ blank .png](/images/2019/10/blank.png)
+[blank .png](/images/2019/10/blank.png)
 
 1px \* 1px에 아무런 색상 정보도 들어있지 않은 이미지입니다.  
 95바이트밖에 되지 않으니, 로딩 속도에 큰 영향을 끼치지 않습니다.
@@ -41,7 +41,7 @@ ogImage: /images/2019/10/티스토리-Lazy-Load-2.png
 
 ## 자바스크립트
 
-```
+```js
 document.addEventListener("DOMContentLoaded", () => {
     let TICKING = false;
 
@@ -130,16 +130,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
 ```
 
 복사한 이미지 경로를 위 스크립트에 있는 "복사한\_이미지\_경로"에 붙여 넣으신 후, 위 스크립트를 앞에 삽입합니다.
 
-```
+```js
 document.addEventListener("DOMContentLoaded",()=>{let e=!1;const t=e=>{e.classList.contains("loaded")||(e.src=e.dataset.src,e.removeAttribute("data-src"),e.dataset.srcset&&(e.srcset=e.dataset.srcset,e.removeAttribute("data-srcset")),e.classList.add("loaded"))},s=e=>{e.dataset.src=e.src,e.dataset.src&&(e.dataset.srcset=e.srcset,e.removeAttribute("srcset")),e.src="복사한_이미지_경로"};if("IntersectionObserver"in window){const e=new IntersectionObserver((e,s)=>{e.forEach(e=>{if(!e.isIntersecting)return;const r=e.target;t(r),s.unobserve(r)})},{root:null,rootMargin:"200px"});document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(t=>{s(t),e.observe(t),t.classList.add("observing")})}else{const r=()=>{const{scrollY:e}=window;document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(s=>{if(s.classList.contains("loaded"))return;const r=s.parentNode.offsetTop;r+s.offsetHeight>e&&e+window.innerHeight>r&&t(s)})};document.querySelectorAll(".imageblock img,.imagegridblock img").forEach(o=>{s(o),r(),window.addEventListener("scroll",()=>{e||(window.requestAnimationFrame(()=>{t(),e=!1}),e=!0)},{passive:!0})})}});
 ```
 
-똑같은 스크립트를 압축한 스크립트입니다. 마찬가지로 "복사한\_이미지\_경로" 를 복사하신 이미지 경로로 바꾸신 후 사용해주세요.
+똑같은 스크립트를 압축한 스크립트입니다. 마찬가지로 `"복사한_이미지_경로"` 를 복사하신 이미지 경로로 바꾸신 후 사용해주세요.
 
 ## 끝!
 

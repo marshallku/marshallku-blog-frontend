@@ -15,12 +15,11 @@ ogImage: /images/2022/05/Pull-Request-병합-전-코드-검사하기.png
 
 ## 스크립트 추가
 
-```
+```json
 "scripts": {
     "lint": "eslint 'src/**/*.ts'",
     "lint-diff": "eslint $(git diff --name-only --diff-filter=duxb origin/$BASE origin/$HEAD | grep -E '\\.((j|t)sx?)$' | xargs)"
 },
-
 ```
 
 `npm run lint`를 입력하면 src 아래 모든 파일을 검사하도록 했습니다.  
@@ -39,7 +38,7 @@ ogImage: /images/2022/05/Pull-Request-병합-전-코드-검사하기.png
 
 ## workflow 생성
 
-```
+```yml
 name: Check code with eslint
 
 on:
@@ -64,7 +63,6 @@ jobs:
                   CI: true
                   BASE: ${{ github.base_ref }}
                   HEAD: ${{ github.head_ref }}
-
 ```
 
 간단하게 `master` 브랜치에 Pull Request 할 때마다 `lint-diff`를 수행하도록 workflow를 만들어봤습니다.  

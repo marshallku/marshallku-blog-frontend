@@ -23,7 +23,7 @@ ogImage: /images/2022/02/README-자동화-삽질기.png
 
 ## Typescript
 
-```
+```ts
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
@@ -41,7 +41,6 @@ const data = readFileSync(FILE_TO_UPDATE, "utf-8")
     );
 
 writeFileSync(FILE_TO_UPDATE, data, "utf-8");
-
 ```
 
 아무래도 이런 건 Python이나 Javascript를 쓰는 게 제일 만만하니, Javascript로 짰다가 Typescript로 변경했습니다.  
@@ -56,7 +55,7 @@ writeFileSync(FILE_TO_UPDATE, data, "utf-8");
 
 ## C++
 
-```
+```cpp
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -105,7 +104,6 @@ int main()
 
     return 0;
 }
-
 ```
 
 마음속에 끓어 오르는 실행 속도에 대한 불만을 잠재워줄 수 있지 않을까 싶어 C++를 사용해 다시 짰습니다.  
@@ -117,7 +115,7 @@ int main()
 
 `String::reserve` 덕분에 실행 시간은 0.3초 대로 줄었고, 설치해야 할 것도 g++ 하나로 줄어 Ubuntu와 Git 세팅이 완료되고 작업을 수행하는 데 걸리는 시간도 10초가량에서 5초가량으로 줄었습니다.
 
-```
+```cpp
 while (getline(openFile, line))
 {
     if (line.rfind("![탱구]", 0) == 0)
@@ -133,7 +131,6 @@ while (getline(openFile, line))
     line += "\n";
     writeFile << line;
 }
-
 ```
 
 처음 C++ 코드를 짰을 때, 제가 봐도 코드가 많이 이상해서 C++를 다루던 분께 코드 한 번만 봐달라고 요청했더니, 아니나 다를까 '고수준 언어 다루던 사람이 짠 코드 같다'는 평가를 들었습니다. '저런 식으로 짜면 Node나 Python으로 돌린 것과 실행 속도 차이도 얼마 안 나지 않냐'는 질문과 함께요.  
@@ -162,7 +159,7 @@ while (getline(openFile, line))
 
 이런 상황에서도 꾸역꾸역 새벽까지 붙잡고 있었던 걸 보면, 역시 사람은 좋아하는 걸 해야 하는구나 싶기도 합니다.
 
-```
+```bash
 #!/bin/bash
 taengoo_index="$(($RANDOM % 18 + 1))"
 winter_index="$(($RANDOM % 23 + 1))"
@@ -180,7 +177,6 @@ do
     fi
 done < "./README.md" > "tmp.md"
 mv tmp.md ./README.md
-
 ```
 
 스페이스 조금만 틀려도 뻗고, 오류 메시지도 친절하지 않아 내가 도대체 뭘 잘못한 건지 잘 모르겠는 상황에 어찌저찌 완성한 스크립트입니다.
@@ -195,7 +191,7 @@ mv tmp.md ./README.md
 중 후자가 더 간단할 것 같아 후자를 택했고, 그 결과 4번 라인의 기괴한 변수가 탄생했습니다.  
 이게 맞나 싶네요…
 
-```
+```bash
 #!/bin/bash
 function test() {
     echo "First: $1"
@@ -204,7 +200,6 @@ function test() {
 }
 
 test "FOO" "BAR" "BAZ"
-
 ```
 
 쉘 스크립트 문법이 기괴한 부분이 비단 저기서 끝나는 게 아니라, 매개변수도 이런 해괴한 방식으로 작성하더라고요.
@@ -215,7 +210,7 @@ test "FOO" "BAR" "BAZ"
 
 ## YML
 
-```
+```yml
 name: Set random image in README with Shell Script
 on:
     schedule:
@@ -238,7 +233,6 @@ jobs:
                   git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
                   git commit -am "Update image"
                   git push
-
 ```
 
 YML 파일은 매번 크게 바뀌지도 않았고 별다른 내용도 없긴 한데, Github Actions 얘기하면서 언급도 안 하고 넘어가면 서운해 몇 자 적어봅니다.

@@ -87,28 +87,26 @@ Prettier와 Eslint(airbnb 스타일)를 사용해 최대한 틀을 맞췄고, BE
 
 개인적으로 `innerHTMl`을 사용하는 걸 아주 안 좋아하는데
 
-```
+```js
 document.body.innerHTML = `<img src=x onerror=alert('hi')>`;
-
 ```
 
 지금은 이런 스크립트도 실행이 안 되지만, 불과 몇 주 전 저희가 프로젝트를 진행할 때만 해도 저런 코드가 잘 실행되어 보안의 문제도 있고
 
-```
+```js
 document.body.innerHTML = `
     <div class="tmp">
         <h2 class="tmp__title">Title</h2>
         <p class="tmp__description">Description</p>
     </div>
 `;
-
 ```
 
 Syntax 하이라이트가 하나도 지원되지 않는데다가, 따옴표도 매번 수동으로 닫아야 하고, 생성 후 이벤트 리스너를 추가하거나, 내용을 수정할 때도 돔에 다시 접근해서 번거롭게 작업해야 합니다.
 
 그리고 사실 무엇보다 `innerHTML`을 쓴다는 것 자체가 아름답지 않아 보이기도 합니다.
 
-```
+```js
 function WithCreateElement() {
     const container = document.createElement("div");
     const title = document.createElement("h2");
@@ -128,12 +126,11 @@ function WithCreateElement() {
 
     return container;
 }
-
 ```
 
 이런 방식으로 `createElement`만 이용하는 것도 가독성이나, 유지보수에 못지않게 나쁘긴 합니다.
 
-```
+```js
 export default function el(nodeName, attributes, ...children) {
     const node =
         nodeName === "fragment"
@@ -179,7 +176,7 @@ export default function el(nodeName, attributes, ...children) {
 [Jason Miller: Preact: Into the void 0 | JSConf EU 2017](https://www.youtube.com/watch?v=LY6y3HbDVmg)  
 [How to Write Your Own JavaScript DOM Element Factory](https://kyleshevlin.com/how-to-write-your-own-javascript-dom-element-factory)
 
-```
+```js
 function WithFactoryFunction() {
     return el(
         "div",
@@ -195,7 +192,6 @@ function WithFactoryFunction() {
         el("p", { className: "tmp__description" }, "Description"),
     );
 }
-
 ```
 
 구조 파악도 한결 쉬워지고, 이벤트 리스너도 간편히 추가할 수 있게 되었습니다.  
@@ -205,7 +201,7 @@ function WithFactoryFunction() {
 
 ### 라우터
 
-```
+```ts
 import renderPage from "../pages";
 
 export function route(isPopstate?: boolean) {
@@ -241,14 +237,13 @@ export function initializeRouter() {
     route(true);
   });
 }
-
 ```
 
 `History API`를 기반으로 간단하게 라우터를 만들었습니다.
 
 간단한 애플리케이션에선 이 정도로 충분하겠지만, 관리 페이지처럼 `/user`, `/user/posts`, `/user/liked`, `/user/comments`같이 깊이가 하나 추가된 상태에서 모든 페이지가 하나 이상의 컴포넌트를 공유하며, 해당 내용을 업데이트만 하면 될 때를 감당하긴 힘들었습니다.
 
-```
+```ts
 export function customRouter(): ICustomRouter {
   return {
     base: "",
@@ -284,12 +279,11 @@ export function customRouter(): ICustomRouter {
     },
   };
 }
-
 ```
 
 그래서 급하게 위 상황을 해결할 수 있도록 함수를 하나 제작하고
 
-```
+```ts
 function Drawer(userPageRouter: ICustomRouter) {
   const Button = ({ text, path }: { text: string; path: string }) => {
     const a = el(
@@ -346,7 +340,6 @@ export default function UserPage() {
 
   return el("fragment", {}, drawer, main);
 }
-
 ```
 
 이런 방식으로 활용할 수 있도록 했는데, 아무래도 상술한 상황 하나를 해결해야 한다는 생각에서 출발하다 보니, 재사용성이 높은 함수를 만들어내진 못한 것 같습니다.
@@ -358,31 +351,30 @@ export default function UserPage() {
 
 ### 남도 쓸 수 있는 코드 작성
 
-```
+```ts
 export default function renderHeader(page) {
   const [wideAddr, localAddr] = window.location.pathname
     .split("/")
     .slice(2)
     .map((x) => decodeURI(x));
-  ...
-
+  // ...
+}
 ```
 
 얼핏 보면 `wideAddr`과 `localAddr`을 도대체 어디서 어떻게 가져오는지 알기 힘든 코드를
 
-```
+```ts
 export function getPaths(index = 1): string[] {
   return window.location.pathname
     .split("/")
     .slice(index)
     .map((x) => decodeURI(x));
 }
-
 ```
 
 이런 식으로 함수로 따로 빼내 가독성뿐 아니라 재사용성을 올리고, 한 컴포넌트는 하나의 일만 해야 한단 원칙에도 조금 더 가까운 코드를 작성할 수 있게 되었습니다.
 
-```
+```ts
 export const MS_TO_SECOND = 1000;
 export const MINUTE_TO_SECOND = 60;
 export const HOUR_TO_SECOND = MINUTE_TO_SECOND * 60;
@@ -414,12 +406,11 @@ export function formatToReadableTime(dateString: string) {
     return `${floor(diffToDay / MONTH_TO_DAY)}개월 전`;
   return `${floor(diffToDay / YEAR_TO_DAY)}년 전`;
 }
-
 ```
 
 난무하던 매직 넘버도 모두 분리했고
 
-```
+```ts
 const DEFAULT_WAIT = 500;
 
 export function throttle(func: () => any, wait = DEFAULT_WAIT): () => void {
@@ -434,39 +425,37 @@ export function throttle(func: () => any, wait = DEFAULT_WAIT): () => void {
     }
   };
 }
-
 ```
 
 위 상황처럼 파라미터에서나, `switch`문에서 지금까진 '그냥 파라미터로 넘길 때 타이핑 적게 하려고' 등의 이유로 기본값을 작성해왔으나, 혹시 모를 실수를 방지하고, 최대한 매직 넘버를 줄이며, 애플리케이션 작동의 통일성을 높이기 위한 기본값을 작성하는 계기도 되었습니다.
 
 ### 명시적인 코드 작성
 
-```
+```ts
 const array = ["first", "second", "third"];
 
 const first = array[0];
 const second = array[1];
 
 const [first, second] = array;
-
 ```
 
 위 상황처럼 배열 내에서 둘 이상의 아이템을 가져오지 않을 땐 `배열[인덱스]`등의 접근도 자주 사용했습니다.  
 코치님의 피드백을 통해 위 방식이 명시적이지 않을 수 있음을 알 수 있었고, 상술한 내용에서 꾸준히 강조했듯 알아보기 좋은 코드의 작성을 위해 여러 방면에서 고민해보는 계기가 되었습니다.
 
-```
+```ts
 const setSize = () => {
     itemWidth = container.querySelector(selector).offsetWidth;
     const cols = Math.floor(container.offsetWidth / itemWidth);
 
     stack = [...new Array(cols)].map(() => 0);
-    ...
-
+    // ...
+}
 ```
 
 또한, 이렇게 가독성도 떨어지고 위험한 방식으로 배열을 조작하기보다
 
-```
+```ts
 export function reset(arr: Array<any>): void {
   while (arr[0]) {
     arr.pop();
@@ -484,14 +473,13 @@ export function resetWithSize(
     arr.push(number);
   }
 }
-
 ```
 
 이렇게 함수를 하나 따로 만들어 가독성과 안정성을 조금씩 높여가는 계기도 되었습니다.
 
 ### 선언형 프로그래밍에 관한 고민
 
-```
+```ts
 export default function Carousel(items: Array<IPhoto>) {
   const container = document.createElement("div");
   const carousel = document.createElement("div");
@@ -505,14 +493,15 @@ export default function Carousel(items: Array<IPhoto>) {
   let containerWidth = 0;
   let initialX = 0;
   let diffX = 0;
-  ...
 
+  // ...
+}
 ```
 
 개인적으로도 마음에 안 드는 코드였는데, 시간이 부족하기도 하고, 방향성을 잡지도 못해 결국 리팩터링하지 못 했던 코드입니다.  
 `Carousel` 내부에서 위에 보이는 것처럼 `let`으로 선언한 변수들과 `buttons`, `dots` 두 상수를 global 변수처럼 사용하도록 코드를 짜뒀습니다.
 
-```
+```ts
 const slide = (direction: TDirection) => {
   // First Page
   if (currentIndex === 0 && direction === -1) {
@@ -551,7 +540,6 @@ const slide = (direction: TDirection) => {
     containerWidth * currentIndex * -1
   }px, 0, 0)`;
 };
-
 ```
 
 당장 봐도 `buttons[0]`, `buttons[1]`을 `const [ prevButton, nextButton ] = buttons`처럼 수정할 수 있다는 생각이 드는데 왜 수정을 안 했는지 좀 의문이네요.
@@ -562,7 +550,7 @@ const slide = (direction: TDirection) => {
 
 ### Webpack 세팅
 
-```
+```js
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -620,13 +608,11 @@ module.exports = {
         historyApiFallback: true,
     },
 };
-
-
 ```
 
 처음엔 `HtmlWebpackPlugin`을 활용하지 못해 라이브 서버를 켜고, `index.html`에 `script`와 `link`태그를 추가한 뒤, webpack 개발 서버도 켜고, 커밋할 땐 `index.html`을 제외하고 커밋하는 해괴한 방식으로 작업했는데, webpack 설정도 한 단계 나아갈 수 있었습니다.
 
-```
+```js
 const fs = require("fs");
 
 fs.cp("./static", "./dist", { recursive: true }, async (err) => {
@@ -664,7 +650,6 @@ fs.cp("./static", "./dist", { recursive: true }, async (err) => {
 
     console.log("Replaced values in [./dist/index.html]");
 });
-
 ```
 
 물론 여전히 해결하지 못한 문제가 몇몇 남아, `post-build.js`라는 스크립트를 따로 짜서 해결한 문제가 있는데, 구글링을 좀 해봐도 해답을 찾기 힘들고, 스크립트를 짜는 것보다 수월하게 해결될 것 같지도 않아서 어느 정도 선에선 스크립트를 활용하는 게 현명하지 않을까 싶기도 합니다.

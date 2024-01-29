@@ -32,7 +32,7 @@ ogImage: /images/2023/06/Create-tag-release-with-github-actions.png
 
 ## 기존 작업 방식
 
-```
+```yml
 name: Publish package
 
 on:
@@ -72,21 +72,21 @@ jobs:
 
 ## 버전 업데이터 만들기
 
-```
+```bash
 #!/bin/bash
 version=${1:-'patch'}
 pnpm version "$version" -m "Update version to v%s"
 ```
 
 간단한 버전 업데이터입니다.  
-`＂update-version＂: ＂bash scripts/update.sh＂`와 같이 `package.json`에 스크립트를 추가해두고, `pnpm run update-version (major|minor|patch)`와 같이 실행하면, 버전을 업데이트하고(기본으로 patch) 커밋합니다.
+`"update-version": "bash scripts/update.sh"`와 같이 `package.json`에 스크립트를 추가해두고, `pnpm run update-version (major|minor|patch)`와 같이 실행하면, 버전을 업데이트하고(기본으로 patch) 커밋합니다.
 
 참고로, 저는 버전을 `v1.0.0`같은 형식으로 관리해 앞에 v를 붙여주도록 했습니다.  
 만약 다른 패턴을 사용하시면 수정하시면 됩니다.
 
 ## Tag / Release 생성 파이프라인 추가
 
-```
+```yml
 name: Create tag and release
 
 on:
@@ -167,7 +167,6 @@ jobs:
                         workflow_id: 'npm-publish.yml',
                         ref: 'master',
                       })
-
 ```
 
 원하는 대로 제작하려고 반나절 정도 삽질한 것 같습니다.  
@@ -203,7 +202,7 @@ Github actions가 release를 생성하면 자동으로 pipeline이 수행되지 
 
 ## Publish 파이프라인 수정
 
-```
+```yml
 name: Publish package
 
 on:

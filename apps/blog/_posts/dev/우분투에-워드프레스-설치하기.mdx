@@ -23,7 +23,7 @@ ogImage: /images/2020/04/wordpress.png
 
 ## Nginx와 Mysql 설치
 
-```
+```bash
 sudo apt install nginx
 sudo apt install mysql-server
 mysql -u root -p
@@ -37,7 +37,7 @@ FLUSH PRIVILEGES;
 
 ## PHP 설치
 
-```
+```bash
 sudo apt -y install software-properties-common
 sudo add-apt-repository ppa:ondrej/php
 sudo apt update
@@ -49,7 +49,7 @@ php7.4 기준으로 작성했습니다.
 
 ## 워드프레스 설치
 
-```
+```bash
 cd /tmp
 wget https://wordpress.org/latest.tar.gz
 sudo mkdir -p /var/www/html/wordpress
@@ -63,7 +63,7 @@ sudo chown -R www-data: /var/www/html/wordpress
 
 ## Let's Encrypt 인증서 발급
 
-```
+```bash
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt update
@@ -73,7 +73,7 @@ sudo apt install letsencrypt
 Let's Encrypt를 설치할 때 지역을 입력하라고 합니다.  
 6, 엔터, 69, 엔터를 순서대로 입력하면 서울로 설정됩니다.
 
-```
+```bash
 letsencrypt certonly --webroot --webroot-path=/var/www/html -d 도메인.주소
 openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 ```
@@ -84,7 +84,7 @@ openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 dhparam.pem 뒤의 숫자는 pem 파일을 몇 비트로 만들지 설정하는 옵션입니다.  
 과거엔 4096 비트로 많이들 만들었는데, 2048 비트로 제작하면 4096 비트보다 훨씬 빠르게 인증을 끝냅니다.
 
-```
+```bash
 openssl speed rsa2048 rsa4096
 ```
 
@@ -92,13 +92,13 @@ openssl speed rsa2048 rsa4096
 
 ## Nginx 설정
 
-```
+```bash
 sudo vim /etc/nginx/sites-available/도메인.주소
 ```
 
 conf 파일을 수정할 차례입니다.
 
-```
+```nginx
 server {
     listen 80;
     server_name 도메인.주소 www.도메인.주소;
@@ -159,13 +159,12 @@ server {
         add_header Cache-Control "public, no-transform";
     }
 }
-
 ```
 
 기본적인 설정만 해둔 파일입니다.  
 상술한 내용 외 다양한 설정은 [nginx 홈페이지](https://www.nginx.com/resources/wiki/start/topics/examples/full/)를 참고해봐 주세요.
 
-```
+```bash
 sudo ln -s /etc/nginx/sites-available/도메인.주소 /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
@@ -175,7 +174,7 @@ sudo systemctl restart nginx
 
 conf 파일을 업데이트하시려면
 
-```
+```bash
 sudo vim /etc/nginx/sites-available/도메인.주소
 sudo nginx -t
 sudo systemctl restart nginx

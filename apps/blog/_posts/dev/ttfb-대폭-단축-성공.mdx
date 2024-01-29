@@ -37,7 +37,7 @@ ogImage: /images/2020/02/ttfb.png
 
 페이지를 하나 만들고 헤더 카테고리를 처리하는 php를 옮겨둔 뒤, JS에서 fetch로 해당 영역을 불러와 보니, 성공적으로 TTFB도 줄이고, 헤더 카테고리도 표시할 수 있었습니다.
 
-```
+```js
 function getHeaderCategory() {
     const target = document.getElementById("desktopHeader");
 
@@ -56,7 +56,6 @@ function getHeaderCategory() {
         })
     )
 }
-
 ```
 
 메인 자바스크립트 파일에 헤더 카테고리를 조작하던 스크립트만 fetch가 성공했을 때 작동하도록 옮겨주니 모든 게 아무 문제 없이 작동했습니다.

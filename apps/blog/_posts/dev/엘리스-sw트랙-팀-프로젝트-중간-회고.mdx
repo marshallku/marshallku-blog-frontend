@@ -52,7 +52,7 @@ ogImage: /images/2021/12/엘리스-SW-엔지니어-트랙_팀-프로젝트_중�
 
 코치님께서 제가 사용해오던 방식은 유지 보수가 어렵다 말씀하시며, [Jason Miller: Preact: Into the void 0 | JSConf EU 2017](https://youtu.be/LY6y3HbDVmg)이란 동영상을 참고해 팩토리 함수를 만들어보라 조언해주셨고, 덕분에 아집에서 벗어나 팩토리 함수를 작성해봤습니다.
 
-```
+```js
 export default function el(nodeName, attributes, ...children) {
     const node =
         nodeName === "fragment"
@@ -89,15 +89,13 @@ export default function el(nodeName, attributes, ...children) {
 
     return node;
 }
-
-
 ```
 
 구조 자체는 꽤 간단합니다. `nodeName`, `attributes`와 자식 노드들을 인자로 받아 element를 반환하는 형태입니다.
 
 하나 단점이 간단한 이벤트 리스너도 등록하기가 꽤 불편했으나, `events`란 객체를 추가해 이를 해결했습니다.
 
-```
+```js
 import { addClickEvent } from "../router";
 import "../../css/SignInPage.css";
 
@@ -142,13 +140,11 @@ export default function SignInPage() {
 
     return container;
 }
-
-
 ```
 
 제가 사용해오던 방식은 이랬습니다.
 
-```
+```js
 import el from "../utils/dom";
 import { addClickEvent } from "../router";
 import "../../css/SignInPage.css";
@@ -186,8 +182,6 @@ export default function SignInPage() {
         ),
     );
 }
-
-
 ```
 
 비약적으로 향상된 가독성이 보이시나요…  

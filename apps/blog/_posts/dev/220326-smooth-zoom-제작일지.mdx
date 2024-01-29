@@ -45,7 +45,7 @@ rollup을 쓰는 지금은 TypeScript를 쓰지 말아야 할 이유가 하나�
 
 ### 확대할 비 구하기
 
-```
+```js
 let maxWidth = image.naturalWidth;
 
 if (srcset) {
@@ -77,14 +77,13 @@ if (maxHeight >= screenHeight) {
 }
 
 const scale = maxWidth !== width ? maxWidth / width : 1;
-
 ```
 
 기존 코드입니다.
 
 `maxWidth` 변수를 여기저기서 접근하는데다, 조건문이 너무 많고 심지어 저 코드가 여기저기 파편화돼있으니 모르는 사람이 보면 '뭐 어쩌라는 거지…'란 생각이 절로 들만 한 코드입니다.
 
-```
+```js
 const sizes = srcset.match(/ ([0-9]+)w/gm) || [];
 const maxWidth = useMaximumSize
     ? Math.max(
@@ -97,14 +96,13 @@ const maxWidth = useMaximumSize
 const imageScale = maxWidth / width;
 const maxScale = Math.min(screenWidth / width, screenHeight / height);
 const scale = Math.min(maxScale, imageScale);
-
 ```
 
 `Math.max`와 `Math.min`을 활용해 조건문을 없애고, 모든 값을 상수로 선언했습니다.
 
 ### 평균 색 구하기
 
-```
+```js
 const getAverageRGB = (img) => {
     const blockSize = 5;
     const rgb = { r: 0, g: 0, b: 0 };
@@ -143,12 +141,11 @@ const getAverageRGB = (img) => {
 
     return rgb;
 };
-
 ```
 
 [Stackoverflow의 답변](https://stackoverflow.com/a/2541680)을 거의 붙여 넣은 수준의, 도대체 어디서부터 어디까지 지적해줘야 할지 모르겠는 수준의 코드였습니다.
 
-```
+```ts
 function getAverageRGB(img: HTMLImageElement, width: number, height: number) {
     const blockSize = 20;
     const rgb = { r: 0, g: 0, b: 0 };
@@ -193,7 +190,6 @@ function getAverageRGB(img: HTMLImageElement, width: number, height: number) {
 
     return rgb;
 }
-
 ```
 
 코드를 수정함과 동시에, canvas의 크기도 수정했습니다.  
@@ -203,12 +199,11 @@ function getAverageRGB(img: HTMLImageElement, width: number, height: number) {
 
 기존엔 transition의 적용을 위해 이미지를 DOM에 추가한 뒤, `offsetWidth`을 호출하거나, style을 변경해 스타일 재계산을 유발했습니다.
 
-```
+```ts
 window.requestAnimationFrame(() => {
     imageClone.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${wrapX}, ${wrapY})`;
     bg.classList.add("zoom-bg--reveal");
 });
-
 ```
 
 굳이 시간이 얼마나 걸릴지 모르는 불필요한 작업을 시키기보다, 다음 프레임에 style을 적용해주면 transition이 적용됩니다.

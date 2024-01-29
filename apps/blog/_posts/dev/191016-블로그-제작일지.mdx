@@ -42,7 +42,7 @@ ogImage: /images/2019/10/댓글-프로필.png
 
 이제 하위 카테고리가 하나씩만 열립니다.
 
-```
+```js
 [...document.querySelectorAll(".cat-item")].forEach(a => {
     const button = document.createElement("button");
     let children;
@@ -62,7 +62,6 @@ ogImage: /images/2019/10/댓글-프로필.png
         })
     )
 })
-
 ```
 
 화살표 버튼 클릭할 때마다 높이가 0이 아닌 엘리먼트를 찾아서 toggleSlide() 함수를 실행하도록 해뒀습니다.

@@ -18,19 +18,18 @@ ogImage: /images/2019/12/fancy-u-lenticular-card.jpg
 
 ## HTML
 
-```
+```html
 <div id="card">
     <div id="layer1" class="lenticular"></div>
     <div id="layer2" class="lenticular"></div>
 </div>
-
 ```
 
 배경 이미지가 보일 메인 레이어 하나와 각도에 따라 표시할 레이어 두 개만 추가해주면 끝납니다.
 
 ## CSS
 
-```
+```css
 #card {
     position: relative;
     max-width: 100%;
@@ -60,7 +59,6 @@ ogImage: /images/2019/12/fancy-u-lenticular-card.jpg
 #layer2 {
     background-image: url(각도에_따라_보일_이미지_2);
 }
-
 ```
 
 당연한 소리지만 배경 이미지는 제거하셔도 무관하며, 전 배경에 무늬를 넣을 예정이라 layer1과 2에 background-repeat을 제거하지 않았습니다만, 위 사진처럼 인물을 넣을 예정이라면 background-repeat을 제거하고 background-size를 조절하셔야 합니다.
@@ -76,7 +74,7 @@ Opacity가 조금 더 천천히 바뀌도록 x 에 1/3을 곱해줍니다.
 
 여담으로, 채영 렌틸카드와 비교했을 땐 1/10을 곱해야 렌틸카드와 이미지 바뀌는 각도가 비슷하더라고요.
 
-```
+```js
 const layer1 = document.getElementById("layer1"),
   layer2 = document.getElementById("layer2");
 
@@ -101,7 +99,6 @@ function handleMouseMove(event) {
 }
 
 window.addEventListener("deviceorientation", handleOrientation);
-
 ```
 
 위 원리만 알면 모든 건 끝납니다. x축을 중심으로 움직였을 때 이미지가 바뀌어야 하므로, event.beta 값을 x에 대입해 레이어의 opacity를 조절하면 끝납니다.  

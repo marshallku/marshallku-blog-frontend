@@ -18,9 +18,9 @@ https://vlive.tv/video/(비디오 ID)
 그래서 vlive.gq란 무료 도메인을 받아, video란 단어 없는 링크를 첨부하면 V LIVE로 리다이렉트되는 사이트를 만들었습니다.  
 https://vlive.gq/(비디오 ID)를 입력하면 https://vlive.tv/video/(비디오 ID)로 접속합니다.
 
-예시) <https://www.vlive.tv/video/5204> \=> <https://vlive.gq/5204>
+> 예시) https://www.vlive.tv/video/5204 => https://vlive.gq/5204
 
-```
+```html
 <!doctype html>
 <html lang="ko">
 <head>
@@ -34,7 +34,6 @@ https://vlive.gq/(비디오 ID)를 입력하면 https://vlive.tv/video/(비디�
     <script>const a=document.createElement("a");a.href=`https://www.vlive.tv/video${location.pathname}`,a.textContent="v앱 열기",document.getElementById("redirect").append(a);</script>
 </body>
 </html>
-
 ```
 
 HTML 소스.  

@@ -13,15 +13,15 @@ coverImage: /images/2019/07/nightsky.jpg
 ogImage: /images/2019/07/nightsky.jpg
 ---
 
-<https://codesandbox.io/s/z68y1012yl> 참고한 글  
-<https://github.com/marshallku/canvas-night-sky> 깃허브
+[https://codesandbox.io/s/z68y1012yl](https://codesandbox.io/s/z68y1012yl) 참고한 글  
+[https://github.com/marshallku/canvas-night-sky](https://github.com/marshallku/canvas-night-sky) 깃허브
 
 땐나의 계절인 여름도 왔고, 호텔 델루나 보다 보니 보름달이 뜬 밤하늘이 예뻐서 인터넷 뒤적이며 만들어 봤습니다.  
 어디에 써먹을지 고민을 좀 해봤는데, 막상 써먹을 데가 없는 게 아쉽네요. ㅠㅠ
 
 HTML에 nightsky란 ID를 지닌 canvas 추가하시고 아래 스크립트만 붙여 넣으셔도 작동합니다.
 
-```
+```js
 const width = window.innerWidth,
   height = window.innerHeight,
   stars = createStars(width, height, 30),
@@ -107,7 +107,6 @@ function newY(x) {
 canvas.width = width,
 canvas.height = height,
 render();
-
 ```
 
 살면서 2차 함수 그래프를 다시 그릴 날이 올 줄 누가 알았겠습니까…ㅋㅋㅋ  

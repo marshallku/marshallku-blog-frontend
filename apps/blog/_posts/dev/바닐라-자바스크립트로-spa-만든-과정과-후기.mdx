@@ -55,7 +55,7 @@ ogImage: /images/2020/12/vanilla-spa.png
 
 ### 백엔드
 
-```
+```php
 <?php
 $request = $_REQUEST['json'];
 if ($request) : header('Content-Type: application/json'); ?>
@@ -68,20 +68,18 @@ if ($request) : header('Content-Type: application/json'); ?>
 
 <?php get_footer();
 endif; ?>
-
 ```
 
 워드프레스의 `single.php` 나 `archive.php` 등을 수정해 json 쿼리가 들어오면 json으로 응답하게 해뒀습니다. `json_encode`는 그냥 텍스트만 채워서 응답하는 것보다 느려서 그냥 `json_encode`등은 사용하지 않고 `echo`로만 꽉꽉 채웠습니다.  
 어레이(Array)에 아이템을 넣을 땐 마지막 아이템만 제외하고 마지막에 쉼표(,)가 들어가야 해서,
 
-```
+```php
 <?php
 $array = '';
 while ($recent->have_posts()) {
     $array .= '{"title" : "' . get_the_title() . '"},';
 }
 echo '[' . substr($array, 0, -1) . ']';
-
 ```
 
 이런 식으로 작업했습니다. 짧아서 그나마 볼만한데, 아래에 응답 예시 사진을 첨부해뒀으니 한 번 참고해주세요. 저만큼 들어가면 여기서부터 살짝 헛구역질이 나오기 시작합니다.  
@@ -116,7 +114,7 @@ echo '[' . substr($array, 0, -1) . ']';
 
 #### 마침내, SPA
 
-```
+```js
 document.querySelectorAll("a").forEach((element) => {
     addFetchEvent(element);
 });
@@ -124,7 +122,6 @@ document.querySelectorAll("a").forEach((element) => {
 window.addEventListener("popstate", (event) => {
     callFetchJson(event, true);
 });
-
 ```
 
 참고: `addFetchEvent`는 a 태그에 `target="_blank"`등의 속성이 있는지 확인하고 클릭 이벤트에 `callFetchJson`을 추가하는 함수입니다.

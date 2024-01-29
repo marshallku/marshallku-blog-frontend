@@ -36,7 +36,7 @@ ogImage: /images/2021/01/210129_블로그_About-IU_제작일지.png
 
 ### MP4 everywhere
 
-```
+```ts
 async function uploadToImgur(uri: string): Promise<ImgurApiResponse> {
     const formData = new FormData();
     formData.append("image", uri);
@@ -94,7 +94,6 @@ async function convertGifToMp4(string: string): Promise<string> {
 
     return string;
 }
-
 ```
 
 종종 댓글에 첨부된 움짤 중 용량이 과하게 크다 싶은 건 따로 mp4로 변환해서 수정해 두곤 했는데, 굳이 이걸 왜 내가 수동으로 하고 있나 싶어서 만든 기능입니다.  
@@ -136,7 +135,7 @@ Special Clip 라이브 무대도 홈 화면에 추가해뒀습니다. 뮤직비�
 
 ### Function Component
 
-```
+```ts
 class List extends React.Component<
     ListProps,
     {
@@ -149,17 +148,17 @@ class List extends React.Component<
             isStored: !!window[this.props.name],    
         };
     }
-    ...
-
+    // ...
+}
 ```
 
 변경 전
 
-```
+```ts
 export default function List(props: ListProps) {
     const [stored, setStored] = useState<boolean>(!!window[props.name]);
-    ...
-
+    // ...
+}
 ```
 
 변경 후

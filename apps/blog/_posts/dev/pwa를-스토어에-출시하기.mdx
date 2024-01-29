@@ -78,7 +78,7 @@ zip 파일에 포함된 `.apk`파일을 안드로이드 기기에 설치해서 �
 
 좌측 메뉴에서 설정 > 앱 서명을 클릭하시면 위 화면이 보입니다. SHA-256 인증서 지문을 복사해주세요.
 
-```
+```json
 [
     {
         "relation": ["delegate_permission/common.handle_all_urls"],
@@ -101,7 +101,6 @@ zip 파일에 포함된 `.apk`파일을 안드로이드 기기에 설치해서 �
         }
     }
 ]
-
 ```
 
 `assetlinks.json`을 수정하셔야 합니다. 위 예제처럼, Array 안의 오브젝트를 통째로 복사하셔서 `sha256_cert_fingerprints`만 다른 오브젝트를 하나 더 생성해주시면 됩니다.

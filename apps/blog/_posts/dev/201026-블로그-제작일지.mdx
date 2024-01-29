@@ -26,11 +26,10 @@ number를 넘겨야 하는데 string을 넘긴다거나, string이랑 number를 
 
 확실히 마이크로소프트에서 제작해서 그런가 공식 문서가 상당히 깔끔히 정리돼있습니다. 자칫 거칠 수 있는 여정에 큰 힘이 되더라고요.
 
-```
+```ts
 (<HTMLElement>headerContent.querySelector(".date")).innerText = humanTime(
     json.date.posted
 );
-
 ```
 
 물론 매번 이렇게 HTMLElement, HTMLImageElement 같은 거 일일이 추가해주고 interface 만들어다 추가해주고 이래저래 손보는 게 여간 귀찮은 게 아니었긴 합니다.
@@ -56,7 +55,7 @@ number를 넘겨야 하는데 string을 넘긴다거나, string이랑 number를 
 자바스크립트만 있을 땐, 개발할 땐 `script` 태그에 `type="module"`을 추가하면 모든 게 끝났지만, 타입스크립트로 전환 후엔 자바스크립트로 빌드해야 해서 이래저래 손을 봐줘야 했습니다.  
 개발할 땐 Source Map이 필요하고, 난독화는 필요 없으나, 배포할 땐 Source Map이 필요 없고, 난독화가 필요합니다.
 
-```
+```js
 const path = require("path");
 const WebpackObfuscator = require("webpack-obfuscator");
 
@@ -100,18 +99,16 @@ module.exports = (env) => {
         },
     };
 };
-
 ```
 
 `module.exports`를 함수로 만들고, 받아오는 인자를 확인해 개발 모드인지 배포 모드인지 확인하도록 했습니다.  
 처음 해보는 설정이라 잘 된 설정인진 모르겠네요…
 
-```
+```json
 "scripts": {
     "build": "npx webpack --env.mode='production'",
     "devbuild": "npx webpack --env.mode='development'"
 }
-
 ```
 
 그 후, `package.json`에 위 두 스크립트를 추가해 마무리했습니다.
@@ -162,7 +159,7 @@ HTML 태그에도 제가 모르는 게 하나 있었습니다.
 `textarea`의 높이가 입력한 글자에 맞게 자동으로 조정되는 스크립트에 `textarea`의 높이가 너무 길어져버리면 스크롤이 최하단에 박혀버리는 문제가 있었는데, 이를 스크롤을 `textarea`의 최하단에 고정하는 방식으로 해결했었습니다.  
 이는 뷰포인트 밖의 글자를 수정할 수 없는 문제가 있었는데, 아주 간단하게 이를 해결했습니다.
 
-```
+```js
 const autoExpand = () => {
     const { scrollY } = window;
     const textarea = document.getElementById("myTextarea");
@@ -170,7 +167,6 @@ const autoExpand = () => {
     textarea.style.height = `calc(${textarea.scrollHeight}px + 1rem)`;
     window.scrollTo(0, scrollY);
 };
-
 ```
 
 이렇게 textarea의 높이를 조절하기 전에 scrollY를 저장해두고, 높이를 조절한 뒤 다시 그 위치로 스크롤 해주면 되는 문제였습니다.

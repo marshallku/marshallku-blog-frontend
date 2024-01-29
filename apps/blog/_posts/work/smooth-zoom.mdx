@@ -17,7 +17,7 @@ Medium이나 Google Photos처럼 이미지를 부드럽게 확대할 수 있게 
 
 ## 설치
 
-```
+```bash
 npm install smooth-zoom
 # or
 yarn add smooth-zoom
@@ -27,11 +27,10 @@ yarn add smooth-zoom
 
 ## 사용
 
-```
+```html
 <script src="https://cdn.jsdelivr.net/npm/smooth-zoom@latest/dist/zoom.min.js"></script>
 <!-- or -->
 <script src="node_modules/smooth-zoom/dist/zoom.min.js"></script>
-
 ```
 
 브라우저 버전을 사용하시려면 위 cdn 링크를, npm 패키지를 설치하셨다면 아래 링크를 사용하실 수 있습니다.
@@ -39,16 +38,14 @@ yarn add smooth-zoom
 브라우저 버전을 사용할 때 latest 버전을 불러오시면 업데이트가 한참 진행 중일 땐 최신 버전이 유지되지 않을 수 있습니다.  
 [npmjs](https://www.npmjs.com/package/smooth-zoom)에서 최신 버전을 확인하셔서 latest 대신 해당 버전 명을 넣으셔도 됩니다.
 
-```
+```js
 import Zoom from "smooth-zoom";
-
 ```
 
 모듈로 가져오는 방법도 있습니다.
 
-```
+```js
 Zoom(".zoomable");
-
 ```
 
 그 뒤 CSS 셀렉터를 넘기며 호출하시면 됩니다.  
@@ -56,12 +53,11 @@ Zoom(".zoomable");
 
 ## 옵션
 
-```
+```js
 Zoom(".zoomable", {
     originalizer: (src) => src.replace(/-[0-9]+\.jpg/, ".jpg"),
     background: "auto",
 });
-
 ```
 
 ### originalizer
@@ -70,23 +66,20 @@ Zoom(".zoomable", {
 * 기본값 : (src) => src
 * 설명 : `image-768x768.jpg`를 `image.jpg`로 바꾸듯 이미지의 주소를 원본 주소로 바꾸기 위한 함수입니다.
 
-```
+```js
 (src) => `${src.replace(/\/(R|C)[0-9]+x[0-9]+\//, "R0x0")}?original`
-
 ```
 
 티스토리 예제
 
-```
+```js
 (src) => src.replace(/-[0-9]+x[0-9]+/, "")
-
 ```
 
 워드프레스 예제
 
-```
+```js
 (src) => src.replace(/=w[0-9]+/, "=w0")
-
 ```
 
 Google Photos 예제

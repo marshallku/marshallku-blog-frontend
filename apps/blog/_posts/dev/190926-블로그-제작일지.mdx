@@ -78,7 +78,7 @@ ogImage: /images/2019/09/mouseover-effect-2.png
 일단 float이 repaint를 굉장히 많이 일으키더라고요. 사진에 표시된 드로워에도 float이 사용됐었는데, 스크롤 할 때마다 repaint가 일어나서 position: absolute를 사용했습니다.
 
 스크롤 인디케이터는 translateX를 사용하는 게 repaint를 덜 유발할 거라 생각하고 작업했는데, translateX가 발생할 때 마다 header 전체에 repaint가 일어나서 그냥 width만 변경하는 방법으로 수정했습니다.  
-<progress> 태그를 한 번 사용해볼까 싶어서 작업해보니, CSS 수정하기가 좀 까다롭더라고요. 굳이< progress> 태그 써서 득 될 건 없어 보이는데 불편함을 감수하는 건 무의미하다 생각해 그냥 div태그를 계속 사용할 예정입니다.
+`<progress>` 태그를 한 번 사용해볼까 싶어서 작업해보니, CSS 수정하기가 좀 까다롭더라고요. 굳이< progress> 태그 써서 득 될 건 없어 보이는데 불편함을 감수하는 건 무의미하다 생각해 그냥 div태그를 계속 사용할 예정입니다.
 
 ## 기타 스크립트 업데이트
 

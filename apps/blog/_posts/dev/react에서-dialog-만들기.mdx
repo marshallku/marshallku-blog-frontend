@@ -24,7 +24,7 @@ ua에 내장된 `window.confirm`, `window.alert`, `window.prompt` 등 클래식�
 폴더 구조를 포함한 코드는 Github에서 확인하실 수 있습니다.  
 전역 상태 관리 도구로 zustand를 사용했는데, 보일러 플레이트가 적으니 사용하시는 스택으로 옮겨가시기 편하지 않을까 싶습니다.
 
-```
+```ts
 export type ResponseHandler<T = unknown> = (value: T | PromiseLike<T>) => void;
 export type DialogType = "alert" | "confirm" | "prompt";
 
@@ -40,13 +40,12 @@ export interface DialogStore<T = unknown> {
     responseHandler?: ResponseHandler<T>;
     setResponseHandler(responseHandler: ResponseHandler<T>): void;
 }
-
 ```
 
 store의 타입입니다.  
 자세한 설명은 아래에서 하겠습니다.
 
-```
+```ts
 import create from "zustand";
 import { DialogStore } from "../@types/useDialogStore";
 
@@ -71,14 +70,13 @@ export default create<DialogStore>((set) => ({
         set((prev) => ({ ...prev, responseHandler }));
     },
 }));
-
 ```
 
 `WEBSITE says`가 들어갈 `title`과 내용을 저장할 `description`을 제일 먼저 만들었습니다.  
 다음으로 `alert`, `confirm`, `prompt` 세 타입 중 현재 띄운 창이 어떤 것일지를 저장할 곳도 만들었습니다.  
 마지막으로 창의 표시 여부 상태를 저장할 곳을 만들고, 기존에 `alert` 등이 동작하는 것처럼 후의 동작을 `await`으로 막기 위해 `Promise`를 사용할 건데, executor 중 `resolve`를 `responseHandler`에 담을 예정입니다.
 
-```
+```ts
 import useDialogStore from "../store/useDialogStore";
 import { DialogType } from "../@types/useDialogStore";
 
@@ -141,13 +139,12 @@ export default function useDialog() {
         onInteractionEnd,
     };
 }
-
 ```
 
 이제 훅을 만들어주면 준비는 거의 끝났습니다.  
 `alert`, `confirm`, `prompt`를 호출하면 제목 등을 설정한 뒤 `Promise`를 반환하며, 창이 닫힐 때 `onInteractionEnd`를 호출하도록 만들 겁니다.
 
-```
+```tsx
 import { memo, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import useDialogStore from "../store/useDialogStore";
@@ -217,21 +214,19 @@ export default function Dialog() {
 
     return createPortal(revealed ? <DialogComponent /> : null, dialogRoot);
 }
-
 ```
 
 type이 alert일 땐 확인만 뜨게 하는 등 각 상황에 맞게 마크업을 짜줬습니다.
 
 굳이 상태를 만들 필요는 없을 것 같아 `input`은 `useRef`로 관리하여, 창이 닫힐 때 그 값을 꺼내오도록 하였습니다.
 
-```
+```html
 <div id="dialog"></div>
-
 ```
 
 포탈을 열었으니 `#dialog`를 추가해주는 것도 잊으면 안 됩니다.
 
-```
+```css
 .dialog-backdrop {
     position: fixed;
     top: 0;
@@ -329,7 +324,6 @@ type이 alert일 땐 확인만 뜨게 하는 등 각 상황에 맞게 마크업�
         color: var(--dialog-primary);
     }
 }
-
 ```
 
 너무 밋밋하지만 않게 디자인해뒀습니다.  
@@ -337,7 +331,7 @@ type이 alert일 땐 확인만 뜨게 하는 등 각 상황에 맞게 마크업�
 
 `prefers-color-scheme`은 여기서만 작업해두면 창이 뜨는 페이지와 어울리지 않을 수 있어 작업하는 게 맞을지 고민을 잠깐 했는데, 잠깐 고민해보니 ua가 띄우는 창도 그냥 사용자가 선호하는 색상에 따라 배경색이 결정되니 큰 상관이 없지 않을까 싶어 작업해뒀습니다.
 
-```
+```tsx
 import { useCallback, useState } from "react";
 import useDialog from "./hooks/useDialog";
 
@@ -381,7 +375,6 @@ export default function App() {
         </div>
     );
 }
-
 ```
 
 이제 끝입니다!  

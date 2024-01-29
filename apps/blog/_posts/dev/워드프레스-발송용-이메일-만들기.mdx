@@ -16,7 +16,7 @@ ogImage: /images/2020/01/Screenshot-from-2020-01-19-23-17-49.png
 
 ## postfix 설치
 
-```
+```bash
 sudo apt-get update && sudo apt-get install postfix
 ```
 
@@ -37,16 +37,15 @@ System mail name을 입력하라고 나옵니다.
 
 위 과정이 모두 끝나면 /etc/postfix/main.cf을 텍스트 편집기에서 열어주세요.
 
-```
+```ini
 mailbox_size_limit = 0
 recipient_delimiter = +
 inet_interfaces = loopback-only
-
 ```
 
 위 내용을 추가하신 후 저장하시고,
 
-```
+```bash
 sudo service postfix reload
 ```
 
@@ -58,7 +57,7 @@ sudo service postfix reload
 하지만 발신자의 정보가 이름은 WordPress, 메일은 wordpress@블로그.주소 입니다.  
 functions.php를 조금 손봐 위를 수정하실 수 있습니다.
 
-```
+```php
 function mailSenderMail($original_email_address) {
     return "이름@도메인.주소";
 }
@@ -69,7 +68,6 @@ function mailSenderName($original_email_from) {
 
 add_filter("wp_mail_from", "mailSenderMail");
 add_filter("wp_mail_from_name", "mailSenderName");
-
 ```
 
 ## 아쉬운 점

@@ -29,7 +29,7 @@ ogImage: /images/2021/09/syntax-highlighter.png
 
 또 브라우저에선 Tab을 누르면 다음 요소로 포커스(focus)가 넘어가는 게 기본 동작이니
 
-```
+```js
 if (code === "Tab") {
     event.preventDefault();
 
@@ -44,7 +44,6 @@ if (code === "Tab") {
     textarea.selectionEnd = currentEndPosition + 2;
     highlightSyntax();
 }
-
 ```
 
 기본 동작을 막고 공백 두 칸만 커서 위치에 추가하게 해뒀습니다.

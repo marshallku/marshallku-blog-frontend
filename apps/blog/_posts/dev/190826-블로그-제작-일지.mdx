@@ -58,13 +58,12 @@ transform: scale을 사용하다 보니 크기를 깔끔하게 조절하긴 힘�
 
 스팸 댓글이 댓글 작성자 주소 남기는 데 스팸 사이트도 계속 남기고 해서, 검색 엔진 봇이 제 사이트도 스팸으로 오인할까 염려돼서 봇은 해당 링크가 링크인지 판단하지 못하도록 바꿨습니다.
 
-```
+```html
 <!-- 예전 -->
 <a href="https://marshallku.com" class="name">Marshall K</a>
 
 <!-- 현재 -->
 <div class="pseudo-link name" data-uri="https://marshallku.com">Marshall K</div>
-
 ```
 
 위와 같이 html 구조를 변경하고, JS로 클릭하면 새 창에서 링크가 열리도록 해뒀습니다.

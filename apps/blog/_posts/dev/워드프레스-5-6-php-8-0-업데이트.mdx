@@ -18,7 +18,7 @@ ogImage: /images/2020/12/wordpress-php.png
 
 사실 워드프레스 5.6이 기다려진 이유는 워드프레스의 신기능보단 [PHP 8](https://www.php.net/releases/8.0/en.php) 때문이었는데, 이제 nginx에서 `fastcgi_pass unix:/run/php/php8.0-fpm.sock;`를 입력해도 사이트가 깨지지 않고 잘 작동하네요.
 
-```
+```php
 // PHP 7
 $id = null;
 
@@ -28,7 +28,6 @@ if ($post !== null) {
 
 // PHP 8
 $id = $post?->id;
-
 ```
 
 중에서도 제일 반가운 건 이 Nullsafe operator입니다. 드디어 이걸 PHP에서도 쓸 수 있게 되었네요.

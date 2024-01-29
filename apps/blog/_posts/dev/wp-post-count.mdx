@@ -15,7 +15,7 @@ ogImage: /images/2019/07/postcount.png
 
 하지만, 위와 같은 코드는 하위 카테고리의 포스트는 세지 않고, 순수하게 해당 카테고리의 포스트 개수만 출력합니다.
 
-```
+```php
 function postCount($id) {
     $count = get_category($id)->count;
     foreach (get_categories(array('child_of' => $id)) as $category) {
@@ -23,12 +23,11 @@ function postCount($id) {
     }
     return $count;
 }
-
 ```
 
 function.php에 위 함수를 추가하시고, 포스트 개수를 출력하고 싶은 부분에
 
-```
+```php
 postCount($category->term_id)
 ```
 

@@ -16,7 +16,7 @@ ogImage: /images/2020/03/img-new-tab.png
 염원하고 염원하던 그 기능입니다.  
 글 발행하고 업데이트를 까먹기도 하고, 매번 수동으로 업데이트하기 귀찮아서 HTML로 저장하는 걸 멈춰야 하나 생각도 했는데, 드디어 해냈네요.
 
-```
+```php
 add_action("publish_post", "실행될함수");
 ```
 
@@ -28,17 +28,16 @@ add_action("publish_post", "실행될함수");
 
 \+ save\_post에 훅을 거니 무한 콜백 지옥에 빠지더라고요. 유저가 포스트 수정 => 감지 => 포스트 업데이트 => 감지 => 포스트 업데이트…
 
-```
+```php
 remove_action("save_post", "updataeHeadcat", 25);
 wp_update_post($headcat);
 add_action("save_post", "updateHeadcat", 25);
-
 ```
 
 이렇게도 해봤는데 제대로 작동하지 않습니다.  
 포스트 업데이트를 진행하면 그냥 로딩만 계속되더라고요.
 
-```
+```php
 function disableMessingUp( $content ) {
     if (is_singular('page')) {
       remove_filter('the_content', 'wpautop');
@@ -47,7 +46,6 @@ function disableMessingUp( $content ) {
     return $content;
 }
 add_filter( 'the_content', 'disableMessingUp', 0 );
-
 ```
 
 위 방식으로 포스트를 진행하면 워드프레스가 마음대로 nbsp 태그와 p 태그를 오만 곳에 뿌리고 다녀, 상술한 코드로 그걸 방지해뒀습니다.
@@ -75,7 +73,7 @@ add_filter( 'the_content', 'disableMessingUp', 0 );
 예전엔 말 그대로 이미지 자체를 새 탭에서 여는 거라, 이미지 확인이 끝나면 탭을 닫아야(모바일에선 뒤로 가기) 했습니다.  
 하지만 이번엔 별도로 뷰어 페이지를 제작해 이미지를 표시하는 거라, 이미지를 클릭하면 탭이 닫히도록 설정해뒀습니다. 유저 테마를 인식해 배경색이 바뀌게도 해뒀습니다.
 
-```
+```php
 function formatImage($content) {
     global $post;
 
@@ -88,7 +86,6 @@ function formatImage($content) {
     }
     return $content;
 }
-
 ```
 
 이미지 여는 a 태그도 서버 측에서 넣도록 해뒀습니다.  

@@ -25,7 +25,7 @@ ogImage: /images/2020/11/gif-mp4-converter.jpg
 
 ## 앱 생성
 
-```
+```bash
 npx create-snowpack-app gifconverter --template @snowpack/app-template-react-typescript
 ```
 
@@ -33,13 +33,13 @@ snowpack으로 typescript를 이용한 react 앱 템플릿을 생성해줍니다
 
 물론 굳이 snowpack, react, typescript를 사용하셔야 하는 건 아닙니다.
 
-```
+```bash
 npm i @ffmpeg/ffmpeg @ffmpeg/core
 ```
 
 그다음, 이 앱의 핵심인 ffmpeg를 설치해줍니다.
 
-```
+```bash
 npm start
 ```
 
@@ -47,7 +47,7 @@ npm start
 
 ## FFmpeg 초기 설정
 
-```
+```tsx
 import React, { useState, useEffect } from "react";
 import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
 import "./App.css";
@@ -81,7 +81,6 @@ function App() {
 }
 
 export default App;
-
 ```
 
 `App.tsx`의 보일러 플레이트를 제거하고, FFmpeg를 비동기적으로 불러오게 업데이트했습니다.
@@ -90,7 +89,7 @@ FFmpeg를 사용하려면 브라우저에서 `window.SharedArrayBuffer`([MDN 참
 
 ## 파일 업로드
 
-```
+```tsx
 const [input, setInput] = useState<{
     file: File;
     type: string;
@@ -111,7 +110,6 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         }
     }
 };
-
 ```
 
 업로드한 파일이 gif인지, mp4인지 알아야 하기에 file과 type을 저장하는 state를 추가했습니다.
@@ -119,7 +117,7 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 `input[type="file"]`의 변화를 감지해 상태를 업데이트할 거라, `input[type="file"]`의 변화를 `setInput`을 통해 `input`에 저장하는 함수도 만들었습니다.  
 만약 서버에서 돌아가는 스크립트였다면 파일을 훨씬 까다롭게 검사했겠지만, 파일을 업로드한 사용자의 메모리에 올라갈 파일이라 파일 유형만 검사해 gif나 mp4 파일이면 저장하도록 했습니다.
 
-```
+```tsx
 <input type="file" onChange={handleChange} />
 ```
 
@@ -127,7 +125,7 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 ## 파일 변환
 
-```
+```tsx
 const [output, setOutput] = useState<string>("");
 
 const convertFile = async () => {
@@ -191,7 +189,6 @@ const convertFile = async () => {
 useEffect(() => {
     convertFile();
 }, [input]);
-
 ```
 
 변환된 파일을 저장할 `output`도 만들어주고, `useEffect`를 통해 `input`에 변화가 있을 때마다 파일 변환을 진행하도록 했습니다.
@@ -207,7 +204,7 @@ gif는 나이가 나이다 보니 최적화가 많이 안 좋아 시간제한을
 
 앱 제작하면서도 자주 볼 화면
 
-```
+```tsx
 return (
     <>
         {ready ? (
@@ -237,14 +234,13 @@ return (
         )}
     </>
 );
-
 ```
 
 파일 변환이 완료되면 output 파일이 출력되게 했습니다.
 
 ## 지금까지 작성된 코드
 
-```
+```tsx
 import React, { useState, useEffect } from "react";
 import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
 import "./App.css";
@@ -378,7 +374,6 @@ function App() {
 }
 
 export default App;
-
 ```
 
 여기까지만 하셔도 기본적인 파일 변환은 끝났습니다.
@@ -387,20 +382,19 @@ export default App;
 
 ## 보너스 : 진행상태 표시하기
 
-```
+```tsx
 const ffmpeg: FFmpeg = createFFmpeg({ log: true, progress: progressRatio });
 
 function progressRatio(status: { ratio: number }) {
     console.log(status.ratio);
 }
-
 ```
 
 createFFmpeg에 progress란 옵션을 추가하면 FFmpeg의 진행 과정을 0에서 1 사이 값으로 넘겨줍니다.
 
 모양이 이렇다 보니 컴포넌트 밖에서 컴포넌트의 상태를 업데이트해줘야 해서 어떻게 할지 고민을 많이 했습니다.
 
-```
+```tsx
 import React from "react";
 
 declare global {
@@ -433,20 +427,18 @@ export default class DisplayProgress extends React.Component<
         );
     }
 }
-
 ```
 
 `DisplayProgress.tsx`를 따로 생성했습니다.
 
 `DisplayProgress`란 컴포넌트를 만들고 `window.displayProgress`에 이를 할당해줬습니다.
 
-```
+```ts
 function progressRatio(status: { ratio: number }) {
     window.displayProgress.setState({
         ratio: status.ratio,
     });
 }
-
 ```
 
 이제 `App.tsx`의 `progressRatio`에서 `window.displayProgress`의 state를 업데이트해주면 됩니다.

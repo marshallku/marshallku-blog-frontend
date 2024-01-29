@@ -17,7 +17,7 @@ ogImage: /images/2021/01/fullmoon-long.png
 
 ## 틀 잡기
 
-```
+```ts
 const screenSize = {
     vw: 0,
     vh: 0,
@@ -35,14 +35,13 @@ function setScreenSize() {
             window.innerHeight || 0
         ) / 100;
 }
-
 ```
 
 이런 효과는 대부분 일정 크기 이하의 기기에선 없애버리지만, 전 그래도 모바일에서 보이게는 하고 싶어서 vw, vh 두 단위를 적극 활용했습니다. 덕분에 매번 vw과 vh을 px로 변환해줘야 하는 귀찮음을 동반하긴 했지만요.
 
 근데 만들고 보니 확실히 모바일에선 숨기는 게 나아 보입니다. 성능 문제도 있지만, 일단 데스크탑이나 랩탑에 비해 과하게 작은 디스플레이에서 이 모든 걸 표현하기가 쉽지 않더라고요.
 
-```
+```ts
 function scrollEffect() {
     const { scrollY } = window;
     const { vw, vh } = screenSize;
@@ -56,7 +55,6 @@ function scrollEffect() {
         // Do something
     }
 }
-
 ```
 
 vh으로 높이를 정해뒀고, `window.scrollY`가 계속 필요해서, Intersection Observer는 사용하지 않고, scroll 이벤트를 활용했습니다.
@@ -71,7 +69,7 @@ vh으로 높이를 정해뒀고, `window.scrollY`가 계속 필요해서, Inters
 
 하늘, 도시 배경이 실제 스크롤 속도(검은 div가 올라오는 속도)와 다르게 움직이는데, 이런 것 까지는 `position: fixed`로 두고 `transform`을 이용해 `window.scrollY`보다 작은 폭으로 움직이게 해주면 아주 간단하게 만들 수 있습니다.
 
-```
+```ts
 city.style.transform = `translate3d(0, ${-0.1 * scrollY}px, 0)`;
 ```
 
@@ -98,7 +96,7 @@ x 좌표를 구하는 함수는 일차 함수, y 좌표를 구하는 함수는 �
 
 y가 60 \* vh일 때 화면 정 중앙에 달이 있게 할 것이므로, scrollY가 0일 때 0에서 출발해 60 \* vh에 도달하면 -50 \* vw에 moon의 너비의 반을 더한 값만큼 오면 됩니다. moon은 너비와 높이가 17vh인 정사각형에 넣어뒀기에, -8.5 \* vh이 되겠네요.
 
-```
+```ts
 moonTransform.x = ((-50 * vw - 8.5 * vh) / (60 * vh)) * scrollY;
 ```
 
@@ -111,7 +109,7 @@ moonTransform.x = ((-50 * vw - 8.5 * vh) / (60 * vh)) * scrollY;
 
 수학 시간이 아니니, 짧게만 짚으면 꼭짓점을 통해 위 좌표를 구할 수 있고, 원점을 지나니 위 식의 x와 y에 0을 넣으면 a의 값도 구할 수 있습니다.
 
-```
+```ts
 const largerPart = Math.max(vw, vh);
 const halfVh = 30 * vh;
 moonTransform.y =((5 * largerPart) / Math.pow(halfVh, 2)) * Math.pow(scrollY - halfVh, 2) - 5 * largerPart;
@@ -120,7 +118,7 @@ moonTransform.y =((5 * largerPart) / Math.pow(halfVh, 2)) * Math.pow(scrollY - h
 
 정리하면 이런 모양이 됩니다.
 
-```
+```ts
 moon.style.transform = `matrix(${moonTransform.scale}, 0, 0, ${moonTransform.scale}, ${moonTransform.x}, ${moonTransform.y})`;
 ```
 
@@ -131,11 +129,10 @@ moon.style.transform = `matrix(${moonTransform.scale}, 0, 0, ${moonTransform.sca
 
 ### 아래로 커지며 이동
 
-```
+```ts
 moonTransform.x = -50 * vw - 8.5 * vh;
 moonTransform.y = currentY * 0.9;
 moonTransform.scale = 1 + currentY * 0.01;
-
 ```
 
 x의 값은 scrollY가 60 \* vh일 때 값으로 고정해두고, y의 값과 scale 값은 각각 0과 1부터 조금씩 커지게 하면 끝입니다.
@@ -143,7 +140,7 @@ x의 값은 scrollY가 60 \* vh일 때 값으로 고정해두고, y의 값과 sc
 [이 델루나 포스터](https://t1.daumcdn.net/cfile/tistory/998441395FF319822E?original) 느낌을 내기 위해 달 중심에 성도 페이드 인 되게 해뒀습니다.  
 또한 밋밋함을 덜기 위해 달이 빛나는 효과도 천천히 생기게 해뒀는데, 똑같은 달 이미지를 겹쳐두고 z-index가 낮은 달에 `filter: blur(10px)`을 추가하고 페이드 인 되게 해서 만들었습니다.
 
-```
+```ts
 moonGlow.style.opacity = `${currentY / 40 * vh}`;
 ```
 
@@ -151,7 +148,7 @@ opacity가 0에서 1이 될 땐 상술한 것처럼 `현재 좌표 / 페이드 �
 
 ### 왼쪽으로 조금 이동
 
-```
+```ts
 tmpMoonTransform.x = moonTransform.x - currentY * 0.1;
 ```
 
@@ -161,13 +158,12 @@ tmpMoonTransform.x = moonTransform.x - currentY * 0.1;
 
 ### 작아지며 페이드 아웃
 
-```
+```ts
 const half = currentY / (50 * vh);
 const moonScale = Math.max(
     moonTransform.scale - half * moonTransform.scale,
     0
 );
-
 ```
 
 페이드 아웃은 상술한 것과 똑같고, scale은 0보다 작아져서 뒤집혀 표시되는 참사만 안 벌어지게 하면 됩니다.
@@ -178,7 +174,7 @@ const moonScale = Math.max(
 
 `mousemove` 이벤트 핸들러에서 `event.clientX`와 `event.clientY`를 넘겨주고, `touchmove` 이벤트 핸들러에서 `event.touches[0].clientX`와 `event.touches[0].clientY`를 넘겨주면 커서나 터치의 위치를 감지할 수 있습니다.
 
-```
+```ts
 const ease = 20;
 
 // 고정된 요소가 아니면 offset 대신 getBoundingClientRect을 이용하세요.
@@ -187,16 +183,14 @@ const y = (xCord - element.offsetLeft - element.offsetWidth / 2) / ease;
 
 element.style.setProperty("--x", `${x}deg`);
 element.style.setProperty("--y", `${y}deg`);
-
 ```
 
 커서나 터치의 위치를 `(xCord, yCord)`라 할 때, 위 코드처럼 작업하신 뒤
 
-```
+```css
 #frames.reveal > .frame {
     transform: perspective(500px) rotateX(var(--x)) rotateY(var(--y));
 }
-
 ```
 
 회전만 시켜선 몸통을 돌려 바라보지 않으니, perspective를 추가해주고 회전시키면 커서 바라기를 만드실 수 있습니다.
@@ -209,7 +203,7 @@ element.style.setProperty("--y", `${y}deg`);
 
 ![호텔 델루나](/images/2021/01/hotel-del-luna.png)
 
-```
+```html
 <svg>
     <filter id="neon-blue">
         <feDropShadow
@@ -221,23 +215,21 @@ element.style.setProperty("--y", `${y}deg`);
         />
     </filter>
 </svg>
-
 ```
 
 이렇게 filter를 추가해주고
 
-```
+```css
 #logo > svg.filter > path:not(.moon) {
     filter: url(#neon-blue);
 }
-
 ```
 
 css에서 필터를 먹이시면 네온 사인처럼 빛나는 효과를 만드실 수 있습니다.
 
 물론 svg가 없고 투명한 png만 있거나, `feDropShadow`가 마음에 안 드시면, 위에서 달을 빛나게 할 때 쓰던 방법처럼 blur 효과를 주셔서 구현하셔도 됩니다.
 
-```
+```css
 @keyframes blink {
     0%,
     50%,
@@ -254,7 +246,6 @@ css에서 필터를 먹이시면 네온 사인처럼 빛나는 효과를 만드�
 #logo.on > svg.filter {
     animation: blink 2s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
-
 ```
 
 필터를 위한 svg를 겹쳐두시고, 이렇게 애니메이션을 추가하시면 네온사인이 깜빡이면서 켜지는 듯한 애니메이션도 만드실 수 있습니다.

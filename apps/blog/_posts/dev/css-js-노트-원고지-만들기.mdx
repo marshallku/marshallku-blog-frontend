@@ -15,7 +15,7 @@ ogImage: /images/2021/03/노트-원고지-만들기.png
 
 ### HTML
 
-```
+```html
 <div class="note">
     <p>
         오늘도 또 우리 수탉이 막 쫓기었다. 내가 점심을 먹고 나무를 하러 갈
@@ -47,7 +47,6 @@ ogImage: /images/2021/03/노트-원고지-만들기.png
     </p>
     <p>나흘 전 감자 조각만 하더라도 나는 저에게 조금도 잘못한 것은 없다.</p>
 </div>
-
 ```
 
 `.note`를 생성하고 아래에 텍스트와 이미지를 추가했습니다.  
@@ -55,7 +54,7 @@ ogImage: /images/2021/03/노트-원고지-만들기.png
 
 ### CSS
 
-```
+```css
 :root {
     --bg-color: #fff;
     --bg-transparent: rgba(255, 255, 255, 0);
@@ -95,7 +94,6 @@ ogImage: /images/2021/03/노트-원고지-만들기.png
     margin: 0 auto;
     object-fit: cover;
 }
-
 ```
 
 노트 제작은 굉장히 간단한 편입니다.  
@@ -105,7 +103,7 @@ ogImage: /images/2021/03/노트-원고지-만들기.png
 
 ### JS
 
-```
+```js
 function resizeImageForNote() {
     const note = document.querySelectorAll(".note");
     const resize = () => note.forEach(resizeImage);
@@ -126,7 +124,6 @@ function resizeImage(element) {
 }
 
 resizeImageForNote();
-
 ```
 
 이미지처럼 일정 비를 유지하며 작아져야 하는 요소를 위한 예제입니다.  
@@ -134,11 +131,13 @@ CSS에서 줄 간격을 변경하시면 `newHeight % 32`의 32도 그 값으로 
 
 ### 결과
 
+<iframe allowfullscreen="true" frameborder="0" width="560" height="560" src="https://codepen.io/marshall-ku/embed/jOVgeGg?default-tab=result" title="CSS Note" loading="lazy"></iframe>
+
 ## 원고지
 
 ### HTML
 
-```
+```html
 <div class="manuscript-container">
     <div class="manuscript">
         <p>
@@ -173,15 +172,13 @@ CSS에서 줄 간격을 변경하시면 `newHeight % 32`의 32도 그 값으로 
         <p>나흘 전 감자 조각만 하더라도 나는 저에게 조금도 잘못한 것은 없다.</p>
     </div>
 </div>
-
-
 ```
 
 `.note`와 마찬가지지만 줄 공책과 달리 원고는 한 칸의 크기가 정해져 있어 `.manuscript`의 크기도 유동적으로 변경되어야 하기에, `.manuscript`를 감싸주는 `.manuscript-container`가 하나 추가되었습니다.
 
 ### CSS
 
-```
+```css
 :root {
     --bg-color: #fff;
     --bg-transparent: rgba(255, 255, 255, 0);
@@ -319,7 +316,6 @@ CSS에서 줄 간격을 변경하시면 `newHeight % 32`의 32도 그 값으로 
 .manuscript > *:not(:last-child) {
     margin-bottom: 40px;
 }
-
 ```
 
 그래디언트도 조금 골이 아파지기 시작합니다.
@@ -328,7 +324,7 @@ CSS에서 줄 간격을 변경하시면 `newHeight % 32`의 32도 그 값으로 
 
 ### JS
 
-```
+```js
 function initManuscript() {
     const manuscript = document.querySelectorAll(".manuscript");
     const handleResize = () => {
@@ -376,7 +372,6 @@ function resizeImage(element) {
 }
 
 initManuscript();
-
 ```
 
 노트와 마찬가지로 이미지의 크기를 유동적으로 변경해주는 스크립트에 최초에 글자를 하나하나 뜯어서 `span`에 넣어주는 스크립트와, 원고지의 크기를 유동적으로 변경해주는 스크립트가 추가되었습니다.
@@ -384,6 +379,8 @@ initManuscript();
 원고 칸의 크기를 수정하시면 `resizeManuscriptContainer`, `resizeImage`에 들어있는 8의 배수(8, 24, 32)들을 모조리 수정해주시면 됩니다.
 
 ### 결과
+
+<iframe allowfullscreen="true" frameborder="0" width="560" height="560" src="https://codepen.io/marshall-ku/embed/abBeREp?default-tab=result" title="Manuscript" loading="lazy"></iframe>
 
 ## 여담
 

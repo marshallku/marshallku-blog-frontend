@@ -102,7 +102,7 @@ mongoose, jwt, bcrypt 세 패키지만 설치하니 정말 어려울 게 딱히 
 
 처음엔 `YYYY-MM-DD.json`으로 만들려 했는데, 그러면 관리자 페이지에서 달력에 단어 추가 여부를 표시하려니 최적화가 참 힘들더라고요. 위 방식으로 진행하니 그냥 `../words/YYYY/MM` 디렉토리를 `readdirSync`로 읽어다 보내주기만 하면 끝이니 최적화도 구현도 훨씬 쉬웠습니다.
 
-```
+```ts
 app.post("/words/add", authMiddleware, (request, response) => {
     // Check if admin
     const { user, freshToken } = request;
@@ -143,7 +143,6 @@ app.post("/words/add", authMiddleware, (request, response) => {
         }
     );
 });
-
 ```
 
 이대로 끝내기는 뻘쭘해서 첨부한 단어 추가 라우터에 쓴 코드입니다.

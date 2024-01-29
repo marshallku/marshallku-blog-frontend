@@ -68,7 +68,7 @@ React로 빌드한 앱은 Hello World! 수준임에도 500KB 남짓한 용량을
 
 바닐라 자바스크립트를 알고, jQuery와 퍼포먼스 비교를 해봤었는데, jQuey는 정말 느립니다.
 
-```
+```js
 console.time("jQuery")
 $("#header").addClass("hi")
 console.timeEnd("jQuery")
@@ -76,14 +76,13 @@ console.timeEnd("jQuery")
 console.time("vanilla")
 document.getElementById("header").classList.add("hi")
 console.timeEnd("vanilla")
-
 ```
 
 위처럼 정말 간단한 스크립트도 jQuery보다 바닐라가 최소 3배 이상 빠른 속도로 실행합니다.  
 여기에 상술한 용량적 비용까지 합치면, 차이는 당연히 더 벌어지겠죠.
 
-흔히들 간과하는 게, jQuery에서 $ 하나 추가하는 순간 함수가 하나 더 실행되는 겁니다.  
-$(elem)도 당연히 예외는 아니고요.
+흔히들 간과하는 게, jQuery에서 `$` 하나 추가하는 순간 함수가 하나 더 실행되는 겁니다.  
+`$(elem)`도 당연히 예외는 아니고요.
 
 위 예시에선 0.0n \~ 0.n 밀리 초대의 일이지만, 각종 함수가 쌓이고 쌓이다 보면 그 결과는 쉽게 무시할 수 없게 비대해집니다.
 

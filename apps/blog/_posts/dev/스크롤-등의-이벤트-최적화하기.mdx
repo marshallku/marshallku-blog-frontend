@@ -21,7 +21,7 @@ ogImage: /images/2020/11/optimize-event.png
 
 ## Passive Listener
 
-```
+```js
 window.addEventListener("scroll", foo, { passive: true });
 ```
 
@@ -41,7 +41,7 @@ requestAnimationFrame 없인 200회가량 실행됨
 
 위 스크린샷처럼 `requestAnimationFrame`에 콜백을 넘겨주면 브라우저가 화면을 다시 그리기 전에 해당 함수를 호출하니, 함수가 초당 200회씩 호출되는 참사를 방지할 수 있습니다.
 
-```
+```js
 !(function () {
     let ticking = false;
 
@@ -57,7 +57,6 @@ requestAnimationFrame 없인 200회가량 실행됨
 
     window.addEventListener("scroll", foo, { passive: true });
 })();
-
 ```
 
 함수의 실행이 끝났는지 확인하기 위해 `ticking`이란 변수를 추가했습니다.  
@@ -68,7 +67,7 @@ requestAnimationFrame 없인 200회가량 실행됨
 
 매번 상술한 방식으로 이벤트를 등록하는 건 상당히 귀찮을뿐더러 직관적이지 않으니, 어떤 상황에서건 쓸 수 있는 함수를 제작해보겠습니다.
 
-```
+```js
 function outer() {
     let counter = 0;
 
@@ -86,13 +85,12 @@ myFunction(); // 1
 myFunction(); // 2
 myFunction(); // 3
 myFunction(); // 4
-
 ```
 
 그에 앞서 알아야하는 개념이 자바스크립트의 클로저(Closure)([MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures))입니다.  
 위 코드는 언뜻 보면 `counter`가 실행 컨텍스트에도, window에도 없어 제대로 작동하지 않을 것처럼 보이지만, 실제론 `outer`에서 `increaseCounter`를 넘겨줄 때 해당 함수가 `couter`를 사용한단 걸 판단하고 `counter`도 함께 넘겨줍니다.
 
-```
+```js
 function optimizeAnimation(callback) {
     let ticking = false;
 
@@ -106,12 +104,11 @@ function optimizeAnimation(callback) {
         }
     };
 }
-
 ```
 
 위를 활용해 만든 함수입니다.
 
-```
+```js
 window.addEventListener(
     "scroll",
     optimizeAnimation(() => {
@@ -119,7 +116,6 @@ window.addEventListener(
     }),
     { passive: true }
 );
-
 ```
 
 다소 이상해 보일 수 있지만, 이렇게 `optimizeAnimation` 함수가 아닌 `optimizeAnimation`의 실행 결과를 넘겨주면, `ticking`이 동봉되어 함수가 브라우저가 렌더링할 수 있는 능력을 벗어나는 횟수만큼 실행되는 것을 방지할 수 있습니다.

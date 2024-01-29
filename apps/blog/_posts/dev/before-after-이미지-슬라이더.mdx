@@ -20,7 +20,7 @@ ogImage: /images/2020/09/image-comparison-slider.png
 
 ## HTML
 
-```
+```html
 <div class="comparison-slider">
     <figure>
         <img src="./images/before.jpg" alt="before" />
@@ -31,7 +31,6 @@ ogImage: /images/2020/09/image-comparison-slider.png
         <figcaption>After</figcaption>
     </figure>
 </div>
-
 ```
 
 `.comparison-slider` 안에 두 개의 `figure`를 추가하고, 그 안에 `img`와 `figcaption`을 추가했습니다.  
@@ -39,7 +38,7 @@ ogImage: /images/2020/09/image-comparison-slider.png
 
 ## CSS
 
-```
+```css
 .comparison-slider {
     position: relative;
     width: 100%;
@@ -125,8 +124,6 @@ ogImage: /images/2020/09/image-comparison-slider.png
 .comparison-slider > .slider > svg {
     pointer-events: none;
 }
-
-
 ```
 
 `.comparison-slider`에 `touch-action: pan-x`를 추가해 y축으론 터치가 작동하지 않게 했습니다.  
@@ -152,7 +149,7 @@ clip-path: polygon에서 polygon 내부의 좌표가 4개일 땐 위 그림처�
 
 ## Javascript
 
-```
+```js
 document.querySelectorAll(".comparison-slider").forEach((element) => {
     const slider = document.createElement("div");
     const resizeElement = element.getElementsByTagName("figure")[1];
@@ -240,7 +237,6 @@ document.querySelectorAll(".comparison-slider").forEach((element) => {
 
     element.append(slider);
 });
-
 ```
 
 slide를 그냥 호출하면 초당 450번까지도 레이아웃이 일어나길래 `requestAnimationFrame`을 이용해 디스플레이의 주사율에 맞게 레이아웃이 업데이트되게 최적화를 진행했습니다.

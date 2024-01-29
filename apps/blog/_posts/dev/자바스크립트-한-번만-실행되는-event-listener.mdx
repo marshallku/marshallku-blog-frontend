@@ -19,11 +19,10 @@ ogImage: /images/2019/10/one-time-listener.png
 
 ## jQuery
 
-```
+```js
 $("#foo").one("click", function() {
   console.log("두 번째 클릭부턴 표시되지 않습니다.")
 });
-
 ```
 
 꽤 간단하지만, jQuery를 써야 한다는 단점이 있는 스크립트입니다.  
@@ -31,45 +30,41 @@ $("#foo").one("click", function() {
 
 ## 바닐라 (함수 사용하기)
 
-```
+```js
 function oneTimeListener(element, type, callback) {
   element.addEventListener(type, function() {
     element.removeEventListener(type, arguments.callee);
     return callback();
   });
 }
-
 ```
 
 함수 하나만 추가하시면 바닐라 자바스크립트에서도 jQuery의 one()을 구현하실 수 있습니다.
 
-```
+```js
 oneTimeListener(document.getElementById("foo"), "click", function() {
   console.log("두 번째 클릭부턴 표시되지 않습니다.")
 });
-
 ```
 
 함수만 추가하시면 활용은 굉장히 간단합니다.
 
-```
+```js
 function bar() {
   console.log("두 번째 클릭부턴 표시되지 않습니다.")
 }
 
 oneTimeListener(document.getElementById("foo"), "click", bar);
-
 ```
 
 익명 함수를 사용하지 않으실 땐 위와 같이 코드를 작성합니다.
 
 ## 바닐라 (Event Listener에 옵션 추가하기)
 
-```
+```js
 document.getElementById("foo").addEventListener("click", () => {
   console.log("두 번째 클릭부턴 표시되지 않습니다.")
 }, {once: true})
-
 ```
 
 최신 자바스크립트를 사용한다면 굳이 oneTimeListener 같은 함수를 만드실 필요 없이, once: true란 옵션 하나로 간단하게 이벤트 리스너가 한 번만 동작하도록 하실 수 있습니다.

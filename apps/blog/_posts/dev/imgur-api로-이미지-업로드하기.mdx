@@ -29,14 +29,14 @@ Client ID: 아래에 적힌 문자열을 복사해둬 주세요.
 
 ## 파일 업로드
 
-```
+```html
 <input type="file" name="image" id="upload">
 ```
 
 일단 input 엘리먼트를 하나 생성해주세요.  
 앞으로 이 input의 변화를 감지해 파일을 업로드할 겁니다.
 
-```
+```js
 function uploadFile() {
     const fileInput = document.getElementById("upload");
     const upload = (file) => {
@@ -69,15 +69,14 @@ function uploadFile() {
 }
 
 uploadFile();
-
 ```
 
 `<클라이언트 ID>`를 본인의 클라이언트 ID로 변경해주세요.
 
 이제 이미지를 선택해 Input의 파일이 변경될 때마다 Imgur에 업로드합니다.  
-console.log(response)는 응답이 어떤 형태로 오는지 참고하시라고 추가해뒀으니, 해당 코드와 아래 줄의 do Something을 수정하시면 됩니다.
+`console.log(response)`는 응답이 어떤 형태로 오는지 참고하시라고 추가해뒀으니, 해당 코드와 아래 줄의 do Something을 수정하시면 됩니다.
 
-```
+```json
 {
     "data": {
         "id": "vZhkDah",
@@ -123,17 +122,16 @@ console.log(response)는 응답이 어떤 형태로 오는지 참고하시라고
 
 아래에선 예시로 textarea를 하나 추가하고, 그 textarea에 각종 이벤트를 추가해서, 업로드가 성공적으로 완료되면 textarea에 이미지 링크를 추가하는 기능을 구현해보겠습니다.
 
-```
+```html
 <textarea name="textarea" id="myTextarea" cols="30" rows="10"></textarea>
 <label for="upload">업로드</label>
 <input type="file" id="upload" hidden/>
-
 ```
 
 html 구조입니다.  
 저는 개인적으로 input은 예쁘게 꾸미기 힘들어서 숨겨버리고 label을 꾸미는 방법을 선호합니다.
 
-```
+```js
 function uploadFile() {
     const textarea = document.getElementById("myTextarea");
     const fileInput = document.getElementById("upload");
@@ -210,7 +208,6 @@ function uploadFile() {
 }
 
 uploadFile();
-
 ```
 
 gif 이미지를 업로드하면 자동으로 mp4로 변환해주니, 움짤을 업로드하면 비디오 링크를 첨부하도록 해뒀습니다.

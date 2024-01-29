@@ -24,18 +24,17 @@ ogImage: /images/2019/08/css-door.jpg
 
 ## CSS
 
-```
+```css
 body.doorOpened #door {
     transform: perspective(100vw) rotateY(-80deg)
 }
-
 ```
 
 문을 여는데 제일 중요한 CSS만 가져왔습니다.
 
 글 적기 편하려고 transform perspective를 썼는데, 굳이 이렇게 하지 않으시고 부모 요소에 perspective를 주셔도 됩니다.
 
-```
+```css
 #doorWrap {
     position: absolute;
     bottom: 10vh;
@@ -46,7 +45,6 @@ body.doorOpened #door {
     clip: rect(-5vh, auto, 100vh, auto);
     perspective: 100vw
 }
-
 ```
 
 #door 부모 요소에 적용된 CSS입니다.  
@@ -60,7 +58,7 @@ clip 부분은 문 여는 거랑은 관련 없고, 문 열면 채영 이미지 �
 
 ## Javascript
 
-```
+```js
 const body = document.body;
 let tmp;
 window.onload = function () {
@@ -79,7 +77,6 @@ window.onload = function () {
         )
     })
 }
-
 ```
 
 문 두드리는 소리만 아니었다면 굳이 JS를 쓸 필요가 없었을 텐데, 오디오를 재생하면서 JS를 안 쓸 방법은 딱히 떠오르질 않더라고요.

@@ -28,7 +28,7 @@ git을 이용하면 굳이 깃허브가 없어도 봇을 업로드할 수 있습
 
 ## 패키지 파일 추가
 
-```
+```json
 {
     "name": "discord-iu-bot",
     "version": "1.0.0",
@@ -60,7 +60,6 @@ git을 이용하면 굳이 깃허브가 없어도 봇을 업로드할 수 있습
     },
     "homepage": "https://github.com/marshallku/Discord-IU-Bot#readme"
   }
-
 ```
 
 봇 개발을 시작할 당시에 작업을 제대로 하셨다면 `package.json`이란 파일이 폴더에 있을 겁니다.  
@@ -71,7 +70,7 @@ git을 이용하면 굳이 깃허브가 없어도 봇을 업로드할 수 있습
 
 ## 봇의 코드 수정
 
-```
+```js
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -86,7 +85,6 @@ client.on('message', msg => {
 });
 
 client.login(process.env.TOKEN);// 토큰 수정
-
 ```
 
 토큰만 있으면 누구나 봇으로 로그인이 가능하므로, 반드시 토큰은 숨기셔야 합니다.  
@@ -94,7 +92,7 @@ client.login(process.env.TOKEN);// 토큰 수정
 
 ## Procfile 추가
 
-```
+```txt
 worker: node app.js
 ```
 

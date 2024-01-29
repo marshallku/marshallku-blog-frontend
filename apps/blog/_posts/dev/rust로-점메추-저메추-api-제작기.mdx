@@ -28,7 +28,7 @@ TypeScript나 PHP도 이미 많이 써봤고, C#을 써볼까 Rust를 써볼까 
 생각보다 데이터베이스화된 메뉴를 찾는 게 쉽지 않습니다.  
 비슷한 류의 애플리케이션들을 찾아봐도, 비슷비슷한 메뉴들을 추천하는 터라 그냥 하나 만들어야 하나…하던 와중에 [The Meal DB](https://www.themealdb.com/)라는 사이트를 찾았습니다.
 
-```
+```json
 {
     "meals": [
         {
@@ -88,7 +88,6 @@ TypeScript나 PHP도 이미 많이 써봤고, C#을 써볼까 Rust를 써볼까 
         }
     ]
 }
-
 ```
 
 심지어 무작위 메뉴를 내려주는 api도 있습니다.
@@ -107,7 +106,7 @@ TypeScript나 PHP도 이미 많이 써봤고, C#을 써볼까 Rust를 써볼까 
 
 너무 밋밋하지 않게 사진 위에 그래디언트만 하나 얹어주고, 포크나 나이프 등으로 꾸며볼까 하다 저 같은 사람이 디자인에 욕심내면 화를 부르는 게 일반적이라 그냥 다 치웠습니다.
 
-```
+```rs
 let mut handlebars = Handlebars::new();
 let svg_template = r##"<svg
     width="{{svg_width}}"
@@ -213,7 +212,7 @@ handlebars
 
 ### 외부 api 호출
 
-```
+```rs
 use base64::{engine::general_purpose, Engine as _};
 use mime_guess::from_path;
 use reqwest::{get, Error};
@@ -257,7 +256,7 @@ serde를 사용하면 Runtime에도 api 응답과 struct의 구조가 다르면 
 
 ### SVG 렌더링
 
-```
+```rs
 const SVG_WIDTH: usize = 450;
 const IMAGE_WIDTH: usize = 200;
 const TEXT_RIGHT_GUTTER: usize = 100;
@@ -296,7 +295,7 @@ handlebars.render("svg_template", &data).unwrap()
 handlebars에 변수들을 추가할 차례입니다.  
 상술했듯 줄바꿈이 불가능해, SVG의 너비를 음식 이름 길이에 맞게 조정해줘야 하는데, 대부분 환경에서 글자 하나가 17px보다 커지지 않는 건 확인했는데, 아무래도 좀 안정적인 방식은 아니지 않나 싶긴 합니다.
 
-```
+```md
 [![Your delightful menu](https://marshallku.dev:48018/?theme=dark)](https://github.com/marshallku/menu-today#gh-dark-mode-only) [![Your delightful menu](https://marshallku.dev:48018/?theme=light)](https://github.com/marshallku/menu-today#gh-light-mode-only)
 ```
 
@@ -305,7 +304,7 @@ theme을 설정할 수 있게 해뒀는데, github에서 hack이긴 하지만 �
 
 ### HTTP Request 처리
 
-```
+```rs
 mod fetcher;
 mod image;
 mod render;
@@ -375,7 +374,7 @@ async fn main() -> std::io::Result<()> {
 
 위와 같이 캐싱을 통해 응답 시간을 줄일 수 있을 것으로 생각했고, 실제로 2.6초에서 3.6ms로 응답을 만들어내는 데 걸리는 시간을 대폭 줄일 수 있었습니다.
 
-```
+```rs
 #[derive(Clone)]
 pub struct AppState {
     pub cache: Arc<Mutex<ResponseData>>,
@@ -387,7 +386,7 @@ pub struct AppState {
 위와 같이 여러 요청에 걸쳐 사용할 상태를 정의했습니다.  
 추가로, `Arc`를 통해 여러 thread에서 해당 값에 접근할 수 있도록 하였습니다.
 
-```
+```rs
 pub async fn fetch_and_cache(State(state): State<AppState>) -> Result<ResponseData, Error> {
     let cache = state.cache.lock().unwrap();
     let cached_data = cache.clone();
@@ -432,7 +431,7 @@ Mutex에 대한 에러 핸들링이나, Race condition에 대한 핸들링을 �
 
 ### 코드 스타일
 
-```
+```rs
 // axum
 use axum::{Router, routing::get};
 
@@ -466,7 +465,7 @@ async fn manual_hello() -> impl Responder {
 
 actix web은 procedural macro를 통해 method를 정의하기에, 좀 더 친숙하고 직관적이었습니다.
 
-```
+```rs
 // axum
 async fn handle_request(
     query: Query<SVGOption>,

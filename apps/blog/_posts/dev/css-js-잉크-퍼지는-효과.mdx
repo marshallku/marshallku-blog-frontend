@@ -28,7 +28,7 @@ img>모든 파일
 
 ## 자바스크립트
 
-```
+```js
 document.addEventListener("DOMContentLoaded", () => {
     const modalTrigger = document.querySelector(".cd-modal-trigger"),
         transitionLayer = document.querySelector(".cd-transition-layer"),
@@ -91,8 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         )
     })
 
-})
-
+});
 ```
 
 단순히 원본 스크립트를 vanilla javascript로 작성한 버전입니다. (main.vanilla.js 파일)
@@ -101,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 css의 (min-aspect-ratio), (max-aspect-ratio) 옵션을 이용해 대체할 수 있으니 관련 스크립트는 싹 지우면
 
-```
+```js
 document.addEventListener("DOMContentLoaded", () => {
     const modalTrigger = document.querySelector(".cd-modal-trigger"),
         transitionLayer = document.querySelector(".cd-transition-layer"),
@@ -135,15 +134,14 @@ document.addEventListener("DOMContentLoaded", () => {
         modalWindow.classList.remove("visible")
     })
 
-})
-
+});
 ```
 
 이만큼만 남습니다.
 
 ## CSS
 
-```
+```css
 .cd-transition-layer .bg-layer {
   width: 5100vh;
   height: 120vh;
@@ -155,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
     height: calc(100vw / 1.7)
   }
 }
-
 ```
 
 setLayerDimension()을 CSS로 처리하는 방법입니다.
@@ -174,16 +171,15 @@ setLayerDimension()을 CSS로 처리하는 방법입니다.
 예전에 다뤘던 페이지 전환 효과에도 이를 활용할 수 있습니다.  
 HTML과 CSS는 필요한 부분만 가져오며 일부 수정했고, 자바스크립트는 목적에 맞게 적당히 수정했습니다.
 
-```
+```html
 <div class="cd-transition-layer visible opened color"> 
     <div class="bg-layer"></div>
 </div>
-
 ```
 
 visible, opened, color 세 class를 추가해 .cd-transition-layer를 복사해왔습니다.
 
-```
+```css
 .cd-transition-layer {
     position: fixed;
     top: 0;
@@ -240,7 +236,6 @@ visible, opened, color 세 class를 추가해 .cd-transition-layer를 복사해�
         height: calc(100vw / 1.7)
     }
 }
-
 ```
 
 ink.png의 주소만 변경해주시면 됩니다.
@@ -249,7 +244,7 @@ ink.png의 주소만 변경해주시면 됩니다.
 
 ink.png의 색상을 수정하셨으면 그 색에 맞게 #3f2f44를 수정하셔야 합니다.
 
-```
+```js
 const modalTrigger = document.querySelector(".cd-modal-trigger"),
     transitionLayer = document.querySelector(".cd-transition-layer"),
     transitionBackground = transitionLayer.querySelector(".bg-layer"),
@@ -299,7 +294,6 @@ function inkTransitionInit() {
 
 inkTransitionInit(),
 pageTransition(document.querySelectorAll("a"))
-
 ```
 
 pageTransition 함수는 [이 글](https://marshallku.com/web/tips/%ed%8e%98%ec%9d%b4%ec%a7%80-%ec%a0%84%ed%99%98-%ed%9a%a8%ea%b3%bc-%ec%82%ac%ec%9a%a9%ed%95%98%ea%b8%b0)에서 설명해뒀습니다.

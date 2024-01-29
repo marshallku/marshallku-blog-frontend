@@ -14,7 +14,7 @@ ogImage: /images/2019/10/swipe-event.png
 
 굉장히 단순한 구조지만, 간단한 사용엔 크게 무리가 없습니다.
 
-```
+```js
 let initialX = null,
   initialY = null;
 
@@ -57,19 +57,17 @@ window.addEventListener("mousedown", (e) => {
 window.addEventListener("mouseup", () => {
   window.removeEventListener("mousemove", swipeDirection);
 });
-
 ```
 
 처음 마우스를 클릭하거나 디스플레이를 터치하면 해당 좌표를 가져오고, 마우스나 손가락을 움직이면 그 움직인 좌표와 첫 좌표의 차이를 비교해서 스와이프 방향을 구합니다.
 
-```
+```js
 window.addEventListener("mousedown", (e) => {
   0 === e.button && (
     initTouch(e),
     window.addEventListener("mousemove", swipeDirection)
   )
 });
-
 ```
 
 마우스 좌클릭 시에만 이벤트가 작동하게 하시고 싶으시면 mousedown 이벤트를 위와 같이 수정하시면 됩니다.

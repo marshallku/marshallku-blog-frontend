@@ -16,7 +16,7 @@ ogImage: /images/2020/02/page-transition-thumb.png
 
 ## Javascript
 
-```
+```js
 function isSameAsLocation(uriString) {
     const uri = new URL(uriString);
 
@@ -48,8 +48,6 @@ function pageTransition(nodeList) {
         });
     });
 }
-
-
 ```
 
 페이지에 있는 모든 a 태그를 클릭하면 위 함수가 작동하도록 할 겁니다.
@@ -63,13 +61,13 @@ location.href로 uri를 변경했는데, hash만 변경되면 페이지를 새�
 근데 또 아예 똑같은 uri면 새로 불러옵니다.  
 그래서 현재 보고 있는 페이지에서 hash만 바뀔 때만 스크립트가 작동하지 않도록 해뒀습니다.
 
-```
+```js
 pageTransition(document.querySelectorAll("a"))
 ```
 
 일단 위 스크립트처럼 페이지에 있는 모든 a 태그에 클릭 이벤트를 추가해주시고, 자바스크립트 등으로 페이지에 요소가 추가될 때마다 이벤트를 해당 요소에 추가해주셔야 합니다.
 
-```
+```js
 document.body.classList.add("reveal");
 ```
 
@@ -79,7 +77,7 @@ document.body.classList.add("reveal");
 
 ## 페이드 인 / 아웃 - CSS
 
-```
+```css
 body {
     overflow: hidden;
     opacity: 0;
@@ -94,7 +92,6 @@ body.reveal {
 body.hidden {
     opacity: 0
 }
-
 ```
 
 위 영상에도 나오는 제일 만만한 페이드 인 / 아웃입니다.  
@@ -105,7 +102,7 @@ body.hidden {
 간단하게 만들어본 효과입니다.  
 딱히 뭐라 명명해야 할 진 모르겠네요.
 
-```
+```html
 <div id="loader">
   <div></div>
   <div></div>
@@ -116,13 +113,12 @@ body.hidden {
   <div></div>
   <div></div>
 </div>
-
 ```
 
 전 8개의 div를 넣어뒀습니다.  
 본인이 원하는 만큼 늘리거나 줄이시면 됩니다.
 
-```
+```css
 #loader {
     position: fixed;
     top: 0;
@@ -148,13 +144,12 @@ body.hidden {
 body:not(.hidden).reveal #loader>div {
     transform: translateX(-100%)
 }
-
 ```
 
 :nth-child(1) 부터 (8)까지 적기 귀찮아서 Sass(SCSS)를 사용해 루프 돌렸습니다.  
 div 개수 수정하시면 위 코드 수정하시고 [온라인 컴파일러](https://www.sassmeister.com/)를 사용하시거나, 아래에 컴파일된 CSS를 수정해주세요.
 
-```
+```css
 #loader {
     position: fixed;
     top: 0;
@@ -206,7 +201,6 @@ div 개수 수정하시면 위 코드 수정하시고 [온라인 컴파일러](h
 body:not(.hidden).reveal #loader>div {
     transform: translateX(-100%);
 }
-
 ```
 
 컴파일된 CSS입니다.

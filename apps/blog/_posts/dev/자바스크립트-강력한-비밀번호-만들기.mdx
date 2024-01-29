@@ -22,7 +22,7 @@ ogImage: /images/2020/01/password-generator.png
 
 예전 블로그에 올린 스크립트에 이것저것 업데이트해봤습니다.
 
-```
+```js
 let setting = {
     "number": true,
     "symbol": false,
@@ -119,7 +119,6 @@ document.getElementById("pwlength").addEventListener("change", function() {
     setting.length = this.value,
     saveSetting()
 });
-
 ```
 
 예전엔 비밀번호 생성 버튼을 클릭하면 모든 설정 정보를 확인해 비밀번호에 쓸 문자열을 생성하고 비밀번호를 제작하는 과정을 계속 반복했습니다만, 이젠 비밀번호 생성 버튼은 비밀번호의 생성에만 관여합니다.

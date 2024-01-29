@@ -14,7 +14,7 @@ ogImage: /images/2021/10/dynamic-gradient.png
 특성 이미지를 항상 설정하는 편이긴 하지만, 혹시 특성 이미지가 없을 때 유용하게 사용할 수 있지 않을까 싶어 만들어본 기능입니다.  
 위 데모를 클릭하시면 매번 새 이미지가 생성되는 걸 확인하실 수 있습니다.
 
-```
+```ts
 function generateDynamicGradient(width: number, height: number): string {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
@@ -58,7 +58,6 @@ function generateDynamicGradient(width: number, height: number): string {
 
     return canvas.toDataURL();
 }
-
 ```
 
 Typescript 코드입니다. 별도의 컴파일러가 없으시다면 [TypeScript playground](https://typescript-play.js.org/)에 위 코드를 입력하시면 Javascript 코드로 변환해줍니다.
@@ -70,17 +69,15 @@ canvas에 무작위 색상, 크기, 위치를 갖는 원들을 그리고 블러 
 
 ---
 
-```
+```ts
 const randomColor = () => `#${((Math.random() * 0xffffff) << 0).toString(16)}`;
-
 ```
 
 코드 중간에 있는 꽤 쓸만한 무작위 색상 출력을 위한 한 줄짜리 코드입니다. ([출처 확인](https://stackoverflow.com/questions/1484506/random-color-generator#comment6801353%5F5365036))
 
-```
+```ts
 const randomRGB = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 const randomHSL = () => `hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`;
-
 ```
 
 RGB나 HSL을 쓰면 시프트 연산자도 쓸 필요 없고 어떻게 동작할지 확실히 보이긴 하지만, 개인적으로 Hex로 색상을 표현하는 걸 좋아해서 위 코드를 가져왔습니다.  
@@ -88,13 +85,12 @@ RGB나 HSL을 쓰면 시프트 연산자도 쓸 필요 없고 어떻게 동작�
 
 ---
 
-```
+```ts
 const img = document.createElement("img");
 
 img.src = generateDynamicGradient(window.innerWidth, window.innerHeight);
 
 document.getElementById("app").append(img);
-
 ```
 
 data URI를 반환하게 해뒀으니, 이미지를 생성하고 src에 입력만 해주면 끝입니다.

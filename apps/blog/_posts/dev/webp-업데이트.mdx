@@ -26,7 +26,7 @@ WebP는 구글에서 만든 이미지 포맷으로, JPEG, PNG 등의 포맷보�
 메인 서버에 올린 파일들을 하나하나 WebP로 수정하기엔 일이 너무 많고 귀찮을 것 같아서, 캐시 서버에서 요청이 들어오면 파일을 변환해 저장하도록 해뒀습니다.  
 캐시 서버는 어차피 이미지 저장용이니 CPU의 성능은 그다지 좋지 않은 서비스를 이용 중이라 서버가 뻗어버리면 어쩌나 걱정했는데, 모니터링 해보니 다행히 이미지 변환에도 큰 사양이 필요하진 않더라고요.
 
-```
+```ts
 class MainContainer {
     // ...
     createPicture(
@@ -69,7 +69,6 @@ class MainContainer {
     }
     // ...
 }
-
 ```
 
 지금까진 `img` 태그 하나만 만들면 되고, 돔 업데이트를 할 때도 `img.src`와 `img.srcset`만 수정하면 됐는데 이젠 `picture, source, source, img` 총 네 개를 만들어야 하고, 업데이트도 `source.srcset, source.srcset, img.src, img.srcset` 네 개를 업데이트해야 한단 번거로움이 생기긴 했지만,

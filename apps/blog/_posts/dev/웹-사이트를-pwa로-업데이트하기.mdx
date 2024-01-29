@@ -68,7 +68,7 @@ images/icon 등의 폴더를 제작하셔서 넣어두시는 걸 추천합니다
 
 ##### manifest.json 추가 및 연결
 
-```
+```json
 {
     "name": "앱 이름",
     "short_name": "앱 이름",
@@ -110,16 +110,15 @@ images/icon 등의 폴더를 제작하셔서 넣어두시는 걸 추천합니다
     "background_color": "#121212",
     "theme_color": "#f1718c"
 }
-
 ```
 
 name은 설치 페이지, 웹 스토어, 앱 관리 페이지 등에서 표시되는 이름입니다. (최대 45글자)  
-short\_name은 앱을 설치했을 때 런처에서 보이는 이름입니다. (최대 12글자 권장)  
+`short_name`은 앱을 설치했을 때 런처에서 보이는 이름입니다. (최대 12글자 권장)  
 icons에는 위에서 추가한 아이콘을 넣으시면 필요한 상황에 맞는 크기의 아이콘을 자동으로 가져갑니다.  
-start\_url은 문자 그대로 앱을 실행하면 표시되는 주소입니다.  
+`start_url`은 문자 그대로 앱을 실행하면 표시되는 주소입니다.  
 display는 앱이 표시되는 모드입니다. browser, standalone, minimal-ui, fullscreen 네 가지가 있으며, browser는 일반적인 브라우저와 같고, standalone은 여기서 주소창이 사라진 형태, minimal-ui는 standalone에서 뒤로 가기, 새로 고침 등의 키가 추가된 형태, fullscreen은 전체 화면으로 앱이 표시됩니다.  
-background\_color는 앱이 로딩되는 동안 배경에 표시되는 색입니다. 웹 사이트의 배경 색과 같은 색을 사용하면 부드러운 트랜지션 효과를 주실 수 있습니다.  
-theme\_color는 툴바, 상단바 등에 표시되는 색입니다.
+`background_color`는 앱이 로딩되는 동안 배경에 표시되는 색입니다. 웹 사이트의 배경 색과 같은 색을 사용하면 부드러운 트랜지션 효과를 주실 수 있습니다.  
+`theme_color`는 툴바, 상단바 등에 표시되는 색입니다.
 
 더 자세한 내용은 제 블로그의 [PWA의 Manifest 작성하기](https://marshallku.com/web/tips/pwa%ec%9d%98-manifest-%ec%9e%91%ec%84%b1%ed%95%98%ea%b8%b0)를 참고해주세요.
 
@@ -128,7 +127,7 @@ theme\_color는 툴바, 상단바 등에 표시되는 색입니다.
 작성을 완료하시면 root에 업로드하시고, 웹 사이트의 모든 페이지의 head 태그에 아래 코드처럼 manifest.json을 추가해주세요.  
 반드시 root에 업로드하셔야 하는 건 아니지만, root에 업로드하지 않으시면 start\_url 등에 적으신 상대 주소가 manifest.json이 업로드 된 경로를 기준으로 잡기 때문에, root에 업로드하시는 게 여러모로 편할 겁니다.
 
-```
+```html
 <link rel="manifest" href="/manifest.json" />
 ```
 
@@ -140,21 +139,19 @@ theme\_color는 툴바, 상단바 등에 표시되는 색입니다.
 
 아직도 iOS의 사파리는 manifest.json을 완벽히 지원하지 않기 때문에([확인](https://webkit.org/status/#specification-web-app-manifest)), 별도의 메타 태그를 head 태그에 추가해주셔야 합니다.
 
-```
+```html
 <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="apple-mobile-web-app-title" content="앱 이름" />
-
 ```
 
 ##### 기타 메타 태그 업데이트
 
-```
+```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
 <meta name="description" content="사이트 설명" />
 <meta name="theme-color" content="#f1718c" />
-
 ```
 
 viewport 태그는 어지간하면 HTML5 템플릿을 만드시면서 생성되지만, 혹여 삭제하셨으면 추가해주세요.  
@@ -173,7 +170,7 @@ fetch 해오는 내용을 죄다 캐싱하는 방법도 있지만, 이 글에선
 
 ##### service-worker.js 추가
 
-```
+```js
 // 캐시 이름
 const CACHE_NAME = "cache-v1";
 
@@ -215,7 +212,6 @@ self.addEventListener("fetch", (event) => {
         )
     );
 });
-
 ```
 
 브라우저와 다른 스레드에서 돌아갈 서비스 워커입니다.  
@@ -225,13 +221,12 @@ self.addEventListener("fetch", (event) => {
 
 ##### service-worker.js 등록
 
-```
+```js
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("/service-worker.js");
     });
 }
-
 ```
 
 index.html에 script 태그로 삽입하시거나, js 파일에 위 코드를 추가해주세요.  

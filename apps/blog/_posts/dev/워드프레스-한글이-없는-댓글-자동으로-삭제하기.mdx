@@ -19,7 +19,7 @@ Akismet 등의 스팸 차단 플러그인도 괜찮은 선택지일 수 있겠�
 
 ### functions.php 수정
 
-```
+```php
 function filter_comments_without_kr($comment_ID, $comment_approved, $commentdata)
 {
     if (1 === $comment_approved) {

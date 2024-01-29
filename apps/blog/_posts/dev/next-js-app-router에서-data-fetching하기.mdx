@@ -28,7 +28,7 @@ caching, ridating 등의 기능을 axios에선 사용할 수 없으니 사용하
 
 이렇게 둘을 제외하면 사실 남는 것도 별로 없거니와 찾아봐도 마음에 드는 게 없어, 오랜만에 fetcher를 간단하게 구현해보기로 했습니다.
 
-```
+```ts
 export default function createInstance({ baseUrl, timeOut }: InstanceOptions) {
     const fetcher: Instance = {
         baseUrl,
@@ -84,7 +84,6 @@ export default function createInstance({ baseUrl, timeOut }: InstanceOptions) {
 
     return fetcher;
 }
-
 ```
 
 약 2년 전쯤 프로젝트를 진행할 때 간단하게 만들었던 유틸리티입니다.  
@@ -96,7 +95,7 @@ export default function createInstance({ baseUrl, timeOut }: InstanceOptions) {
 
 위 단점을 해결하면서, 몇 안 되는 장점 중 하나인 `baseUrl`을 살릴 방법이 없나 고민하던 와중에
 
-```
+```ts
 type FetchParameters = Parameters<typeof fetch>;
 type Promiseable<T> = T | Promise<T>;
 export type HTTPClient<R = Response> = ReturnType<typeof httpClient<R>>;

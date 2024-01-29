@@ -10,7 +10,7 @@ ogImage: /images/2020/06/Screen-Shot-2020-06-30-at-10.53.16-PM.png
 꽤 예전에 로그인 페이지를 특정 IP를 제외하곤 접근할 수 없도록 막는 작업을 했었는데, 집 밖에선 로그인이 까다롭단 이유로 다시 모든 IP에서 접근할 수 있도록 바꿔뒀습니다.  
 최근 유독 /admin/login.asp에 접근을 시도하거나 xmlrpc.php에 post 요청을 보내는 로그가 많이 보여, 이게 과연 괜찮은 걸까 싶어 블랙리스트를 만들 목적으로 로그인 실패 시 제게 메일이 오게 작업해봤습니다.
 
-```
+```php
 function loginFailed() {
     $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -25,7 +25,6 @@ function loginFailed() {
 }
 
 add_action( 'wp_login_failed', 'loginFailed' );
-
 ```
 
 사용한 코드입니다. wp\_login\_failed란 훅을 이용해 로그인에 실패하면 메일을 보내는 간단한 방식입니다.
@@ -39,7 +38,7 @@ add_action( 'wp_login_failed', 'loginFailed' );
 
 블랙리스트를 만들면 종일 블랙리스트 IP만 추가하고 있어야겠다 싶어서 그냥 다시 모든 IP의 접근을 막고 확인된 IP에서만 접근할 수 있도록 바꿔뒀습니다.
 
-```
+```nginx
 location ^~ /wp-login {
     allow my.ip;
     deny all;
@@ -47,19 +46,17 @@ location ^~ /wp-login {
     include snippets/fastcgi-php.conf;
     # 등등 php 관련 설정
 }
-
 ```
 
 제가 사용한 코드입니다. nginx에선 위 코드를 이용하시면 됩니다.  
 location 블럭 내부에 php 관련 설정이 없으면 서버가 php 파일을 읽지 못하니 반드시 넣어주세요.
 
-```
+```apache
 <FilesMatch "wp-login.php">
     Order Deny, Allow
     deny from all
     allow from 0.0.0.0
 </FilesMatch>
-
 ```
 
 apache2를 사용 중이시면 위 코드를 conf 파일이나 .htaccess에 추가하시면 됩니다.

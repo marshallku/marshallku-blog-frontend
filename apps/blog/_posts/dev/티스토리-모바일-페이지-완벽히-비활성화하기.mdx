@@ -33,18 +33,16 @@ ogImage: /images/2019/12/tistory-mobile.jpg
 
 이 플러그인을 클릭하시고
 
-```
+```html
 <style>@keyframes t{100%{transform:translateZ(0)}}</style><tenping style="animation: t .1s linear" onanimationend="const tmp=location.href,mobile='/m/';-1!=tmp.indexOf('/m/')&&-1==navigator.userAgent.indexOf('Tistory')&&(location.href=tmp.replace('/m/','/'));"></tenping>
-
 ```
 
 위 코드를 복사하신 후 적용해주세요.
 
 /m/이 들어가면 무작정 리다이렉트되게하면 티스토리 앱에서 location.href를 계속 수정해버려서 블로그에 진입 자체가 불가능해져서, userAgent를 체크해 TIstory란 단어가 없으면 작동하도록 해뒀습니다.
 
-```
+```html
 <style>@keyframes t{100%{transform:translateZ(0)}}</style><tenping style="animation: t .1s linear" onanimationend="const tmp=location.href,mobile='/m/';let ajax;-1!=tmp.indexOf(mobile)&&-1==navigator.userAgent.indexOf('Tistory')?location.href=tmp.replace(mobile,'/'):((ajax=new XMLHttpRequest).open('GET',tmp.replace(mobile,'/')),ajax.send(null),ajax.onreadystatechange=(()=>{4===ajax.readyState&&(parser=(new DOMParser).parseFromString(ajax.responseText,'text/html'),document.write(ajax.responseText))}));"></tenping>
-
 ```
 
 티스토리 앱에서는 XMLHttpRequest를 사용한 버전입니다.  

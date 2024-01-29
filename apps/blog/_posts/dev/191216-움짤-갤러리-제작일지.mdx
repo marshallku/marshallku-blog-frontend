@@ -18,7 +18,7 @@ ogImage: /images/2019/12/gifgallery-buttons.jpg
 비디오 아래에 비디오를 일시 정지 / 재생하는 버튼과 소음(消音) / 해제하는 버튼을 추가했습니다.  
 소리 토글 버튼은 비디오에 소리가 있을 때만 나타납니다.
 
-```
+```js
 document.querySelector("video").addEventListener("click", function() {
     if (typeof this.webkitAudioDecodedByteCount !== "undefined") {
         if (this.webkitAudioDecodedByteCount > 0) {
@@ -30,8 +30,7 @@ document.querySelector("video").addEventListener("click", function() {
             console.log("소리 있는 비디오임")
         }
     }
-})
-
+});
 ```
 
 위 코드를 사용해 비디오에 소리가 있는지 판단합니다.  

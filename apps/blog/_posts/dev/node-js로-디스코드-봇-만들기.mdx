@@ -66,17 +66,16 @@ Bot 버튼을 클릭하시고, 아래에서 봇에 사용할 옵션들을 클릭
 [이 링크](https://github.com/nodesource/distributions#installation-instructions)에서 구체적인 내용을 확인하실 수 있습니다.  
 데비안, readhat 등을 이용하신다면 위 링크를 참조해주세요.
 
-```
+```bash
 nodejs --version
 ```
 
 Node.js의 버전을 확인할 수 있는 명령어입니다.  
 13.x가 가장 최신 릴리즈입니다.
 
-```
+```bash
 curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 sudo apt-get install -y nodejs
-
 ```
 
 curl을 실행할 수 없으시면 sudo apt install curl로 설치하시면 됩니다.
@@ -91,13 +90,13 @@ cd 명령어를 사용하시거나, vs code를 사용하시면 우클릭 -> Open
 
 이제 [discord.js](https://discord.js.org/)를 설치할 차례입니다.
 
-```
+```bash
 npm install discord.js
 ```
 
 후술할 내용 외에도 다양한 api가 공식 문서에 기술되어 있으니 위 링크를 참고해보세요.
 
-```
+```js
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -112,7 +111,6 @@ client.on('message', msg => {
 });
 
 client.login('token');
-
 ```
 
 app.js(이름은 자유) 파일을 생성하신 후 코드를 작성하시면 됩니다.  
@@ -122,16 +120,15 @@ app.js(이름은 자유) 파일을 생성하신 후 코드를 작성하시면 �
 
 저는 추가로 같은 폴더에 token.json이란 파일을 생성한 후
 
-```
+```json
 {
     "token": "토큰"
 }
-
 ```
 
 이렇게 따로 빼뒀습니다.
 
-```
+```js
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = require("./token.json");
@@ -147,7 +144,6 @@ client.on('message', msg => {
 });
 
 client.login(token.token);
-
 ```
 
 이렇게 외부 파일에서 token 값을 가져와 사용할 수 있습니다.  
@@ -157,7 +153,7 @@ client.login(token.token);
 
 봇에 쓸 코드 입력을 완료하면, 다시 터미널을 열어서
 
-```
+```bash
 node app.js
 ```
 
@@ -180,7 +176,7 @@ node app.js
 
 ![](/images/2020/03/Screenshot-from-2020-03-04-22-13-57.png)
 
-```
+```bash
 sudo apt install -y screen
 ```
 

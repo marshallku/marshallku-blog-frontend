@@ -12,9 +12,9 @@ ogImage: /images/2020/01/serialize-form.png
 
 xhr(XMLHttpRequest) 혹은 fetch 등으로 데이터를 보낼(POST) 때, 쓰는 스크립트입니다.
 
-input\[type="submit"\]을 클릭했을 때와 같은 동작을 하는 버튼을 만들 때 쓰신다고 생각하시면 편합니다.
+`input[type="submit"]`을 클릭했을 때와 같은 동작을 하는 버튼을 만들 때 쓰신다고 생각하시면 편합니다.
 
-```
+```js
 function serialize(form) {
     const serialized = new FormData();
 
@@ -45,7 +45,7 @@ function serialize(form) {
 
 \* jQuery엔 .serialize()란 함수가 있습니다. [참고](https://api.jquery.com/serialize/)
 
-```
+```js
 const myForm = document.getElementById("myForm");
 const data = serialize(myForm);
 
@@ -53,7 +53,6 @@ fetch(myForm.action, {
   method: "POST",
   body: data
 })
-
 ```
 
 이런 방식으로 데이터를 보내시면 됩니다.

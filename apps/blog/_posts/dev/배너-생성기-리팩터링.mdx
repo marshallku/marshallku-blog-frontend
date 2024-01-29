@@ -25,7 +25,7 @@ ogImage: /images/2022/05/배너-생성기-리팩터링.png
 
 ## 상태 관리
 
-```
+```ts
 export default class CanvasStore extends EventTarget {
     canvas?: HTMLCanvasElement;
     width: number;
@@ -69,13 +69,12 @@ export default class CanvasStore extends EventTarget {
 
     // ...
 }
-
 ```
 
 `EventTarget`의 자식 클래스를 제작해 전역 상태를 관리했습니다.  
 `dispatchEvent`를 통해 store의 상태에 의존하는 컴포넌트에 재렌더링해야 할 시점을 간편히 알려줄 수 있었습니다.
 
-```
+```ts
 export default function Preview() {
     const { setCanvas } = canvasStore;
     const canvas = el("canvas", {
@@ -94,13 +93,12 @@ export default function Preview() {
 
     return el("div", {}, canvas);
 }
-
 ```
 
 `render`는 canvas에 결과물을 그리는 함수입니다.  
 작성한 텍스트, 폰트 설정 등이 변경되면 `render`를 다시 호출해 결과물을 그리도록 작업했습니다.
 
-```
+```ts
 const WIDTH = <HTMLInputElement>document.getElementById("width");
 const HEIGHT = <HTMLInputElement>document.getElementById("height");
 const TEXT = <HTMLInputElement>document.getElementById("text");
@@ -112,14 +110,13 @@ const img = new Image();
 
 let input = 0;
 let font = "sans-serif";
-
 ```
 
 예전엔 이렇게 input 요소 등과 상태 모두 전역에 두고 input 요소 모두에 일일이 `change`등 이벤트 핸들러 추가해둔 다음에 값 변경될 때마다 canvas를 다시 그렸는데, 다시 보니 새삼 끔찍하네요.
 
 ## DOM 생성 방식
 
-```
+```ts
 import { canvasStore } from "../store";
 import el from "../utils/el";
 
@@ -151,7 +148,6 @@ export default function Textarea() {
         el("div", { className: "text__line" })
     );
 }
-
 ```
 
 상기 코드들에서도 볼 수 있듯 이번에도 함수 하나 만들어 활용했습니다.  

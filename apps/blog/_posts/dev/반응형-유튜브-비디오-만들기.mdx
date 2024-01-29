@@ -15,7 +15,7 @@ ogImage: /images/2019/07/youtube-video.jpg
 
 위 비디오처럼 CSS로 요소를 특정 비를 유지하며 크기가 줄어들도록 하실 수 있습니다.
 
-```
+```css
 .resvid {
   position: relative;
   width: 100%;
@@ -66,7 +66,6 @@ ogImage: /images/2019/07/youtube-video.jpg
     padding-bottom: 100%
   }
 }
-
 ```
 
 위 CSS에서 제일 중요한 건 width와 padding-bottom (top이어도 무관)의 값입니다.  
@@ -74,7 +73,7 @@ width : padding-bottom = 16 : 9처럼 원하는 값을 적절히 넣으셔서 wi
 
 가로가 더 길 땐 width를 100으로 놓는 걸 추천하지만, 세로가 더 긴 요소는 .resgvid.alt처럼 width를 작게 해주시는 게 좋습니다.
 
-```
+```js
 Array.from(document.querySelectorAll("iframe")).forEach(function (a) {
     const r = a.width / a.height,
         reswrapper = document.createElement("div");
@@ -83,7 +82,6 @@ Array.from(document.querySelectorAll("iframe")).forEach(function (a) {
     a.parentElement.insertBefore(reswrapper, a);
     reswrapper.appendChild(a)
 });
-
 ```
 
 예전엔 조건문을 width / height === 16 / 9면 elem.classList.add("something") 같은 방식으로 짰는데, 이번엔 훨씬 간결하게 바꿔봤습니다.

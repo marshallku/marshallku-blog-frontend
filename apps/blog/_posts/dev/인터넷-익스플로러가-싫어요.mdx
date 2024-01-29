@@ -28,7 +28,7 @@ ogImage: /images/2019/08/익스플로러.jpg
 
 ## 자바스크립트
 
-```
+```js
 console.log(navigator.userAgent)
 ```
 
@@ -39,7 +39,7 @@ Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2
 
 제가 쓰는 IE 기준으론 이런 메시지가 나옵니다.
 
-```
+```js
 function detectIE() {
   const ua = navigator.userAgent.toLowerCase();
   if (ua.indexOf("msie") !== -1 || ua.indexOf("trident") !== -1) {
@@ -48,7 +48,6 @@ function detectIE() {
 }
 
 detectIE()
-
 ```
 
 stack overflow에선 msie란 단어가 들어가기도 한다 해서, msie나 trident가 들어가면 스크립트가 작동하도록 했습니다.
@@ -59,7 +58,7 @@ stack overflow에선 msie란 단어가 들어가기도 한다 해서, msie나 tr
 
 그래서 택한 두 번째 방법입니다.
 
-```
+```css
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     html::before {
         content: "인터넷 익스플로러는 지원하지 않습니다.";
@@ -85,7 +84,6 @@ stack overflow에선 msie란 단어가 들어가기도 한다 해서, msie나 tr
         display: none!important
     }
 }
-
 ```
 
 적힌 대로 위는 IE를, 아래는 엣지를 걸러주는 태그입니다.

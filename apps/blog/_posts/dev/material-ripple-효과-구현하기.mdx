@@ -15,10 +15,9 @@ ogImage: /images/2019/08/material-ripple.jpg
 
 ## HTML
 
-```
+```html
 <a href="#" class="material-ripple">Click Me!</a>
 <a href="#" class="material-ripple" data-color="ff99ff">Custom Color</a>
-
 ```
 
 엘리먼트에 material-ripple이란 class만 추가하시면 됩니다.
@@ -28,7 +27,7 @@ ripple 효과에 특정 색상을 원하시면 data-color이란 속성을 만드
 
 ## CSS
 
-```
+```css
 @keyframes materialRipple {
     0% {
         transform: translate(-50%, -50%) scale(1)
@@ -58,7 +57,6 @@ ripple 효과에 특정 색상을 원하시면 data-color이란 속성을 만드
     border-radius: 50%;
     animation: materialRipple 0.5s linear
 }
-
 ```
 
 Additional 아래의 내용은 크게 중요하지 않은 내용입니다.  
@@ -68,7 +66,7 @@ position이 static이 되지 않도록 해주시고, overflow만 감춰주세요
 
 ## 자바스크립트
 
-```
+```js
 Array.from(document.querySelectorAll(".material-ripple")).forEach(a => {
     a.addEventListener("click", function (e) {
         const ripple = document.createElement("div"),
@@ -84,7 +82,6 @@ Array.from(document.querySelectorAll(".material-ripple")).forEach(a => {
         }, 500)
     })
 })
-
 ```
 
 position: fixed 등의 상황에선 offset을 제대로 불러오지 못해 getBoundingClientRect()를 이용했습니다.

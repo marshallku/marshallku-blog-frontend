@@ -17,7 +17,7 @@ ogImage: /images/2019/08/인기글.png
 
 응용하시면 본문에서도 활용 가능합니다.
 
-```
+```html
 <s_sidebar_element>
   <!-- 이 블로그 인기글 -->
   <div class="popularPost">
@@ -36,14 +36,13 @@ ogImage: /images/2019/08/인기글.png
     </ul>
   </div>
 </s_sidebar_element>
-
 ```
 
 제일 먼저 인기 글 목록이 필요합니다. [티스토리의 가이드](https://tistory.github.io/document-tistory-skin/sidebar/popular%5Fpost.html)를 참고해 작업해주세요.
 
 제일 중요한 건 \[##\_rctps\_rep\_link\_##\]가 포함된 a 태그에 ImSoHot이란 class를 추가하셔야 합니다.
 
-```
+```js
 function checkHot() {
     const hotArray = [];
 
@@ -58,42 +57,39 @@ function checkHot() {
         ) && a.classList.add("ImHot");
     });
 }
-
 ```
 
 위 스크립트를 추가하시고(당연히 함수를 호출하셔야 합니다.), 인기 글인지 확인하고 싶은 글 목록에 있는 a 태그에 amIHot이란 class를 추가하시면 끝입니다.
 
-```
+```html
 <s_index_article_rep>
-    <div class="list_content">
-      <s_article_rep_thumbnail>
-        <img src="[##_article_rep_thumbnail_url_##]">
-      </s_article_rep_thumbnail>
-  
-      <a href="[##_article_rep_link_##]" class="link_post amIHot">
-        <strong class="tit_post">[##_article_rep_title_##]</strong>
-        <p class="txt_post">[##_article_rep_summary_##]</p>
-      </a>
-  
-      <div class="detail_info">
-        <a href="[##_article_rep_category_link_##]" class="link_cate">
-          [##_article_rep_category_##]
-        </a>
-        <span class="txt_bar"></span>
-        [##_article_rep_date_##]
-      </div>
-    </div>
-  </s_index_article_rep>
+  <div class="list_content">
+    <s_article_rep_thumbnail>
+      <img src="[##_article_rep_thumbnail_url_##]">
+    </s_article_rep_thumbnail>
 
+    <a href="[##_article_rep_link_##]" class="link_post amIHot">
+      <strong class="tit_post">[##_article_rep_title_##]</strong>
+      <p class="txt_post">[##_article_rep_summary_##]</p>
+    </a>
+
+    <div class="detail_info">
+      <a href="[##_article_rep_category_link_##]" class="link_cate">
+        [##_article_rep_category_##]
+      </a>
+      <span class="txt_bar"></span>
+      [##_article_rep_date_##]
+    </div>
+  </div>
+</s_index_article_rep>
 ```
 
 이제 CSS를 적당히 꾸며주시면 끝납니다!
 
-```
+```css
 .ImHot::before {
     /* something */
 }
-
 ```
 
-자바스크립트에서 a.classList.add("ImHot") 대신 특정 요소를 추가하도록 하셔도 되고, CSS에서 위 예시처럼 ImHot에 가상 요소를 추가해 꾸미셔도 됩니다.
+자바스크립트에서 `a.classList.add("ImHot")` 대신 특정 요소를 추가하도록 하셔도 되고, CSS에서 위 예시처럼 ImHot에 가상 요소를 추가해 꾸미셔도 됩니다.

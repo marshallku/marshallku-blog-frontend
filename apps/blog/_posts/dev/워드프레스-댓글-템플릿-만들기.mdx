@@ -21,7 +21,7 @@ ogImage: /images/2020/12/댓글-템플릿-제작하기.png
 
 ## callback
 
-```
+```php
 <?php
 function format_comment($comment, $args, $depth)
 {
@@ -78,7 +78,6 @@ function format_comment($comment, $args, $depth)
 
     </li>
 <?php } ?>
-
 ```
 
 간략한 예시를 위해 제가 사용하던 코드를 들고왔습니다.  
@@ -97,12 +96,11 @@ function format_comment($comment, $args, $depth)
 
 답글은 `comment_reply_link`로 주소를 바꿔버리는 대신 댓글 입력 폼의 `input[name="comment_parent"]`의 value를 댓글 id로 수정하셔도 작동합니다. 답글 링크 클릭할 때마다 페이지가 바뀌는 게 거슬리시면 JS로 input의 value를 수정해주세요.
 
-```
+```php
 wp_list_comments(array(
     'style' => 'ul',
     'callback' => 'format_comment'
 ));
-
 ```
 
 작성이 끝나시면 `wp_list_comments`의 인자로 넘겨주는 array에 `callback`으로 함수명을 넘겨주시면 됩니다.
@@ -111,7 +109,7 @@ wp_list_comments(array(
 
 조금 더 근간을 뜯어고치고 싶으실 때 사용하시면 됩니다.
 
-```
+```php
 class comment_walker extends Walker_Comment
 {
     public $tree_type = 'comment';
@@ -186,19 +184,17 @@ class comment_walker extends Walker_Comment
         </li>
     <?php }
 }
-
 ```
 
 보이는 것처럼 `callback`에선 수정할 수 없던 부분까지 수정할 수 있어서, 전 댓글 목록을 JSON으로 만드는 데 사용했습니다. 워드프레스에서 제공해주는 API가 있긴 하지만, 답글이 따로 분리가 안 돼 있어서 상당히 불편하더라고요.
 
 댓글 목록 내부를 수정하는 건 상술한 것과 크게 다르지 않으니 넘어가겠습니다.
 
-```
+```php
 wp_list_comments(array(
     'style' => 'ul',
     'walker' => new comment_walker()
 ));
-
 ```
 
 작성이 끝나시면 이번엔 `walker`에 객체를 생성해서 넘겨주시면 됩니다.

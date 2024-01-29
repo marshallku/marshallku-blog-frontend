@@ -37,7 +37,7 @@ React랑 조금 친하게 지내보려고 예전에 만들어둔 것들을 React
 
 ---
 
-```
+```js
 componentDidUpdate(prevProps) {
   const { value } = this.props;
   if (prevProps.value !== value) {
@@ -48,12 +48,11 @@ componentDidUpdate(prevProps) {
       }
   }
 }
-
 ```
 
 일반적으로 props가 업데이트될 때, 무한 루프에 빠지지 않게 하려고 상술한 것처럼 조건문으로 감싸줘야 합니다. 대부분 props의 업데이트를 감지하고 렌더링을 다시 한다는 건 이전의 props와 바꿀 props가 다를 때 진행하는데, 키패드는 33, 22같이 동일한 props가 전달될 수도 있습니다.
 
-```
+```jsx
 componentDidUpdate(prevProps) {
     const { value } = this.props;
     if (prevProps.value !== value) {
@@ -78,7 +77,6 @@ componentDidUpdate(prevProps) {
     }`}
     confirm={this.props.confirm}
 />
-
 ```
 
 이렇게 `performance.now()`와 함께 값을 넘겨줘서 이 문제는 해결했습니다.  

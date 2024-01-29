@@ -23,7 +23,7 @@ ogImage: /images/2020/05/react-lottery-app.png
 
 처음엔 바닐라만큼 직관적이진 않다고 느꼈으나, 한 엘리먼트에 여러 곳에서 접근하다 코드가 꼬이는 등의 불상사는 일어날 일이 없어 보이니 단순한 접근 방식의 차이일 뿐이지 직관성은 뛰어날 수도 있겠다 싶습니다.
 
-```
+```tsx
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
@@ -172,7 +172,6 @@ class LotteryItem extends React.Component {
 }
 
 ReactDOM.render(<LotteryBox />, document.getElementById("root"));
-
 ```
 
 아직 React 초보라, LotteryItem에 index를 일일이 넣어주는 점이며, LotteryBox의 number란 array의 아이템을 LotteryItem에 하나씩 전달해주는 점이 굉장히 우아하지 못한 것 같은데, 첫술에 배를 불리려는 건 과욕이겠지요. 😂

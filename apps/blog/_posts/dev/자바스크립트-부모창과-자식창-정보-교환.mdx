@@ -18,7 +18,7 @@ window.open() 혹은 a (anchor) 태그에 target="\_blank" 어트리븃을 붙�
 
 ## 부모창에서 자식창 접근
 
-```
+```html
 <!DOCTYPE html>
 <html>
 
@@ -39,7 +39,6 @@ window.open() 혹은 a (anchor) 태그에 target="\_blank" 어트리븃을 붙�
 </body>
 
 </html>
-
 ```
 
 window.open() 함수를 변수에 집어넣고(예시에선 newWindow), 해당 변수에서 정보를 가져옵니다.
@@ -48,7 +47,7 @@ window.open() 함수를 변수에 집어넣고(예시에선 newWindow), 해당 �
 
 ## 자식창에서 부모창 접근
 
-```
+```html
 <!DOCTYPE html>
 <html>
 
@@ -67,7 +66,6 @@ window.open() 함수를 변수에 집어넣고(예시에선 newWindow), 해당 �
 </body>
 
 </html>
-
 ```
 
 따로 변수는 필요 없이 opener가 부모창을 리턴합니다
@@ -80,7 +78,7 @@ opener.document.querySelector(".element")와 같이 사용하실 수 있습니�
 
 예시에서 보여 드린 것처럼 일반적으로 읽는 것만 가능한 게 아니라
 
-```
+```js
 opener.document.documentElement.classList.add("hello")
 ```
 

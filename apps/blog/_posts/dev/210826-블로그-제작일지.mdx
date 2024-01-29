@@ -22,7 +22,7 @@ ogImage: /images/2021/08/210826-블로그-제작일지.png
 
 ## Auto Growing Textarea
 
-```
+```js
 const autoGrow = () => {
     const numberOfLineBreaks =
         (textarea.value.match(/\n/g) || []).length + 2;
@@ -30,7 +30,6 @@ const autoGrow = () => {
 
     textarea.style.height = `${newHeight + 1}rem`;
 };
-
 ```
 
 `textarea`의 `height` 값을 `auto`로 바꾸고 `scrollHeight`을 구해 `height`에 다시 적용하던 방식에서, `textarea`의 값에 줄 바꿈이 몇 번 있는지 확인해 `height`을 업데이트하는 방식으로 바꿨습니다.  

@@ -56,7 +56,7 @@ window.innerWidth를 너비로, window.outerHeight을 높이로 설정했는데,
 
 filter에 data:svg로 이미지 추가해서 블러 효과 주는 걸 지원하지 않는 브라우저가 생각보다 많아서, 배경 블러 처리하는 방식도 좀 손봤습니다.
 
-```
+```html
 <svg>
     <defs>
         <filter id="blur" x="0" y="0" width="100%" height="100%">
@@ -67,7 +67,6 @@ filter에 data:svg로 이미지 추가해서 블러 효과 주는 걸 지원하�
         </filter>
     </defs>
 </svg>
-
 ```
 
 위 svg를 html에 추가하고 css에서 filter:url(#blur)를 추가하면 어지간한 브라우저에선 블러 처리가 제대로 됩니다.
@@ -110,7 +109,7 @@ window.scroll에서 behavior:"smooth"를 걸어둬도 작동하지 않는다.
 
 위에서 해결한 문제지만, 배경 블러 처리를 제대로 못 합니다.
 
-```
+```css
 filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a' x='0' y='0' width='1' height='1'%3E%3CfeGaussianBlur stdDeviation='40' result='b'/%3E%3CfeMorphology operator='dilate' radius='4'/%3E %3CfeMerge%3E%3CfeMergeNode/%3E%3CfeMergeNode in='b'/%3E%3C/feMerge%3E%3C/filter%3E%3C/svg%3E#a");
 ```
 

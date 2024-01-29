@@ -18,36 +18,33 @@ ogImage: /images/2021/01/internet-explorer.png
 
 ### PHP
 
-```
+```php
 if (preg_match('/MSIE|Internet Explorer|Trident/i', $_SERVER['HTTP_USER_AGENT'])) {
     // IE!!
 }
-
 ```
 
 ### Javascript
 
-```
+```js
 if (window.navigator.userAgent.match(/MSIE|Internet Explorer|Trident/i)) {
     // IE!!
 }
-
 ```
 
 ## 엣지로 리다이렉트
 
-```
+```js
 window.location = "microsoft-edge:" + window.location.href;
 ```
 
 별거 없이 `window.location`에 `microsoft-edge:`만 붙여줘도 엣지로 리다이렉트됩니다.  
 `window.open`에도 사용할 수 있지만, 팝업을 수동으로 허용해줘야 엣지로 넘어갑니다.
 
-```
+```php
 if (preg_match('/MSIE|Internet Explorer|Trident/i', $_SERVER['HTTP_USER_AGENT'])) {
     echo '<script>window.location="microsoft-edge:https://marshallku.com'.$_SERVER['REQUEST_URI'].'";</script>';
 }
-
 ```
 
 저는 `head` 태그 중간에 코드를 이렇게 삽입해뒀습니다.
