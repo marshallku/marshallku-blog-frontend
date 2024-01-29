@@ -97,5 +97,5 @@ export function getCategorySlugs(subDirectory?: string) {
 }
 
 export function getAllCategories() {
-    return getCategorySlugs();
+    return getCategorySlugs().filter((x) => !getCategoryBySlug(x)?.hidden);
 }
