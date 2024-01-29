@@ -1,6 +1,6 @@
 import { Pagination, PostCard } from "#components";
 import { PAGE_SIZE } from "#constants";
-import { getGroupedPostByCategory, getPosts } from "#utils";
+import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils";
 
 export const dynamic = "error";
 
@@ -22,10 +22,11 @@ export function generateStaticParams() {
 export default async function Archive({ params: { category } }: ArchiveProps) {
     const posts = getPosts(category);
     const postsInPage = posts.slice(0, PAGE_SIZE);
+    const categoryInfo = getCategoryBySlug(`/${category}`);
 
     return (
         <section>
-            <h2>Recent posts</h2>
+            <h1>{categoryInfo?.name || "카테고리 최근 글"}</h1>
             <section>
                 {postsInPage.map((post) => (
                     <PostCard key={post.slug} post={post} />
