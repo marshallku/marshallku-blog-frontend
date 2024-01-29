@@ -1,33 +1,31 @@
 .typography {
-    line-height: 1.75;
-
     // variant - Major second scale
     &--h1 {
-        font-size: toRem(32.44px);
+        @include typography(h1);
     }
     &--h2 {
-        font-size: toRem(28.83px);
+        @include typography(h2);
     }
     &--h3 {
-        font-size: toRem(25.63px);
+        @include typography(h3);
     }
     &--h4 {
-        font-size: toRem(22.78px);
+        @include typography(h4);
     }
     &--h5 {
-        font-size: toRem(20.25px);
+        @include typography(h5);
     }
     &--h6 {
-        font-size: toRem(18px);
+        @include typography(h6);
     }
     &--b1 {
-        font-size: toRem(16px);
+        @include typography(b1);
     }
     &--b2 {
-        font-size: toRem(14.22px);
+        @include typography(b2);
     }
     &--c1 {
-        font-size: toRem(12.64px);
+        @include typography(c1);
     }
     // weight
     @for $i from 1 through 9 {
