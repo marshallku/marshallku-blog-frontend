@@ -15,7 +15,7 @@ export function generateStaticParams() {
     const groupedPosts = getGroupedPostByCategory();
 
     return Object.entries(groupedPosts).flatMap(([category]) => ({
-        category: category.slice(1),
+        category,
     }));
 }
 

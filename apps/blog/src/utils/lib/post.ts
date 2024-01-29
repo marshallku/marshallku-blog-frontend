@@ -60,12 +60,15 @@ export function getGroupedPostByCategory() {
     const posts = getPosts();
     const groupedPosts: Record<string, typeof posts> = {};
 
-    for (let i = 0, max = posts.length; i < max; i++) {
+    for (let i = 0, max = posts.length; i < max; ++i) {
         const post = posts[i];
-        if (!groupedPosts[post.category]) {
-            groupedPosts[post.category] = [];
+        const category = post.category.split("/")[1];
+
+        if (!groupedPosts[category]) {
+            groupedPosts[category] = [];
         }
-        groupedPosts[post.category].push(post);
+
+        groupedPosts[category].push(post);
     }
 
     return groupedPosts;

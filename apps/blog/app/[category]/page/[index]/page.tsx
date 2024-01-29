@@ -18,7 +18,7 @@ export function generateStaticParams() {
     return Object.entries(groupedPosts).flatMap(([category, posts]) =>
         Array.from({ length: Math.ceil(posts.length / PAGE_SIZE) }, (_, i) => ({
             params: {
-                category: category.slice(1),
+                category,
                 index: `${i + 1}`,
             },
         })),
