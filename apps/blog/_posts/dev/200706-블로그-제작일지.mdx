@@ -50,7 +50,7 @@ passive: true 옵션은 위와 같이 사용할 수 있고, 해당 옵션이 있
 
 ## 댓글 링크 추가 스크립트 업데이트
 
-[티스토리 댓글에 링크 및 이미지 추가하기](/web/tips/%ed%8b%b0%ec%8a%a4%ed%86%a0%eb%a6%ac-%eb%8c%93%ea%b8%80%ec%97%90-%eb%a7%81%ed%81%ac-%eb%b0%8f-%ec%9d%b4%eb%af%b8%ec%a7%80-%ec%b6%94%ea%b0%80%ed%95%98%ea%b8%b0) 포스트에서 언급했듯, 이제 innerHTML을 사용하지 않고 댓글의 링크를 변환합니다.  
+[티스토리 댓글에 링크 및 이미지 추가하기](/dev/%ed%8b%b0%ec%8a%a4%ed%86%a0%eb%a6%ac-%eb%8c%93%ea%b8%80%ec%97%90-%eb%a7%81%ed%81%ac-%eb%b0%8f-%ec%9d%b4%eb%af%b8%ec%a7%80-%ec%b6%94%ea%b0%80%ed%95%98%ea%b8%b0) 포스트에서 언급했듯, 이제 innerHTML을 사용하지 않고 댓글의 링크를 변환합니다.  
 댓글과 비슷한 HTML 구조를 가진 테스트 페이지를 제작해 테스트를 진행한 결과, innerHTML을 사용하지 않는 스크립트가 최악으로 작동했을 때가 innerHTML을 사용한 스크립트가 최선으로 작동했을 때보다 처리가 빨랐습니다.
 
 사용한 코드는 상술한 포스트에 있는 코드와 크게 다르지 않습니다.
@@ -105,5 +105,5 @@ map $http_user_agent $ua_blacklist {
 심지어 티스토리에서 주소를 붙여 넣으면 인코딩된 문자열에 포함된 %를 다시 %25로 인코딩해 존재하지 않는 주소를 첨부해버리더라고요.  
 그래서 본문 하단에 주소를 복사하는 버튼도 추가해뒀습니다. 클릭하시면 디코딩된 주소가 복사됩니다.
 
-인코딩 된 URI 예시 - https://marshallku.com/web/log/200706-%eb%b8%94%eb%a1%9c%ea%b7%b8-%ec%a0%9c%ec%9e%91%ec%9d%bc%ec%a7%80  
-위 URI를 디코딩 - https://marshallku.com/web/log/200706-블로그-제작일지
+인코딩 된 URI 예시 - https://marshallku.com/dev/200706-%eb%b8%94%eb%a1%9c%ea%b7%b8-%ec%a0%9c%ec%9e%91%ec%9d%bc%ec%a7%80  
+위 URI를 디코딩 - https://marshallku.com/dev/200706-블로그-제작일지
