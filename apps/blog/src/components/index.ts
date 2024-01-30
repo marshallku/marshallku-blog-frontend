@@ -1,3 +1,5 @@
+export { default as GlobalNavigation, type GlobalNavigationProps } from "./GlobalNavigation";
+export { default as Logo, type LogoProps } from "./Logo";
 export { default as MDXComponents } from "./MDXComponents";
 export { default as Pagination, type PaginationProps } from "./Pagination";
 export { default as PostCard, type PostCardProps } from "./PostCard";
