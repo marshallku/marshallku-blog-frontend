@@ -56,6 +56,12 @@ export function getPosts(category?: string) {
         });
 }
 
+export function getTags() {
+    const posts = getPosts();
+
+    return [...new Set(posts.filter(({ data: { tags } }) => 0 < tags?.length).flatMap(({ data: { tags } }) => tags))];
+}
+
 export function getGroupedPostByCategory() {
     const posts = getPosts();
     const groupedPosts: Record<string, typeof posts> = {};
