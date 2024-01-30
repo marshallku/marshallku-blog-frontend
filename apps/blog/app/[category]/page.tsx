@@ -1,4 +1,4 @@
-import { Pagination, PostCard } from "#components";
+import { PostList } from "#components";
 import { PAGE_SIZE } from "#constants";
 import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils";
 
@@ -19,20 +19,22 @@ export function generateStaticParams() {
     }));
 }
 
-export default async function Archive({ params: { category } }: ArchiveProps) {
+export default async function ArchivePage({ params: { category } }: ArchiveProps) {
     const posts = getPosts(category);
     const postsInPage = posts.slice(0, PAGE_SIZE);
     const categoryInfo = getCategoryBySlug(`/${category}`);
 
     return (
-        <section>
+        <>
             <h1>{categoryInfo?.name || "카테고리 최근 글"}</h1>
-            <section>
-                {postsInPage.map((post) => (
-                    <PostCard key={post.slug} post={post} />
-                ))}
-            </section>
-            <Pagination currentIndex={1} totalCount={posts.length} basePath={`/${category}`} rowSize={PAGE_SIZE} />
-        </section>
+            <PostList
+                posts={postsInPage}
+                paginationProps={{
+                    currentIndex: 1,
+                    totalCount: posts.length,
+                    basePath: `/${category}`,
+                }}
+            />
+        </>
     );
 }

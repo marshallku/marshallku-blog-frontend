@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PostCard } from "#components";
+import { PostList } from "#components";
 import { getAllCategories, getPosts } from "#utils";
 import { PAGE_SIZE } from "#constants";
 
@@ -11,9 +11,7 @@ export default async function Home() {
         <section>
             <h1>Welcome to my blog</h1>
             <h2>Recent posts</h2>
-            {postsInPage.map((post) => (
-                <PostCard key={post.slug} post={post} />
-            ))}
+            <PostList posts={postsInPage} />
             <h2>Categories</h2>
             {getAllCategories().map((category) => (
                 <Link href={category}>{category}</Link>
