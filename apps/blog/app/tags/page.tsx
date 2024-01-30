@@ -1,11 +1,8 @@
-import { getPosts } from "#utils";
 import Link from "next/link";
+import { getTags } from "#utils";
 
 export default function TagCloudPage() {
-    const posts = getPosts();
-    const tags = [
-        ...new Set(posts.filter(({ data: { tags } }) => 0 < tags?.length).flatMap(({ data: { tags } }) => tags)),
-    ];
+    const tags = getTags();
 
     return (
         <div>
