@@ -99,6 +99,10 @@
             }
         }
 
+        figure {
+            margin-bottom: 1em;
+        }
+
         code {
             font-family: "Fira Code", monospace;
             font-size: 90%;
@@ -161,8 +165,6 @@
 
         :global {
             figure.image-block {
-                margin-bottom: 1em;
-
                 > figcaption {
                     @include typography(caption);
                     text-align: center;
