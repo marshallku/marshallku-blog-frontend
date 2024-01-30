@@ -4,8 +4,11 @@ import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
-import { MDXComponents } from "#components";
+import { classNames } from "@marshallku/utils";
+import { MDXComponents, Typography } from "#components";
 import { setImageMetaData, getPostBySlug, getPostSlugs } from "#utils";
+import styles from "./page.module.scss";
+import remarkUnwrapImages from "remark-unwrap-images";
 
 export const dynamic = "error";
 
@@ -23,27 +26,33 @@ export async function generateStaticParams() {
     }));
 }
 
+const cx = classNames(styles, "page");
+
 export default async function Post({ params: { category, slug } }: PostProps) {
     const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
     return (
-        <article>
-            <header>
-                <h1>{post.data.title}</h1>
-                <figure>
+        <article className={cx()}>
+            <header className={cx("__header")}>
+                <figure className={cx("__cover")}>
                     <img src={post.data.coverImage} alt={post.data.title} />
                 </figure>
-                <time dateTime={post.data.date.posted.toISOString()}>
-                    {post.data.date.posted.toLocaleDateString("ko-KR")}
-                </time>
+                <div className={cx("__post-information")}>
+                    <Typography variant="h1" component="h1" fontWeight={700} className={cx("__title")}>
+                        {post.data.title}
+                    </Typography>
+                    <Typography component="time" dateTime={post.data.date.posted.toISOString()}>
+                        {post.data.date.posted.toLocaleDateString("ko-KR")}
+                    </Typography>
+                </div>
             </header>
-            <section>
+            <main className={cx("__body")}>
                 <MDXRemote
                     source={post.content}
                     components={MDXComponents}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [remarkToc, remarkGfm, remarkSlug],
+                            remarkPlugins: [remarkToc, remarkGfm, remarkSlug, remarkUnwrapImages],
                             rehypePlugins: [
                                 rehypeAutolinkHeadings,
                                 [
@@ -59,7 +68,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                         },
                     }}
                 />
-            </section>
+            </main>
         </article>
     );
 }

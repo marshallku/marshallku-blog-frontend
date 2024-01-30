@@ -2,6 +2,7 @@
     "name": "@marshallku/blog",
     "version": "0.1.0",
     "private": true,
+    "sideEffects": false,
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -22,7 +23,8 @@
         "rehype-pretty-code": "^0.12.6",
         "remark-gfm": "^3.0.1",
         "remark-slug": "^7.0.1",
-        "remark-toc": "^9.0.0"
+        "remark-toc": "^9.0.0",
+        "remark-unwrap-images": "^4.0.0"
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",

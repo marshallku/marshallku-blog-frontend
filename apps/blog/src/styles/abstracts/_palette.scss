@@ -58,6 +58,11 @@ $sepia-palette: (
     link: #0021c2,
 );
 
+$container-width: (
+    large: 1140px,
+    small: 880px,
+);
+
 @function get-color($palette, $key, $sub-key: null) {
     @if map-has-key($palette, $key) {
         $color: map-get($palette, $key);
