@@ -1,0 +1,49 @@
+.global-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(8px) saturate(180%);
+    backdrop-filter: blur(8px) saturate(180%);
+    z-index: 1000;
+
+    &__container {
+        display: flex;
+        max-width: map-get($container-width, large);
+        margin: 0 auto;
+        height: $global-navigation-height;
+    }
+
+    &__left,
+    &__right {
+        display: flex;
+        align-items: center;
+        flex: 1 0 0;
+    }
+
+    &__left {
+        justify-content: flex-start;
+    }
+
+    &__right {
+        justify-content: flex-end;
+    }
+
+    &__category {
+        display: flex;
+        height: $global-navigation-height;
+        align-items: center;
+
+        a {
+            @include typography(b2);
+            color: #f1f1f1;
+            font-weight: 500;
+        }
+
+        li:not(:last-child) {
+            margin-right: 4px;
+        }
+    }
+}

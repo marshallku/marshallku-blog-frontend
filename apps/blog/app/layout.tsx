@@ -3,6 +3,7 @@ import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { GlobalNavigation } from "#components";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -15,7 +16,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko">
-            <body>{children}</body>
+            <body>
+                <GlobalNavigation />
+                {children}
+            </body>
         </html>
     );
 }
