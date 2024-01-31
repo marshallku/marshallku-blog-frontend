@@ -8,7 +8,7 @@ interface TagArchivePageProps {
     params: { tag: string };
 }
 
-export async function getStaticParams() {
+export async function generateStaticParams() {
     return getTags().map((tag) => ({ tag }));
 }
 
