@@ -4,11 +4,11 @@ import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
+import remarkUnwrapImages from "remark-unwrap-images";
 import { classNames } from "@marshallku/utils";
 import { MDXComponents, Typography } from "#components";
 import { setImageMetaData, getPostBySlug, getPostSlugs } from "#utils";
 import styles from "./page.module.scss";
-import remarkUnwrapImages from "remark-unwrap-images";
 
 export const dynamic = "error";
 
