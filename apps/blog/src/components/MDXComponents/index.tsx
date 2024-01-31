@@ -53,6 +53,11 @@ function Link({ href, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "ref">) {
 const MDXComponents = {
     img: Image,
     a: Link,
+    table: (props: HTMLProps<HTMLTableElement>) => (
+        <div className="table">
+            <table {...props} />
+        </div>
+    ),
 };
 
 export default MDXComponents;

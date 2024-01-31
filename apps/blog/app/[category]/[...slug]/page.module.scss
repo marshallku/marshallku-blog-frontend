@@ -2,7 +2,8 @@
     $container-padding: 12px;
 
     img,
-    video {
+    video,
+    iframe {
         max-width: 100%;
         height: auto;
     }
@@ -171,6 +172,10 @@
                     text-align: center;
                     margin-top: 0.2em;
                 }
+            }
+
+            .table {
+                overflow-x: auto;
             }
         }
     }
