@@ -11,6 +11,7 @@
         "analyze": "ANALYZE=true next build"
     },
     "dependencies": {
+        "@marshallku/icon": "workspace:^",
         "@marshallku/ui": "workspace:^",
         "@marshallku/utils": "workspace:^",
         "gray-matter": "^4.0.3",
