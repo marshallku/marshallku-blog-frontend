@@ -4,6 +4,10 @@
     font-display: block;
 }
 
+i[class*="{{ prefix }}-"] {
+    vertical-align: middle;
+}
+
 i[class*=" {{ prefix }}-"]::before,
 i[class^="{{ prefix }}-"]::before {
     font-family: {{ name }} !important;
