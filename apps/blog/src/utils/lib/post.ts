@@ -40,6 +40,12 @@ export function getPostBySlug(slug: string): Post {
     };
 }
 
+export function getPostsByTag(tag: string) {
+    const posts = getPosts();
+
+    return posts.filter(({ data: { tags } }) => tags?.find((x) => x === tag));
+}
+
 export function getPosts(category?: string) {
     return getPostSlugs(category)
         .map((slug) => getPostBySlug(slug))

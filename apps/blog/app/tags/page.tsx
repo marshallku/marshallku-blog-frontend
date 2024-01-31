@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTags } from "#utils";
 
+export const dynamic = "error";
+
 export default function TagCloudPage() {
     const tags = getTags();
 
