@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useMemo } from "react";
+import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import { NonNullableProperties } from "#types";
 import styles from "./index.module.scss";
@@ -51,7 +52,8 @@ function Pagination({ currentIndex, rowSize = 6, totalCount, pageRange = 5, base
                 href={`${basePath}/page/${currentIndex - 1}`}
                 className={cx("__direction", currentIndex <= 1 && "__direction--invisible")}
             >
-                Prev
+                <Icon name="chevron-left" />
+                <span className="sr-only">이전 페이지</span>
             </Link>
             {calculatePageNumbers({ currentIndex, rowSize, totalCount, pageRange }).map((i) => (
                 <Link
@@ -68,7 +70,8 @@ function Pagination({ currentIndex, rowSize = 6, totalCount, pageRange = 5, base
                 href={`${basePath}/page/${currentIndex + 1}`}
                 className={cx("__direction", pageCount <= currentIndex && "__direction--invisible")}
             >
-                Next
+                <Icon name="chevron-right" />
+                <span className="sr-only">다음 페이지</span>
             </Link>
         </div>
     );

@@ -20,6 +20,9 @@ importers:
 
   apps/blog:
     dependencies:
+      '@marshallku/icon':
+        specifier: workspace:^
+        version: link:../../packages/icon
       '@marshallku/ui':
         specifier: workspace:^
         version: link:../../packages/ui
