@@ -8,6 +8,7 @@ const analyzing = process.env.ANALYZE === "true";
 const nextConfig = {
     reactStrictMode: true,
     transpilePackages: ["@marshallku/ui"],
+    output: "standalone",
     experimental: {
         outputFileTracingRoot: path.join(__dirname, "../../"),
     },
