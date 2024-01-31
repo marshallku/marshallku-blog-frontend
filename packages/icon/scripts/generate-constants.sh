@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 icon_path='src/icons'
 constant_file='src/constants/index.ts'
 
 echo 'const icons = [' >"$constant_file"
 
-function convert_name {
+convert_name() {
     file_name=$(basename "$1")
     file_name_without_extension="${file_name%.*}"
-    dash_replaced="${file_name_without_extension// /-}"
+    dash_replaced=$(echo "$file_name_without_extension" | tr ' ' '-')
 
     echo "$dash_replaced"
 }

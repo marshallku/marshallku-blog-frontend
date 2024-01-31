@@ -12,7 +12,7 @@
     ],
     "scripts": {
         "build": "tsup src/components/index.tsx --format esm --dts --external react --minify --clean && cp src/constants/index.ts dist/constants.ts && fantasticon",
-        "prebuild": "mkdir -p dist && bash scripts/generate-constants.sh",
+        "prebuild": "mkdir -p dist && sh scripts/generate-constants.sh",
         "postbuild": "pnpm run minify && node scripts/postbuild.js",
         "minify": "cleancss -o ./dist/icons.css ./dist/icons.css"
     },
