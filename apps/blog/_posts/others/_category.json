@@ -1,4 +1,6 @@
 {
     "hidden": false,
-    "name": "기타"
+    "name": "기타",
+    "icon": "category",
+    "color": "#999"
 }

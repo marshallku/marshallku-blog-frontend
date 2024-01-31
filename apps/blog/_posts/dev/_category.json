@@ -1,4 +1,6 @@
 {
     "hidden": false,
-    "name": "개발"
+    "name": "개발",
+    "icon": "code-blocks",
+    "color": "#66b3ff"
 }

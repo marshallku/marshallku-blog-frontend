@@ -1,4 +1,6 @@
 {
     "hidden": false,
-    "name": "갤러리"
+    "name": "갤러리",
+    "icon": "photo-camera",
+    "color": "#ff4d4d"
 }

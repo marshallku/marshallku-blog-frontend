@@ -1,4 +1,6 @@
 {
     "hidden": true,
-    "name": "작업물"
+    "name": "작업물",
+    "icon": "work",
+    "color": "#b37700"
 }

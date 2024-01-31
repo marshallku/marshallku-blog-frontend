@@ -1,4 +1,6 @@
 {
     "hidden": false,
-    "name": "잡담"
+    "name": "잡담",
+    "icon": "chat-bubble",
+    "color": "#ffdb4d"
 }
