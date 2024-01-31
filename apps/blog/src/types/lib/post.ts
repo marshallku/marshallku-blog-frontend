@@ -19,4 +19,7 @@ export interface Category {
     name: string;
     hidden?: boolean;
     coverImage?: string;
+    color?: string;
+    icon?: string;
+    description?: string;
 }

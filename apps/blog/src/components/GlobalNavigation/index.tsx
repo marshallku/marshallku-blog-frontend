@@ -3,6 +3,7 @@ import { classNames } from "@marshallku/utils";
 import Logo from "#components/Logo";
 import { getCategorySlugs, getCategoryBySlug } from "#utils";
 import styles from "./index.module.scss";
+import { Icon, IconProps } from "@marshallku/icon";
 
 export interface GlobalNavigationProps {}
 
@@ -25,8 +26,9 @@ function GlobalNavigation({}: GlobalNavigationProps) {
                                 ...getCategoryBySlug(category)!,
                             }))
                             .filter(({ hidden }) => hidden === false)
-                            .map(({ slug, name }) => (
+                            .map(({ slug, name, icon, color }) => (
                                 <li key={slug}>
+                                    {icon && <Icon name={icon as IconProps["name"]} color={color} />}
                                     <Link href={slug}>{name}</Link>
                                 </li>
                             ))}
