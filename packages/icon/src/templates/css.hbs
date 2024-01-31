@@ -21,7 +21,7 @@ i[class^="{{ prefix }}-"]::before {
 }
 
 {{# each codepoints}}
-    .{{ ../prefix }}-{{ @key }}::before {
+    i.{{ ../prefix }}-{{ @key }}::before {
         content: "\\{{ codepoint this }}";
     }
 {{/ each}}
