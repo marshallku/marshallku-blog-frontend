@@ -7,10 +7,12 @@ export interface IconProps {
     size?: number;
     /** 클래스 명 */
     className?: string;
+    /** 색상 */
+    color?: string;
 }
 
 const cx = (...args: unknown[]) => args.filter(Boolean).join(" ");
 
-export function Icon({ name, size: fontSize, className }: IconProps) {
-    return <i className={cx(`icon-${name}`, className)} style={{ fontSize }} />;
+export function Icon({ name, size: fontSize, className, color }: IconProps) {
+    return <i className={cx(`icon-${name}`, className)} style={{ fontSize, color }} />;
 }
