@@ -10,6 +10,10 @@ while [[ $# -gt 0 ]]; do
         directory='templates'
         shift
         ;;
+    -l | --layout)
+        directory='layouts'
+        shift
+        ;;
     *)
         echo "Unknown option: $key"
         exit 1
