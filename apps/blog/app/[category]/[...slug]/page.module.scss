@@ -1,11 +1,4 @@
 .page {
-    img,
-    video,
-    iframe {
-        max-width: 100%;
-        height: auto;
-    }
-
     &__header {
         position: relative;
         display: flex;
@@ -72,6 +65,13 @@
         p {
             @include typography(b1);
             margin-bottom: 0.65em;
+        }
+
+        img,
+        video,
+        iframe {
+            max-width: 100%;
+            height: auto;
         }
 
         b,

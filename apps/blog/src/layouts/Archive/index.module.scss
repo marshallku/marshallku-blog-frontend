@@ -1,0 +1,10 @@
+.archive {
+    &__title {
+        text-align: center;
+    }
+
+    &__container {
+        width: map-get($container-width, large);
+        margin: 36px auto 0;
+    }
+}

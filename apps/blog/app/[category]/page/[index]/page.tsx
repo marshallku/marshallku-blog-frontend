@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { PostList } from "#components";
-import { PAGE_SIZE } from "#constants";
+import { Archive } from "#layouts";
 import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils";
+import { PAGE_SIZE } from "#constants";
 
 export const dynamic = "error";
 
@@ -40,16 +40,17 @@ export default async function ArchivePage({ params: { category, index } }: Archi
     const postsInPage = posts.slice(start, end);
 
     return (
-        <>
-            <h1>{categoryInfo?.name || "카테고리 최근 글"}</h1>
-            <PostList
-                posts={postsInPage}
-                paginationProps={{
+        <Archive
+            title={categoryInfo?.name || "카테고리 최근 글"}
+            coverImage={categoryInfo?.coverImage || postsInPage[0]?.data?.coverImage}
+            postListProps={{
+                posts: postsInPage,
+                paginationProps: {
                     currentIndex: pageIndex,
                     totalCount: posts.length,
                     basePath: `/${category}`,
-                }}
-            />
-        </>
+                },
+            }}
+        />
     );
 }

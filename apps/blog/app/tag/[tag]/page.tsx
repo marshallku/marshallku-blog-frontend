@@ -1,4 +1,4 @@
-import { PostList } from "#components";
+import { Archive } from "#layouts";
 import { getTags, getPostsByTag } from "#utils";
 import { PAGE_SIZE } from "#constants";
 
@@ -17,16 +17,16 @@ export default function TagArchivePage({ params: { tag } }: TagArchivePageProps)
     const postsInPage = posts.slice(0, PAGE_SIZE);
 
     return (
-        <section>
-            <h1>{tag} 태그 글</h1>
-            <PostList
-                posts={postsInPage}
-                paginationProps={{
+        <Archive
+            title={`${tag} 태그 글`}
+            postListProps={{
+                posts: postsInPage,
+                paginationProps: {
                     currentIndex: 1,
                     totalCount: posts.length,
                     basePath: `/tag/${tag}`,
-                }}
-            />
-        </section>
+                },
+            }}
+        />
     );
 }
