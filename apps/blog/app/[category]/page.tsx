@@ -11,6 +11,15 @@ interface ArchiveProps {
     };
 }
 
+export function generateMetaData({ params: { category } }: ArchiveProps) {
+    const categoryInfo = getCategoryBySlug(`/${category}`);
+
+    return {
+        title: categoryInfo?.name ? `${categoryInfo.name} 카테고리 글` : "카테고리 최근 글",
+        description: categoryInfo?.description,
+    };
+}
+
 export function generateStaticParams() {
     const groupedPosts = getGroupedPostByCategory();
 

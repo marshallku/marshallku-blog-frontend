@@ -12,6 +12,12 @@ interface TagArchivePageProps {
     };
 }
 
+export function generateMetaData({ params: { tag } }: TagArchivePageProps) {
+    return {
+        title: `${tag} 태그 글`,
+    };
+}
+
 export function generateStaticParams() {
     const posts = getPosts();
     const tags = [...new Set(posts.flatMap(({ data: { tags } }) => tags))];
