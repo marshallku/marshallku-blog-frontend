@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import Logo from "#components/Logo";
+import { Logo, ThemeToggle } from "#components";
 import { getCategorySlugs, getCategoryBySlug } from "#utils";
 import styles from "./index.module.scss";
 
@@ -34,7 +34,9 @@ function GlobalNavigation({}: GlobalNavigationProps) {
                             ))}
                     </ul>
                 </div>
-                <div className={cx("__right")}></div>
+                <div className={cx("__right")}>
+                    <ThemeToggle />
+                </div>
             </div>
         </nav>
     );

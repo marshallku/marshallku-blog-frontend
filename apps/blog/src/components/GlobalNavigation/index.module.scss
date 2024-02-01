@@ -42,8 +42,14 @@
             font-weight: 500;
         }
 
-        li:not(:last-child) {
-            margin-right: 4px;
+        li {
+            &:not(:last-child) {
+                margin-right: 12px;
+            }
+
+            > i {
+                margin-right: 4px;
+            }
         }
     }
 }
