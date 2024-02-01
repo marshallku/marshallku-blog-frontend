@@ -58,7 +58,14 @@ function Pagination({
     return (
         <div className={cx("", gutterTop && "--gutter")} role="navigation">
             <Link
-                href={`${basePath}/page/${currentIndex - 1}`}
+                href={`${basePath}/page/1`}
+                className={cx("__direction", currentIndex < Math.ceil(pageRange / 2) + 1 && "__direction--invisible")}
+            >
+                <Icon name="first-page" />
+                <span className="sr-only">첫 페이지</span>
+            </Link>
+            <Link
+                href={`${basePath}/page/${Math.max(1, currentIndex - pageRange)}`}
                 className={cx("__direction", currentIndex <= 1 && "__direction--invisible")}
             >
                 <Icon name="chevron-left" />
@@ -76,11 +83,21 @@ function Pagination({
                 </Link>
             ))}
             <Link
-                href={`${basePath}/page/${currentIndex + 1}`}
+                href={`${basePath}/page/${Math.min(pageCount, currentIndex + pageRange)}`}
                 className={cx("__direction", pageCount <= currentIndex && "__direction--invisible")}
             >
                 <Icon name="chevron-right" />
                 <span className="sr-only">다음 페이지</span>
+            </Link>
+            <Link
+                href={`${basePath}/page/${pageCount}`}
+                className={cx(
+                    "__direction",
+                    Math.ceil(pageCount - pageRange / 2) <= currentIndex && "__direction--invisible",
+                )}
+            >
+                <Icon name="last-page" />
+                <span className="sr-only">마지막 페이지</span>
             </Link>
         </div>
     );
