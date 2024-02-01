@@ -31,7 +31,7 @@
         width: clamp(0px, map-get($container-width, small), 100%);
         margin-bottom: 12px;
         padding: 36px $container-padding;
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(8px);
         border-radius: 12px;
 
