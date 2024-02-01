@@ -11,6 +11,7 @@ import { Banner, MDXComponents, PostList, PrevNextPost, Typography } from "#comp
 import { setImageMetaData, getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils";
 import styles from "./page.module.scss";
 import Link from "next/link";
+import { Metadata } from "next";
 
 export const dynamic = "error";
 
@@ -19,6 +20,17 @@ interface PostProps {
         category: string;
         slug: string[];
     };
+}
+
+export async function generateMetadata({ params: { category, slug } }: PostProps) {
+    const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
+
+    const metaData: Metadata = {
+        title: post.data.title,
+        description: post.data.description,
+    };
+
+    return metaData;
 }
 
 export async function generateStaticParams() {

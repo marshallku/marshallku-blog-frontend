@@ -8,6 +8,12 @@ interface TagArchivePageProps {
     params: { tag: string };
 }
 
+export function generateMetaData({ params: { tag } }: TagArchivePageProps) {
+    return {
+        title: `${tag} 태그 글`,
+    };
+}
+
 export async function generateStaticParams() {
     return getTags().map((tag) => ({ tag }));
 }
