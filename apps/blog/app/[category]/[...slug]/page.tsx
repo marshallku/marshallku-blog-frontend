@@ -6,7 +6,7 @@ import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
 import { classNames } from "@marshallku/utils";
-import { MDXComponents, Typography } from "#components";
+import { Banner, MDXComponents, Typography } from "#components";
 import { setImageMetaData, getPostBySlug, getPostSlugs } from "#utils";
 import styles from "./page.module.scss";
 
@@ -33,19 +33,14 @@ export default async function Post({ params: { category, slug } }: PostProps) {
 
     return (
         <article className={cx()}>
-            <header className={cx("__header")}>
-                <figure className={cx("__cover")}>
-                    <img src={post.data.coverImage} alt={post.data.title} />
-                </figure>
-                <div className={cx("__post-information")}>
-                    <Typography variant="h1" component="h1" fontWeight={700} className={cx("__title")}>
-                        {post.data.title}
-                    </Typography>
-                    <Typography component="time" dateTime={post.data.date.posted.toISOString()}>
-                        {post.data.date.posted.toLocaleDateString("ko-KR")}
-                    </Typography>
-                </div>
-            </header>
+            <Banner title={post.data.title} coverImage={post.data.coverImage}>
+                <Typography variant="h1" component="h1" fontWeight={700} className={cx("__title")}>
+                    {post.data.title}
+                </Typography>
+                <Typography component="time" dateTime={post.data.date.posted.toISOString()}>
+                    {post.data.date.posted.toLocaleDateString("ko-KR")}
+                </Typography>
+            </Banner>
             <main className={cx("__body")}>
                 <MDXRemote
                     source={post.content}
