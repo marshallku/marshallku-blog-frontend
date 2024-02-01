@@ -1,12 +1,44 @@
 .pagination {
+    text-align: center;
+
+    &--gutter {
+        margin-top: 36px;
+    }
+
     &__page {
         &--current {
             color: color(main);
         }
     }
+
     &__direction {
         &--invisible {
             visibility: hidden;
+        }
+    }
+
+    > a {
+        display: inline-block;
+        margin: 0 12px;
+        color: color(text);
+        text-decoration: none;
+
+        &[aria-current="true"] {
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 1.75em;
+                height: 1.75em;
+                background-color: color(main-opacity);
+                transform: translate3d(-50%, -50%, 0);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: -1;
+            }
         }
     }
 }

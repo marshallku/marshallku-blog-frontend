@@ -6,5 +6,6 @@
     &__container {
         width: map-get($container-width, large);
         margin: 36px auto 0;
+        padding-bottom: 64px;
     }
 }

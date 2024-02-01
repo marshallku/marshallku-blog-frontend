@@ -10,7 +10,7 @@ export interface ArchiveProps {
 
 const cx = classNames(styles, "archive");
 
-function Archive({ title, coverImage, postListProps }: ArchiveProps) {
+function Archive({ title, coverImage, postListProps: { posts, paginationProps } }: ArchiveProps) {
     const typographyProps = {
         variant: "h2",
         component: "h1",
@@ -28,7 +28,10 @@ function Archive({ title, coverImage, postListProps }: ArchiveProps) {
                 <Typography {...typographyProps}>{title}</Typography>
             )}
             <main className={cx("__container")}>
-                <PostList {...postListProps} />
+                <PostList
+                    posts={posts}
+                    paginationProps={paginationProps ? { ...paginationProps, gutterTop: true } : undefined}
+                />
             </main>
         </div>
     );
