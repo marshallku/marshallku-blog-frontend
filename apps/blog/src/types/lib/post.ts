@@ -1,3 +1,5 @@
+import { IconProps } from "@marshallku/icon";
+
 export interface Post {
     data: {
         title: string;
@@ -20,6 +22,6 @@ export interface Category {
     hidden?: boolean;
     coverImage?: string;
     color?: string;
-    icon?: string;
+    icon?: IconProps["name"];
     description?: string;
 }
