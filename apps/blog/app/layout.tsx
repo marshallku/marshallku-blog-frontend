@@ -16,8 +16,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="ko">
+        <html lang="ko" suppressHydrationWarning>
             <body>
+                {/* HACK: Dirty hack for implementing theme toggle */}
+                <script
+                    id="theme"
+                    dangerouslySetInnerHTML={{
+                        __html: `(function(){var t=localStorage.getItem("theme");if(!t){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"sepia"}document.documentElement.dataset.theme=t,document.documentElement.style.colorScheme=t})()`,
+                    }}
+                />
                 <GlobalNavigation />
                 {children}
             </body>
