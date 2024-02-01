@@ -16,6 +16,8 @@ export interface PaginationProps {
     pageRange?: number;
     /** base path for pagination */
     basePath?: string;
+    /** whether to display gutter at top */
+    gutterTop?: boolean;
 }
 
 const cx = classNames(styles, "pagination");
@@ -25,7 +27,7 @@ function calculatePageNumbers({
     rowSize,
     totalCount,
     pageRange,
-}: NonNullableProperties<Omit<PaginationProps, "basePath">>) {
+}: NonNullableProperties<Omit<PaginationProps, "basePath" | "gutterTop">>) {
     const maxPageCount = Math.ceil(totalCount / rowSize);
     let startPage = Math.max(1, currentIndex - Math.floor(pageRange / 2));
     const endPage = Math.min(startPage + pageRange - 1, maxPageCount);
@@ -43,11 +45,18 @@ function calculatePageNumbers({
     return pages;
 }
 
-function Pagination({ currentIndex, rowSize = 6, totalCount, pageRange = 5, basePath = "/" }: PaginationProps) {
+function Pagination({
+    currentIndex,
+    rowSize = 6,
+    totalCount,
+    pageRange = 5,
+    basePath = "/",
+    gutterTop,
+}: PaginationProps) {
     const pageCount = useMemo(() => Math.ceil(totalCount / rowSize), [totalCount, rowSize]);
 
     return (
-        <div className={cx()} role="navigation">
+        <div className={cx("", gutterTop && "--gutter")} role="navigation">
             <Link
                 href={`${basePath}/page/${currentIndex - 1}`}
                 className={cx("__direction", currentIndex <= 1 && "__direction--invisible")}
