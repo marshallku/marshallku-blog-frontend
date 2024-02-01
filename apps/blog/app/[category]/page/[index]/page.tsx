@@ -12,7 +12,7 @@ interface ArchiveProps {
     };
 }
 
-export function generateMetaData({ params: { category } }: ArchiveProps) {
+export function generateMetadata({ params: { category } }: ArchiveProps) {
     const categoryInfo = getCategoryBySlug(`/${category}`);
 
     return {

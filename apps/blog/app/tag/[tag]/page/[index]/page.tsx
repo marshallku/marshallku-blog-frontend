@@ -12,7 +12,7 @@ interface TagArchivePageProps {
     };
 }
 
-export function generateMetaData({ params: { tag } }: TagArchivePageProps) {
+export function generateMetadata({ params: { tag } }: TagArchivePageProps) {
     return {
         title: `${tag} 태그 글`,
     };
