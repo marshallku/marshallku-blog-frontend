@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { classNames } from "@marshallku/utils";
+import { classNames, formatDate } from "@marshallku/utils";
 import { PostList, PostListGallery, Typography } from "#components";
 import { getCategories, getPosts } from "#utils";
 import { PAGE_SIZE } from "#constants";
@@ -23,7 +23,9 @@ export default async function Home() {
                     <img src={mostRecentPost.data.coverImage} alt={mostRecentPost.data.title} />
                 </figure>
                 <div className={cx("-header__content")}>
-                    <Typography variant="c1">{mostRecentPost.data.date.posted.toLocaleDateString("ko-KR")}</Typography>
+                    <Typography variant="c1">
+                        {formatDate(mostRecentPost.data.date.posted, "yyyy년 MM월 dd일")}
+                    </Typography>
                     <Typography component="h1" variant="h1" fontWeight={700} className={cx("-header__title")}>
                         <Link href={mostRecentPost.slug}>{mostRecentPost.data.title}</Link>
                     </Typography>

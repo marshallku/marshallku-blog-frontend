@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { classNames } from "@marshallku/utils";
+import { classNames, formatDate } from "@marshallku/utils";
 import { Post } from "#types";
 import { Typography } from "#components";
 import styles from "./index.module.scss";
@@ -35,7 +35,7 @@ export default function PostCard({ post }: PostCardProps) {
                     variant="c1"
                     dateTime={post.data.date.posted.toISOString()}
                 >
-                    {post.data.date.posted.toLocaleDateString("ko-KR")}
+                    {formatDate(post.data.date.posted, "yyyy년 MM월 dd일")}
                 </Typography>
             </header>
         </article>
