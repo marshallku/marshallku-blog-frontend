@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-
+import { easeInOutCubic } from "#utils/easing";
 
 const DEFAULT_DURATION = 500;
 
@@ -33,7 +33,7 @@ const parseTarget = (target: NonNullable<Target>) => {
     return target;
 };
 
-export default function useScroll({ useNativeScroll = false, easing = (x) => x }: Option = {}) {
+export default function useScroll({ useNativeScroll = false, easing = easeInOutCubic }: Option = {}) {
     const scroll = useCallback(
         (target: Target, duration = DEFAULT_DURATION) => {
             if (target == null) {
