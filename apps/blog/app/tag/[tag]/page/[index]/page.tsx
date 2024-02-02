@@ -35,7 +35,8 @@ export function generateStaticParams() {
 }
 
 export default async function TagArchivePage({ params: { tag, index } }: TagArchivePageProps) {
-    const posts = getPostsByTag(decodeURIComponent(tag));
+    const decodedTag = decodeURIComponent(tag);
+    const posts = getPostsByTag(decodedTag);
     const pageIndex = Number(index);
 
     if (Number.isNaN(pageIndex) || pageIndex < 1 || Math.ceil(posts.length / PAGE_SIZE) < pageIndex) {
@@ -49,7 +50,7 @@ export default async function TagArchivePage({ params: { tag, index } }: TagArch
 
     return (
         <Archive
-            title={`${tag} 태그 글`}
+            title={`${decodedTag} 태그 글`}
             postListProps={{
                 posts: postsInPage,
                 paginationProps: {

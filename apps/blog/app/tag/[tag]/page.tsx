@@ -19,12 +19,13 @@ export async function generateStaticParams() {
 }
 
 export default function TagArchivePage({ params: { tag } }: TagArchivePageProps) {
-    const posts = getPostsByTag(decodeURIComponent(tag));
+    const decodedTag = decodeURIComponent(tag);
+    const posts = getPostsByTag(decodedTag);
     const postsInPage = posts.slice(0, PAGE_SIZE);
 
     return (
         <Archive
-            title={`${tag} 태그 글`}
+            title={`${decodedTag} 태그 글`}
             postListProps={{
                 posts: postsInPage,
                 paginationProps: {
