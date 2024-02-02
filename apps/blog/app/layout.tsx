@@ -4,7 +4,7 @@ import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Footer, GlobalNavigation } from "#components";
+import { Footer, GlobalNavigation, TopButton } from "#components";
 import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 
 export const metadata: Metadata = {
@@ -29,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <GlobalNavigation />
                 {children}
                 <Footer />
+                <TopButton />
             </body>
         </html>
     );

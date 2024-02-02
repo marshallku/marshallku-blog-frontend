@@ -9,6 +9,7 @@ export { default as PostList, type PostListProps } from "./PostList";
 export { default as PostListGallery, type PostListGalleryProps } from "./PostListGallery";
 export { default as PrevNextPost, type PrevNextPostProps } from "./PrevNextPost";
 export { default as ThemeToggle } from "./ThemeToggle";
+export { default as TopButton, type TopButtonProps } from "./TopButton";
 export {
     default as Typography,
     type TypographyComponent,
