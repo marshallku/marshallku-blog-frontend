@@ -26,7 +26,7 @@
 
         &__content {
             position: relative;
-            max-width: map-get($container-width, "large");
+            width: clamp(0px, map-get($container-width, "large"), 100%);
             padding: 0 12px 32px;
             z-index: 5;
 
@@ -42,7 +42,7 @@
     }
 
     &__container {
-        max-width: map-get($container-width, "large");
+        width: clamp(0px, map-get($container-width, "large"), 100%);
         margin: 36px auto 48px;
 
         &--padding {

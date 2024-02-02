@@ -11,7 +11,7 @@
 
     &__container {
         display: flex;
-        max-width: map-get($container-width, large);
+        width: clamp(0px, map-get($container-width, "large"), 100%);
         margin: 0 auto;
         height: $global-navigation-height;
     }
