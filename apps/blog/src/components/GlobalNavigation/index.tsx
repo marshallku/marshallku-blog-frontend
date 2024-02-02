@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import { Logo, ThemeToggle } from "#components";
+import { Logo, ThemeToggle, Typography } from "#components";
 import { getCategories } from "#utils";
 import styles from "./index.module.scss";
 
-export interface GlobalNavigationProps {}
-
 const cx = classNames(styles, "global-navigation");
 
-function GlobalNavigation({}: GlobalNavigationProps) {
+function GlobalNavigation() {
     return (
         <nav className={cx()}>
             <div className={cx("__container")}>
@@ -23,7 +21,9 @@ function GlobalNavigation({}: GlobalNavigationProps) {
                         {getCategories().map(({ slug, name, icon, color }) => (
                             <li key={slug}>
                                 {icon && <Icon name={icon} color={color} />}
-                                <Link href={slug}>{name}</Link>
+                                <Typography variant="b2" component="span" fontWeight={700}>
+                                    <Link href={slug}>{name}</Link>
+                                </Typography>
                             </li>
                         ))}
                     </ul>
