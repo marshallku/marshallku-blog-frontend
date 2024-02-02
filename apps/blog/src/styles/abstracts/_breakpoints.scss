@@ -1,4 +1,7 @@
 $breakpoints: (
+    "small": (
+        min-width: 480px,
+    ),
     "medium": (
         min-width: 720px,
     ),
