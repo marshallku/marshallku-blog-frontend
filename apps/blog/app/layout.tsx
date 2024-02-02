@@ -4,11 +4,12 @@ import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { GlobalNavigation } from "#components";
+import { Footer, GlobalNavigation } from "#components";
+import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 
 export const metadata: Metadata = {
-    title: "Marshall K의 블로그",
-    description: "웹 개발과 관련된 내용을 다룹니다.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     assets: [
         "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
     ],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
                 <GlobalNavigation />
                 {children}
+                <Footer />
             </body>
         </html>
     );
