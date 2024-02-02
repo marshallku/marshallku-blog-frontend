@@ -20,12 +20,12 @@ export default function PostCard({ post }: PostCardProps) {
             )}
             <header className={cx("__header")}>
                 <Link href={post.slug}>
-                    <Typography component="h2" variant="h2" fontWeight={700} className={cx("__title")}>
+                    <Typography component="h2" variant="h2" fontWeight={700} className={cx("__title")} marginBottom={8}>
                         {post.data.title}
                     </Typography>
                 </Link>
                 <Link href={post.slug}>
-                    <Typography component="p" className={cx("__description")}>
+                    <Typography component="p" className={cx("__description")} variant="b2" marginBottom={8}>
                         {post.data.description}
                     </Typography>
                 </Link>
