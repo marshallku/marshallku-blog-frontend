@@ -1,0 +1,23 @@
+.top-button {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    right: 12px;
+    bottom: 12px;
+    font-size: 16px;
+    background-color: color(masonry-alt);
+    border-radius: 50%;
+    overflow: hidden;
+
+    &__progress {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        stroke: color(theme);
+        stroke-width: 3px;
+        fill: transparent;
+        transform: rotate(-90deg);
+    }
+}
