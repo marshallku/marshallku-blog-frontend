@@ -111,6 +111,23 @@ export function getCategorySlugs(subDirectory?: string) {
     return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\/_category\.json$/, ""));
 }
 
-export function getAllCategories() {
-    return getCategorySlugs().filter((x) => !getCategoryBySlug(x)?.hidden);
+export function getCategories() {
+    return getCategorySlugs()
+        .map((slug) => ({ ...getCategoryBySlug(slug), slug }))
+        .filter(({ hidden }) => hidden !== true)
+        .sort((a, b) => {
+            if (a.index == null || b.index == null) {
+                return 0;
+            }
+
+            if (a.index > b.index) {
+                return 1;
+            }
+
+            if (a.index < b.index) {
+                return -1;
+            }
+
+            return 0;
+        });
 }

@@ -18,6 +18,7 @@ export interface Post {
 }
 
 export interface Category {
+    index?: number;
     name: string;
     hidden?: boolean;
     coverImage?: string;
