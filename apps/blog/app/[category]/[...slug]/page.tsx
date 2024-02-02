@@ -6,7 +6,7 @@ import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
 import { Icon } from "@marshallku/icon";
-import { classNames } from "@marshallku/utils";
+import { classNames, formatDate } from "@marshallku/utils";
 import { Banner, MDXComponents, PostList, PrevNextPost, Typography } from "#components";
 import { setImageMetaData, getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils";
 import styles from "./page.module.scss";
@@ -72,7 +72,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                         </span>
                     )}
                     <time dateTime={post.data.date.posted.toISOString()}>
-                        {post.data.date.posted.toLocaleDateString("ko-KR")}
+                        {formatDate(post.data.date.posted, "yyyy년 MM월 dd일")}
                     </time>
                 </Typography>
             </Banner>
@@ -81,7 +81,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     <Typography variant="c1" component="div" marginBottom={8}>
                         최종 수정일:{" "}
                         <time dateTime={post.data.date.modified.toISOString()}>
-                            {post.data.date.modified.toLocaleDateString("ko-KR")}
+                            {formatDate(post.data.date.modified, "yyyy년 MM월 dd일")}
                         </time>
                     </Typography>
                 )}
