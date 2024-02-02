@@ -1,4 +1,4 @@
-import { Archive } from "#layouts";
+import { Archive } from "#templates";
 import { getTags, getPostsByTag } from "#utils";
 import { PAGE_SIZE } from "#constants";
 

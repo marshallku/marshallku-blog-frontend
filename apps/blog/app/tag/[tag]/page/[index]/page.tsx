@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Archive } from "#layouts";
+import { Archive } from "#templates";
 import { getPosts, getPostsByTag } from "#utils";
 import { PAGE_SIZE } from "#constants";
 
