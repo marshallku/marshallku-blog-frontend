@@ -1,6 +1,11 @@
 .archive {
     &__title {
         text-align: center;
+
+        &--only {
+            margin-top: $global-navigation-height + 72px;
+            margin-bottom: $global-navigation-height + 48px;
+        }
     }
 
     &__container {
