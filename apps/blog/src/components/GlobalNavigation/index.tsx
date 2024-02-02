@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import { Logo, ThemeToggle } from "#components";
-import { getCategorySlugs, getCategoryBySlug } from "#utils";
+import { getCategories } from "#utils";
 import styles from "./index.module.scss";
 
 export interface GlobalNavigationProps {}
@@ -20,18 +20,12 @@ function GlobalNavigation({}: GlobalNavigationProps) {
                 </div>
                 <div className={cx("__center")}>
                     <ul className={cx("__category")}>
-                        {getCategorySlugs()
-                            .map((category) => ({
-                                slug: category,
-                                ...getCategoryBySlug(category)!,
-                            }))
-                            .filter(({ hidden }) => hidden === false)
-                            .map(({ slug, name, icon, color }) => (
-                                <li key={slug}>
-                                    {icon && <Icon name={icon} color={color} />}
-                                    <Link href={slug}>{name}</Link>
-                                </li>
-                            ))}
+                        {getCategories().map(({ slug, name, icon, color }) => (
+                            <li key={slug}>
+                                {icon && <Icon name={icon} color={color} />}
+                                <Link href={slug}>{name}</Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 <div className={cx("__right")}>
