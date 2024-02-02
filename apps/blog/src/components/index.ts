@@ -1,4 +1,5 @@
 export { default as Banner, type BannerProps } from "./Banner";
+export { default as Footer } from "./Footer";
 export { default as GlobalNavigation } from "./GlobalNavigation";
 export { default as Logo, type LogoProps } from "./Logo";
 export { default as MDXComponents } from "./MDXComponents";

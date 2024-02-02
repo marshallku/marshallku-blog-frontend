@@ -1,0 +1,42 @@
+.footer {
+    background-color: color(background-dimmed);
+    text-align: center;
+
+    &__curve {
+        fill: color(background);
+    }
+
+    &__logo {
+        fill: color(text);
+    }
+
+    &__content {
+        padding: 24px 48px;
+    }
+
+    &__contact {
+        margin: 16px 0;
+
+        > a,
+        button {
+            display: inline-flex;
+            width: toRem(32px);
+            height: toRem(32px);
+            margin: 0 5px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: toRem(16px);
+            line-height: toRem(32px);
+            background: color(background);
+
+            > i {
+                display: inline-flex;
+                width: toRem(32px);
+                height: toRem(32px);
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}
