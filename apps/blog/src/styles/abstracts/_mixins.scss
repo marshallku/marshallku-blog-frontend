@@ -27,3 +27,9 @@ $breakpoints: (
            + 'Please make sure it is defined in `$breakpoints` map.';
     }
 }
+
+@mixin supports-hover {
+    @media (any-hover: hover) and (any-pointer: fine) {
+        @content;
+    }
+}

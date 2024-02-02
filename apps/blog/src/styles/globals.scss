@@ -1,4 +1,5 @@
 @import "./abstracts/_palette.scss";
+@import "./abstracts/_mixins.scss";
 
 html {
     @each $key, $value in $light-palette {
@@ -49,8 +50,10 @@ a {
     text-decoration: none;
     color: color(text);
 
-    &:hover {
-        color: color(highlight);
+    @include supports-hover {
+        &:hover {
+            color: color(highlight);
+        }
     }
 }
 

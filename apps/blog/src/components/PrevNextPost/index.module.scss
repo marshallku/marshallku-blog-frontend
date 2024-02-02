@@ -30,8 +30,10 @@
             color: #fff;
             z-index: 5;
 
-            &:hover {
-                color: #fff;
+            @include supports-hover {
+                &:hover {
+                    color: #fff;
+                }
             }
 
             :global(#{$post}--previous) & {
@@ -56,8 +58,10 @@
             opacity: 0.5;
             transition: transform 0.3s ease-in-out;
 
-            @at-root #{$post}:hover & {
-                transform: scale(1.1);
+            @include supports-hover {
+                @at-root #{$post}:hover & {
+                    transform: scale(1.1);
+                }
             }
         }
 
