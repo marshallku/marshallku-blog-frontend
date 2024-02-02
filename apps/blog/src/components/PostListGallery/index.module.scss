@@ -1,0 +1,32 @@
+.post-list-gallery {
+    $self: &;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    @include respond-to(small) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include respond-to(large) {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    &__item {
+        aspect-ratio: 1 / 1;
+    }
+
+    &__image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 0.2s ease-in-out;
+
+        @include supports-hover {
+            @at-root #{$self}:hover &:not(:hover) {
+                opacity: 0.2;
+            }
+        }
+    }
+}
