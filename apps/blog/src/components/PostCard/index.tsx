@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { classNames, formatDate } from "@marshallku/utils";
+import Typography from "#components/Typography";
 import { Post } from "#types";
-import { Typography } from "#components";
 import styles from "./index.module.scss";
 
 export interface PostCardProps {

@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
-import { httpClient, HTTPClient } from "#utils";
+import httpClient, { HTTPClient } from "#utils/httpClient";
 
 const initializeHeaders = (initHeaders?: RequestInit["headers"]) => ({
     "User-Agent": headers().get("User-Agent") ?? "",

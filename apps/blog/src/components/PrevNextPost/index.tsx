@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { classNames } from "@marshallku/utils";
-import { Typography } from "#components";
+import Typography from "#components/Typography";
 import { Post } from "#types";
 import styles from "./index.module.scss";
 

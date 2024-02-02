@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { Archive } from "#templates";
-import { getPosts, getPostsByTag } from "#utils";
+import Archive from "#templates/Archive";
+import { getPosts, getPostsByTag } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 
 export const dynamic = "error";

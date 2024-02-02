@@ -1,7 +1,7 @@
-import { classNames } from "@marshallku/utils";
-import styles from "./index.module.scss";
-import { Post } from "#types";
 import Link from "next/link";
+import { classNames } from "@marshallku/utils";
+import { Post } from "#types";
+import styles from "./index.module.scss";
 
 export interface PostListGalleryProps {
     posts: Post[];

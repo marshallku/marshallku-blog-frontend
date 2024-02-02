@@ -1,5 +1,7 @@
 import { classNames } from "@marshallku/utils";
-import { Banner, PostList, PostListProps, Typography } from "#components";
+import Banner from "#components/Banner";
+import PostList, { PostListProps } from "#components/PostList";
+import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
 export interface ArchiveProps {

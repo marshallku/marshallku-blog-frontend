@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -7,11 +9,14 @@ import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
-import { Banner, MDXComponents, PostList, PrevNextPost, Typography } from "#components";
-import { setImageMetaData, getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils";
+import Banner from "#components/Banner";
+import MDXComponents from "#components/MDXComponents";
+import PostList from "#components/PostList";
+import PrevNextPost from "#components/PrevNextPost";
+import Typography from "#components/Typography";
+import { setImageMetaData } from "#utils/image";
+import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
-import Link from "next/link";
-import { Metadata } from "next";
 
 export const dynamic = "error";
 

@@ -1,5 +1,5 @@
-import { Archive } from "#templates";
-import { getTags, getPostsByTag } from "#utils";
+import Archive from "#templates/Archive";
+import { getTags, getPostsByTag } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 
 export const dynamic = "error";
