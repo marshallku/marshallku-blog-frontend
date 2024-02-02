@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { classNames } from "@marshallku/utils";
 import { Icon } from "@marshallku/icon";
-import { useScroll } from "#hooks";
+import useScroll from "#hooks/useScroll";
 import styles from "./index.module.scss";
 
 export interface TopButtonProps {}

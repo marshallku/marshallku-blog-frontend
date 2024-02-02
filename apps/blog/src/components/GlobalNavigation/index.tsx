@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import { Logo, ThemeToggle, Typography } from "#components";
-import { getCategories } from "#utils";
+import Logo from "#components/Logo";
+import ThemeToggle from "#components/ThemeToggle";
+import Typography from "#components/Typography";
+import { getCategories } from "#utils/post";
 import styles from "./index.module.scss";
 
 const cx = classNames(styles, "global-navigation");

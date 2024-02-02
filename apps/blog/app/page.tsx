@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
-import { PostList, PostListGallery, Typography } from "#components";
-import { getCategories, getPosts } from "#utils";
+import PostList from "#components/PostList";
+import PostListGallery from "#components/PostListGallery";
+import Typography from "#components/Typography";
+import { getPosts, getCategories } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 import styles from "./page.module.scss";
-import { Icon } from "@marshallku/icon";
 
 export const dynamic = "error";
 

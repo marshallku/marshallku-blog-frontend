@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { getTags } from "#utils";
+import { getTags } from "#utils/post";
 
 export const dynamic = "error";
 

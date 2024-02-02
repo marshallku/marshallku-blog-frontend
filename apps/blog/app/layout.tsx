@@ -4,8 +4,10 @@ import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Footer, GlobalNavigation, TopButton } from "#components";
 import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
+import Footer from "#components/Footer";
+import GlobalNavigation from "#components/GlobalNavigation";
+import TopButton from "#components/TopButton";
 
 export const metadata: Metadata = {
     title: SITE_NAME,

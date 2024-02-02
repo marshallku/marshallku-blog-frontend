@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { Archive } from "#templates";
-import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils";
+import Archive from "#templates/Archive";
+import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 
 export const dynamic = "error";
