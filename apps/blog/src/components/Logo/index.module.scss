@@ -10,21 +10,23 @@
         }
     }
 
-    &--hover-animation {
-        path {
-            transition: transform 0.5s;
-        }
-
-        &:hover {
-            #{$self}__image > path {
-                transform: translate3d(331px, 0, 0);
+    @include supports-hover {
+        &--hover-animation {
+            path {
+                transition: transform 0.5s;
             }
 
-            #{$self}__text > path {
-                transform: translate3d(0, -600px, 0);
+            &:hover {
+                #{$self}__image > path {
+                    transform: translate3d(331px, 0, 0);
+                }
 
-                &:nth-child(2n) {
-                    transform: translate3d(0, 600px, 0);
+                #{$self}__text > path {
+                    transform: translate3d(0, -600px, 0);
+
+                    &:nth-child(2n) {
+                        transform: translate3d(0, 600px, 0);
+                    }
                 }
             }
         }
