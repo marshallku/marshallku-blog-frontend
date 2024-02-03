@@ -1,0 +1,52 @@
+.hamburger {
+    $self: &;
+
+    display: flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    transition: opacity 0.35s $ease-in-out-cubic;
+
+    &__line {
+        background-color: #bbb;
+        width: 20px;
+        height: 3px;
+        border-radius: 5px;
+        transition:
+            transform 0.35s $ease-in-out-cubic,
+            opacity 0.35s $ease-in-out-cubic;
+
+        &--middle {
+            margin: 3px 0;
+        }
+
+        @include supports-hover {
+            :global(#{$self}--animate:hover) & {
+                &--top {
+                    transform: rotate(45deg) scaleX(0.7) translate3d(calc(50% - 4px), -2px, 0);
+                }
+
+                &--bottom {
+                    transform: rotate(-45deg) scaleX(0.7) translate3d(calc(50% - 4px), 2px, 0);
+                }
+            }
+        }
+
+        :global(:is(#{$self}--opened, #{$self}--opened:hover)) & {
+            &--top {
+                transform: translate3d(0, 6px, 0) rotate(-135deg);
+            }
+
+            &--middle {
+                opacity: 0;
+                transform: rotate(135deg);
+            }
+
+            &--bottom {
+                transform: translate3d(0, -6px, 0) rotate(-45deg);
+            }
+        }
+    }
+}

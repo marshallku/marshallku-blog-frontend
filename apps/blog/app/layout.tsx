@@ -32,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {children}
                 <Footer />
                 <TopButton />
+                <div id="drawer-root" />
             </body>
         </html>
     );
