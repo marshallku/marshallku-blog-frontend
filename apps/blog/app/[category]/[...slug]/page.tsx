@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -31,6 +32,10 @@ interface PostProps {
 export async function generateMetadata({ params: { category, slug } }: PostProps) {
     const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
+    if (!post) {
+        return;
+    }
+
     const metaData: Metadata = {
         title: post.data.title,
         description: post.data.description,
@@ -49,9 +54,14 @@ export async function generateStaticParams() {
 const cx = classNames(styles, "page");
 
 export default async function Post({ params: { category, slug } }: PostProps) {
-    const categoryInfo = getCategoryBySlug(category);
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
     const post = getPostBySlug(postSlug);
+
+    if (!post) {
+        return notFound();
+    }
+
+    const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
 

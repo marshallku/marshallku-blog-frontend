@@ -17,8 +17,13 @@ export function getPostSlugs(subDirectory?: string) {
     return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.mdx$/, ""));
 }
 
-export function getPostBySlug(slug: string): Post {
+export function getPostBySlug(slug: string): Post | undefined {
     const fullPath = join(POSTS_DIRECTORY, `${slug}.mdx`);
+
+    if (!existsSync(fullPath)) {
+        return;
+    }
+
     const fileContents = readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
@@ -48,7 +53,7 @@ export function getPostsByTag(tag: string) {
 
 export function getPosts(category?: string) {
     return getPostSlugs(category)
-        .map((slug) => getPostBySlug(slug))
+        .map((slug) => getPostBySlug(slug)!)
         .sort((a, b) => {
             if (a.data.date.posted > b.data.date.posted) {
                 return -1;
