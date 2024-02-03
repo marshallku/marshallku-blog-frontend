@@ -13,28 +13,26 @@ const cx = classNames(styles, "top-button");
 function TopButton({}: TopButtonProps) {
     const { scroll } = useScroll();
     const progressRef = useRef<SVGSVGElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const circumference = useRef(0);
 
     useEffect(() => {
         const { current: progressElement } = progressRef;
+        const { current: buttonElement } = buttonRef;
         const handleScroll = () => {
-            if (!progressElement) {
-                return;
-            }
-
-            const circle = progressElement.querySelector("circle");
-
-            if (!circle) {
+            if (!progressElement || !buttonElement) {
                 return;
             }
 
             const { scrollY: currentScroll } = window;
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
-            const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrollProgress = (currentScroll / documentHeight) * circumference;
 
-            progressElement.style.strokeDasharray = `${circumference} ${circumference}`;
-            progressElement.style.strokeDashoffset = `${circumference - scrollProgress}`;
+            buttonElement.style.opacity = currentScroll <= 0 ? "0" : "1";
+
+            const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollProgress = (currentScroll / documentHeight) * circumference.current;
+
+            progressElement.style.strokeDasharray = `${circumference.current} ${circumference.current}`;
+            progressElement.style.strokeDashoffset = `${circumference.current - scrollProgress}`;
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
@@ -51,10 +49,21 @@ function TopButton({}: TopButtonProps) {
             onClick={() => {
                 scroll(0);
             }}
+            ref={buttonRef}
+            style={{ opacity: "0" }}
         >
             <Icon name="arrow-upward" />
             <svg className={cx("__progress")} width="30" height="30" ref={progressRef}>
-                <circle cx="15" cy="15" r="14" />
+                <circle
+                    cx="15"
+                    cy="15"
+                    r="14"
+                    ref={(element) => {
+                        if (element) {
+                            circumference.current = element.r.baseVal.value * 2 * Math.PI;
+                        }
+                    }}
+                />
             </svg>
         </button>
     );
