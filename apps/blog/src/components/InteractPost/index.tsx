@@ -24,6 +24,8 @@ function InteractPost({ className, title, slug }: InteractPostProps) {
                     `Discussion about ${title}`,
                 )}&assignees=marshallku&body=${encodeURIComponent(`Link of the post: ${url}\n\n---\n\n`)}`}
                 className={cx("__github")}
+                target="_blank"
+                rel="noreferrer noopener nofollow"
             >
                 <Icon name="github" />
                 Create an issue
