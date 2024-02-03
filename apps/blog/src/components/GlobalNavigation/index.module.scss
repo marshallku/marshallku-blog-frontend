@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 12px;
     background-color: rgba(0, 0, 0, 0.7);
     -webkit-backdrop-filter: blur(8px) saturate(180%);
     backdrop-filter: blur(8px) saturate(180%);
@@ -11,8 +11,6 @@
 
     &__container {
         display: flex;
-        width: clamp(0px, map-get($container-width, "large"), 100%);
-        margin: 0 auto;
         height: $global-navigation-height;
     }
 
@@ -31,10 +29,18 @@
         justify-content: flex-end;
     }
 
+    &__logo {
+        margin-left: 8px;
+    }
+
     &__category {
-        display: flex;
+        display: none;
         height: $global-navigation-height;
         align-items: center;
+
+        @include respond-to(medium) {
+            display: flex;
+        }
 
         a {
             @include typography(b2);

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
+import Drawer from "#components/Drawer";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
 import Typography from "#components/Typography";
@@ -14,7 +15,8 @@ function GlobalNavigation() {
         <nav className={cx()}>
             <div className={cx("__container")}>
                 <div className={cx("__left")}>
-                    <Link href="/">
+                    <Drawer />
+                    <Link href="/" className={cx("__logo")}>
                         <Logo animationOnHover forceWhiteColor />
                     </Link>
                 </div>
