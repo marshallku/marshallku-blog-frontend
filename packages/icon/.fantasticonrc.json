@@ -4,5 +4,6 @@
     "normalize": true,
     "fontTypes": ["svg", "woff"],
     "assetTypes": ["css", "ts", "json"],
-    "templates": { "css": "src/templates/css.hbs" }
+    "templates": { "css": "src/templates/css.hbs" },
+    "descent": 35
 }
