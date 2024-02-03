@@ -1,0 +1,89 @@
+{
+    "name": "Marshall K의 블로그",
+    "short_name": "Marshall K의 블로그",
+    "description": "HTML, CSS, Javascript, PHP, Node.js 등 웹 개발과 관련된 내용을 다룹니다.",
+    "icons": [
+        {
+            "src": "https://marshallku.com/logo/logo-128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://marshallku.com/logo/logo-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://marshallku.com/logo/logo-152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://marshallku.com/logo/logo-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://marshallku.com/logo/logo-256.png",
+            "sizes": "256x256",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://marshallku.com/logo/logo-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#f1718c",
+    "lang": "ko-KR",
+    "categories": ["web", "web development", "html", "css", "javascript", "typescript", "php", "node.js", "deno"],
+    "url": "https://marshallku.com",
+    "screenshots": [],
+    "orientation": "any",
+    "shortcuts": [
+        {
+            "name": "개발",
+            "icons": [{ "src": "/icons/web.png", "sizes": "192x192" }],
+            "url": "/dev"
+        },
+        {
+            "name": "작업물",
+            "icons": [{ "src": "/icons/work.png", "sizes": "192x192" }],
+            "url": "/work"
+        },
+        {
+            "name": "잡담",
+            "icons": [{ "src": "/icons/chat.png", "sizes": "192x192" }],
+            "url": "/chat"
+        },
+        {
+            "name": "갤러리",
+            "icons": [{ "src": "/icons/gallery.png", "sizes": "192x192" }],
+            "url": "/gallery"
+        },
+        {
+            "name": "기타",
+            "icons": [{ "src": "/icons/others.png", "sizes": "192x192" }],
+            "url": "/others"
+        },
+        {
+            "name": "공지",
+            "icons": [{ "src": "/icons/notice.png", "sizes": "192x192" }],
+            "url": "/notice"
+        },
+        {
+            "name": "방명록",
+            "icons": [{ "src": "/icons/guestbook.png", "sizes": "192x192" }],
+            "url": "/guestbook"
+        }
+    ]
+}
