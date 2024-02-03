@@ -10,11 +10,12 @@
     transition: opacity 0.35s $ease-in-out-cubic;
 
     &__line {
-        background-color: #bbb;
+        background-color: color(text);
         width: 20px;
         height: 3px;
         border-radius: 5px;
         transition:
+            background-color 0.35s $ease-in-out-cubic,
             transform 0.35s $ease-in-out-cubic,
             opacity 0.35s $ease-in-out-cubic;
 
@@ -35,6 +36,7 @@
         }
 
         :global(:is(#{$self}--opened, #{$self}--opened:hover)) & {
+            background-color: #fff;
             &--top {
                 transform: translate3d(0, 6px, 0) rotate(-135deg);
             }

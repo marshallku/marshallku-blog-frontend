@@ -17,6 +17,7 @@ import Typography from "#components/Typography";
 import { setImageMetaData } from "#utils/image";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
+import InteractPost from "#components/InteractPost";
 
 export const dynamic = "error";
 
@@ -57,6 +58,16 @@ export default async function Post({ params: { category, slug } }: PostProps) {
     return (
         <article className={cx()}>
             <Banner title={post.data.title} coverImage={post.data.coverImage}>
+                <div className={cx("__tags")}>
+                    {!!post.data.tags?.length &&
+                        post.data.tags.map((tag) => (
+                            <Link href={`/tag/${tag}`} key={tag}>
+                                <Typography variant="b2" component="span" marginBottom={24}>
+                                    <Icon name="tag" /> {tag}
+                                </Typography>
+                            </Link>
+                        ))}
+                </div>
                 <Typography variant="h1" component="h1" fontWeight={700} className={cx("__title")}>
                     {post.data.title}
                 </Typography>
@@ -90,16 +101,6 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                         </time>
                     </Typography>
                 )}
-                <div className={cx("__tags")}>
-                    {!!post.data.tags?.length &&
-                        post.data.tags.map((tag) => (
-                            <Link href={`/tag/${tag}`} key={tag}>
-                                <Typography variant="b2" component="span" marginBottom={24}>
-                                    <Icon name="tag" /> {tag}
-                                </Typography>
-                            </Link>
-                        ))}
-                </div>
             </div>
             <main className={cx("__body")}>
                 <MDXRemote
@@ -114,7 +115,10 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                     // @ts-expect-error
                                     rehypePrettyCode,
                                     {
-                                        theme: "solarized-light",
+                                        theme: {
+                                            dark: "one-dark-pro",
+                                            light: "solarized-light",
+                                        },
                                         keepBackground: true,
                                     },
                                 ],
@@ -123,7 +127,11 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                         },
                     }}
                 />
+                <Typography component="div" variant="c1" className={cx("__copyright")}>
+                    ⓒ {post.data.date.posted.getFullYear()}. Marshall K All rights reserved
+                </Typography>
             </main>
+            <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography

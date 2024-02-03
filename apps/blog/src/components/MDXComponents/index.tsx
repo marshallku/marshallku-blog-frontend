@@ -1,6 +1,7 @@
 import { HTMLProps } from "react";
 import NextImage from "next/image";
 import NextLink from "next/link";
+import { Icon } from "@marshallku/icon";
 
 function Image({ src, alt, width, height, title }: HTMLProps<HTMLImageElement>) {
     if (!src) {
@@ -34,20 +35,29 @@ function Image({ src, alt, width, height, title }: HTMLProps<HTMLImageElement>) 
     );
 }
 
-function Link({ href, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "ref">) {
+function Link({ href, children, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "ref">) {
     if (!href) {
         return null;
     }
 
     if (href.startsWith("#")) {
-        return <a href={href} {...rest} />;
+        return (
+            <a href={href} {...rest}>
+                {children}
+            </a>
+        );
     }
 
     if (href.startsWith("http")) {
-        return <a className="external-link" href={href} {...rest} target="_blank" rel="noopener noreferrer" />;
+        return (
+            <a className="external-link" href={href} {...rest} target="_blank" rel="noopener noreferrer">
+                {children}
+                <Icon name="open-in-new" />
+            </a>
+        );
     }
 
-    return <NextLink data-foo="id" href={href} {...rest} />;
+    return <NextLink data-foo="id" href={href} children={children} {...rest} />;
 }
 
 const MDXComponents = {

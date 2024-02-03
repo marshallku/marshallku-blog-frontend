@@ -1,0 +1,22 @@
+.interact-post {
+    display: flex;
+    justify-content: space-between;
+
+    &__github {
+        display: inline-block;
+        padding: 4px 8px;
+        border: 1px solid color(sub);
+        border-radius: 2em;
+
+        i {
+            margin-right: 4px;
+        }
+    }
+
+    &__send {
+        display: inline-block;
+        padding: 4px;
+        border: 1px solid color(sub);
+        border-radius: 2em;
+    }
+}
