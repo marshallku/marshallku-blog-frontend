@@ -1,0 +1,3 @@
+{
+    "extends": ["@marshallku/eslint-config/react.js"]
+}
