@@ -6,7 +6,7 @@
         fill: color(text);
 
         @at-root #{$self}--white & {
-            fill: #fff;
+            fill: color(text);
         }
     }
 

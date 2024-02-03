@@ -43,6 +43,7 @@
         "Promiseable",
         "rabbitmq",
         "raspberrypi",
+        "shiki",
         "sonarqube",
         "sonarsource",
         "tailwindcss",

@@ -1,4 +1,5 @@
 import "@marshallku/icon/dist/icons.css";
+import "@marshallku/toast/dist/index.css";
 import "#styles/reset.scss";
 import "#styles/globals.scss";
 import "./globals.css";
