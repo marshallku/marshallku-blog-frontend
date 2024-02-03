@@ -51,6 +51,3 @@ function $component_name({}: ${component_name}Props) {
 }
 
 export default $component_name" >>"$component_dir"/index.tsx
-
-# Update barrel file
-echo "export { default as $component_name, type ${component_name}Props } from './$name';" >>apps/blog/src/$directory/index.ts
