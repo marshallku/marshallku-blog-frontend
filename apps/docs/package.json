@@ -17,6 +17,7 @@
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/typescript-config": "workspace:*",
         "@storybook/addon-actions": "^7.6.7",
         "@storybook/addon-docs": "^7.6.7",
         "@storybook/addon-essentials": "^7.6.7",
@@ -25,9 +26,9 @@
         "@storybook/react-vite": "^7.6.7",
         "@vitejs/plugin-react": "^4.2.1",
         "eslint": "^8.56.0",
+        "eslint-plugin-import": "^2.29.1",
         "serve": "^14.2.1",
         "storybook": "^7.6.7",
-        "@marshallku/typescript-config": "workspace:*",
         "typescript": "^5.3.3",
         "vite": "^5.0.10"
     }

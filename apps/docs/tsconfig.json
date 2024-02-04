@@ -1,5 +1,13 @@
 {
     "extends": "@marshallku/typescript-config/react-app.json",
     "include": ["."],
-    "exclude": ["dist", "build", "node_modules"]
+    "exclude": ["dist", "build", "node_modules"],
+    "compilerOptions": {
+        "paths": {
+            "@ui": ["../../packages/ui/src"],
+            "#*": ["../../packages/ui/src/*"],
+            "@icon": ["../../packages/icon/dist"],
+            "@icon/*": ["../../packages/icon/dist/*"]
+        }
+    }
 }
