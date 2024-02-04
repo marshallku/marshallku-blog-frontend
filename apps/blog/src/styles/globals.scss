@@ -46,6 +46,11 @@ html[data-theme="sepia"] {
     color: get-color($sepia-palette, text);
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 a {
     text-decoration: none;
     color: color(text);

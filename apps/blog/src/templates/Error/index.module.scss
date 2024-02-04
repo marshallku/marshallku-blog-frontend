@@ -1,0 +1,31 @@
+.error {
+    flex-grow: 1;
+    padding: 120px 12px;
+    text-align: center;
+
+    &__ufo {
+        @keyframes ufo {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        width: 100px;
+        height: 100px;
+        margin-bottom: 16px;
+        animation: ufo 1s infinite;
+    }
+
+    &__buttons {
+        display: flex;
+        margin-bottom: 16px;
+        justify-content: center;
+        gap: 8px;
+    }
+}
