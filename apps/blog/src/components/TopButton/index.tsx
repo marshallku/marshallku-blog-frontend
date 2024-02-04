@@ -6,11 +6,9 @@ import { Icon } from "@marshallku/icon";
 import useScroll from "#hooks/useScroll";
 import styles from "./index.module.scss";
 
-export interface TopButtonProps {}
-
 const cx = classNames(styles, "top-button");
 
-function TopButton({}: TopButtonProps) {
+function TopButton() {
     const { scroll } = useScroll();
     const progressRef = useRef<SVGSVGElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);

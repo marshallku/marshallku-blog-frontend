@@ -32,4 +32,8 @@ module.exports = {
         "node_modules/",
     ],
     overrides: [{ files: ["*.js?(x)", "*.ts?(x)"] }],
+    rules: {
+        "@next/next/no-img-element": "off",
+        "no-unused-vars": "off",
+    },
 };

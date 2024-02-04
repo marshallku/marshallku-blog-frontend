@@ -1,4 +1,8 @@
-export default function classNames(styles: Record<string, string> = {}, rootClassName = "") {
+export default function classNames(
+    styles: Record<string, string> = {},
+    rootClassName = "",
+): (...names: unknown[]) => string {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const hasOwn = {}.hasOwnProperty;
     const func = (...names: unknown[]): string => {
         const classes: unknown[] = [];
@@ -23,7 +27,7 @@ export default function classNames(styles: Record<string, string> = {}, rootClas
             const nameType = typeof name;
 
             if (nameType === "string" || nameType === "number") {
-                const nameWithRoot = rootClassName + name;
+                const nameWithRoot = rootClassName + (name as number | string);
                 classes.push(styles[nameWithRoot] || nameWithRoot);
                 continue;
             }
