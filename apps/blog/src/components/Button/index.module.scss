@@ -1,0 +1,96 @@
+.button {
+    $self: &;
+    border: 1px solid;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+    // resizing
+    &--resizing-hug {
+        display: inline-flex;
+    }
+    &--resizing-fill {
+        display: flex;
+        width: 100%;
+    }
+
+    // size
+    &--size-large {
+        padding: 13px 21px;
+    }
+
+    &--size-medium {
+        padding: 9px 15px;
+    }
+
+    &--size-small {
+        padding: 5px 11px;
+    }
+
+    // variant
+    &--variant-base {
+        padding: 0;
+        border: none;
+
+        &#{$self}--disabled {
+            color: color(grayscale, 500);
+        }
+    }
+
+    &--variant-text {
+        border-color: transparent;
+
+        &#{$self}--disabled {
+            color: color(grayscale, 500);
+        }
+    }
+
+    &--variant-primary {
+        border-color: color(theme);
+        background-color: color(theme);
+        color: color(comment-2);
+
+        &#{$self}--disabled {
+            border-color: color(grayscale, 200);
+            background-color: color(grayscale, 200);
+            color: color(grayscale, 500);
+        }
+    }
+
+    &--variant-secondary {
+        border-color: color(grayscale, 200);
+        background-color: color(grayscale, 50);
+        color: color(text);
+
+        &#{$self}--disabled {
+            color: color(grayscale, 500);
+        }
+    }
+
+    &--variant-outline {
+        border-color: color(grayscale, 300);
+        background-color: color(background);
+        color: color(text);
+
+        &#{$self}--disabled {
+            color: color(grayscale, 500);
+        }
+    }
+
+    // radius
+    &--radius-square {
+        border-radius: 0;
+    }
+
+    &--radius-rounded {
+        border-radius: 6px;
+    }
+
+    &--radius-capsule {
+        border-radius: 32px;
+    }
+
+    &--radius-circle {
+        border-radius: 50%;
+    }
+}
