@@ -1,5 +1,6 @@
+import { notFound } from "next/navigation";
 import Archive from "#templates/Archive";
-import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
+import { checkCategoryExists, getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 
 export const dynamic = "error";
@@ -29,6 +30,9 @@ export function generateStaticParams() {
 }
 
 export default async function ArchivePage({ params: { category } }: ArchiveProps) {
+    if (!checkCategoryExists(category)) {
+        return notFound();
+    }
     const posts = getPosts(category);
     const postsInPage = posts.slice(0, PAGE_SIZE);
     const categoryInfo = getCategoryBySlug(`/${category}`);

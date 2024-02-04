@@ -5,10 +5,19 @@ import { POSTS_DIRECTORY } from "#constants";
 import { Category, Post } from "#types";
 import { walk } from "./file";
 
+export function checkCategoryExists(category: string) {
+    return existsSync(join(POSTS_DIRECTORY, category));
+}
+
 export function getPostSlugs(subDirectory?: string) {
     const files: string[] = [];
+    const fullPath = subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY;
 
-    walk(subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY, (path) => {
+    if (!existsSync(fullPath)) {
+        return [];
+    }
+
+    walk(fullPath, (path) => {
         if (path.endsWith(".mdx")) {
             files.push(path);
         }
