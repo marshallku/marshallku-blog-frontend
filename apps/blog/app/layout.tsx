@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     assets: [
         "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
+        "https://fonts.googleapis.com/css2?family=Fira+Code&display=swap",
     ],
     manifest: "/manifest.json",
 };
