@@ -1,6 +1,6 @@
 ---
 title: \[자바스크립트\] 부모창과 자식창 정보 교환
-description: window.open() 혹은 a (anchor) 태그에 target=&quot;_blank&quot; 어트리븃을 붙여서 연 윈도우와 원래 윈도우 간 정보 교환하는 방법입니다. 새 윈도우를 연 창을 부모창, 부모창에 의해 window.open()이나 a 태그로 열린 창을 자식창이라 칭하겠습니다. 부모창에서 자식창 접근 &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt;     &lt;title&gt;부모창&lt;/title&gt; &lt;/head&gt; &lt;body&gt;     &lt;input type=&quot;text&quot; id=&quot;parentInput&quot;&gt;     &lt;div id=&quot;childOutput&quot;&gt;&lt;/div&gt;&lt;button id=&quot;getChildOutput&quot;&gt;자식창 입력 가져오기&lt;/button&gt;     &lt;script&gt;         const newWindow = window.open(&quot;tmp-child.html&quot;);                      document.getElementById(&quot;getChildOutput&quot;).addEventListener(&quot;click&quot;, () =&gt; {             document.getElementById(&quot;childOutput&quot;).innerText = newWindow.document.getElementById(&quot;childInput&quot;).value         })     &lt;/script&gt; &lt;/body&gt; &lt;/html&gt; window.open() 함수를 변수에 집어넣고(예시에선 newWindow),
+description: window.open() 혹은 a (anchor) 태그에 target="_blank" 어트리븃을 붙여서 연 윈도우와 원래 윈도우 간 정보 교환하는 방법입니다.
 date:
   posted: 2019-09-23T16:19:00.000Z
   modified: 2023-11-19T07:56:00.000Z
