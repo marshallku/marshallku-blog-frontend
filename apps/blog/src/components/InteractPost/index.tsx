@@ -7,6 +7,7 @@ import { toast } from "@marshallku/toast";
 import styles from "./index.module.scss";
 import Button from "#components/Button";
 import { AnchorHTMLAttributes } from "react";
+import ReportIssueButton from "#components/ReportIssueButton";
 
 export interface InteractPostProps {
     className?: string;
@@ -21,18 +22,7 @@ function InteractPost({ className, title, slug }: InteractPostProps) {
     const url = `https://marshallku.com/${slug}`;
     return (
         <div className={cx("", { className })}>
-            <Button
-                component={(x: AnchorHTMLAttributes<HTMLAnchorElement>) => <a {...x} />}
-                href={`https://github.com/marshallku/marshallku-blog-frontend/issues/new?title=${encodeURIComponent(
-                    `Discussion about ${title}`,
-                )}&assignees=marshallku&body=${encodeURIComponent(`Link of the post: ${url}\n\n---\n\n`)}`}
-                className={cx("__github")}
-                target="_blank"
-                rel="noreferrer noopener nofollow"
-            >
-                <Icon name="github" />
-                Report an issue
-            </Button>
+            <ReportIssueButton title={`Discussion about ${title}`} body={`Link of the post: ${url}\n\n---\n\n`} />
             <div className={cx("__send")}>
                 <Button
                     onClick={() => {
