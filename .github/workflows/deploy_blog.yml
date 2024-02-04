@@ -18,9 +18,7 @@ jobs:
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.ED_KEY }}
                   script_stop: true
-                  script: |
-                      cd /var/www
-                      ./deploy.sh gifconverter
+                  script: bash ~/dev/deploy-blog-frontend.sh
     send-notification:
         needs: [deploy]
         if: ${{ failure() }}
