@@ -28,7 +28,7 @@ function InteractPost({ className, title, slug }: InteractPostProps) {
                 rel="noreferrer noopener nofollow"
             >
                 <Icon name="github" />
-                Create an issue
+                Report an issue
             </a>
             <div className={cx("__send")}>
                 <button
