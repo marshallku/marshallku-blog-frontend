@@ -11,7 +11,7 @@ export interface PrevNextPostProps {
 
 const cx = classNames(styles, "prev-next-post");
 
-const Post = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolean }) => (
+const Article = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolean }) => (
     <article className={cx("-post", isPreviousPost && "-post--previous")}>
         <Link href={post.slug} className={cx("-post__meta")}>
             <Typography variant="c1" className={cx("-post__label")}>
@@ -28,8 +28,8 @@ const Post = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolean }
 function PrevNextPost({ previousPost, nextPost }: PrevNextPostProps) {
     return (
         <aside className={cx()}>
-            {previousPost && <Post post={previousPost} isPreviousPost />}
-            {nextPost && <Post post={nextPost} />}
+            {previousPost && <Article post={previousPost} isPreviousPost />}
+            {nextPost && <Article post={nextPost} />}
         </aside>
     );
 }

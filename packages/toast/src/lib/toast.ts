@@ -10,10 +10,10 @@ export interface ToastOption {
 export default function toast(
     message: string,
     { timeout = DEFAULT_TIMEOUT, removable = false, bottom = 24 }: ToastOption = {},
-) {
+): void {
     let removed = false;
     const div = document.createElement("div");
-    const removeElement = () => {
+    const removeElement = (): void => {
         if (removed) {
             return;
         }
@@ -30,7 +30,9 @@ export default function toast(
         div.style.removeProperty("transform");
     };
 
-    document.querySelectorAll(`.${CLASS_NAME}`).forEach((elt) => elt.remove());
+    document.querySelectorAll(`.${CLASS_NAME}`).forEach((elt) => {
+        elt.remove();
+    });
 
     div.classList.add(CLASS_NAME);
     div.innerText = message;

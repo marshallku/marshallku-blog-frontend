@@ -11,6 +11,7 @@ export type ButtonRadius = "square" | "rounded" | "capsule" | "circle";
 export type ButtonResizing = "hug" | "fill";
 
 export type ButtonProps<T extends object = Record<never, never>> = ButtonHTMLAttributes<HTMLButtonElement> & {
+    // eslint-disable-next-line no-unused-vars
     component?(props: T): ReactNode;
     /**
      * Size of the padding and font
