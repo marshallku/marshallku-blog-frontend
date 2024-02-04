@@ -16,6 +16,30 @@ const nextConfig = {
         prependData:
             '@import "src/styles/abstracts/_variables.scss";@import "src/styles/abstracts/_palette.scss";@import "src/styles/abstracts/_fonts.scss";@import "src/styles/abstracts/_mixins.scss";',
     },
+    async redirects() {
+        return [
+            {
+                source: "/web/tips/:path*",
+                destination: "/dev/:path*",
+                permanent: true
+            },
+            {
+                source: "/web/log/:path*",
+                destination: "/dev/:path*",
+                permanent: true
+            },
+            {
+                source: "/web/:path*",
+                destination: "/dev/:path*",
+                permanent: true
+            },
+            {
+                source: "/rss",
+                destination: "/feed.xml",
+                permanent: true
+            }
+        ];
+    },
 };
 
 if (analyzing) {
