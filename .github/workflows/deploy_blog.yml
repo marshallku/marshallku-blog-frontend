@@ -21,3 +21,12 @@ jobs:
                   script: |
                       cd /var/www
                       ./deploy.sh gifconverter
+    send-notification:
+        needs: [deploy]
+        if: ${{ failure() }}
+        uses: marshallku/actions/.github/workflows/send-notification.yml@master
+        with:
+            failed: ${{ contains(join(needs.*.result, ','), 'failure') }}
+            message: "CI job failed - push"
+        secrets:
+            url: ${{ secrets.DISCORD_WEBHOOK_URI }}
