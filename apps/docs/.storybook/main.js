@@ -29,6 +29,22 @@ const config = {
                         find: "ui",
                         replacement: resolve(__dirname, "../../../packages/ui/"),
                     },
+                    {
+                        find: "@ui",
+                        replacement: resolve("../../packages/ui/src"),
+                    },
+                    {
+                        find: "@dist",
+                        replacement: resolve("../../packages/ui/dist"),
+                    },
+                    {
+                        find: /#/,
+                        replacement: `${resolve("../../packages/ui/src")}/`,
+                    },
+                    {
+                        find: "@icon",
+                        replacement: resolve("../../packages/icon/dist"),
+                    },
                 ],
             },
         };
