@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     assets: [
         "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
     ],
+    manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,6 +35,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Footer />
                 <TopButton />
                 <div id="drawer-root" />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(function(){if("serviceWorker" in navigator) {window.addEventListener("load",() => {navigator.serviceWorker.register("/service-worker.js")})}})()`,
+                    }}
+                />
             </body>
         </html>
     );
