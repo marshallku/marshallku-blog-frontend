@@ -5,6 +5,7 @@ import "#styles/globals.scss";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import Footer from "#components/Footer";
 import GlobalNavigation from "#components/GlobalNavigation";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         __html: `(function(){if("serviceWorker" in navigator) {window.addEventListener("load",() => {navigator.serviceWorker.register("/service-worker.js")})}})()`,
                     }}
                 />
+                <GoogleAnalytics gaId="G-WPZTSDZ027" />
             </body>
         </html>
     );
