@@ -143,7 +143,6 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
-            <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography
                     variant="h4"
