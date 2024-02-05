@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { classNames, formatDate } from "@marshallku/utils";
+import Image from "#components/Image";
 import Typography from "#components/Typography";
 import { Post } from "#types";
 import styles from "./index.module.scss";
@@ -15,7 +16,7 @@ export default function PostCard({ post }: PostCardProps) {
         <article className={cx()}>
             {post.data.ogImage && (
                 <figure className={cx("__image")}>
-                    <img src={post.data.ogImage} alt={post.data.title} />
+                    <Image src={`${post.data.ogImage}=w300`} alt={post.data.title} />
                 </figure>
             )}
             <header className={cx("__header")}>

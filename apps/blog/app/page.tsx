@@ -3,6 +3,7 @@ import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
 import PostList from "#components/PostList";
 import PostListGallery from "#components/PostListGallery";
+import Image from "#components/Image";
 import Typography from "#components/Typography";
 import { getPosts, getCategories } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
@@ -22,7 +23,7 @@ export default async function Home() {
         <section className={cx()}>
             <header className={cx("-header")}>
                 <figure className={cx("-header__cover")}>
-                    <img src={mostRecentPost.data.coverImage} alt={mostRecentPost.data.title} />
+                    <Image src={mostRecentPost.data.coverImage} alt={mostRecentPost.data.title} />
                 </figure>
                 <div className={cx("-header__content")}>
                     <Typography variant="c1">
