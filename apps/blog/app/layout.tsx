@@ -19,6 +19,13 @@ export const metadata: Metadata = {
         "https://fonts.googleapis.com/css2?family=Fira+Code&display=swap",
     ],
     manifest: "/manifest.json",
+    themeColor: "#f1718c",
+    applicationName: SITE_NAME,
+    icons: [
+        { rel: "icon", url: "https://marshallku.com/favicon.ico" },
+        { rel: "apple-touch-icon", url: "https://marshallku.com/logo/logo-152.png" },
+        { rel: "apple-touch-icon-precomposed", url: "https://marshallku.com/favicon.ico" },
+    ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
