@@ -32,7 +32,10 @@ export default async function Home() {
                         <Link href={mostRecentPost.slug}>{mostRecentPost.data.title}</Link>
                     </Typography>
                     <Typography variant="b2">
-                        <Link href={mostRecentPost.slug}>{mostRecentPost.data.description}</Link>
+                        <Link href={mostRecentPost.slug}>
+                            {mostRecentPost.data.description}
+                            <br />더 보기 <Icon name="arrow-forward" />
+                        </Link>
                     </Typography>
                 </div>
             </header>
