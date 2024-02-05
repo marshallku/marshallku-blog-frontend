@@ -13,7 +13,6 @@ import { classNames, formatDate } from "@marshallku/utils";
 import Banner from "#components/Banner";
 import MDXComponents from "#components/MDXComponents";
 import PostList from "#components/PostList";
-import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
@@ -63,7 +62,6 @@ export default async function Post({ params: { category, slug } }: PostProps) {
 
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
-    const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
 
     return (
         <article className={cx()}>
