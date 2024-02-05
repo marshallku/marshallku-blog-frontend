@@ -15,7 +15,7 @@ import MDXComponents from "#components/MDXComponents";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
-import { setImageMetaData } from "#utils/rehype";
+import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
 import InteractPost from "#components/InteractPost";
@@ -115,7 +115,6 @@ export default async function Post({ params: { category, slug } }: PostProps) {
             <main className={cx("__body")}>
                 <MDXRemote
                     source={post.content}
-                    components={MDXComponents}
                     options={{
                         mdxOptions: {
                             remarkPlugins: [remarkToc, remarkGfm, remarkSlug, remarkUnwrapImages],
@@ -133,9 +132,11 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                     },
                                 ],
                                 setImageMetaData,
+                                makeIframeResponsive,
                             ],
                         },
                     }}
+                    components={MDXComponents}
                 />
                 <Typography component="div" variant="c1" className={cx("__copyright")}>
                     ⓒ {post.data.date.posted.getFullYear()}. Marshall K All rights reserved
