@@ -9,7 +9,7 @@
         "dev": {
             "cache": false,
             "persistent": true,
-            "env": ["NEXT_PUBLIC_BLOG_ORIGIN"]
+            "env": ["NEXT_PUBLIC_BLOG_ORIGIN", "NEXT_PUBLIC_CDN_URL"]
         },
         "clean": {
             "cache": false

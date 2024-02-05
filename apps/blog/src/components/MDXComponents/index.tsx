@@ -1,7 +1,9 @@
 import { HTMLProps } from "react";
-import NextImage from "next/image";
 import NextLink from "next/link";
 import { Icon } from "@marshallku/icon";
+import CustomImage from "#components/Image";
+
+const IMAGE_SIZE = [480, 600, 860, 1180];
 
 function Image({ src, alt, width, height, title }: HTMLProps<HTMLImageElement>) {
     if (!src) {
@@ -29,7 +31,7 @@ function Image({ src, alt, width, height, title }: HTMLProps<HTMLImageElement>) 
 
     return (
         <figure className="image-block">
-            <NextImage src={src} alt={alt || ""} width={Number(width)} height={Number(height)} />
+            <CustomImage src={src} alt={alt || ""} width={width} height={height} />
             {title && <figcaption>{title}</figcaption>}
         </figure>
     );

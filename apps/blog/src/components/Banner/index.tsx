@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { classNames } from "@marshallku/utils";
+import Image from "#components/Image";
 import styles from "./index.module.scss";
 
 export interface BannerProps {
@@ -14,7 +15,7 @@ function Banner({ title, coverImage, children }: BannerProps) {
     return (
         <header className={cx("__header")}>
             <figure className={cx("__cover")}>
-                <img src={coverImage} alt={title} />
+                <Image src={coverImage} alt={title} />
             </figure>
             {children && <div className={cx("__content")}>{children}</div>}
         </header>

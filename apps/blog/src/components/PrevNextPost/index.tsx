@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { classNames } from "@marshallku/utils";
+import Image from "#components/Image";
 import Typography from "#components/Typography";
 import { Post } from "#types";
 import styles from "./index.module.scss";
@@ -21,7 +22,7 @@ const Article = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolea
                 {post.data.title}
             </Typography>
         </Link>
-        <img className={cx("-post__cover-image")} src={post.data.coverImage} alt={post.data.title} />
+        <Image className={cx("-post__cover-image")} src={post.data.coverImage} alt={post.data.title} />
     </article>
 );
 
