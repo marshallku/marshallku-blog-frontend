@@ -15,7 +15,7 @@ interface ImageNode extends Node {
     };
 }
 
-export function isExternalImage(path: string) {
+function isExternalImage(path: string) {
     return path.startsWith("http");
 }
 

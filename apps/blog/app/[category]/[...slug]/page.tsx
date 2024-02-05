@@ -15,7 +15,7 @@ import MDXComponents from "#components/MDXComponents";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
-import { setImageMetaData } from "#utils/image";
+import { setImageMetaData } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
 import InteractPost from "#components/InteractPost";
