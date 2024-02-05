@@ -14,8 +14,8 @@ function Image({ src, alt, width, height, ...rest }: HTMLProps<HTMLImageElement>
                     : undefined
             }
             alt={alt || ""}
-            width={Number(width)}
-            height={Number(height)}
+            width={width}
+            height={height}
             loading="lazy"
             {...rest}
         />
