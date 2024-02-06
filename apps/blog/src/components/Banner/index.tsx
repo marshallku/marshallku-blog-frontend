@@ -15,7 +15,7 @@ function Banner({ title, coverImage, children }: BannerProps) {
     return (
         <header className={cx("__header")}>
             <figure className={cx("__cover")}>
-                <Image src={coverImage} alt={title} />
+                <Image src={coverImage} alt={title} loading="eager" />
             </figure>
             {children && <div className={cx("__content")}>{children}</div>}
         </header>

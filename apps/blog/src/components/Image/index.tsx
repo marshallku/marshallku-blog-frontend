@@ -1,6 +1,6 @@
-import { type HTMLProps } from "react";
+import { type ImgHTMLAttributes } from "react";
 
-interface ImageProps extends HTMLProps<HTMLImageElement> {
+interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
     forceSize?: number;
 }
 
