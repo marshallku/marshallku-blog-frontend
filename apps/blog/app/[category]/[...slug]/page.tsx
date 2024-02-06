@@ -36,6 +36,7 @@ export async function generateMetadata({ params: { category, slug } }: PostProps
     }
 
     const metaData: Metadata = {
+        metadataBase: new URL("https://marshallk.com"),
         title: post.data.title,
         description: post.data.description,
         openGraph: {
