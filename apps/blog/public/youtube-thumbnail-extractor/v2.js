@@ -31,9 +31,9 @@
     m();
     const a = ["maxresdefault", "sddefault", "hqdefault", "mqdefault", "default"];
     function d(n) {
-        const r = /youtu\.?be(\.com)?\/(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/,
+        const r = /youtu\.?be(\.com)?\/(live\/)?(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/,
             i = n.match(r);
-        return i ? i[3] : "";
+        return i ? i[4] : "";
     }
     function f(n) {
         return a.map((r) => `https://i.ytimg.com/vi/${n}/${r}.jpg`);
