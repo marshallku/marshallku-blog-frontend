@@ -16,7 +16,7 @@ export default function PostCard({ post }: PostCardProps) {
         <article className={cx()}>
             {post.data.ogImage && (
                 <figure className={cx("__image")}>
-                    <Image src={post.data.ogImage} alt={post.data.title} forceSize={300} />
+                    <Image src={post.data.ogImage} alt={post.data.title} forceSize={500} />
                 </figure>
             )}
             <header className={cx("__header")}>
