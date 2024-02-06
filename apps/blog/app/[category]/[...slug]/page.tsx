@@ -38,6 +38,21 @@ export async function generateMetadata({ params: { category, slug } }: PostProps
     const metaData: Metadata = {
         title: post.data.title,
         description: post.data.description,
+        openGraph: {
+            type: "article",
+            title: post.data.title,
+            description: post.data.description,
+            url: `https://marshallk.com/${post.slug}`,
+            publishedTime: post.data.date.posted.toISOString(),
+            modifiedTime: post.data.date.modified?.toISOString(),
+            tags: post.data.tags,
+            images: [
+                {
+                    url: post.data.ogImage,
+                    alt: post.data.title,
+                },
+            ],
+        },
     };
 
     return metaData;
