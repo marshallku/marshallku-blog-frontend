@@ -1,13 +1,19 @@
 import { type HTMLProps } from "react";
 
+interface ImageProps extends HTMLProps<HTMLImageElement> {
+    forceSize?: number;
+}
+
 const IMAGE_SIZE = [480, 600, 860, 1180];
 
-function Image({ src, alt, width, height, ...rest }: HTMLProps<HTMLImageElement>) {
+function Image({ src, alt, width, height, forceSize, ...rest }: ImageProps) {
     return (
         <img
-            src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}`}
+            src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}${
+                forceSize && process.env.NODE_ENV !== "development" ? `=w${forceSize}` : ""
+            }`}
             srcSet={
-                width && height
+                width && height && process.env.NODE_ENV !== "development"
                     ? IMAGE_SIZE.filter((size) => size < Number(width))
                           .map((size) => `${process.env.NEXT_PUBLIC_CDN_URL}${src}=w${size} ${size}w`)
                           .join(", ")
