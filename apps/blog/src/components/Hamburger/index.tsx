@@ -21,6 +21,7 @@ function Hamburger({ className, opened, animationOnHover, direction = "right", o
             <div className={cx("__line", "__line--top")} />
             <div className={cx("__line", "__line--middle")} />
             <div className={cx("__line", "__line--bottom")} />
+            <span className="sr-only">{opened ? "메뉴 닫기" : "메뉴 열기"}</span>
         </button>
     );
 }

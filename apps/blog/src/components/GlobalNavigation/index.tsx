@@ -18,6 +18,7 @@ function GlobalNavigation() {
                     <Drawer />
                     <Link href="/" className={cx("__logo")}>
                         <Logo animationOnHover forceWhiteColor />
+                        <span className="sr-only">홈으로 이동</span>
                     </Link>
                 </div>
                 <div className={cx("__center")}>
