@@ -4,7 +4,7 @@ import "#styles/reset.scss";
 import "#styles/globals.scss";
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import Footer from "#components/Footer";
@@ -19,13 +19,17 @@ export const metadata: Metadata = {
         "https://fonts.googleapis.com/css2?family=Fira+Code&display=swap",
     ],
     manifest: "/manifest.json",
-    themeColor: "#f1718c",
     applicationName: SITE_NAME,
     icons: [
         { rel: "icon", url: "https://marshallku.com/favicon.ico" },
         { rel: "apple-touch-icon", url: "https://marshallku.com/logo/logo-152.png" },
         { rel: "apple-touch-icon-precomposed", url: "https://marshallku.com/favicon.ico" },
     ],
+    authors: [{ url: "https://marshallku.com/", name: "Marshall K" }],
+};
+
+export const viewport: Viewport = {
+    themeColor: "#f1718c",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
