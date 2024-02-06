@@ -29,12 +29,23 @@ function Footer() {
                 <div className={cx("__contact")}>
                     <a href="https://github.com/marshallku" target="_blank" rel="noopener noreferrer nofollow">
                         <Icon name="github" />
+                        <span className="sr-only">GitHub</span>
+                    </a>
+                    <a
+                        href="https://www.linkedin.com/in/marshallku/"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                    >
+                        <Icon name="linkedin" />
+                        <span className="sr-only">GitHub</span>
                     </a>
                     <a href="tel:01066531143">
                         <Icon name="call" />
+                        <span className="sr-only">010-6653-1143</span>
                     </a>
                     <a href="mailto:marshall@kakao.com">
                         <Icon name="mail" />
+                        <span className="sr-only">marshall@kakao.com</span>
                     </a>
                 </div>
                 <Typography marginBottom={8}>
