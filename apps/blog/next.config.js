@@ -2,14 +2,13 @@
 const path = require("path");
 
 const analyzing = process.env.ANALYZE === "true";
-const isProd = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
     transpilePackages: ["@marshallku/ui"],
     output: "standalone",
-    assetPrefix: isProd ? "https://cdn-t.marshallku.com/files" : undefined,
+    assetPrefix: process.env.NEXT_PUBLIC_FILE_CDN_URL,
     experimental: {
         outputFileTracingRoot: path.join(__dirname, "../../"),
     },

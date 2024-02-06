@@ -10,10 +10,10 @@ function Image({ src, alt, width, height, forceSize, ...rest }: ImageProps) {
     return (
         <img
             src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}${
-                forceSize && process.env.NODE_ENV !== "development" ? `=w${forceSize}` : ""
+                forceSize && process.env.NEXT_PUBLIC_CDN_URL !== "" ? `=w${forceSize}` : ""
             }`}
             srcSet={
-                width && height && process.env.NODE_ENV !== "development"
+                width && height && process.env.NEXT_PUBLIC_CDN_URL !== ""
                     ? IMAGE_SIZE.filter((size) => size < Number(width))
                           .map((size) => `${process.env.NEXT_PUBLIC_CDN_URL}${src}=w${size} ${size}w`)
                           .join(", ")
