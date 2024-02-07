@@ -36,14 +36,14 @@ export async function generateMetadata({ params: { category, slug } }: PostProps
     }
 
     const metaData: Metadata = {
-        metadataBase: new URL("https://marshallk.com"),
+        metadataBase: new URL("https://marshallku.com"),
         title: post.data.title,
         description: post.data.description,
         openGraph: {
             type: "article",
             title: post.data.title,
             description: post.data.description,
-            url: `https://marshallk.com/${post.slug}`,
+            url: `https://marshallku.com/${post.slug}`,
             publishedTime: post.data.date.posted.toISOString(),
             modifiedTime: post.data.date.modified?.toISOString(),
             tags: post.data.tags,
