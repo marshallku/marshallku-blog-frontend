@@ -1,0 +1,50 @@
+.tag-cloud {
+    display: flex;
+    padding: $global-navigation-height + 20px 12px 10px;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    a {
+        background-color: color(main);
+        border-radius: 0 3px 3px 0;
+        color: #fff;
+        display: inline-block;
+        font-size: 13px;
+        height: 30px;
+        line-height: 30px;
+        margin-right: 12px;
+        padding: 0 1em;
+        position: relative;
+        text-decoration: none;
+
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+        }
+
+        &::before {
+            background-color: color(background);
+            border-radius: 100%;
+            display: block;
+            height: 6px;
+            left: 0;
+            margin-top: -3px;
+            top: 50%;
+            width: 6px;
+            z-index: 3;
+        }
+
+        &::after {
+            border: solid transparent;
+            border-color: transparent color(main) transparent transparent;
+            border-width: 15px;
+            height: 0;
+            margin-top: -15px;
+            pointer-events: none;
+            right: 100%;
+            top: 50%;
+            width: 0;
+        }
+    }
+}
