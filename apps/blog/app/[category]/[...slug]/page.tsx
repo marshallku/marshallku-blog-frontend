@@ -12,12 +12,12 @@ import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
 import Banner from "#components/Banner";
 import MDXComponents from "#components/MDXComponents";
+import InteractPost from "#components/InteractPost";
 import PostList from "#components/PostList";
 import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
-import InteractPost from "#components/InteractPost";
 
 export const dynamic = "error";
 
