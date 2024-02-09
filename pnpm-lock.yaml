@@ -80,6 +80,9 @@ importers:
       remark-unwrap-images:
         specifier: ^4.0.0
         version: 4.0.0
+      smooth-zoom:
+        specifier: ^1.4.1
+        version: 1.4.1
     devDependencies:
       '@marshallku/eslint-config':
         specifier: workspace:*
@@ -11317,6 +11320,10 @@ packages:
       wcwidth: 1.0.1
       yargs: 15.4.1
     dev: true
+
+  /smooth-zoom@1.4.1:
+    resolution: {integrity: sha512-a7nlEE1Tuk6C4+sDHTGrDYcL1x9GJC5M8A9M3BWmxhaJNePPdNycrpAdB6GMIL/zWwmBAhr5XIYknGiS4GHXhA==}
+    dev: false
 
   /snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}

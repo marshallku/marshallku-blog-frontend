@@ -2,8 +2,7 @@ import { HTMLProps } from "react";
 import NextLink from "next/link";
 import { Icon } from "@marshallku/icon";
 import CustomImage from "#components/Image";
-
-const IMAGE_SIZE = [480, 600, 860, 1180];
+import PostImage from "#components/PostImage";
 
 function Image({ src, alt, width, height, title }: HTMLProps<HTMLImageElement>) {
     if (!src) {
@@ -63,7 +62,7 @@ function Link({ href, children, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "r
 }
 
 const MDXComponents = {
-    img: Image,
+    img: PostImage,
     a: Link,
     table: (props: HTMLProps<HTMLTableElement>) => (
         <div className="table">
