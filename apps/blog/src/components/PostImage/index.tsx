@@ -5,15 +5,11 @@ import { classNames } from "@marshallku/utils";
 import useZoom from "#hooks/useZoom";
 import styles from "./index.module.scss";
 
-export interface PostImageProps extends ImgHTMLAttributes<HTMLImageElement> {
-    src: string;
-}
-
 const IMAGE_SIZE = [480, 600, 860, 1180];
 
 const cx = classNames(styles, "post-image");
 
-function PostImage({ src, title, alt, width, height, ...rest }: PostImageProps) {
+function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttributes<HTMLImageElement>) {
     const imageRef = useRef<HTMLImageElement>(null);
     const { attach, detach } = useZoom();
 
