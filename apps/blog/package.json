@@ -30,7 +30,8 @@
         "remark-gfm": "^3.0.1",
         "remark-slug": "^7.0.1",
         "remark-toc": "^9.0.0",
-        "remark-unwrap-images": "^4.0.0"
+        "remark-unwrap-images": "^4.0.0",
+        "smooth-zoom": "^1.4.1"
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",
