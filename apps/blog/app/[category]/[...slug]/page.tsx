@@ -10,7 +10,6 @@ import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
-import Banner from "#components/Banner";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import PostList from "#components/PostList";
@@ -19,6 +18,8 @@ import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
+import Image from "#components/Image";
+import imageSize from "image-size";
 
 export const dynamic = "error";
 
@@ -80,10 +81,11 @@ export default async function Post({ params: { category, slug } }: PostProps) {
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
+    const dimensions = imageSize(`public${decodeURIComponent(post.data.coverImage)}`);
 
     return (
         <article className={cx()}>
-            <Banner title={post.data.title} coverImage={post.data.coverImage}>
+            <header className={cx("__banner")}>
                 <div className={cx("__tags")}>
                     {!!post.data.tags?.length &&
                         post.data.tags.map((tag) => (
@@ -117,7 +119,15 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                         {formatDate(post.data.date.posted, "yyyy년 MM월 dd일")}
                     </time>
                 </Typography>
-            </Banner>
+            </header>
+            <figure className={cx("__cover-image")}>
+                <Image
+                    src={post.data.coverImage}
+                    alt={post.data.title}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                />
+            </figure>
             <div className={cx("__meta")}>
                 {post.data.date.modified && (
                     <Typography variant="c1" component="div" marginBottom={8}>
