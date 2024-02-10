@@ -5,6 +5,7 @@ import Drawer from "#components/Drawer";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
 import Typography from "#components/Typography";
+import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
 import { getCategories } from "#utils/post";
 import styles from "./index.module.scss";
 
@@ -37,6 +38,7 @@ function GlobalNavigation() {
                     <ThemeToggle />
                 </div>
             </div>
+            <GlobalNavigationBackground />
         </nav>
     );
 }
