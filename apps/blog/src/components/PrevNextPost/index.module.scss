@@ -1,8 +1,14 @@
 .prev-next-post {
     display: flex;
-    margin: 48px 0;
+    width: clamp(0px, map-get($container-width, small), 100%);
+    margin: 48px auto;
     flex-wrap: wrap;
     justify-content: space-between;
+    overflow: hidden;
+
+    @include respond-to(medium) {
+        border-radius: 8px;
+    }
 
     &-post {
         $post: &;
@@ -17,6 +23,8 @@
         text-align: right;
         background-color: #000;
         overflow: hidden;
+        flex-grow: 1;
+        flex-wrap: wrap;
 
         &--previous {
             align-items: flex-start;
@@ -27,7 +35,7 @@
         &__meta {
             position: relative;
             width: 100%;
-            padding: 48px 8px;
+            padding: 36px 8px;
             background: linear-gradient(-90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2) 80%);
             color: #fff;
             z-index: 5;
@@ -40,6 +48,25 @@
 
             @at-root #{$post}--previous & {
                 background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2) 80%);
+            }
+        }
+
+        &__label {
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+
+            i {
+                margin-left: 4px;
+            }
+
+            @at-root #{$post}--previous & {
+                flex-direction: row;
+
+                i {
+                    margin-right: 4px;
+                    margin-left: 0;
+                }
             }
         }
 

@@ -14,6 +14,7 @@ import Banner from "#components/Banner";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import PostList from "#components/PostList";
+import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
@@ -78,6 +79,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
 
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
+    const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
 
     return (
         <article className={cx()}>
@@ -157,6 +159,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
+            <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography
                     variant="h4"
