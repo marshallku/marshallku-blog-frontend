@@ -4,10 +4,6 @@
     left: 0;
     width: 100%;
     padding: 0 12px;
-    background-color: color(navigation-background);
-    -webkit-backdrop-filter: blur(8px) saturate(180%);
-    backdrop-filter: blur(8px) saturate(180%);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
     z-index: 1000;
 
     &__container {
