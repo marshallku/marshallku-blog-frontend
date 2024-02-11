@@ -1,8 +1,12 @@
 .home {
+    padding-top: $global-navigation-height;
+
     &-header {
         position: relative;
         display: flex;
         height: toRem(500px);
+        background-color: #000;
+        color: #fff;
         align-items: flex-end;
         justify-content: center;
 
@@ -27,6 +31,10 @@
             width: clamp(0px, map-get($container-width, "large"), 100%);
             padding: 0 12px 32px;
             z-index: 5;
+
+            a {
+                color: #fff;
+            }
         }
 
         &__title {
