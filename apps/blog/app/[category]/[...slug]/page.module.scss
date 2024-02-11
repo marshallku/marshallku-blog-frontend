@@ -155,7 +155,7 @@
             padding: 0.2em 0.4em;
             border-radius: 4px;
             overflow-x: auto;
-            background-color: color(main-opacity);
+            background-color: color(background-dimmed);
 
             @at-root html[data-theme="dark"] & {
                 &[data-theme*=" "],
