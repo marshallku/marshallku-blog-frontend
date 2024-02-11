@@ -5,7 +5,7 @@ import { classNames } from "@marshallku/utils";
 import useZoom from "#hooks/useZoom";
 import styles from "./index.module.scss";
 
-const IMAGE_SIZE = [480, 600, 860, 1180];
+const IMAGE_SIZE = [480, 600, 860, 1180, 1536, 2048];
 
 const cx = classNames(styles, "post-image");
 
@@ -35,6 +35,7 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
         return (
             <figure className={cx()}>
                 <img
+                    ref={imageRef}
                     decoding="async"
                     src={`${src}=w1180`}
                     srcSet={`${src}=w1180 1180w, ${src}=w600 600w, ${src}=w400 400w, ${src}=w1536 1536w, ${src}=w2048 2048w`}
@@ -47,7 +48,7 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
     }
 
     if (src.startsWith("http") || !width || !height) {
-        return <img src={src} alt={alt} width={width} height={height} />;
+        return <img ref={imageRef} src={src} alt={alt} width={width} height={height} />;
     }
 
     const extension = src.split(".").pop();
@@ -60,10 +61,13 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
                 src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}`}
                 srcSet={
                     width && height && process.env.NEXT_PUBLIC_CDN_URL !== ""
-                        ? IMAGE_SIZE.filter((size) => size < Number(width))
+                        ? [...IMAGE_SIZE, Number(width)]
+                              .filter((size) => size <= Number(width))
                               .map(
                                   (size) =>
-                                      `${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w${size}.${extension} ${size}w`,
+                                      `${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}${
+                                          size === Number(width) ? "" : `.w${size}`
+                                      }.${extension} ${size}w`,
                               )
                               .join(", ")
                         : undefined
