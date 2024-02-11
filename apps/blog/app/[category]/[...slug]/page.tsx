@@ -8,18 +8,18 @@ import remarkGfm from "remark-gfm";
 import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
+import imageSize from "image-size";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
+import Image from "#components/Image";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
-import Image from "#components/Image";
-import imageSize from "image-size";
 
 export const dynamic = "error";
 
