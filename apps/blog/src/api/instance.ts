@@ -16,7 +16,7 @@ const initializeHeaders = (initHeaders?: RequestInit["headers"]) => ({
  * Redirects if the response status is 401.
  */
 export const request: HTTPClient<unknown> = httpClient({
-    baseUrl: process.env.NEXT_PUBLIC_BLOG_ORIGIN,
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     headers: {
         "Content-Type": "application/json",
     },
