@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Dispatch, SetStateAction, useCallback, useRef } from "react";
+import { Dispatch, MouseEventHandler, SetStateAction, useCallback, useRef } from "react";
 import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Hamburger from "#components/Hamburger";
@@ -23,6 +23,12 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
         containerRef.current?.addEventListener("animationend", closeDrawer, { once: true, passive: true });
         setWillClose(true);
     }, [closeDrawer, setWillClose]);
+
+    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback((e) => {
+        if (e.target === containerRef.current) {
+            close();
+        }
+    }, [close]);
 
     const List = useCallback(
         ({
@@ -47,7 +53,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
     );
 
     return (
-        <div className={cx("", opened && "--opened", willClose && "--close")} ref={containerRef}>
+        <div className={cx("", opened && "--opened", willClose && "--close")} ref={containerRef} onClick={handleClick}>
             <Hamburger onClick={close} opened={!willClose} className={cx("__hamburger")} />
             <nav className={cx("__nav")}>
                 <ul className={cx("__item")}>
