@@ -23,6 +23,9 @@ importers:
       '@marshallku/icon':
         specifier: workspace:^
         version: link:../../packages/icon
+      '@marshallku/react-error-boundary':
+        specifier: workspace:^
+        version: link:../../packages/react-error-boundary
       '@marshallku/toast':
         specifier: workspace:^
         version: link:../../packages/toast
@@ -83,6 +86,9 @@ importers:
       smooth-zoom:
         specifier: ^1.4.1
         version: 1.4.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@marshallku/eslint-config':
         specifier: workspace:*
@@ -217,6 +223,31 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+
+  packages/react-error-boundary:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@marshallku/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@marshallku/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/react':
+        specifier: ^18.2.37
+        version: 18.2.48
+      '@types/react-dom':
+        specifier: ^18.2.15
+        version: 18.2.18
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(typescript@5.3.3)
 
   packages/toast:
     devDependencies:
@@ -13026,6 +13057,10 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
