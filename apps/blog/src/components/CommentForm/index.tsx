@@ -1,32 +1,70 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { FormEventHandler, useCallback, useRef, useState } from "react";
+import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import { submitComment } from "app/[category]/[...slug]/action";
-import Button from "#components/Button";
-import styles from "./index.module.scss";
 import Typography from "#components/Typography";
 import CommentAvatar from "#components/CommentAvatar";
-import { useState } from "react";
-import { Icon } from "@marshallku/icon";
+import styles from "./index.module.scss";
+import { usePostComment } from "#api/comment/queries";
+
+interface CommentFormProps {
+    slug: string;
+}
 
 const cx = classNames(styles, "comment-form");
 
-const initialState = {
-    message: "",
-};
-
-function CommentForm() {
-    const [state, formAction] = useFormState(submitComment, initialState);
+function CommentForm({ slug }: CommentFormProps) {
     const [name, setName] = useState("");
     const [body, setBody] = useState("");
+    const formRef = useRef<HTMLFormElement>(null);
+    const { mutate } = usePostComment(slug);
+
+    const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+        (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.currentTarget);
+            const body = formData.get("body");
+
+            if (!body || typeof body !== "string" || body.trim() === "") {
+                return {
+                    message: "내용을 입력해 주세요.",
+                };
+            }
+
+            const korean = /[\u3131-\uD79D]/giu;
+
+            if (!korean.test(body)) {
+                return {
+                    message: "한글을 입력해 주세요.",
+                };
+            }
+
+            const data = {
+                name: (formData.get("name") as string) || "익명",
+                postSlug: slug,
+                password: formData.get("password") as string,
+                email: formData.get("email") as string,
+                url: formData.get("url") as string,
+                body,
+                parentCommentId: formData.get("parentCommentId") as string,
+            };
+
+            mutate(data);
+            formRef.current?.reset();
+            setName("");
+            setBody("");
+        },
+        [slug],
+    );
 
     return (
         <div className={cx()}>
             <figure className={cx("__avatar")}>
                 <CommentAvatar name={name} />
             </figure>
-            <form action={formAction} className={cx("__form")}>
+            <form className={cx("__form")} onSubmit={handleSubmit} ref={formRef}>
                 <Typography variant="c1" marginBottom={16}>
                     댓글을 남겨주세요. (이메일 주소는 공개되지 않습니다.)
                 </Typography>
@@ -50,7 +88,6 @@ function CommentForm() {
                         setBody(value);
                     }}
                 />
-                {state.message && <Typography variant="c2">{state.message}</Typography>}
                 <div className={cx("__buttons")}>
                     <button type="submit" disabled={!body} className={cx("__submit")}>
                         <Icon name="arrow-downward" size={24} />
