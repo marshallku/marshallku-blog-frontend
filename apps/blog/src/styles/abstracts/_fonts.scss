@@ -18,6 +18,7 @@ $typography-size: (
     b1: toRem(16px),
     b2: toRem(14.22px),
     c1: toRem(12.64px),
+    c2: toRem(10.86px),
 );
 
 $typography-height: (
@@ -30,6 +31,7 @@ $typography-height: (
     b1: 162.5%,
     b2: 162.5%,
     c1: 130%,
+    c2: 130%,
 );
 
 @mixin typography($key) {
