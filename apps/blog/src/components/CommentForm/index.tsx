@@ -3,10 +3,10 @@
 import { FormEventHandler, useCallback, useRef, useState } from "react";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
+import { usePostComment } from "#api/comment/queries";
 import Typography from "#components/Typography";
 import CommentAvatar from "#components/CommentAvatar";
 import styles from "./index.module.scss";
-import { usePostComment } from "#api/comment/queries";
 
 interface CommentFormProps {
     slug: string;

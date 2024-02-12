@@ -1,3 +1,5 @@
+"use client";
+
 import { request } from "#api/instance.client";
 import { Comment, CommentListResponse } from "./types";
 
