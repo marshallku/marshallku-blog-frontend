@@ -1,0 +1,99 @@
+.comment-bubble {
+    $self: &;
+    $avatar-width: 40px;
+
+    display: flex;
+    padding: 12px 0;
+
+    &--author {
+        flex-direction: row-reverse;
+    }
+
+    &--border {
+        border-top: 1px solid color(main);
+    }
+
+    &__avatar {
+        width: $avatar-width;
+        height: $avatar-width;
+        margin-top: 12px;
+        margin-right: 12px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        overflow: hidden;
+
+        @at-root #{$self}--author & {
+            margin-left: 12px;
+            margin-right: 0;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__content {
+        display: flex;
+        max-width: 100%;
+        min-width: 0;
+        flex-wrap: wrap;
+        padding: 12px 0;
+
+        @at-root #{$self}--author & {
+            flex-direction: row-reverse;
+        }
+    }
+
+    &__name,
+    &__date {
+        width: 100%;
+
+        @at-root #{$self}--author & {
+            text-align: right;
+        }
+    }
+
+    &__text {
+        position: relative;
+        max-width: 100%;
+        margin-top: 4px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transform-origin: top left;
+        background-color: color(comment-2);
+        white-space: pre-wrap;
+        word-break: break-all;
+
+        &::after {
+            content: "";
+            box-sizing: content-box;
+            position: absolute;
+            width: 17.5px;
+            height: 25px;
+            border: 0 solid color(comment-2);
+            border-width: 0 20px;
+            border-radius: 50%;
+            clip: rect(0, 41px, 15px, 28px);
+            display: block;
+            z-index: 1;
+            left: -37.4px;
+            top: 5px;
+        }
+
+        @at-root #{$self}--author & {
+            background-color: color(comment);
+
+            &::after {
+                left: auto;
+                right: -37.3px;
+                clip: rect(0, 28px, 10px, 19px);
+            }
+        }
+    }
+
+    &__date {
+        margin-top: 4px;
+    }
+}

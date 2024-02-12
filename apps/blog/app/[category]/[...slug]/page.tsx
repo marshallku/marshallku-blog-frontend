@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -11,17 +12,17 @@ import remarkUnwrapImages from "remark-unwrap-images";
 import imageSize from "image-size";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
+import { getComments } from "#api";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import Image from "#components/Image";
+import PostComment from "#components/PostComment";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
 import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
-
-export const dynamic = "error";
 
 interface PostProps {
     params: {
@@ -66,6 +67,11 @@ export async function generateStaticParams() {
         category: slug.slice(1).split("/")[0],
         slug: slug.slice(1).split("/").slice(1),
     }));
+}
+
+async function Comments({ slug }: { slug: string }) {
+    const comments = await getComments(slug);
+    return <PostComment data={comments} />;
 }
 
 const cx = classNames(styles, "page");
@@ -169,6 +175,9 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
+            <Suspense fallback={<p>Loading...</p>}>
+                <Comments slug={`/${postSlug}`} />
+            </Suspense>
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography
