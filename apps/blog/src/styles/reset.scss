@@ -59,6 +59,7 @@ caption,
 tbody,
 tfoot,
 thead,
+textarea,
 tr,
 th,
 td,
@@ -94,7 +95,9 @@ video {
     vertical-align: baseline;
 }
 
-html {
+html,
+input,
+textarea {
     font-family:
         "Pretendard Variable",
         Pretendard,
