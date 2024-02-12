@@ -14,6 +14,7 @@ import { classNames, formatDate } from "@marshallku/utils";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import Image from "#components/Image";
+import PostComment from "#components/PostComment";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
@@ -169,6 +170,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
+            <PostComment slug={`/${postSlug}`} />
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography

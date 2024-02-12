@@ -1,20 +1,32 @@
+"use client";
+
+import { Suspense, useMemo } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "@marshallku/react-error-boundary";
 import { classNames } from "@marshallku/utils";
-import { type CommentListResponse } from "#api";
 import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
 import styles from "./index.module.scss";
 
 export interface PostCommentProps {
-    data?: CommentListResponse;
+    slug: string;
 }
 
 const cx = classNames(styles, "post-comment");
 
-function PostComment({ data }: PostCommentProps) {
+function PostComment({ slug }: PostCommentProps) {
+    const queryClient = useMemo(() => new QueryClient(), []);
+
     return (
         <div className={cx()}>
-            <CommentForm />
-            {data && <CommentList data={data} />}
+            <QueryClientProvider client={queryClient}>
+                <CommentForm slug={slug} />
+                <ErrorBoundary fallback={null}>
+                    <Suspense fallback={null}>
+                        <CommentList slug={slug} />
+                    </Suspense>
+                </ErrorBoundary>
+            </QueryClientProvider>
         </div>
     );
 }

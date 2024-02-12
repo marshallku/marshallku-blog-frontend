@@ -1,12 +1,8 @@
-import { request } from "#api/instance";
+import { request } from "#api/instance.client";
 import { Comment, CommentListResponse } from "./types";
 
 export async function getComments(slug: string) {
-    return request<CommentListResponse>(`/comment/list?postSlug=${encodeURIComponent(slug)}`, {
-        next: {
-            tags: [slug],
-        },
-    });
+    return request<CommentListResponse>(`/comment/list?postSlug=${encodeURIComponent(slug)}`);
 }
 
 export async function postComment(data: Omit<Comment, "_id" | "createdAt" | "byPostAuthor">) {

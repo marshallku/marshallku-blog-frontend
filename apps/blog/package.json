@@ -18,6 +18,7 @@
         "@marshallku/utils": "workspace:^",
         "@next/eslint-plugin-next": "^14.1.0",
         "@next/third-parties": "^14.1.0",
+        "@tanstack/react-query": "^5.20.1",
         "copy2clip": "^1.1.1",
         "gray-matter": "^4.0.3",
         "image-size": "^1.1.1",
