@@ -43,10 +43,18 @@ export async function submitComment(_: State, formData: FormData): Promise<State
         parentCommentId: formData.get("parentCommentId") as string,
     };
 
-    await postComment(data);
-    revalidateTag(data.postSlug);
+    try {
+        await postComment(data);
+        revalidateTag(data.postSlug);
 
-    return {
-        message: "",
-    };
+        return {
+            message: "",
+        };
+    } catch (error) {
+        console.error(error);
+
+        return {
+            message: "댓글을 작성하는 중 오류가 발생했습니다.",
+        };
+    }
 }
