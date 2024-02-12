@@ -175,7 +175,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
-            <Suspense fallback={<p>Loading...</p>}>
+            <Suspense fallback={<PostComment />}>
                 <Comments slug={`/${postSlug}`} />
             </Suspense>
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />

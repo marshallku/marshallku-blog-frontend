@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toURL } from "#utils/url";
 
 const AVATAR_SIZE = 40;
@@ -31,6 +31,10 @@ const getAvatar = (name: string, link?: string) => {
 
 function CommentAvatar({ name, url, postAuthor }: CommentAvatarProps) {
     const [src, setSrc] = useState(getAvatar(name, url));
+
+    useEffect(() => {
+        setSrc(getAvatar(name, url));
+    }, [name, url]);
 
     if (postAuthor) {
         return (

@@ -1,0 +1,75 @@
+.comment-form {
+    display: flex;
+    width: clamp(0px, map-get($container-width, small), 100%);
+    margin: 24px auto;
+    padding: 0 12px;
+
+    &__avatar {
+        margin: 12px 12px 0 0;
+    }
+
+    &__form {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 24px;
+        padding: 12px;
+        background-color: color(comment-2);
+        border-radius: 8px;
+
+        &::after {
+            content: "";
+            box-sizing: content-box;
+            position: absolute;
+            width: 17.5px;
+            height: 25px;
+            border: 0 solid color(comment-2);
+            border-width: 0 20px;
+            border-radius: 50%;
+            clip: rect(0, 41px, 15px, 28px);
+            display: block;
+            z-index: 1;
+            left: -37.4px;
+            top: 5px;
+        }
+    }
+
+    &__input {
+        @include typography(b2);
+        margin-bottom: 12px;
+        padding: 4px 12px;
+        background-color: color(comment);
+        border-radius: 4px;
+    }
+
+    &__textarea {
+        @include typography(b1);
+        height: 7em;
+        margin-top: 12px;
+        padding: 8px 12px;
+        background-color: color(comment);
+        border-radius: 4px;
+        resize: none;
+    }
+
+    &__buttons {
+        margin-top: 24px;
+        text-align: right;
+    }
+
+    &__submit {
+        display: inline-flex;
+        padding: 8px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color: color(comment-2);
+        background-color: color(theme);
+        transition: background-color 0.3s $ease-in-out-cubic;
+
+        &:disabled {
+            background-color: color(comment);
+        }
+    }
+}
