@@ -3,36 +3,50 @@
     &--h1 {
         @include typography(h1);
     }
+
     &--h2 {
         @include typography(h2);
     }
+
     &--h3 {
         @include typography(h3);
     }
+
     &--h4 {
         @include typography(h4);
     }
+
     &--h5 {
         @include typography(h5);
     }
+
     &--h6 {
         @include typography(h6);
     }
+
     &--b1 {
         @include typography(b1);
     }
+
     &--b2 {
         @include typography(b2);
     }
+
     &--c1 {
         @include typography(c1);
     }
+
+    &--c2 {
+        @include typography(c2);
+    }
+
     // weight
     @for $i from 1 through 9 {
         &--#{$i * 100} {
             font-weight: $i * 100;
         }
     }
+
     // gutter
     @for $i from 2 through 36 {
         &--mt-#{$i} {

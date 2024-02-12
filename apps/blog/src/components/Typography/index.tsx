@@ -45,7 +45,7 @@ export type TypographyComponent = keyof Omit<
     | "video"
     | "wbr"
 >;
-export type TypographyVariant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "b1" | "b2" | "c1";
+export type TypographyVariant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "b1" | "b2" | "c1" | "c2";
 export type TypographyFontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 
 export type TypographyProps<T extends TypographyComponent = "p"> = {
