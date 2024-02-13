@@ -44,6 +44,9 @@ RUN pnpm turbo run build --filter=@marshallku/blog...
 FROM base AS runner
 WORKDIR /app
 
+COPY --from=installer /app/apps/blog/newrelic.js .
+RUN pnpm add @newrelic/next
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -58,4 +61,4 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/.next/static ./apps/blog/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/public ./apps/blog/public
 
-CMD node apps/blog/server.js
+CMD node -r @newrelic/next apps/blog/server.js
