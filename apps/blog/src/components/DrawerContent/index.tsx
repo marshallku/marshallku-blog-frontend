@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Dispatch, MouseEventHandler, SetStateAction, useCallback, useRef } from "react";
+import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, useCallback, useRef } from "react";
 import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Hamburger from "#components/Hamburger";
@@ -14,6 +14,14 @@ interface DrawerContentProps {
     closeDrawer(): void;
 }
 
+const CATEGORIES = [
+    { slug: "/dev", name: "개발", icon: "code-blocks", color: "#66b3ff" },
+    { slug: "/work", name: "작업물", icon: "package", color: "#b37700" },
+    { slug: "/chat", name: "잡담", icon: "chat-bubble", color: "#ffdb4d" },
+    { slug: "/gallery", name: "갤러리", icon: "photo-camera", color: "#ff4d4d" },
+    { slug: "/others", name: "기타", icon: "category", color: "#999" },
+] as const;
+
 const cx = classNames(styles, "drawer-content");
 
 function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerContentProps) {
@@ -24,11 +32,14 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
         setWillClose(true);
     }, [closeDrawer, setWillClose]);
 
-    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback((e) => {
-        if (e.target === containerRef.current) {
-            close();
-        }
-    }, [close]);
+    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(
+        (e) => {
+            if (e.target === containerRef.current) {
+                close();
+            }
+        },
+        [close],
+    );
 
     const List = useCallback(
         ({
@@ -36,17 +47,20 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
             text,
             href,
             color,
+            children,
         }: {
             icon: IconProps["name"];
             text: string;
             href: string;
             color?: IconProps["color"];
+            children?: ReactNode;
         }) => (
             <li>
                 <Link href={href} onClick={close}>
                     <Icon name={icon} color={color} />
                     {text}
                 </Link>
+                {children}
             </li>
         ),
         [close],
@@ -62,11 +76,14 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                     <List icon="tag" text="Tags" href="/tags" />
                 </ul>
                 <ul className={cx("__item")}>
-                    <List icon="code-blocks" text="개발" href="/dev" color="#66b3ff" />
-                    <List icon="package" text="작업물" href="/work" color="#b37700" />
-                    <List icon="chat-bubble" text="잡담" href="/chat" color="#ffdb4d" />
-                    <List icon="photo-camera" text="갤러리" href="/gallery" color="#ff4d4d" />
-                    <List icon="category" text="기타" href="/others" color="#999" />
+                    {CATEGORIES.map(({ slug, name, icon, color }) => (
+                        <List key={slug} icon={icon} text={name} href={slug} color={color}>
+                            <a href={`${slug}/feed`} target="_blank" rel="noopener noreferrer">
+                                <Icon name="rss" />
+                                <span className="sr-only">피드 확인</span>
+                            </a>
+                        </List>
+                    ))}
                 </ul>
             </nav>
         </div>
