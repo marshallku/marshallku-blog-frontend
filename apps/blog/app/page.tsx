@@ -16,7 +16,11 @@ const cx = classNames(styles, "home");
 export default async function Home() {
     const posts = getPosts();
     const mostRecentPost = posts[0];
-    const postsInPage = posts.slice(1, PAGE_SIZE);
+    const categories = getCategories();
+    const postsInPage = posts
+        .slice(1)
+        .filter(({ category }) => !!categories.find(({ slug }) => slug === category))
+        .slice(0, PAGE_SIZE);
     const galleryPosts = posts.filter(({ category }) => category === "/gallery").slice(0, 6);
 
     return (
@@ -44,7 +48,7 @@ export default async function Home() {
                 <PostList posts={postsInPage} />
             </section>
             <section className={cx("__container", "__container--padding", "__category")}>
-                {getCategories()
+                {categories
                     .filter(({ icon }) => !!icon)
                     .map(({ slug, name, icon, color }) => (
                         <Link href={slug} key={slug}>
