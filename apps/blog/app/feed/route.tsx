@@ -22,22 +22,25 @@ export async function GET() {
     const categories = getCategories();
     const host = "https://marshallku.com";
     const formattedPosts = await Promise.all(
-        posts.slice(0, 10).map(async (post) => {
-            const url = `${host}${post.slug
-                .split("/")
-                .map((x) => encodeURIComponent(x))
-                .join("/")}`;
+        posts
+            .filter(({ category }) => !!categories.find(({ slug }) => slug === category))
+            .slice(0, 10)
+            .map(async (post) => {
+                const url = `${host}${post.slug
+                    .split("/")
+                    .map((x) => encodeURIComponent(x))
+                    .join("/")}`;
 
-            return {
-                title: post.data.title,
-                link: url,
-                pubDate: post.data.date.posted.toUTCString(),
-                category: categories.find(({ slug }) => slug === post.category)?.name || post.category.slice(1),
-                tags: post.data.tags,
-                description: post.data.description,
-                content: marked.parse(post.content),
-            };
-        }),
+                return {
+                    title: post.data.title,
+                    link: url,
+                    pubDate: post.data.date.posted.toUTCString(),
+                    category: categories.find(({ slug }) => slug === post.category)?.name || post.category.slice(1),
+                    tags: post.data.tags,
+                    description: post.data.description,
+                    content: marked.parse(post.content),
+                };
+            }),
     );
 
     return new Response(
