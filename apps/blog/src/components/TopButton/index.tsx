@@ -63,6 +63,7 @@ function TopButton() {
                     }}
                 />
             </svg>
+            <span className="sr-only">최상단으로 이동</span>
         </button>
     );
 }
