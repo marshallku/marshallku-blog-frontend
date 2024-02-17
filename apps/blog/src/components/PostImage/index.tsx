@@ -53,31 +53,42 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
 
     const extension = src.split(".").pop();
     const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
+    const hasCdnUrl = process.env.NEXT_PUBLIC_CDN_URL !== "";
+    const sizes = width && height && hasCdnUrl ? IMAGE_SIZE.filter((size) => size <= Number(width)) : [];
 
     return (
         <figure className={cx("", { className: "image-block" })}>
-            <img
-                ref={imageRef}
-                src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}`}
-                srcSet={
-                    width && height && process.env.NEXT_PUBLIC_CDN_URL !== ""
-                        ? [...IMAGE_SIZE, Number(width)]
-                              .filter((size) => size <= Number(width))
-                              .map(
-                                  (size) =>
-                                      `${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}${
-                                          size === Number(width) ? "" : `.w${size}`
-                                      }.${extension} ${size}w`,
-                              )
-                              .join(", ")
-                        : undefined
-                }
-                alt={alt || ""}
-                width={width}
-                height={height}
-                loading="lazy"
-                {...rest}
-            />
+            <picture>
+                {sizes.map((size) => (
+                    <source
+                        key={`webp-${size}`}
+                        type="image/webp"
+                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w${size}.${extension}.webp`}
+                        media={`(max-width: ${size}px)`}
+                    />
+                ))}
+                <source
+                    type="image/webp"
+                    srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}.webp`}
+                />
+                {sizes.map((size) => (
+                    <source
+                        key={size}
+                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w${size}.${extension}`}
+                        media={`(max-width: ${size}px)`}
+                    />
+                ))}
+                <source srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}`} />
+                <img
+                    ref={imageRef}
+                    src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}`}
+                    alt={alt || ""}
+                    width={width}
+                    height={height}
+                    loading="lazy"
+                    {...rest}
+                />
+            </picture>
             {title && <figcaption>{title}</figcaption>}
         </figure>
     );
