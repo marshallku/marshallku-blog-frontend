@@ -67,10 +67,12 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
                         media={`(max-width: ${size}px)`}
                     />
                 ))}
-                <source
-                    type="image/webp"
-                    srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}.webp`}
-                />
+                {hasCdnUrl && (
+                    <source
+                        type="image/webp"
+                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}.webp`}
+                    />
+                )}
                 {sizes.map((size) => (
                     <source
                         key={size}
