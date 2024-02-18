@@ -1,0 +1,219 @@
+---
+title: Github Actions 워크플로우 재사용하기
+description: Composite Action과 Reusable Workflow를 통해 인생 좀 더 편하게 살기
+date:
+  posted: 2024-02-18T09:41:19.729Z
+tags:
+  - Github Actions
+coverImage: /images/2024/02/reuse-workflow.png
+ogImage: /images/2024/02/reuse-workflow.png
+---
+
+프로젝트를 진행하며 Github Actions를 사용하다 보면 비슷비슷한 형태의 workflow를 반복적으로 사용하는 경우가 많습니다.  
+Node.js 버전이 변경되거나, 더 나은 방법을 찾았을 때 등 상황에 repository를 돌아다니며 workflow를 수정하는 건 상당히 귀찮은 일입니다.
+
+이때 재사용할 수 있는 workflow를 만들어 한 군데서 workflow를 관리할 수 있습니다.  
+예시로, 저도 tag / release 생성, pnpm 환경 구성 등 workflow들을 [`actions`](https://github.com/marshallku/actions)라는 한 repository에서 관리하는 중입니다.
+
+## `workflow_call`
+
+### Workflow 생성
+
+```yaml
+name: Reusable Workflow
+
+on:
+    workflow_call:
+```
+
+`on`에 [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call)을 추가하면, 해당 workflow는 다른 workflow에서 호출할 수 있습니다.
+
+- top level의 `jobs.*.uses`에서**만** 사용할 수 있어, `steps` 중간에 사용할 수 없습니다.
+- 네 단계의 nesting만 가능합니다.
+- 한 workflow는 최대 20개의 reusable workflow를 호출할 수 있습니다.
+- `env` context는 공유되지 않습니다.
+
+등의 [제약](https://docs.github.com/en/actions/using-workflows/reusing-workflows#limitations)이 있지만, `secret`도 사용할 수 있고, 기존에 사용하시던 workflow에 `workflow_call`만 추가하면 바로 사용해볼 수 있습니다.
+
+```yaml
+name: Reusable workflow
+
+on:
+    workflow_call:
+        inputs:
+            message:
+                description: "A message to include in the greeting"
+                type: string
+                required: true
+        secrets:
+            url:
+                description: "The URL to post the message to"
+                required: true
+
+jobs:
+    run:
+        name: Send greeting message
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send message
+              shell: bash
+              run: |
+                  echo "${{ inputs.message }}" > message.txt
+                  curl -X POST -d @message.txt ${{ secrets.url }}
+```
+
+위와 같이 `input` 뿐 아니라, `secrets`도 추가하실 수 있습니다.  
+yaml 파일에서 확인하실 수 있듯, 일반적인 workflow를 작성하는 것과 거의 동일합니다.
+
+### Workflow 호출
+
+```yaml
+jobs:
+    call-reusable-workflow:
+        name: Call reusable workflow
+        runs-on: ubuntu-latest
+        steps:
+            - name: Call reusable workflow
+              uses: ./.github/workflows/reusable-workflow.yml
+              with:
+                  message: "Hello, world!"
+              secrets:
+                  url: ${{ secrets.URL }}
+```
+
+`uses`에 호출할 workflow의 경로를 입력하면 해당 workflow를 호출할 수 있습니다.  
+다른 repository에서 호출하실 때는 `owner/repo/path/to/workflow.yml@ref` 형태로 입력하시면 됩니다.
+
+![failed to run job](/images/2024/02/ci-job-failed.png)
+
+일례로, 저는 제가 관리하는 repository들에 [CI 파이프라인](https://github.com/marshallku/marshallku-blog-cdn/blob/master/.github/workflows/ci.yml)을 추가해두고, 작업이 실패할 때마다 [Discord로 알림이 오게](https://github.com/marshallku/actions/blob/master/.github/workflows/send-notification.yml) 설정해두었습니다.  
+git push하고 얼마 지나지 않아 discord 알림이 오는 소리가 나면 식은땀이 조금 나면서 심장 박동이 빨라진다는 것만 제외하면, 정말 유용한 기능입니다.
+
+## `repository_dispatch`
+
+### Workflow 생성
+
+[`repository_dispatch`](https://cli.github.com/manual/gh_api)를 사용하면, 외부에서도 workflow를 호출할 수 있습니다.
+
+```yaml
+name: Reusable Workflow
+
+on:
+    workflow_dispatch:
+    repository_dispatch:
+        types: [my-event-type]
+
+jobs:
+    echo:
+        if: ${{ !github.event.client_payload.passed }}
+        runs-on: ubuntu-latest
+        steps:
+            - env:
+                  MESSAGE: ${{ github.event.client_payload.message }}
+              run: echo "$MESSAGE"
+```
+
+기본적인 사용법은 `repository_dispatch`를 추가하고, `types`에 이벤트의 타입을 추가하면 됩니다.
+
+입력값을 전달하는 부분에 차이가 조금 있는데, `repository_dispatch`에서는 `client_payload` 파라미터를 통해 데이터를 전달할 수 있습니다.
+
+### Workflow 호출
+
+```yaml
+trigger:
+    runs-on: ubuntu-latest
+    steps:
+        - run: |
+              gh api /repos/$OWNER/$REPO/dispatches \
+              --method POST \
+              --field event_type=my-event-type \
+              --field client_payload[passed]=false \
+              --field client_payload[message]="Testing workflow"
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+예제로는 [github api](https://cli.github.com/manual/gh_api)를 사용해 workflow에서 호출했지만, 외부에서 rest api 등을 사용해서도 호출할 수 있습니다([api 문서 참고](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event)).
+
+## Composite Action
+
+workflow를 만들다 보면, 알림 발송처럼 한 단계만을 위한 job도 많지만, pnpm 환경 구성처럼 여러 단계 중 일부가 반복되는 경우도 많습니다.  
+하지만 `workflow_call`은 상술한 것처럼 `steps` 중간에 사용할 수 없습니다.
+
+이때 사용할 수 있는 것이 [Composite Action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)입니다.
+
+### Action 생성
+
+```txt
+.
+├── .github
+│   └── workflows
+│       └── my-workflow.yml
+└── my-action
+    └── action.yml
+```
+
+기존에 `.github/workflows`에 workflow를 작성하던 것과는 다르게, 폴더 내에 `action.yml`을 추가하셔야 합니다.
+
+```yaml
+name: My composite action
+description: My example composite action
+
+inputs:
+  name:
+    description: User name to greet
+    required: false
+    default: "Anonymous"
+
+outputs:
+  message:
+    description: Greeting message
+    value: ${{ steps.greeting.outputs.message }}
+
+runs:
+  using: composite
+  steps:
+    - name: Display greeting
+      id: greeting
+      shell: bash
+      run: |
+        message="Hello, ${{ inputs.name }}"
+        echo "message=$message" >> $GITHUB_OUTPUT
+    - run: echo "This script only runs if the condition is true"
+      shell: bash
+      if: ${{ inputs.name == 'Marshall' }}
+```
+
+작성 방식에 이젠 차이가 조금 생겼습니다.
+
+- `on` 조건이 없습니다.
+- `using: composite`을 추가해야 합니다.
+- 하나의 job만 실행할 수 있습니다.
+- `shell`을 명시적으로 추가해야 합니다.
+
+다행히 조건문을 사용할 수 있긴 하지만, 하나의 job만 실행할 수 있기에 둘 이상의 job에 dependency가 있는 등 복잡한 workflow를 온전한 형태로 가져오기는 어렵습니다.
+
+### Action 호출
+
+```yaml
+greeting:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: owner/repo/greeting@ref
+      id: greeting
+      with:
+        name: "Marshall"
+    - run: echo ${{ steps.greeting.outputs.message }}
+```
+
+다른 일반적인 action과 마찬가지로, `uses`에 호출할 action의 경로를 입력하면 됩니다.  
+`workflow_call`과는 다르게 step 중간에 사용할 수 있어, 훨씬 유연하게 사용할 수 있습니다.
+
+## 맺으며
+
+개인적으로 새 프로젝트를 시작할 때마다 기존에 사용하던 bash script와 workflow들 복사하고, 업데이트할 일 생기면 repository 돌아다니며 수정하는 게 상당히 귀찮았는데, [위 방법들을 사용](https://github.com/marshallku/actions)하고부터 이런 잡무가 많이 줄었습니다.  
+`ref`를 `master`로 고정해두고 관리하고 있어 그리 안전하진 않을 수 있는데, 실수할 사람이 당장에는 저밖에 없으니 관리하는 공수를 줄이는 것만 생각했습니다.
+
+외부에서 호출할 일은 사실 그리 많지 않아 `repository_dispatch`는 한 프로젝트에밖에 사용해보지 않았고, `secrets`가 필요하면 reusable workflow를, 아니면 composite action을 사용하는 방식으로 구분해서 사용하고 있습니다.
+
+불필요하게 신경 쓸 것들을 줄이고 가벼운 마음으로 프로젝트를 진행하시는 데 도움이 되셨길 바라며, 이상으로 글을 마칩니다.
