@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    blog-front:
-        container_name: blog-front
+    blog-front-blue: &front
+        container_name: blog-front-blue
         build:
             context: .
             dockerfile: ./apps/blog/Dockerfile
@@ -11,6 +11,11 @@ services:
             - 4200:3000
         networks:
             - app_network
+    blog-front-green:
+        <<: *front
+        container_name: blog-front-green
+        ports:
+            - 4201:3000
 
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
