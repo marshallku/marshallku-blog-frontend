@@ -18,7 +18,8 @@ export async function GET(_: Request, { params }: { params: { category: string }
     });
 
     const posts = getPosts();
-    const lastBuildDate = new Date(posts[0].data.date.modified || posts[0].data.date.posted).toUTCString();
+    // FIXME: Should calculate it in build time
+    const lastBuildDate = new Date().toUTCString();
     const categories = getCategories();
     const host = "https://marshallku.com";
     const formattedPosts = await Promise.all(
