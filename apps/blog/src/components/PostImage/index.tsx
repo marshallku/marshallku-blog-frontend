@@ -88,6 +88,7 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
                     width={width}
                     height={height}
                     loading="lazy"
+                    crossOrigin="anonymous"
                     {...rest}
                 />
             </picture>
