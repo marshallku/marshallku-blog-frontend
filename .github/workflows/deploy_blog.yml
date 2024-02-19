@@ -18,7 +18,7 @@ jobs:
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.ED_KEY }}
                   script_stop: true
-                  script: bash ~/dev/deploy-blog-frontend.sh
+                  script: /home/${{ secrets.SERVER_USER }}/dev/deploy-blog-frontend.sh
     send-notification:
         needs: [deploy]
         if: ${{ failure() }}
