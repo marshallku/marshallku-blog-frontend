@@ -21,6 +21,8 @@ function GlobalNavigationBackground() {
             container.style.opacity = scrollY > 0 ? "1" : "0";
         };
 
+        handleScroll();
+
         window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
