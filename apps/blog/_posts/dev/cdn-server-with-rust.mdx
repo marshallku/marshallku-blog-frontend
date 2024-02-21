@@ -3,6 +3,7 @@ title: CDN 서버 구축일지
 description: PHP로 만들었던 캐시 서버 Rust로 다시 만들고, Next.js 프로젝트에 적용하기
 date:
     posted: 2024-02-20T22:43:50.712Z
+    modified: 2024-02-21T08:17:53.669Z
 tags:
     - Rust
     - 캐시 서버
@@ -141,9 +142,9 @@ const YEAR_TO_SECONDS: u32 = 31536000;
 pub fn get_cache_header(age: u32) -> HeaderMap {
     let mut headers = HeaderMap::new();
     let cache_age = if age <= 0 {
-        "no-cache"
+        "no-cache".to_string()
     } else {
-        "public, max-age=31536000"
+        format!("public, max-age={}", age)
     };
 
     headers.insert("Cache-Control", cache_age.parse().unwrap());
