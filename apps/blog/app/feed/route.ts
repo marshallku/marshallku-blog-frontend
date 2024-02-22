@@ -18,7 +18,6 @@ export async function GET() {
     });
 
     const posts = getPosts();
-    // FIXME: SHould calculate it in build time
     const lastBuildDate = new Date().toUTCString();
     const categories = getCategories();
     const host = "https://marshallku.com";
