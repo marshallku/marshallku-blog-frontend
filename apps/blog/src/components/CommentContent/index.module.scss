@@ -1,0 +1,27 @@
+.comment-content {
+    &__image,
+    &__video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    &__code {
+        font-family: "Fira Code", monospace;
+        font-size: 90%;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        overflow-x: auto;
+        background-color: color(background-dimmed);
+    }
+
+    &__image,
+    &__video,
+    &__code,
+    p {
+        margin-bottom: 0.65em;
+    }
+
+    a {
+        color: color(link);
+    }
+}
