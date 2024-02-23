@@ -4,8 +4,10 @@ import { FormEventHandler, useCallback, useRef, useState } from "react";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import { usePostComment } from "#api/comment/queries";
-import Typography from "#components/Typography";
 import CommentAvatar from "#components/CommentAvatar";
+import Input from "#components/Input";
+import Textarea from "#components/Textarea";
+import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
 interface CommentFormProps {
@@ -68,7 +70,7 @@ function CommentForm({ slug }: CommentFormProps) {
                 <Typography variant="c1" marginBottom={16}>
                     댓글을 남겨주세요. (이메일 주소는 공개되지 않습니다.)
                 </Typography>
-                <input
+                <Input
                     className={cx("__input")}
                     name="name"
                     placeholder="이름 (미입력시 '익명')"
@@ -77,9 +79,9 @@ function CommentForm({ slug }: CommentFormProps) {
                         setName(value);
                     }}
                 />
-                <input className={cx("__input")} name="url" inputMode="url" placeholder="주소" />
-                <input className={cx("__input")} name="email" inputMode="email" placeholder="이메일 (비공개)" />
-                <textarea
+                <Input className={cx("__input")} name="url" inputMode="url" placeholder="주소" />
+                <Input className={cx("__input")} name="email" inputMode="email" placeholder="이메일 (비공개)" />
+                <Textarea
                     className={cx("__textarea")}
                     name="body"
                     value={body}
