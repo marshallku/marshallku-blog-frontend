@@ -1,8 +1,9 @@
 import { classNames, formatDate } from "@marshallku/utils";
 import { type Comment } from "#api";
-import styles from "./index.module.scss";
 import CommentAvatar from "#components/CommentAvatar";
 import Typography from "#components/Typography";
+import CommentContent from "#components/CommentContent";
+import styles from "./index.module.scss";
 
 export interface CommentBubbleProps {
     data: Comment;
@@ -27,8 +28,8 @@ function CommentBubble({ border, data: { name, url, body, createdAt, byPostAutho
                         {name}
                     </Typography>
                 </div>
-                <Typography variant="b1" className={cx("__text")}>
-                    {body}
+                <Typography variant="b1" className={cx("__text")} component="div">
+                    <CommentContent content={body} />
                 </Typography>
                 <Typography variant="c2" className={cx("__date")}>
                     {formatDate(new Date(createdAt), "yyyy. MM. dd")}
