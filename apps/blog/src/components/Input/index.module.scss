@@ -1,0 +1,29 @@
+.input {
+    display: block;
+    padding: 4px 12px;
+
+    &--box {
+        background-color: color(comment);
+        border-radius: 4px;
+    }
+
+    &--line {
+        border-bottom: 1px solid color(comment);
+        transition: border-color 0.2s $ease-in-out-cubic;
+
+        &:has(input:focus) {
+            border-color: color(theme);
+        }
+    }
+
+    &__label {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    &__input {
+        @include typography(b2);
+        display: block;
+        width: 100%;
+    }
+}
