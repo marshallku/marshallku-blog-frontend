@@ -11,6 +11,8 @@ services:
             - 4200:3000
         networks:
             - app_network
+        environment:
+            TZ: "Asia/Seoul"
     blog-front-green:
         <<: *front
         container_name: blog-front-green
