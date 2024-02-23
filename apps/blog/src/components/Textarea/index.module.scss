@@ -11,7 +11,7 @@
         border-bottom: 1px solid color(comment);
         transition: border-color 0.2s $ease-in-out-cubic;
 
-        &:has(input:focus) {
+        &:has(textarea:focus) {
             border-color: color(theme);
         }
     }
