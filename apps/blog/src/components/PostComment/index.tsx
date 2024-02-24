@@ -4,8 +4,8 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@marshallku/react-error-boundary";
 import { classNames } from "@marshallku/utils";
-import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
+import PostCommentForm from "#components/PostCommentForm";
 import styles from "./index.module.scss";
 
 export interface PostCommentProps {
@@ -28,7 +28,7 @@ function PostComment({ slug }: PostCommentProps) {
                 {/* HACK: Removing dynamic data while building application */}
                 {render && (
                     <>
-                        <CommentForm slug={slug} />
+                        <PostCommentForm slug={slug} />
                         <ErrorBoundary fallback={null}>
                             <Suspense fallback={null}>
                                 <CommentList slug={slug} />
