@@ -1,0 +1,9 @@
+.guestbook {
+    width: clamp(0px, map-get($container-width, small), 100%);
+    margin: $global-navigation-height auto 0;
+
+    &__title {
+        margin: 24px 12px;
+        text-align: center;
+    }
+}

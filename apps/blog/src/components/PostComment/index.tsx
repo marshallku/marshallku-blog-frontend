@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@marshallku/react-error-boundary";
 import { classNames } from "@marshallku/utils";
-import CommentList from "#components/CommentList";
+import Comments from "#components/Comments";
 import PostCommentForm from "#components/PostCommentForm";
 import styles from "./index.module.scss";
 
@@ -31,7 +31,7 @@ function PostComment({ slug }: PostCommentProps) {
                         <PostCommentForm slug={slug} />
                         <ErrorBoundary fallback={null}>
                             <Suspense fallback={null}>
-                                <CommentList slug={slug} />
+                                <Comments slug={slug} />
                             </Suspense>
                         </ErrorBoundary>
                     </>
