@@ -5,7 +5,7 @@ import { classNames } from "@marshallku/utils";
 import { type CommentListResponse } from "#api";
 import { useCommentList } from "#api/comment/queries";
 import CommentBubble from "#components/CommentBubble";
-import { PostCommentProps } from "#components/PostComment";
+import { type PostCommentProps } from "#components/PostComment";
 import styles from "./index.module.scss";
 
 export interface CommentListProps {
