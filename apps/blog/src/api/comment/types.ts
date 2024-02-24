@@ -11,6 +11,8 @@ export interface Comment {
     parentCommentId?: string;
 }
 
+export type CommentRequest = Omit<Comment, "_id" | "createdAt" | "byPostAuthor">;
+
 export interface NestedComment extends Omit<Comment, "parentCommentId"> {
     replies?: Required<Comment>[];
 }
