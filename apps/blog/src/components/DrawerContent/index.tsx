@@ -74,6 +74,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                     <List icon="home" text="Home" href="/" />
                     <List icon="notifications" text="Notice" href="/notice" />
                     <List icon="tag" text="Tags" href="/tags" />
+                    <List icon="mail" text="Guestbook" href="/guestbook" />
                 </ul>
                 <ul className={cx("__item")}>
                     {CATEGORIES.map(({ slug, name, icon, color }) => (
