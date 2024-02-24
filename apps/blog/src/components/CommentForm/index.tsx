@@ -3,7 +3,7 @@
 import { FormEventHandler, useCallback, useRef, useState } from "react";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import { usePostComment } from "#api/comment/queries";
+import { type CommentRequest } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
 import Input from "#components/Input";
 import Textarea from "#components/Textarea";
@@ -12,15 +12,15 @@ import styles from "./index.module.scss";
 
 interface CommentFormProps {
     slug: string;
+    submit(data: CommentRequest): void;
 }
 
 const cx = classNames(styles, "comment-form");
 
-function CommentForm({ slug }: CommentFormProps) {
+function CommentForm({ slug, submit }: CommentFormProps) {
     const [name, setName] = useState("");
     const [body, setBody] = useState("");
     const formRef = useRef<HTMLFormElement>(null);
-    const { mutate } = usePostComment(slug);
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
         (event) => {
@@ -53,7 +53,7 @@ function CommentForm({ slug }: CommentFormProps) {
                 parentCommentId: formData.get("parentCommentId") as string,
             };
 
-            mutate(data);
+            submit(data);
             formRef.current?.reset();
             setName("");
             setBody("");
