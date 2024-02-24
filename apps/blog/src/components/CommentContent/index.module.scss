@@ -18,7 +18,9 @@
     &__video,
     &__code,
     p {
-        margin-bottom: 0.65em;
+        &:not(:last-child) {
+            margin-bottom: 0.65em;
+        }
     }
 
     a {
