@@ -1,11 +1,7 @@
-"use client";
-
 import { Fragment } from "react";
 import { classNames } from "@marshallku/utils";
 import { type CommentListResponse } from "#api";
-import { useCommentList } from "#api/comment/queries";
 import CommentBubble from "#components/CommentBubble";
-import { type PostCommentProps } from "#components/PostComment";
 import styles from "./index.module.scss";
 
 export interface CommentListProps {
@@ -14,9 +10,7 @@ export interface CommentListProps {
 
 const cx = classNames(styles, "comment-list");
 
-function CommentList({ slug }: Pick<PostCommentProps, "slug">) {
-    const { data } = useCommentList(slug);
-
+function CommentList({ data }: CommentListProps) {
     return (
         <ul className={cx()}>
             {data.map(({ replies, ...comment }) => (
