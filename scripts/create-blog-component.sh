@@ -31,7 +31,7 @@ fi
 component_name=$(tr '[:lower:]' '[:upper:]' <<<"${name:0:1}")${name:1}
 style_name=$(echo "$component_name" | perl -pe 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')
 
-component_dir="apps/blog/src/$directory/$name"
+component_dir="apps/blog/src/$directory/$component_name"
 
 mkdir -p "$component_dir"
 
