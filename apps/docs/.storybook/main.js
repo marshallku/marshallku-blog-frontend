@@ -1,5 +1,7 @@
 import { dirname, join, resolve } from "path";
 
+const BLOG_SRC = resolve("../blog/src");
+
 function getAbsolutePath(value) {
     return dirname(require.resolve(join(value, "package.json")));
 }
@@ -38,14 +40,31 @@ const config = {
                         replacement: resolve("../../packages/ui/dist"),
                     },
                     {
-                        find: /#/,
-                        replacement: `${resolve("../../packages/ui/src")}/`,
-                    },
-                    {
                         find: "@icon",
                         replacement: resolve("../../packages/icon/dist"),
                     },
+                    {
+                        find: "@blog",
+                        replacement: resolve(BLOG_SRC, "components"),
+                    },
+                    {
+                        find: /#/,
+                        replacement: `${BLOG_SRC}/`,
+                    },
                 ],
+            },
+            css: {
+                postcss: null,
+                preprocessorOptions: {
+                    scss: {
+                        additionalData: `
+                            @import "${BLOG_SRC}/styles/abstracts/_variables.scss";
+                            @import "${BLOG_SRC}/styles/abstracts/_palette.scss";
+                            @import "${BLOG_SRC}/styles/abstracts/_fonts.scss";
+                            @import "${BLOG_SRC}/styles/abstracts/_mixins.scss";
+                        `,
+                    },
+                },
             },
         };
     },
