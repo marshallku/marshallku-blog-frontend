@@ -1,6 +1,7 @@
 #!/bin/bash
 
 directory='components'
+story_dir='apps/docs/stories'
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -51,3 +52,25 @@ function $component_name({}: ${component_name}Props) {
 }
 
 export default $component_name" >>"$component_dir"/index.tsx
+
+# Create story file
+echo "import { type Meta, type StoryObj } from \"@storybook/react\";
+import $component_name, { type ${component_name}Props } from \"@blog/$component_name\";
+
+const story: Meta<${component_name}Props> = {
+    component: $component_name,
+    title: \"Components/$component_name\",
+    parameters: {
+        docs: {
+            description: {
+                component: \"ADD_YOUR_DESCRIPTION\",
+            },
+        },
+    },
+};
+
+export default story;
+
+export const Default: StoryObj<${component_name}Props> = {
+    args: {},
+};" >>"$story_dir/$component_name.stories.tsx"
