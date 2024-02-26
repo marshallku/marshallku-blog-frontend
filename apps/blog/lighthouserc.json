@@ -2,7 +2,7 @@
     "ci": {
         "collect": {
             "startServerCommand": "pnpm start --filter @marshallku/blog",
-            "startServerReadyPattern": "ready on",
+            "startServerReadyPattern": "Ready in",
             "url": ["http://localhost:3000"],
             "numberOfRuns": 5,
             "settings": {

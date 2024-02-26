@@ -39,12 +39,12 @@ jobs:
               env:
                   LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
               run: |
+                  pnpm build --filter @marshallku/blog
                   cd apps/blog
-                  pnpm build
-                  pnpm add -G @lhci/cli
+                  npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, lint-all, build-all]
+        needs: [check-spelling, lint-all, build-all, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
