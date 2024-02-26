@@ -29,6 +29,20 @@ jobs:
             - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages
               run: pnpm build
+    lighthouse:
+        name: Lighthouse CI
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Run Lighthouse CI
+              env:
+                  LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+              run: |
+                  cd apps/blog
+                  pnpm build
+                  pnpm add -G @lhci/cli
+                  lhci autorun
     send-notification:
         needs: [check-spelling, lint-all, build-all]
         if: ${{ failure() }}
