@@ -2,13 +2,17 @@ name: CI / Push
 
 on:
     push:
-        branches:
-            - master
 
 env:
     CI: true
 
 jobs:
+    check-spelling:
+        name: Check spelling
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: marshallku/actions/check-spelling@master
     lint-all:
         name: Check quality with ESLint
         runs-on: ubuntu-latest
@@ -26,7 +30,7 @@ jobs:
             - name: Build apps and packages
               run: pnpm build
     send-notification:
-        needs: [lint-all, build-all]
+        needs: [check-spelling, lint-all, build-all]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
