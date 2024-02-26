@@ -39,8 +39,11 @@ jobs:
               env:
                   LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
               run: |
+                  mv apps/blog/.env.example apps/blog/.env
                   pnpm build --filter @marshallku/blog
                   cd apps/blog
+                  cp .next/static .next/standalone/apps/blog/.next -r
+                  cp public .next/standalone/apps/blog/ -r
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
