@@ -1,0 +1,23 @@
+{
+    "ci": {
+        "collect": {
+            "startServerCommand": "pnpm start --filter @marshallku/blog",
+            "startServerReadyPattern": "ready on",
+            "url": ["http://localhost:3000"],
+            "numberOfRuns": 5,
+            "settings": {
+                "preset": "desktop"
+            }
+        },
+        "assert": {
+            "preset": "lighthouse:recommended",
+            "assertions": {
+                "categories:performance": ["warn", { "minScore": 0.95 }],
+                "categories:accessibility": ["error", { "minScore": 0.9 }]
+            }
+        },
+        "upload": {
+            "target": "temporary-public-storage"
+        }
+    }
+}
