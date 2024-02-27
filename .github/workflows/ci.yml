@@ -1,4 +1,4 @@
-name: CI / Push
+name: CI
 
 on:
     push:
@@ -54,6 +54,6 @@ jobs:
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
             failed: ${{ contains(join(needs.*.result, ','), 'failure') }}
-            message: "CI job failed - push on master"
+            message: "CI job failed"
         secrets:
             url: ${{ secrets.DISCORD_WEBHOOK_URI }}
