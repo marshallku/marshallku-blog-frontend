@@ -18,6 +18,10 @@ const config = {
         options: {},
     },
 
+    features: {
+        buildStoriesJson: true,
+    },
+
     core: {},
 
     async viteFinal(config, { configType }) {
