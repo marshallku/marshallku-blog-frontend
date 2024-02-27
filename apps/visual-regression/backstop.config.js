@@ -1,3 +1,8 @@
+const storyData = require("../docs/storybook-static/stories.json");
+
+const stories = Object.values(storyData.stories);
+const blackList = [];
+
 /** @type {import('backstopjs').Config} */
 const config = {
     id: "backstop_default",
@@ -15,15 +20,16 @@ const config = {
     ],
     onBeforeScript: "puppet/onBefore.js",
     onReadyScript: "puppet/onReady.js",
-    scenarios: [
-        {
-            label: "BackstopJS Homepage",
-            cookiePath: "backstop_data/engine_scripts/cookies.json",
-            url: "https://garris.github.io/BackstopJS/",
+    scenarios: stories
+        .filter((story) => story.tags.includes("story") || !blackList.includes(story.id))
+        .map((story) => ({
+            label: story.id,
+            cookiePath: "",
+            url: `http://localhost:8083/iframe.html?id=${story.id}&viewMode=story`,
             referenceUrl: "",
             readyEvent: "",
-            readySelector: "",
-            delay: 0,
+            readySelector: "#storybook-root",
+            delay: 3000,
             hideSelectors: [],
             removeSelectors: [],
             hoverSelector: "",
@@ -34,8 +40,7 @@ const config = {
             expect: 0,
             misMatchThreshold: 0.1,
             requireSameDimensions: true,
-        },
-    ],
+        })),
     paths: {
         bitmaps_reference: "backstop_data/bitmaps_reference",
         bitmaps_test: "backstop_data/bitmaps_test",
