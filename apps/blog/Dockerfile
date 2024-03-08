@@ -1,7 +1,7 @@
 FROM node:20-alpine AS base
 
-RUN apk add --no-cache libc6-compat
-RUN apk update
+RUN apk add --no-cache libc6-compat \
+    && apk update
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -21,6 +21,9 @@ RUN turbo prune --scope=@marshallku/blog --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
+
+ENV TZ=Asia/Seoul
+RUN echo "Asia/Seoul" > /etc/timezone
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
