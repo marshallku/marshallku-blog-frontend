@@ -1,0 +1,48 @@
+.about {
+    width: clamp(0px, map-get($container-width, small), 100%);
+    margin: $global-navigation-height auto 0;
+
+    &__container {
+        padding: 0 12px;
+    }
+
+    &__profile {
+        margin: 24px 0;
+
+        > img {
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+    }
+
+    &__title {
+        margin: 0 0 24px;
+        text-align: center;
+    }
+
+    &__contact {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        @include respond-to(medium) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        > li > a {
+            display: flex;
+            padding: 8px;
+            align-items: center;
+            border: 1px solid color(sub);
+            border-radius: 8px;
+
+            > i {
+                margin-right: 8px;
+                font-size: 2em;
+            }
+        }
+    }
+}

@@ -73,6 +73,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                 <ul className={cx("__item")}>
                     <List icon="home" text="Home" href="/" />
                     <List icon="notifications" text="Notice" href="/notice" />
+                    <List icon="edit" text="About" href="/about" />
                     <List icon="tag" text="Tags" href="/tags" />
                     <List icon="mail" text="Guestbook" href="/guestbook" />
                 </ul>
