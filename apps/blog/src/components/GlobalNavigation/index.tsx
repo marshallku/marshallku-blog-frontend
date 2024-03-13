@@ -28,7 +28,9 @@ function GlobalNavigation() {
                             <li key={slug}>
                                 {icon && <Icon name={icon} color={color} />}
                                 <Typography variant="b2" component="span" fontWeight={700}>
-                                    <Link href={slug}>{name}</Link>
+                                    <Link href={slug} prefetch={false}>
+                                        {name}
+                                    </Link>
                                 </Typography>
                             </li>
                         ))}

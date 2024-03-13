@@ -56,7 +56,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
             children?: ReactNode;
         }) => (
             <li>
-                <Link href={href} onClick={close}>
+                <Link href={href} onClick={close} prefetch={false}>
                     <Icon name={icon} color={color} />
                     {text}
                 </Link>
