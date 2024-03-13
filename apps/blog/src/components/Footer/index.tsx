@@ -37,7 +37,7 @@ function Footer() {
                         rel="noopener noreferrer nofollow"
                     >
                         <Icon name="linkedin" />
-                        <span className="sr-only">GitHub</span>
+                        <span className="sr-only">LinkedIn</span>
                     </a>
                     <a href="mailto:marshall@kakao.com">
                         <Icon name="mail" />
