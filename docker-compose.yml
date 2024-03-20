@@ -6,6 +6,9 @@ services:
         build:
             context: .
             dockerfile: ./apps/blog/Dockerfile
+            args: 
+                - TURBO_TEAM=${TURBO_TEAM}
+                - TURBO_TOKEN=${TURBO_TOKEN}
         restart: unless-stopped
         ports:
             - 4200:3000
