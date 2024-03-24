@@ -90,6 +90,7 @@
         "**/.turbo/**",
         "**/public/images/**",
         "*.svg",
-        "*.mdx"
+        "*.mdx",
+        "apps/blog/src/components/NewrelicSnippet/index.tsx"
     ]
 }
