@@ -14,7 +14,10 @@
                 "NEXT_PUBLIC_BLOG_ORIGIN",
                 "NEXT_PUBLIC_CDN_URL",
                 "NEXT_PUBLIC_FILE_CDN_URL",
-                "NEXT_PUBLIC_API_URL"
+                "NEXT_PUBLIC_API_URL",
+                "NR_ACCOUNT_ID",
+                "NR_LICENSE_KEY",
+                "NR_APPLICATION_ID"
             ]
         },
         "clean": {

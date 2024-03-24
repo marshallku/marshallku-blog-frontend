@@ -10,6 +10,7 @@ import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import Footer from "#components/Footer";
 import GlobalNavigation from "#components/GlobalNavigation";
 import TopButton from "#components/TopButton";
+import NewrelicSnippet from "#components/NewrelicSnippet";
 
 export const metadata: Metadata = {
     title: SITE_NAME,
@@ -35,6 +36,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko" suppressHydrationWarning>
+            <head>
+                <NewrelicSnippet
+                    accountId={process.env.NR_ACCOUNT_ID}
+                    licenseKey={process.env.NR_LICENSE_KEY}
+                    applicationId={process.env.NR_APPLICATION_ID}
+                />
+            </head>
             <body>
                 {/* HACK: Dirty hack for implementing theme toggle */}
                 <script
