@@ -37,11 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="ko" suppressHydrationWarning>
             <body>
-                <NewrelicSnippet
-                    accountId={process.env.NR_ACCOUNT_ID}
-                    licenseKey={process.env.NR_LICENSE_KEY}
-                    applicationId={process.env.NR_APPLICATION_ID}
-                />
+                <NewrelicSnippet />
                 {/* HACK: Dirty hack for implementing theme toggle */}
                 <script
                     id="theme"
