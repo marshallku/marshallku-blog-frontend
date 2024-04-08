@@ -127,6 +127,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     alt={post.data.title}
                     width={dimensions.width}
                     height={dimensions.height}
+                    useLowQualityPlaceholder
                 />
             </figure>
             <div className={cx("__meta")}>
