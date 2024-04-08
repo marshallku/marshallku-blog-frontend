@@ -4,11 +4,12 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
     src: string;
     forceSize?: number;
     disableWebP?: boolean;
+    useLowQualityPlaceholder?: boolean;
 }
 
 const IMAGE_SIZE = [480, 600, 860, 1180];
 
-function Image({ src, alt, width, height, forceSize, disableWebP, ...rest }: ImageProps) {
+function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityPlaceholder, ...rest }: ImageProps) {
     const extension = src.split(".").pop();
     const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
     const hasCdnUrl = process.env.NEXT_PUBLIC_CDN_URL !== "";
@@ -55,6 +56,16 @@ function Image({ src, alt, width, height, forceSize, disableWebP, ...rest }: Ima
                     height={height}
                     loading="lazy"
                     {...rest}
+                    style={
+                        useLowQualityPlaceholder
+                            ? {
+                                  backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w10.${extension})`,
+                                  backgroundSize: "cover",
+                                  backgroundPosition: "center",
+                                  backgroundRepeat: "no-repeat",
+                              }
+                            : {}
+                    }
                 />
             </picture>
         );

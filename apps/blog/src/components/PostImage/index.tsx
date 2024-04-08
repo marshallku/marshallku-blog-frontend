@@ -7,9 +7,13 @@ import styles from "./index.module.scss";
 
 const IMAGE_SIZE = [480, 600, 860, 1180, 1536, 2048];
 
+export interface PostImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+    useLowQualityPlaceholder?: boolean;
+}
+
 const cx = classNames(styles, "post-image");
 
-function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttributes<HTMLImageElement>) {
+function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, height, ...rest }: PostImageProps) {
     const imageRef = useRef<HTMLImageElement>(null);
     const { attach, detach } = useZoom();
 
@@ -54,10 +58,22 @@ function PostImage({ src, title, alt, width, height, ...rest }: ImgHTMLAttribute
     const extension = src.split(".").pop();
     const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
     const hasCdnUrl = process.env.NEXT_PUBLIC_CDN_URL !== "";
-    const sizes = width && height && hasCdnUrl ? IMAGE_SIZE.filter((size) => size <= Number(width)) : [];
+    const sizes = hasCdnUrl ? IMAGE_SIZE.filter((size) => size <= Number(width)) : [];
 
     return (
-        <figure className={cx("", { className: "image-block" })}>
+        <figure
+            className={cx("", { className: "image-block" })}
+            style={
+                useLowQualityPlaceholder && hasCdnUrl
+                    ? {
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w10.${extension})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
+                      }
+                    : undefined
+            }
+        >
             <picture>
                 {sizes.map((size) => (
                     <source
