@@ -1,12 +1,10 @@
-version: "3"
-
 services:
     blog-front-blue: &front
         container_name: blog-front-blue
         build:
             context: .
             dockerfile: ./apps/blog/Dockerfile
-            args: 
+            args:
                 - TURBO_TEAM=${TURBO_TEAM}
                 - TURBO_TOKEN=${TURBO_TOKEN}
         restart: unless-stopped
