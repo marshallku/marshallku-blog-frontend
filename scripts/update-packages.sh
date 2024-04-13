@@ -25,7 +25,7 @@ cd "$target" || exit 1
 packages=$(pnpm outdated)
 IFS=$'\n'
 mapfile -t lines <<<"$packages"
-regex="│ (\S+)(.*)? │ +([0-9\.]+) +│ +([0-9\.]+) +│"
+regex="│ ([a-zA-Z0-9\._@\/-]+)(.*)? │ +([0-9\.]+) (\(wanted +([0-9\.]+)\))? +│ +([0-9\.]+) +│"
 
 cmd='pnpm i '
 
@@ -35,7 +35,7 @@ for ((i = 0; i < ${#lines[@]}; i++)); do
     if [[ $line =~ $regex ]]; then
         package="${BASH_REMATCH[1]}"
         current_version="${BASH_REMATCH[3]}"
-        update_version="${BASH_REMATCH[4]}"
+        update_version="${BASH_REMATCH[6]}"
 
         confirm "Will you update $package from $current_version to $update_version?" && cmd+="$package@$update_version "
 
