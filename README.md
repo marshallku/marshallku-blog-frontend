@@ -1,6 +1,6 @@
 # Blog Frontend
 
-![Blog front page](https://media.discordapp.net/attachments/1102888096007196733/1203635833467445258/nextjs-blog.png)
+![Blog front page](https://github.com/marshall-ku/assets/assets/72745119/a9add532-4f7c-4504-98dd-5d9c823077a0)
 
 Front-end application of [my blog](https://marshallku.com/)
 
