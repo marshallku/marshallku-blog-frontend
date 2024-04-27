@@ -61,19 +61,7 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
     const sizes = hasCdnUrl ? IMAGE_SIZE.filter((size) => size <= Number(width)) : [];
 
     return (
-        <figure
-            className={cx("", { className: "image-block" })}
-            style={
-                useLowQualityPlaceholder && hasCdnUrl
-                    ? {
-                          backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w10.${extension})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                      }
-                    : undefined
-            }
-        >
+        <figure className={cx("", { className: "image-block" })}>
             <picture>
                 {sizes.map((size) => (
                     <source
@@ -106,6 +94,16 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
                     loading="lazy"
                     crossOrigin="anonymous"
                     {...rest}
+                    style={
+                        useLowQualityPlaceholder && hasCdnUrl
+                            ? {
+                                  backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w10.${extension})`,
+                                  backgroundSize: "cover",
+                                  backgroundPosition: "center",
+                                  backgroundRepeat: "no-repeat",
+                              }
+                            : undefined
+                    }
                 />
             </picture>
             {title && <figcaption>{title}</figcaption>}
