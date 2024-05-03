@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { join, parse } from "path";
 import matter from "gray-matter";
+import { groupBy } from "@marshallku/utils";
 import { POSTS_DIRECTORY } from "#constants";
 import { Category, Post } from "#types";
 import { walk } from "./file";
@@ -83,21 +84,7 @@ export function getTags() {
 }
 
 export function getGroupedPostByCategory() {
-    const posts = getPosts();
-    const groupedPosts: Record<string, typeof posts> = {};
-
-    for (let i = 0, max = posts.length; i < max; ++i) {
-        const post = posts[i];
-        const category = post.category.split("/")[1];
-
-        if (!groupedPosts[category]) {
-            groupedPosts[category] = [];
-        }
-
-        groupedPosts[category].push(post);
-    }
-
-    return groupedPosts;
+    return groupBy(getPosts(), ({ category }) => category.split("/")[1]);
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
