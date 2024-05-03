@@ -29,19 +29,9 @@ function calculatePageNumbers({
     pageRange,
 }: NonNullableProperties<Omit<PaginationProps, "basePath" | "gutterTop">>) {
     const maxPageCount = Math.ceil(totalCount / rowSize);
-    let startPage = Math.max(1, currentIndex - Math.floor(pageRange / 2));
+    const startPage = Math.max(1, Math.min(currentIndex - Math.floor(pageRange / 2), maxPageCount - pageRange + 1));
     const endPage = Math.min(startPage + pageRange - 1, maxPageCount);
-
-    if (endPage - startPage < pageRange - 1) {
-        startPage = Math.max(1, endPage - pageRange + 1);
-    }
-
-    const pages = [];
-
-    for (let i = startPage; i <= endPage; ++i) {
-        pages.push(i);
-    }
-
+    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     return pages;
 }
 
