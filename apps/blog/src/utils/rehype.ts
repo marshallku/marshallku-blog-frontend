@@ -25,7 +25,7 @@ function isExternalImage(path: string) {
     return path.startsWith("http");
 }
 
-async function addImageMetaData(node: ImageNode) {
+function addImageMetaData(node: ImageNode) {
     const {
         properties: { src },
     } = node;
@@ -48,17 +48,11 @@ async function addImageMetaData(node: ImageNode) {
 
 export function setImageMetaData(this: Processor) {
     return async function transformer(tree: Node, _: VFile) {
-        const imageNodes: ImageNode[] = [];
-
         visit(tree, "element", (node: ImageNode) => {
             if (node.type === "element" && node.tagName === "img") {
-                imageNodes.push(node);
+                addImageMetaData(node);
             }
         });
-
-        for (const node of imageNodes) {
-            await addImageMetaData(node);
-        }
 
         return tree;
     };
