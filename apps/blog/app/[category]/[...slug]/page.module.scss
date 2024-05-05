@@ -2,7 +2,8 @@
     $banner-height: 128px;
 
     &__banner {
-        padding: $global-navigation-height + 48px $container-padding $banner-height;
+        $padding: 36px;
+        padding: $global-navigation-height + $padding $container-padding $banner-height + $padding;
         text-align: center;
         background-color: color(background-dimmed);
     }
