@@ -6,6 +6,7 @@ import useZoom from "#hooks/useZoom";
 import styles from "./index.module.scss";
 
 const IMAGE_SIZE = [480, 600, 860, 1180, 1536, 2048];
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
 
 export interface PostImageProps extends ImgHTMLAttributes<HTMLImageElement> {
     useLowQualityPlaceholder?: boolean;
@@ -57,7 +58,7 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
 
     const extension = src.split(".").pop();
     const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
-    const hasCdnUrl = process.env.NEXT_PUBLIC_CDN_URL !== "";
+    const hasCdnUrl = CDN_URL !== "";
     const sizes = hasCdnUrl ? IMAGE_SIZE.filter((size) => size <= Number(width)) : [];
 
     return (
@@ -67,27 +68,24 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
                     <source
                         key={`webp-${size}`}
                         type="image/webp"
-                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w${size}.${extension}.webp`}
+                        srcSet={`${CDN_URL}${srcWithoutExtension}.w${size}.${extension}.webp`}
                         media={`(max-width: ${size}px)`}
                     />
                 ))}
                 {hasCdnUrl && (
-                    <source
-                        type="image/webp"
-                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}.webp`}
-                    />
+                    <source type="image/webp" srcSet={`${CDN_URL}${srcWithoutExtension}.${extension}.webp`} />
                 )}
                 {sizes.map((size) => (
                     <source
                         key={size}
-                        srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w${size}.${extension}`}
+                        srcSet={`${CDN_URL}${srcWithoutExtension}.w${size}.${extension}`}
                         media={`(max-width: ${size}px)`}
                     />
                 ))}
-                <source srcSet={`${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.${extension}`} />
+                <source srcSet={`${CDN_URL}${srcWithoutExtension}.${extension}`} />
                 <img
                     ref={imageRef}
-                    src={`${process.env.NEXT_PUBLIC_CDN_URL}${src}`}
+                    src={`${CDN_URL}${src}`}
                     alt={alt || ""}
                     width={width}
                     height={height}
@@ -97,7 +95,7 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
                     style={
                         useLowQualityPlaceholder && hasCdnUrl
                             ? {
-                                  backgroundImage: `url(${process.env.NEXT_PUBLIC_CDN_URL}${srcWithoutExtension}.w10.${extension})`,
+                                  backgroundImage: `url(${CDN_URL}${srcWithoutExtension}.w10.${extension})`,
                                   backgroundSize: "cover",
                                   backgroundPosition: "center",
                                   backgroundRepeat: "no-repeat",
