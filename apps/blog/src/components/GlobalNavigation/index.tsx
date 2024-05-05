@@ -1,15 +1,19 @@
 import Link from "next/link";
-import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Drawer from "#components/Drawer";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
 import Typography from "#components/Typography";
 import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
-import { getCategories } from "#utils/post";
 import styles from "./index.module.scss";
 
 const cx = classNames(styles, "global-navigation");
+
+const NAVIGATION = [
+    { path: "/", name: "Home" },
+    { path: "/about", name: "About" },
+    { path: "/guestbook", name: "Guestbook" },
+] as const;
 
 function GlobalNavigation() {
     return (
@@ -24,11 +28,10 @@ function GlobalNavigation() {
                 </div>
                 <div className={cx("__center")}>
                     <ul className={cx("__category")}>
-                        {getCategories().map(({ slug, name, icon, color }) => (
-                            <li key={slug}>
-                                {icon && <Icon name={icon} color={color} />}
+                        {NAVIGATION.map(({ path, name }) => (
+                            <li key={path}>
                                 <Typography variant="b2" component="span" fontWeight={700}>
-                                    <Link href={slug} prefetch={false}>
+                                    <Link href={path} prefetch={false}>
                                         {name}
                                     </Link>
                                 </Typography>
