@@ -4,7 +4,7 @@
     "private": true,
     "sideEffects": false,
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev -p 3443",
         "build": "next build",
         "start": "node .next/standalone/apps/blog/server.js",
         "lint": "next lint",
