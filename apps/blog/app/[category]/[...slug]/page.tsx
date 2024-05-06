@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import nextDynamic from "next/dynamic";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -14,7 +15,6 @@ import { classNames, formatDate } from "@marshallku/utils";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import Image from "#components/Image";
-import PostComment from "#components/PostComment";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import Typography from "#components/Typography";
@@ -72,6 +72,9 @@ export async function generateStaticParams() {
 const cx = classNames(styles, "page");
 
 export default async function Post({ params: { category, slug } }: PostProps) {
+    const PostComment = nextDynamic(() => import("#components/PostComment"), {
+        ssr: false,
+    });
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
     const post = getPostBySlug(postSlug);
 
