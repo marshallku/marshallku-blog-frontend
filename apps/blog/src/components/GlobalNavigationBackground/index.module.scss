@@ -7,7 +7,7 @@
     background-color: color(navigation-background);
     -webkit-backdrop-filter: blur(8px) saturate(180%);
     backdrop-filter: blur(8px) saturate(180%);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
     opacity: 0;
     transition: opacity 0.25s $ease-in-out-cubic;
     z-index: -1;

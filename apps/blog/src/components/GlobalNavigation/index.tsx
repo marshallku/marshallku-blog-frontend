@@ -1,19 +1,22 @@
 import Link from "next/link";
+import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Drawer from "#components/Drawer";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
 import Typography from "#components/Typography";
 import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
+import { getCategories } from "#utils/post";
 import styles from "./index.module.scss";
 
 const cx = classNames(styles, "global-navigation");
 
 const NAVIGATION = [
     { path: "/", name: "Home" },
+    { name: "Categories", subMenu: getCategories() } as const,
     { path: "/about", name: "About" },
     { path: "/guestbook", name: "Guestbook" },
-] as const;
+];
 
 function GlobalNavigation() {
     return (
@@ -28,12 +31,30 @@ function GlobalNavigation() {
                 </div>
                 <div className={cx("__center")}>
                     <ul className={cx("__category")}>
-                        {NAVIGATION.map(({ path, name }) => (
-                            <li key={path}>
-                                <Typography variant="b2" component="span" fontWeight={700}>
-                                    <Link href={path} prefetch={false}>
-                                        {name}
-                                    </Link>
+                        {NAVIGATION.map(({ path, name, subMenu }) => (
+                            <li key={name} className={cx("__item", subMenu && "__item--has-sub-menu")}>
+                                <Typography variant="b2" component="span" fontWeight={500}>
+                                    {path ? (
+                                        <Link href={path} prefetch={false}>
+                                            {name}
+                                        </Link>
+                                    ) : (
+                                        name
+                                    )}
+                                    {subMenu && (
+                                        <ul>
+                                            {subMenu.map(({ name, slug, icon, color }) => (
+                                                <li key={slug}>
+                                                    <Typography variant="b2" component="span" fontWeight={500}>
+                                                        <Link href={slug} prefetch={false}>
+                                                            {icon && <Icon name={icon} color={color} />}
+                                                            {name}
+                                                        </Link>
+                                                    </Typography>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </Typography>
                             </li>
                         ))}
