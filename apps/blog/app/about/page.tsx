@@ -73,14 +73,21 @@ export default function AboutPage() {
                         <Typography component="strong" fontWeight={700}>
                             Backend Development:
                         </Typography>{" "}
-                        I've worked with NestJS, MongoDB, and more to create robust server-side applications.
+                        I've worked with NestJS, Axum, MongoDB, and more to create robust server-side applications.
                     </li>
                     <li>
                         <Typography component="strong" fontWeight={700}>
-                            Automation Enthusiast:
+                            Infrastructure Management:
                         </Typography>{" "}
-                        I love automating tasks and creating efficient workflows using tools like Github Actions and
-                        Shell Scripts.
+                        I manage both on-premise and cloud-based environments using Docker, Nginx, and Ubuntu, ensuring
+                        high availability and security.
+                    </li>
+                    <li>
+                        <Typography component="strong" fontWeight={700}>
+                            Development Efficiency:
+                        </Typography>{" "}
+                        I am passionate about automating tasks and creating efficient workflows using tools like GitHub
+                        Actions and Shell Scripts.
                     </li>
                 </Typography>
                 <Typography component="p">
