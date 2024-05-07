@@ -11,6 +11,11 @@
             a {
                 color: color(link);
             }
+
+            ul li::before {
+                content: "•";
+                margin-right: 4px;
+            }
         }
     }
 
