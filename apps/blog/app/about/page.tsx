@@ -2,7 +2,6 @@ import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Typography from "#components/Typography";
 import styles from "./page.module.scss";
-import Button from "#components/Button";
 
 export const dynamic = "error";
 
@@ -28,7 +27,7 @@ export default function AboutPage() {
                     <li>
                         <a href="https://github.com/marshallku" target="_blank" rel="noopener noreferrer nofollow">
                             <Icon name="github" />
-                            <Typography>GitHub</Typography>
+                            <Typography className="sr-only">GitHub</Typography>
                         </a>
                     </li>
                     <li>
@@ -38,26 +37,56 @@ export default function AboutPage() {
                             rel="noopener noreferrer nofollow"
                         >
                             <Icon name="linkedin" />
-                            <Typography>LinkedIn</Typography>
+                            <Typography className="sr-only">LinkedIn</Typography>
                         </a>
                     </li>
                     <li>
                         <a href="mailto:marshall@kakao.com">
                             <Icon name="mail" />
-                            <Typography>marshall@kakao.com</Typography>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="https://marshallku.notion.site/a8461811a3044446a2048fc054001b9d?pvs=4"
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                        >
-                            <Icon name="notion" />
-                            <Typography>Resume</Typography>
+                            <Typography className="sr-only">marshall@kakao.com</Typography>
                         </a>
                     </li>
                 </ul>
+            </section>
+            <section className={cx("__container", "__container--about")}>
+                <Typography component="p" marginBottom>
+                    Hello! I'm Marshall Ku, a passionate developer who loves learning and taking on new challenges. I've
+                    worked on various projects and have experience with a wide range of technologies.
+                </Typography>
+                <Typography component="p" marginBottom>
+                    I enjoy solving complex problems with code and continuously strive to improve my skills. Through
+                    side projects and professional experience, I've gained a solid foundation in multiple domains, from
+                    frontend to backend technologies.
+                </Typography>
+                <Typography component="p" marginBottom={8} variant="h5" fontWeight={700}>
+                    What I Do
+                </Typography>
+                <Typography component="ul" marginBottom>
+                    <li>
+                        <Typography component="strong" fontWeight={700}>
+                            Frontend Development:
+                        </Typography>{" "}
+                        I specialize in building interactive user interfaces using technologies like React and
+                        TypeScript.
+                    </li>
+                    <li>
+                        <Typography component="strong" fontWeight={700}>
+                            Backend Development:
+                        </Typography>{" "}
+                        I've worked with NestJS, MongoDB, and more to create robust server-side applications.
+                    </li>
+                    <li>
+                        <Typography component="strong" fontWeight={700}>
+                            Automation Enthusiast:
+                        </Typography>{" "}
+                        I love automating tasks and creating efficient workflows using tools like Github Actions and
+                        Shell Scripts.
+                    </li>
+                </Typography>
+                <Typography component="p">
+                    For more details about my experience and projects, please visit my{" "}
+                    <a href="https://resume.marshallku.com/">resume page</a>.
+                </Typography>
             </section>
         </div>
     );

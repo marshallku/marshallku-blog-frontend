@@ -4,6 +4,14 @@
 
     &__container {
         padding: 0 12px;
+
+        &--about {
+            margin-bottom: 32px;
+
+            a {
+                color: color(link);
+            }
+        }
     }
 
     &__profile {
@@ -23,25 +31,20 @@
 
     &__contact {
         display: flex;
-        flex-direction: column;
+        margin-bottom: 32px;
         gap: 8px;
-
-        @include respond-to(medium) {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
+        align-items: center;
+        justify-content: center;
 
         > li > a {
             display: flex;
             padding: 8px;
             align-items: center;
             border: 1px solid color(sub);
-            border-radius: 8px;
+            border-radius: 50%;
 
             > i {
-                margin-right: 8px;
-                font-size: 2em;
+                font-size: 1.2em;
             }
         }
     }
