@@ -31,7 +31,7 @@ export default async function GuestbookPage() {
                     revalidateTag(SLUG);
                 }}
             />
-            <Suspense fallback={<p>Loading...</p>}>
+            <Suspense>
                 <Comments />
             </Suspense>
         </div>
