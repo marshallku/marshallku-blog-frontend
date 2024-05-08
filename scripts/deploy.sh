@@ -43,7 +43,7 @@ if [[ $response -eq 200 ]]; then
     docker compose down $INACTIVE_SERVICE
 else
     # Rollback
-    echo "$ACTIVE_SERVICE is DOWN, terminating..."
+    echo "$ACTIVE_SERVICE is DOWN with status $response, terminating..."
     docker compose down $ACTIVE_SERVICE
     exit 1
 fi
