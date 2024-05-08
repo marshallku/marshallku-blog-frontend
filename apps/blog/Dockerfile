@@ -26,7 +26,6 @@ ENV TZ=Asia/Seoul
 RUN echo "Asia/Seoul" > /etc/timezone
 
 # First install the dependencies (as they change less often)
-COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
