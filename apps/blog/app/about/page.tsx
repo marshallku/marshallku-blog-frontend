@@ -66,7 +66,7 @@ export default function AboutPage() {
                         <Typography component="strong" fontWeight={700}>
                             Frontend Development:
                         </Typography>{" "}
-                        I specialize in building interactive user interfaces using technologies like React and
+                        I specialize in building interactive user interfaces using technologies like React, Next.js, and
                         TypeScript.
                     </li>
                     <li>
@@ -79,7 +79,7 @@ export default function AboutPage() {
                         <Typography component="strong" fontWeight={700}>
                             Infrastructure Management:
                         </Typography>{" "}
-                        I manage both on-premise and cloud-based environments using Docker, Nginx, and Ubuntu, ensuring
+                        I manage both on-premise and cloud-based environments using Docker, NGINX, and Ubuntu, ensuring
                         high availability and security.
                     </li>
                     <li>
@@ -87,12 +87,15 @@ export default function AboutPage() {
                             Development Efficiency:
                         </Typography>{" "}
                         I am passionate about automating tasks and creating efficient workflows using tools like GitHub
-                        Actions and Shell Scripts.
+                        Actions, Python, JavaScript, and Shell Scripts.
                     </li>
                 </Typography>
                 <Typography component="p">
                     For more details about my experience and projects, please visit my{" "}
-                    <a href="https://resume.marshallku.com/">resume page</a>.
+                    <a href="https://resume.marshallku.com/" target="_blank" rel="noreferrer noopener">
+                        resume page
+                    </a>
+                    .
                 </Typography>
             </section>
         </div>
