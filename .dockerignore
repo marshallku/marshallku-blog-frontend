@@ -1,8 +1,13 @@
 .github
+.gitattributes
+.gitignore
+.prettierignore
+.prettierrc
+cspell.json
 .changeset
 **/node_modules
 node_modules
 **/Dockerfile
 docker-compose.yml
-cspell.json
 README.md
+/scripts
