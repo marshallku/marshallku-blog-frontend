@@ -28,22 +28,27 @@ INACTIVE_PORT=$([ "$ACTIVE_SERVICE" == "$BLUE_SERVICE" ] && echo '4201' || echo 
 docker compose up --build -d $ACTIVE_SERVICE
 
 # Health check
-sleep 10
+for _ in {1..10}; do
+    SERVER_URL="http://0.0.0.0:$ACTIVE_PORT"
+    response=$(curl -s -o /dev/null -I -w "%{http_code}" "$SERVER_URL")
 
-SERVER_URL="http://0.0.0.0:$ACTIVE_PORT"
-response=$(curl -s -o /dev/null -I -w "%{http_code}" "$SERVER_URL")
+    echo "$SERVER_URL responded with status $response"
 
-if [[ $response -eq 200 ]]; then
-    # Shift traffic
-    echo "$SERVER_URL responded with status 200, deploying $ACTIVE_SERVICE"
-    sudo /bin/sed -i "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE"
-    # Should prevent sigkill
-    sudo /bin/systemctl restart nginx || exit 1
+    if [[ $response -eq 200 ]]; then
+        echo "Health check passed. Switching traffic"
+        # Shift traffic
+        sudo /bin/sed -i "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE"
+        # Should prevent sigkill
+        sudo /bin/systemctl restart nginx || exit 1
 
-    docker compose down $INACTIVE_SERVICE
-else
-    # Rollback
-    echo "$ACTIVE_SERVICE is DOWN with status $response, terminating..."
-    docker compose down $ACTIVE_SERVICE
-    exit 1
-fi
+        docker compose down $INACTIVE_SERVICE
+        exit 0
+    fi
+
+    sleep 1
+done
+
+# Rollback
+echo "Health check failed. Rolling back"
+docker compose down $ACTIVE_SERVICE
+exit 1
