@@ -1,5 +1,6 @@
 import { writeFileSync } from "fs";
-import icons from "../dist/icons.json" assert { type: "json" };
+
+const { default: icons } = await import("../dist/icons.json", { with: { type: "json" } });
 
 writeFileSync(
     "./dist/constants.ts",
