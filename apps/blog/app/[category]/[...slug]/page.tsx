@@ -162,7 +162,9 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                         keepBackground: true,
                                     },
                                 ],
+                                // @ts-expect-error
                                 setImageMetaData,
+                                // @ts-expect-error
                                 makeIframeResponsive,
                             ],
                         },
