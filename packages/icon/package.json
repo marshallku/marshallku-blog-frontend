@@ -21,10 +21,10 @@
         "@types/react": "^18.2.46",
         "@types/react-dom": "^18.2.18",
         "clean-css-cli": "^5.6.2",
-        "fantasticon": "^2.0.0",
-        "react": "^18.2.0",
-        "tsup": "^8.0.1",
-        "typescript": "^5.3.3"
+        "fantasticon": "^3.0.0",
+        "react": "^18.3.1",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.5"
     },
     "publishConfig": {
         "access": "public"
