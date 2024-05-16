@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "next dev -p 3443",
         "build": "next build",
-        "test": "CI=true playwright test",
+        "test:e2e": "CI=true playwright test",
         "start": "node .next/standalone/apps/blog/server.js",
         "lint": "next lint",
         "analyze": "ANALYZE=true next build"
