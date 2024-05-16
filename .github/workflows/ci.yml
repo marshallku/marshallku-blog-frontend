@@ -48,6 +48,7 @@ jobs:
               run: pnpm test:e2e --filter @marshallku/blog
     lighthouse:
         name: Lighthouse CI
+        needs: [build-all]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -56,8 +57,8 @@ jobs:
               run: |
                   cp apps/blog/.env.example apps/blog/.env
                   pnpm build --filter @marshallku/blog
-                  cp apps/blog/.next/static apps/blog/.next/standalone/apps/blog/.next -r
-                  cp apps/blog/public apps/blog/.next/standalone/apps/blog/ -r
+                  if [ -d apps/blog/.next/static ]; then cp -r apps/blog/.next/static apps/blog/.next/standalone/apps/blog/.next; fi
+                  if [ -d apps/blog/public ]; then cp -r apps/blog/public apps/blog/.next/standalone/apps/blog/; fi
             - name: Run Lighthouse CI
               env:
                   LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
