@@ -25,7 +25,7 @@ export default defineConfig({
     },
 
     use: {
-        // Use baseURL so to make navigations relative.
+        // Use baseURL so to make navigation relative.
         // More information: https://playwright.dev/docs/api/class-testoptions#test-options-base-url
         baseURL,
 
