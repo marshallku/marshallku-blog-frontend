@@ -31,6 +31,21 @@ jobs:
             - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages
               run: pnpm build
+    test-all:
+        name: Build all packages and apps
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Build apps and packages
+              run: |
+                  # setup playwright
+                  cd apps/blog
+                  pnpm exec playwright install 
+                  cd ../..
+
+                  # run tests
+                  pnpm test
     lighthouse:
         name: Lighthouse CI
         runs-on: ubuntu-latest
@@ -51,7 +66,7 @@ jobs:
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, lint-all, build-all, lighthouse]
+        needs: [check-spelling, lint-all, build-all, test-all, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
