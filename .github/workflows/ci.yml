@@ -31,22 +31,20 @@ jobs:
             - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages
               run: pnpm build
-    test-all:
-        name: Test all packages and apps
+    test-blog-e2e:
+        name: Run e2e test in blog
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
-            - name: Test apps and packages
+            - name: Setup playwright
               run: |
-                  # setup playwright
                   cd apps/blog
-                  pnpm exec playwright install 
-                  cd ../..
-
+                  pnpm exec playwright install
+            - name: Run test
+              run: |
                   # run tests
-                  # FIXME: Remove --filter when visual regression tests are fixed
-                  pnpm test --filter @marshallku/blog
+                  pnpm test:e2e --filter @marshallku/blog
     lighthouse:
         name: Lighthouse CI
         runs-on: ubuntu-latest
@@ -67,7 +65,7 @@ jobs:
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, lint-all, build-all, test-all, lighthouse]
+        needs: [check-spelling, lint-all, build-all, test-blog-e2e, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
