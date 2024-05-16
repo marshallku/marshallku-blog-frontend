@@ -27,7 +27,7 @@ export default function classNames(
             const nameType = typeof name;
 
             if (nameType === "string" || nameType === "number") {
-                const nameWithRoot = rootClassName + (name as number | string);
+                const nameWithRoot = `${rootClassName}${name as number | string}`;
                 classes.push(styles[nameWithRoot] || nameWithRoot);
                 continue;
             }
