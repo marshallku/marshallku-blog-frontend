@@ -40,7 +40,7 @@ importers:
         version: 14.2.3
       '@next/third-parties':
         specifier: ^14.2.3
-        version: 14.2.3(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1))(react@18.3.1)
+        version: 14.2.3(next@14.2.3(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.36.0
         version: 5.36.0(react@18.3.1)
@@ -58,7 +58,7 @@ importers:
         version: 12.0.2
       next:
         specifier: ^14.2.1
-        version: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1)
+        version: 14.2.3(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1)
       next-mdx-remote:
         specifier: ^4.4.1
         version: 4.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -102,6 +102,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^14.2.3
         version: 14.2.3
+      '@playwright/test':
+        specifier: ^1.44.0
+        version: 1.44.0
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
@@ -1663,6 +1666,11 @@ packages:
   '@pkgr/core@0.1.0':
     resolution: {integrity: sha512-Zwq5OCzuwJC2jwqmpEQt7Ds1DTi6BWSwoGkbb1n9pO3hzb35BoJELx7c0T23iDkBGkh2e7tvOtjF3tr3OaQHDQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.44.0':
+    resolution: {integrity: sha512-rNX5lbNidamSUorBhB4XZ9SQTjAqfe5M+p37Z8ic0jPFBMo5iCtQz1kRWkEMg+rYOKSlVycpQmpqjSFq7LXOfg==}
+    engines: {node: '>=16'}
+    hasBin: true
 
   '@polka/url@1.0.0-next.24':
     resolution: {integrity: sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==}
@@ -5625,8 +5633,18 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
+  playwright-core@1.44.0:
+    resolution: {integrity: sha512-ZTbkNpFfYcGWohvTTl+xewITm7EOuqIqex0c7dNZ+aXsbrLj0qI8XlGKfPpipjm0Wny/4Lt4CJsWJk1stVS5qQ==}
+    engines: {node: '>=16'}
+    hasBin: true
+
   playwright@1.42.0:
     resolution: {integrity: sha512-Ko7YRUgj5xBHbntrgt4EIw/nE//XBHOKVKnBjO1KuZkmkhlbgyggTe5s9hjqQ1LpN+Xg+kHsQyt5Pa0Bw5XpvQ==}
+    engines: {node: '>=16'}
+    hasBin: true
+
+  playwright@1.44.0:
+    resolution: {integrity: sha512-F9b3GUCLQ3Nffrfb6dunPOkE5Mh68tR7zN32L4jCk4FjQamgesGay7/dAAe1WaMEGV04DkdJfcJzjoCKygUaRQ==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -8659,9 +8677,9 @@ snapshots:
   '@next/swc-win32-x64-msvc@14.2.3':
     optional: true
 
-  '@next/third-parties@14.2.3(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1))(react@18.3.1)':
+  '@next/third-parties@14.2.3(next@14.2.3(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1))(react@18.3.1)':
     dependencies:
-      next: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1)
+      next: 14.2.3(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1)
       react: 18.3.1
       third-party-capital: 1.0.20
 
@@ -8715,6 +8733,10 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.1.0': {}
+
+  '@playwright/test@1.44.0':
+    dependencies:
+      playwright: 1.44.0
 
   '@polka/url@1.0.0-next.24': {}
 
@@ -9254,7 +9276,7 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
       picomatch: 2.3.1
       pkg-dir: 5.0.0
-      prettier-fallback: prettier@3.1.1
+      prettier-fallback: prettier@3.2.5
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       semver: 7.6.0
@@ -13799,7 +13821,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1):
+  next@14.2.3(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.1):
     dependencies:
       '@next/env': 14.2.3
       '@swc/helpers': 0.5.5
@@ -13820,6 +13842,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.3
       '@next/swc-win32-ia32-msvc': 14.2.3
       '@next/swc-win32-x64-msvc': 14.2.3
+      '@playwright/test': 1.44.0
       sass: 1.77.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -14163,9 +14186,17 @@ snapshots:
 
   playwright-core@1.42.0: {}
 
+  playwright-core@1.44.0: {}
+
   playwright@1.42.0:
     dependencies:
       playwright-core: 1.42.0
+    optionalDependencies:
+      fsevents: 2.3.2
+
+  playwright@1.44.0:
+    dependencies:
+      playwright-core: 1.44.0
     optionalDependencies:
       fsevents: 2.3.2
 
