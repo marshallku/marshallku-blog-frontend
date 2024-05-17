@@ -1,0 +1,44 @@
+name: Visual Regression Test
+
+on:
+    pull_request:
+
+env:
+    CI: true
+    TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+    test:
+        name: Run visual regression test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.base_ref }}
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Build storybook in base branch
+              run: pnpm build --filter @marshallku/docs
+            - name: Run backstop server in background
+              run: pnpm dev --filter @marshallku/visual-regression &
+            - name: Generate reference files
+              run: |
+                  git checkout ${{ github.base_ref }}
+                  cd apps/visual-regression
+                  pnpm backstop:reference
+                  cd ../..
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Build storybook with current changes
+              run: pnpm build --filter @marshallku/docs
+            - name: Run test
+              run: pnpm test:visual-regression
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                  name: backstop-html-report
+                  path: apps/visual-regression/backstop_data/html_report
+                  retention-days: 30
