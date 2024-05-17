@@ -16,18 +16,57 @@ confirm() {
     done
 }
 
-# select a package in apps, packages
-target=$(find apps/ packages/ -mindepth 1 -maxdepth 1 -type d | fzf)
-package_name=$(grep '"name"' "${target}/package.json" | awk -F ': ' '{print $2}' | tr -d '",')
+workspace=false
 
-cd "$target" || exit 1
+parse_args() {
+    case "$1" in
+    -w | --workspace)
+        workspace=true
+        ;;
+    esac
+}
+
+while [[ "$#" -ge 1 ]]; do
+    parse_args "$1"
+    shift 1
+done
+
+# select a package in apps, packages
+if [ "$workspace" = true ]; then
+    target=''
+else
+    target=$(find apps/ packages/ -mindepth 1 -maxdepth 1 -type d | fzf)
+fi
+
+if [ "$workspace" = false ] && [ -z "$target" ]; then
+    echo 'No target selected'
+    exit 0
+fi
+
+if [ "$workspace" = true ]; then
+    package_file='package.json'
+else
+    package_file="${target}/package.json"
+fi
+
+package_name=$(grep '"name"' "${package_file}" | awk -F ': ' '{print $2}' | tr -d '",')
+
+if [ -n "$target" ]; then
+    cd "$target" || exit 1
+fi
 
 packages=$(pnpm outdated)
 IFS=$'\n'
 mapfile -t lines <<<"$packages"
 regex="│ ([a-zA-Z0-9\._@\/-]+)(.*)? │ +([0-9\.]+) (\(wanted +([0-9\.]+)\))? +│ +([0-9\.]+) +│"
 
-cmd='pnpm i '
+if [ "$workspace" = true ]; then
+    default_cmd='pnpm i -w '
+else
+    default_cmd='pnpm i '
+fi
+
+cmd="$default_cmd"
 
 for ((i = 0; i < ${#lines[@]}; i++)); do
     line=${lines[$i]}
@@ -42,7 +81,7 @@ for ((i = 0; i < ${#lines[@]}; i++)); do
     fi
 done
 
-if [[ "$cmd" == 'pnpm i ' ]]; then
+if [[ "$cmd" == "$default_cmd" ]]; then
     echo 'Packages are up to date, installation step is skipped'
     exit 0
 fi
