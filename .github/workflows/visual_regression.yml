@@ -42,7 +42,9 @@ jobs:
               uses: thollander/actions-comment-pull-request@v2
               with:
                   message: |
-                      Test result - ${{ steps.test.outcome }}"
+                      Test result - ${{ steps.test.outcome }}
+
+                      You can check results [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - name: Upload test results
               uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
