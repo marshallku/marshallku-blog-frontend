@@ -7,8 +7,12 @@
         },
         "lint": {},
         "test": {},
-        "test:e2e": {},
-        "test:visual-regression": {},
+        "test:e2e": {
+            "outputs": ["test-results/**"]
+        },
+        "test:visual-regression": {
+            "outputs": ["backstop-data/**"]
+        },
         "dev": {
             "cache": false,
             "persistent": true,
