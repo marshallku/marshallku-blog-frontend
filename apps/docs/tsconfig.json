@@ -1,13 +1,13 @@
 {
     "extends": "@marshallku/typescript-config/react-app.json",
-    "include": ["."],
+    "include": [".", ".storybook/next.config.js"],
     "exclude": ["dist", "build", "node_modules"],
     "compilerOptions": {
         "paths": {
             "@ui": ["../../packages/ui/src"],
-            "#*": ["../../packages/ui/src/*"],
             "@icon": ["../../packages/icon/dist"],
             "@icon/*": ["../../packages/icon/dist/*"],
+            "#*": ["../blog/src/*"],
             "@blog": ["../blog/src/components"],
             "@blog/*": ["../blog/src/components/*"]
         }
