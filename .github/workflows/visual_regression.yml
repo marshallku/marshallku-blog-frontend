@@ -19,13 +19,12 @@ jobs:
             - uses: marshallku/actions/setup-pnpm@master
             - name: Install puppeteer
               run: npx puppeteer browsers install chrome
-            - name: Build apps and packages without blog
-              run: pnpm build --filter !@marshallku/blog
             - name: Run backstop server in background
               run: pnpm dev --filter @marshallku/visual-regression &
             - name: Generate reference files
               run: |
                   git checkout ${{ github.base_ref }}
+                  pnpm build --filter !@marshallku/blog
                   cd apps/visual-regression
                   pnpm backstop:reference
                   cd ../..
