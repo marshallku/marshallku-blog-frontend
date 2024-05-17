@@ -17,8 +17,8 @@ jobs:
               with:
                   ref: ${{ github.base_ref }}
             - uses: marshallku/actions/setup-pnpm@master
-            - name: Build storybook in base branch
-              run: pnpm build --filter @marshallku/docs
+            - name: Build apps and packages without blog
+              run: pnpm build --filter !@marshallku/blog
             - name: Run backstop server in background
               run: pnpm dev --filter @marshallku/visual-regression &
             - name: Generate reference files
@@ -31,8 +31,8 @@ jobs:
               with:
                   ref: ${{ github.head_ref }}
             - uses: marshallku/actions/setup-pnpm@master
-            - name: Build storybook with current changes
-              run: pnpm build --filter @marshallku/docs
+            - name: Build apps and packages without blog
+              run: pnpm build --filter !@marshallku/blog
             - name: Run test
               run: pnpm test:visual-regression
             - name: Upload test results
