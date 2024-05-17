@@ -4,8 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "node server.js",
-        "test": "backstop test --config=\"backstop.config.js\"",
-        "test:approve": "backstop approve --config=\"backstop.config.js\"",
+        "test:visual-regression": "backstop test --config=\"backstop.config.js\"",
+        "backstop:reference": "backstop reference --config=\"backstop.config.js\"",
+        "backstop:approve": "backstop approve --config=\"backstop.config.js\"",
+        "backstop:openReport": "backstop openReport --config=\"backstop.config.js\"",
         "clean": "rm -rf .turbo && rm -rf node_modules"
     },
     "devDependencies": {
