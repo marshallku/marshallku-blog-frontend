@@ -5,6 +5,7 @@
         "dev": "turbo run dev",
         "test": "turbo run test",
         "test:e2e": "turbo run test:e2e",
+        "test:visual-regression": "turbo run test:visual-regression",
         "lint": "turbo run lint",
         "clean": "turbo run clean && rm -rf node_modules",
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",
