@@ -5,7 +5,7 @@ const path = require("path");
 const app = express();
 const port = 8083;
 
-const filePath = path.join("..", "docs", "storybook-static");
+const filePath = path.resolve("..", "docs", "storybook-static");
 
 app.use(express.static(filePath));
 

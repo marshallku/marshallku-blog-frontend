@@ -1,6 +1,6 @@
-const storyData = require("../docs/storybook-static/stories.json");
+const storyData = require("../docs/storybook-static/index.json");
 
-const stories = Object.values(storyData.stories);
+const stories = Object.values(storyData.entries);
 const blackList = [];
 
 /** @type {import('backstopjs').Config} */
@@ -21,7 +21,7 @@ const config = {
     onBeforeScript: "puppet/onBefore.js",
     onReadyScript: "puppet/onReady.js",
     scenarios: stories
-        .filter((story) => story.tags.includes("story") || !blackList.includes(story.id))
+        .filter((story) => story.type !== "docs" && !blackList.includes(story.id))
         .map((story) => ({
             label: story.id,
             cookiePath: "",
