@@ -1,12 +1,13 @@
 import { dirname, join, resolve } from "path";
+import type { StorybookConfig } from "@storybook/react-vite";
 
 const BLOG_SRC = resolve("../blog/src");
 
-function getAbsolutePath(value) {
-    return dirname(require.resolve(join(value, "package.json")));
+function getAbsolutePath<T extends string>(value: T): T {
+    return dirname(require.resolve(join(value, "package.json"))) as T;
 }
 
-const config = {
+const config: StorybookConfig = {
     stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
     addons: [
         getAbsolutePath("@storybook/addon-links"),
@@ -17,16 +18,10 @@ const config = {
         name: getAbsolutePath("@storybook/react-vite"),
         options: {},
     },
-
-    features: {
-        buildStoriesJson: true,
-    },
-
+    features: {},
     core: {},
-
     async viteFinal(config, { configType }) {
-        // customize the Vite config here
-        return {
+        const customConfig: typeof config = {
             ...config,
             define: { "process.env": {} },
             resolve: {
@@ -58,7 +53,6 @@ const config = {
                 ],
             },
             css: {
-                postcss: null,
                 preprocessorOptions: {
                     scss: {
                         additionalData: `
@@ -71,8 +65,8 @@ const config = {
                 },
             },
         };
+        return customConfig;
     },
-
     docs: {
         autodocs: true,
     },
