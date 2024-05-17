@@ -40,6 +40,6 @@ jobs:
               uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
-                  name: backstop-html-report
-                  path: apps/visual-regression/backstop_data/html_report
+                  name: backstop-data
+                  path: apps/visual-regression/backstop_data
                   retention-days: 30
