@@ -556,9 +556,9 @@ RUN set -eux; \
 이 작업만 십여 분의 시간이 걸리더니, 의존하는 패키지들을 수십 분이 지나도 빌드가 안 끝납니다.  
 결국 한숨 자고 와서 다시 확인해봤는데도...여전히 수십 개의 패키지를 빌드해야 끝나는 상황이더라고요.
 
-결국 Github Actions를 사용해 GitHub Container Registry에 이미지를 올려두는 방식으로 변경했습니다.
+결국 GitHub Actions를 사용해 GitHub Container Registry에 이미지를 올려두는 방식으로 변경했습니다.
 
-![Github Actions로 3분 56초만에 빌드된 이미지](/images/2024/02/push-image-github-actions.png)
+![GitHub Actions로 3분 56초만에 빌드된 이미지](/images/2024/02/push-image-github-actions.png)
 
 나름대로 합리적인 시간에 빌드를 끝냅니다.
 

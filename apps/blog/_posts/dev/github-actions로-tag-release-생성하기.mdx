@@ -1,11 +1,11 @@
 ---
-title: Github Actions로 tag, release 생성하기
+title: GitHub Actions로 tag, release 생성하기
 description: 개인적인 용도로 만든 npm package들도 있고, 알바몬에 사용할 npm package들에 기능 등의 추가가 필요하거나 문제가 있으면 업무 외 시간에 업데이트하곤 합니다. 어느새 그 가짓수만 해도 꽤 늘었습니다.이 패키지들 관리하며 npm 배포 자동화를 위해 한 삽질을 좀 공유할까 합니다.
 date:
   posted: 2023-06-19T02:23:00.000Z
-  modified: 2023-11-19T07:55:00.000Z
+  modified: 2024-05-18T03:19:54.217Z
 tags:
-  - Github Actions
+  - GitHub Actions
   - Shell Script
   - CD
 coverImage: /images/2024/01/github-tag.png
@@ -228,7 +228,7 @@ check-commit에서 추출한 버전명을 제목, create-tag에서 생성된 bod
 ### trigger-deploy
 
 create-release job이 완료만 되면 실행됩니다.  
-Github actions가 release를 생성하면 자동으로 pipeline이 수행되지 않기에(무한 루프 등 방지 위해 의도된 기능), deploy workflow를 trigger해줘야 합니다.
+GitHub actions가 release를 생성하면 자동으로 pipeline이 수행되지 않기에(무한 루프 등 방지 위해 의도된 기능), deploy workflow를 trigger해줘야 합니다.
 
 ## Publish 파이프라인 수정
 
@@ -267,8 +267,8 @@ workflow\_dispatch, repository\_dispatch에도 trigger 되도록 수정하면 �
 
 ## 마무리
 
-![Github Actions 실행 결과](/images/2023/06/Actions-Result.png)
+![GitHub Actions 실행 결과](/images/2023/06/Actions-Result.png)
 
-![Github release 결과](/images/2023/06/Github-release-card.png)
+![GitHub release 결과](/images/2023/06/Github-release-card.png)
 
 버전 업데이터로 버전을 업데이트하면 변경된 내용이 요약된 release가 생성되고, npm에 자동으로 배포까지 되는 것을 확인할 수 있습니다.
