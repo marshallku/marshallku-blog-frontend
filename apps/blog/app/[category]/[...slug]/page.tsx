@@ -71,10 +71,11 @@ export async function generateStaticParams() {
 
 const cx = classNames(styles, "page");
 
+const PostComment = nextDynamic(() => import("#components/PostComment"), {
+    ssr: false,
+});
+
 export default async function Post({ params: { category, slug } }: PostProps) {
-    const PostComment = nextDynamic(() => import("#components/PostComment"), {
-        ssr: false,
-    });
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
     const post = getPostBySlug(postSlug);
 
