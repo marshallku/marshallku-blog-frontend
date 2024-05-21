@@ -1,12 +1,12 @@
 "use client";
 
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { getComments, postComment } from "./api.client";
+import { getCommentsBySlug, postComment } from "./api.client";
 
 export const useCommentList = (slug: string) =>
     useSuspenseQuery({
         queryKey: ["commentList", slug],
-        queryFn: () => getComments(slug),
+        queryFn: () => getCommentsBySlug(slug),
     });
 
 export const usePostComment = (slug: string) => {
