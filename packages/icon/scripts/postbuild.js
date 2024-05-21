@@ -2,14 +2,14 @@ import { writeFileSync } from "fs";
 
 const { default: icons } = await import("../dist/icons.json", { with: { type: "json" } });
 
-writeFileSync(
-    "./dist/constants.ts",
-    `const icons = [
+const content = `const icons = [
     ${Object.keys(icons)
-        .map((key) => `'${key}'`)
+        .sort((a, b) => a.localeCompare(b))
+        .map((key) => `"${key}"`)
         .join(",\n    ")},
 ] as const;
 
-export default icons;`,
-    "utf-8",
-);
+export default icons;`;
+
+writeFileSync("./src/constants/index.ts", content, "utf-8");
+writeFileSync("./dist/constants.ts", content, "utf-8");
