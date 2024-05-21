@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { Suspense } from "react";
 import { classNames } from "@marshallku/utils";
-import { getComments, postComment } from "#api/comment/api.server";
+import { getCommentsBySlug, postComment } from "#api/comment/api.server";
 import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
 import Typography from "#components/Typography";
@@ -12,7 +12,7 @@ const SLUG = "/guestbook";
 const cx = classNames(styles, "guestbook");
 
 async function Comments() {
-    const data = await getComments(SLUG);
+    const data = await getCommentsBySlug(SLUG);
     return <CommentList data={data} />;
 }
 
