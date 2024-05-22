@@ -1,11 +1,18 @@
 "use client";
 
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { getCommentsBySlug, postComment } from "./api.client";
+import { getComments, getCommentsBySlug, postComment } from "./api.client";
 
 const enum QueryKeys {
+    Comments = "comments",
     CommentsBySlug = "postComments",
 }
+
+export const useComments = () =>
+    useSuspenseQuery({
+        queryKey: [QueryKeys.Comments],
+        queryFn: getComments,
+    });
 
 export const useCommentsBySlug = (slug: string) =>
     useSuspenseQuery({
