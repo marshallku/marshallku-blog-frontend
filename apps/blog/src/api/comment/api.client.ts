@@ -3,7 +3,11 @@
 import { request } from "#api/instance.client";
 import { type CommentListResponse, type CommentRequest } from "./types";
 
-export async function getCommentsBySlug(slug: string) {
+export async function getComments(): Promise<CommentListResponse> {
+    return request<CommentListResponse>("/comment/recent");
+}
+
+export async function getCommentsBySlug(slug: string): Promise<CommentListResponse> {
     return request<CommentListResponse>(`/comment/list?postSlug=${encodeURIComponent(slug)}`);
 }
 
