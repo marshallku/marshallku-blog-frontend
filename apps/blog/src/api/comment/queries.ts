@@ -4,12 +4,12 @@ import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-q
 import { getCommentsBySlug, postComment } from "./api.client";
 
 const enum QueryKeys {
-    CommentList = "commentList",
+    CommentsBySlug = "postComments",
 }
 
-export const useCommentList = (slug: string) =>
+export const useCommentsBySlug = (slug: string) =>
     useSuspenseQuery({
-        queryKey: [QueryKeys.CommentList, slug],
+        queryKey: [QueryKeys.CommentsBySlug, slug],
         queryFn: () => getCommentsBySlug(slug),
     });
 
@@ -17,6 +17,6 @@ export const usePostComment = (slug: string) => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (comment: Parameters<typeof postComment>[0]) => postComment(comment),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKeys.CommentList, slug] }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKeys.CommentsBySlug, slug] }),
     });
 };

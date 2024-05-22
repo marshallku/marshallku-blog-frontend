@@ -1,6 +1,6 @@
 "use client";
 
-import { useCommentList } from "#api/comment/queries";
+import { useCommentsBySlug } from "#api/comment/queries";
 import CommentList from "#components/CommentList";
 
 export interface CommentsProps {
@@ -8,7 +8,7 @@ export interface CommentsProps {
 }
 
 function Comments({ slug }: CommentsProps) {
-    const { data } = useCommentList(slug);
+    const { data } = useCommentsBySlug(slug);
 
     return <CommentList data={data} />;
 }
