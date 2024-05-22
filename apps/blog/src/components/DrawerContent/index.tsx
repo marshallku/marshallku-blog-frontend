@@ -69,25 +69,27 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
     return (
         <div className={cx("", opened && "--opened", willClose && "--close")} ref={containerRef} onClick={handleClick}>
             <Hamburger onClick={close} opened={!willClose} className={cx("__hamburger")} />
-            <nav className={cx("__nav")}>
-                <ul className={cx("__item")}>
-                    <List icon="home" text="Home" href="/" />
-                    <List icon="notifications" text="Notice" href="/notice" />
-                    <List icon="edit" text="About" href="/about" />
-                    <List icon="tag" text="Tags" href="/tags" />
-                    <List icon="mail" text="Guestbook" href="/guestbook" />
-                </ul>
-                <ul className={cx("__item")}>
-                    {CATEGORIES.map(({ slug, name, icon, color }) => (
-                        <List key={slug} icon={icon} text={name} href={slug} color={color}>
-                            <a href={`${slug}/feed`} target="_blank" rel="noopener noreferrer">
-                                <Icon name="rss" />
-                                <span className="sr-only">피드 확인</span>
-                            </a>
-                        </List>
-                    ))}
-                </ul>
-            </nav>
+            <div className={cx("__content")}>
+                <nav className={cx("__nav")}>
+                    <ul className={cx("__item")}>
+                        <List icon="home" text="Home" href="/" />
+                        <List icon="notifications" text="Notice" href="/notice" />
+                        <List icon="edit" text="About" href="/about" />
+                        <List icon="tag" text="Tags" href="/tags" />
+                        <List icon="mail" text="Guestbook" href="/guestbook" />
+                    </ul>
+                    <ul className={cx("__item")}>
+                        {CATEGORIES.map(({ slug, name, icon, color }) => (
+                            <List key={slug} icon={icon} text={name} href={slug} color={color}>
+                                <a href={`${slug}/feed`} target="_blank" rel="noopener noreferrer">
+                                    <Icon name="rss" />
+                                    <span className="sr-only">피드 확인</span>
+                                </a>
+                            </List>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
         </div>
     );
 }
