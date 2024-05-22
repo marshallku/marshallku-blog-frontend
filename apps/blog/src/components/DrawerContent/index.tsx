@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, useCallback, useRef } from "react";
+import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, Suspense, useCallback, useMemo, useRef } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "@marshallku/react-error-boundary";
 import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Hamburger from "#components/Hamburger";
+import DrawerComment from "#components/DrawerComment";
 import styles from "./index.module.scss";
 
 interface DrawerContentProps {
@@ -26,6 +29,7 @@ const cx = classNames(styles, "drawer-content");
 
 function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerContentProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const queryClient = useMemo(() => new QueryClient(), []);
 
     const close = useCallback(() => {
         containerRef.current?.addEventListener("animationend", closeDrawer, { once: true, passive: true });
@@ -89,6 +93,13 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                         ))}
                     </ul>
                 </nav>
+                <QueryClientProvider client={queryClient}>
+                    <ErrorBoundary fallback={null}>
+                        <Suspense fallback={null}>
+                            <DrawerComment />
+                        </Suspense>
+                    </ErrorBoundary>
+                </QueryClientProvider>
             </div>
         </div>
     );
