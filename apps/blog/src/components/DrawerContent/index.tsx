@@ -27,6 +27,30 @@ const CATEGORIES = [
 
 const cx = classNames(styles, "drawer-content");
 
+const List = ({
+    icon,
+    text,
+    href,
+    color,
+    children,
+    close,
+}: {
+    icon: IconProps["name"];
+    text: string;
+    href: string;
+    color?: IconProps["color"];
+    close?(): void;
+    children?: ReactNode;
+}) => (
+    <li>
+        <Link href={href} onClick={close} prefetch={false}>
+            <Icon name={icon} color={color} />
+            {text}
+        </Link>
+        {children}
+    </li>
+);
+
 function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerContentProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const queryClient = useMemo(() => new QueryClient(), []);
@@ -45,46 +69,21 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
         [close],
     );
 
-    const List = useCallback(
-        ({
-            icon,
-            text,
-            href,
-            color,
-            children,
-        }: {
-            icon: IconProps["name"];
-            text: string;
-            href: string;
-            color?: IconProps["color"];
-            children?: ReactNode;
-        }) => (
-            <li>
-                <Link href={href} onClick={close} prefetch={false}>
-                    <Icon name={icon} color={color} />
-                    {text}
-                </Link>
-                {children}
-            </li>
-        ),
-        [close],
-    );
-
     return (
         <div className={cx("", opened && "--opened", willClose && "--close")} ref={containerRef} onClick={handleClick}>
             <Hamburger onClick={close} opened={!willClose} className={cx("__hamburger")} />
             <div className={cx("__content")}>
                 <nav className={cx("__nav")}>
                     <ul className={cx("__item")}>
-                        <List icon="home" text="Home" href="/" />
-                        <List icon="notifications" text="Notice" href="/notice" />
-                        <List icon="edit" text="About" href="/about" />
-                        <List icon="tag" text="Tags" href="/tags" />
-                        <List icon="mail" text="Guestbook" href="/guestbook" />
+                        <List icon="home" text="Home" href="/" close={close} />
+                        <List icon="notifications" text="Notice" href="/notice" close={close} />
+                        <List icon="edit" text="About" href="/about" close={close} />
+                        <List icon="tag" text="Tags" href="/tags" close={close} />
+                        <List icon="mail" text="Guestbook" href="/guestbook" close={close} />
                     </ul>
                     <ul className={cx("__item")}>
                         {CATEGORIES.map(({ slug, name, icon, color }) => (
-                            <List key={slug} icon={icon} text={name} href={slug} color={color}>
+                            <List key={slug} icon={icon} text={name} href={slug} color={color} close={close}>
                                 <a href={`${slug}/feed`} target="_blank" rel="noopener noreferrer">
                                     <Icon name="rss" />
                                     <span className="sr-only">피드 확인</span>
