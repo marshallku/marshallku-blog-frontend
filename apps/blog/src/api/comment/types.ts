@@ -18,3 +18,8 @@ export interface NestedComment extends Omit<Comment, "parentCommentId"> {
 }
 
 export type CommentListResponse = NestedComment[];
+
+export interface GetRecentCommentParameters {
+    /** default: 5 */
+    count?: number;
+}

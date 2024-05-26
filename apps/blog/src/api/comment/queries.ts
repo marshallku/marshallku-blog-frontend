@@ -8,10 +8,10 @@ const enum QueryKeys {
     CommentsBySlug = "postComments",
 }
 
-export const useComments = () =>
+export const useComments = (params?: Parameters<typeof getComments>[0]) =>
     useSuspenseQuery({
-        queryKey: [QueryKeys.Comments],
-        queryFn: getComments,
+        queryKey: [QueryKeys.Comments, params],
+        queryFn: () => getComments(params),
     });
 
 export const useCommentsBySlug = (slug: string) =>
