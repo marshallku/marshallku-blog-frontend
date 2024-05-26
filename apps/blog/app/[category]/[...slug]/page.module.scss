@@ -3,9 +3,13 @@
 
     &__banner {
         $padding: 36px;
-        padding: $global-navigation-height + $padding $container-padding $banner-height + $padding;
+        padding: $global-navigation-height + $padding $container-padding $padding;
         text-align: center;
         background-color: color(background-dimmed);
+
+        &--has-cover {
+            padding-bottom: $banner-height + $padding;
+        }
     }
 
     &__cover-image {

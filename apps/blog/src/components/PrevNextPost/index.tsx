@@ -24,7 +24,12 @@ const Article = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolea
                 {post.data.title}
             </Typography>
         </Link>
-        <Image className={cx("-post__cover-image")} src={post.data.coverImage} alt={post.data.title} forceSize={500} />
+        <Image
+            className={cx("-post__cover-image")}
+            src={post.data.coverImage || post.data.ogImage}
+            alt={post.data.title}
+            forceSize={500}
+        />
     </article>
 );
 
