@@ -7,16 +7,20 @@ import CommentAvatar from "#components/CommentAvatar";
 import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
+export interface DrawerCommentProps {
+    closeDrawer(): void;
+}
+
 const cx = classNames(styles, "drawer-comment");
 
-function DrawerComment() {
+function DrawerComment({ closeDrawer }: DrawerCommentProps) {
     const { data } = useComments({ count: 6 });
 
     return (
         <ol className={cx()}>
             {data.map(({ _id: id, name, url, body, createdAt, byPostAuthor, postSlug }) => (
                 <li key={id} className={cx("__comment")}>
-                    <Link href={postSlug} className={cx("__link")}>
+                    <Link href={postSlug} className={cx("__link")} onClick={closeDrawer}>
                         <figure className={cx("__avatar")}>
                             <CommentAvatar name={name} url={url} postAuthor={byPostAuthor} />
                         </figure>

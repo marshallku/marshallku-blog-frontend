@@ -95,7 +95,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                 <QueryClientProvider client={queryClient}>
                     <ErrorBoundary fallback={null}>
                         <Suspense fallback={null}>
-                            <DrawerComment />
+                            <DrawerComment closeDrawer={close} />
                         </Suspense>
                     </ErrorBoundary>
                 </QueryClientProvider>
