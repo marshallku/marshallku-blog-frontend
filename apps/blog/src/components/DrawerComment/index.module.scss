@@ -7,6 +7,10 @@
     overflow: hidden;
 
     &__comment {
+        width: 100%;
+    }
+
+    &__link {
         display: flex;
         padding: 16px 8px;
 
