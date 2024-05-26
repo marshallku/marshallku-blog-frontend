@@ -9,7 +9,7 @@ import styles from "./index.module.scss";
 const cx = classNames(styles, "drawer-comment");
 
 function DrawerComment() {
-    const { data } = useComments();
+    const { data } = useComments({ count: 6 });
 
     return (
         <ol className={cx()}>
