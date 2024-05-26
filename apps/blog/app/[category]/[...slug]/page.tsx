@@ -86,11 +86,12 @@ export default async function Post({ params: { category, slug } }: PostProps) {
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
-    const dimensions = imageSize(`public${decodeURIComponent(post.data.coverImage)}`);
+    const hasCoverImage = !!post.data.coverImage;
+    const dimensions = hasCoverImage && imageSize(`public${decodeURIComponent(post.data.coverImage)}`);
 
     return (
         <article className={cx()}>
-            <header className={cx("__banner")}>
+            <header className={cx("__banner", hasCoverImage && "__banner--has-cover")}>
                 <div className={cx("__tags")}>
                     {!!post.data.tags?.length &&
                         post.data.tags.map((tag) => (
@@ -125,15 +126,17 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     </time>
                 </Typography>
             </header>
-            <figure className={cx("__cover-image")}>
-                <Image
-                    src={post.data.coverImage}
-                    alt={post.data.title}
-                    width={dimensions.width}
-                    height={dimensions.height}
-                    useLowQualityPlaceholder
-                />
-            </figure>
+            {dimensions && (
+                <figure className={cx("__cover-image")}>
+                    <Image
+                        src={post.data.coverImage}
+                        alt={post.data.title}
+                        width={dimensions.width}
+                        height={dimensions.height}
+                        useLowQualityPlaceholder
+                    />
+                </figure>
+            )}
             <div className={cx("__meta")}>
                 {post.data.date.modified && (
                     <Typography variant="c1" component="div" marginBottom={8}>

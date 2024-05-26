@@ -40,7 +40,7 @@ export default async function ArchivePage({ params: { category } }: ArchiveProps
     return (
         <Archive
             title={categoryInfo?.name ? `${categoryInfo.name} 카테고리 글` : "카테고리 최근 글"}
-            coverImage={categoryInfo?.coverImage || postsInPage[0]?.data?.coverImage}
+            coverImage={categoryInfo?.coverImage || postsInPage[0]?.data?.coverImage || postsInPage[0]?.data?.ogImage}
             postListProps={{
                 posts: postsInPage,
                 paginationProps: {
