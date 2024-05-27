@@ -58,7 +58,7 @@ export function getPostBySlug(slug: string): Post | undefined {
 export function getPostsByTag(tag: string): Post[] {
     const posts = getPosts();
 
-    return posts.filter(({ data: { tags } }) => tags?.find((x) => x === tag));
+    return posts.filter(({ data: { tags } }) => tags?.find((x) => x.toLocaleLowerCase() === tag.toLocaleLowerCase()));
 }
 
 export function getPosts(category?: string): Post[] {
@@ -80,7 +80,21 @@ export function getPosts(category?: string): Post[] {
 export function getTags(): string[] {
     const posts = getPosts();
 
-    return [...new Set(posts.filter(({ data: { tags } }) => 0 < tags?.length).flatMap(({ data: { tags } }) => tags))];
+    return posts
+        .flatMap(({ data: { tags } }) => tags)
+        .reduce(
+            (acc, tag) => {
+                const lowerCased = tag.toLocaleLowerCase();
+
+                if (!acc.map.has(lowerCased)) {
+                    acc.map.set(lowerCased, tag);
+                    acc.result.push(lowerCased);
+                }
+
+                return acc;
+            },
+            { map: new Map<string, string>(), result: [] as string[] },
+        ).result;
 }
 
 export function getGroupedPostByCategory(): Record<string, Post[]> {
