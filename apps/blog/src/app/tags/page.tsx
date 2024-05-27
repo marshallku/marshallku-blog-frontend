@@ -17,9 +17,9 @@ export default function TagCloudPage() {
 
     return (
         <div className={cx()}>
-            {tags.map((tag) => (
-                <Link key={tag} href={`/tag/${tag}`}>
-                    {tag}
+            {tags.map(({ name, count }) => (
+                <Link key={name} href={`/tag/${name}`}>
+                    {name} ({count})
                 </Link>
             ))}
         </div>
