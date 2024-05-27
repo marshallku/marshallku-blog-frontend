@@ -53,7 +53,6 @@ const List = ({
 
 function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerContentProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const queryClient = useMemo(() => new QueryClient(), []);
 
     const close = useCallback(() => {
         containerRef.current?.addEventListener("animationend", closeDrawer, { once: true, passive: true });
@@ -92,13 +91,11 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                         ))}
                     </ul>
                 </nav>
-                <QueryClientProvider client={queryClient}>
-                    <ErrorBoundary fallback={null}>
-                        <Suspense fallback={null}>
-                            <DrawerComment closeDrawer={close} />
-                        </Suspense>
-                    </ErrorBoundary>
-                </QueryClientProvider>
+                <ErrorBoundary fallback={null}>
+                    <Suspense fallback={null}>
+                        <DrawerComment closeDrawer={close} />
+                    </Suspense>
+                </ErrorBoundary>
             </div>
         </div>
     );
