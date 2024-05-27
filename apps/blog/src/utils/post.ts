@@ -6,11 +6,11 @@ import { POSTS_DIRECTORY } from "#constants";
 import { Category, Post } from "#types";
 import { walk } from "./file";
 
-export function checkCategoryExists(category: string) {
+export function checkCategoryExists(category: string): boolean {
     return existsSync(join(POSTS_DIRECTORY, category));
 }
 
-export function getPostSlugs(subDirectory?: string) {
+export function getPostSlugs(subDirectory?: string): string[] {
     const files: string[] = [];
     const fullPath = subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY;
 
@@ -55,13 +55,13 @@ export function getPostBySlug(slug: string): Post | undefined {
     };
 }
 
-export function getPostsByTag(tag: string) {
+export function getPostsByTag(tag: string): Post[] {
     const posts = getPosts();
 
     return posts.filter(({ data: { tags } }) => tags?.find((x) => x === tag));
 }
 
-export function getPosts(category?: string) {
+export function getPosts(category?: string): Post[] {
     return getPostSlugs(category)
         .map((slug) => getPostBySlug(slug)!)
         .sort((a, b) => {
@@ -77,13 +77,13 @@ export function getPosts(category?: string) {
         });
 }
 
-export function getTags() {
+export function getTags(): string[] {
     const posts = getPosts();
 
     return [...new Set(posts.filter(({ data: { tags } }) => 0 < tags?.length).flatMap(({ data: { tags } }) => tags))];
 }
 
-export function getGroupedPostByCategory() {
+export function getGroupedPostByCategory(): Record<string, Post[]> {
     return groupBy(getPosts(), ({ category }) => category.split("/")[1]);
 }
 
@@ -100,7 +100,7 @@ export function getCategoryBySlug(slug: string): Category | undefined {
     return data;
 }
 
-export function getCategorySlugs(subDirectory?: string) {
+export function getCategorySlugs(subDirectory?: string): string[] {
     const files: string[] = [];
 
     walk(subDirectory ? join(POSTS_DIRECTORY, subDirectory) : POSTS_DIRECTORY, (path) => {
@@ -112,10 +112,10 @@ export function getCategorySlugs(subDirectory?: string) {
     return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\/_category\.json$/, ""));
 }
 
-export function getCategories() {
+export function getCategories(): (Category & { slug: string })[] {
     return getCategorySlugs()
         .map((slug) => ({ ...getCategoryBySlug(slug), slug }))
-        .filter(({ hidden }) => hidden !== true)
+        .filter((category): category is Category & { slug: string } => "name" in category && category.hidden !== true)
         .sort((a, b) => {
             if (a.index == null || b.index == null) {
                 return 0;
