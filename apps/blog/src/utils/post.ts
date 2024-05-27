@@ -81,6 +81,7 @@ export function getTags(): string[] {
     const posts = getPosts();
 
     return posts
+        .filter(({ data: { tags } }) => !!tags)
         .flatMap(({ data: { tags } }) => tags)
         .reduce(
             (acc, tag) => {
