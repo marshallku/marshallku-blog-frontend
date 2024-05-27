@@ -26,3 +26,8 @@ export interface Category {
     icon?: IconProps["name"];
     description?: string;
 }
+
+export interface Tag {
+    name: string;
+    count: number;
+}

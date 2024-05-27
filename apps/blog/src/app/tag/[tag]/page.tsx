@@ -15,7 +15,7 @@ export function generateMetadata({ params: { tag } }: TagArchivePageProps) {
 }
 
 export async function generateStaticParams() {
-    return getTags().map((tag) => ({ tag }));
+    return getTags().map(({ name }) => ({ tag: name }));
 }
 
 export default function TagArchivePage({ params: { tag } }: TagArchivePageProps) {

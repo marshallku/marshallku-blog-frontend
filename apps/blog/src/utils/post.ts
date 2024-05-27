@@ -3,7 +3,7 @@ import { join, parse } from "path";
 import matter from "gray-matter";
 import { groupBy } from "@marshallku/utils";
 import { POSTS_DIRECTORY } from "#constants";
-import { Category, Post } from "#types";
+import { Category, Post, Tag } from "#types";
 import { walk } from "./file";
 
 export function checkCategoryExists(category: string): boolean {
@@ -77,7 +77,7 @@ export function getPosts(category?: string): Post[] {
         });
 }
 
-export function getTags(): string[] {
+export function getTags(): Tag[] {
     const posts = getPosts();
 
     return posts
@@ -87,14 +87,18 @@ export function getTags(): string[] {
             (acc, tag) => {
                 const lowerCased = tag.toLocaleLowerCase();
 
-                if (!acc.map.has(lowerCased)) {
+                if (acc.map.has(lowerCased)) {
+                    const index = acc.result.findIndex((x) => x.name === acc.map.get(lowerCased));
+
+                    acc.result[index].count++;
+                } else {
                     acc.map.set(lowerCased, tag);
-                    acc.result.push(lowerCased);
+                    acc.result.push({ name: tag, count: 1 });
                 }
 
                 return acc;
             },
-            { map: new Map<string, string>(), result: [] as string[] },
+            { map: new Map<string, string>(), result: [] as Tag[] },
         ).result;
 }
 
