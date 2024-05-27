@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, Suspense, useCallback, useMemo, useRef } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, Suspense, useCallback, useRef } from "react";
 import { ErrorBoundary } from "@marshallku/react-error-boundary";
 import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
