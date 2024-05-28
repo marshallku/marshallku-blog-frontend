@@ -1,0 +1,43 @@
+name: Visual Regression Test
+
+on:
+    push:
+        branches:
+            - master
+    workflow_dispatch:
+
+jobs:
+    test:
+        name: Run visual regression test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Install puppeteer
+              run: npx puppeteer browsers install chrome
+            - name: Run backstop server in background
+              run: pnpm dev --filter @marshallku/visual-regression &
+            - name: Build apps and packages without blog
+              run: pnpm build --filter !@marshallku/blog
+            - name: Run test
+              id: test
+              continue-on-error: true
+              run: pnpm test:visual-regression
+            - name: Create commit comment
+              if: ${{ !cancelled() }}
+              uses: peter-evans/commit-comment@v3
+              with:
+                  body: |
+                      Visual regression test result - **${{ steps.test.outcome }}**
+            - name: Approve results
+              if: ${{ steps.test.outcome == 'failure' }}
+              run: |
+                  cd apps/visual-regression
+                  pnpm backstop:approve
+            - name: Commit changes
+              if: ${{ steps.test.outcome == 'failure' }}
+              run: bash .github/scripts/commit.sh
+              env:
+                  MESSAGE: "Update visual regression test results"
