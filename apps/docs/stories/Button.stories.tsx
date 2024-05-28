@@ -18,7 +18,7 @@ export default story;
 
 export const StringChildren: StoryObj<ButtonProps> = {
     args: {
-        children: "Click me!",
+        children: "Click this!",
         disabled: false,
     },
 };
