@@ -1,17 +1,14 @@
-import { Preview } from "@storybook/react";
-import { getRouter } from "@storybook/nextjs/router.mock";
-import "#styles/reset.scss";
-import "#styles/globals.scss";
-import "../../blog/src/app/globals.css";
+import type { Preview } from "@storybook/react";
+import "./styles/preview.css";
+import "./styles/reset.scss";
+import "./styles/globals.scss";
 
 const preview: Preview = {
     parameters: {
         nextjs: {
             router: {},
+            appDirectory: true,
         },
-    },
-    async beforeEach() {
-        getRouter().push.mockImplementation(() => {});
     },
 };
 
