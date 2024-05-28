@@ -1,4 +1,4 @@
-name: Visual Regression Test
+name: Check PR
 
 on:
     pull_request:
@@ -7,28 +7,16 @@ env:
     CI: true
 
 jobs:
-    test:
+    visual-regression-test:
         name: Run visual regression test
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
             - uses: marshallku/actions/setup-pnpm@master
             - name: Install puppeteer
               run: npx puppeteer browsers install chrome
             - name: Run backstop server in background
               run: pnpm dev --filter @marshallku/visual-regression &
-            - name: Generate reference files
-              run: |
-                  git checkout ${{ github.base_ref }}
-                  pnpm build --filter !@marshallku/blog
-                  cd apps/visual-regression
-                  pnpm backstop:reference
-                  cd ../..
-            - name: Checkout to PR branch
-              run: git checkout ${{ github.head_ref }}
-            - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages without blog
               run: pnpm build --filter !@marshallku/blog
             - name: Run test
