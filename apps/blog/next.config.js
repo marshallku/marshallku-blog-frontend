@@ -13,8 +13,12 @@ const nextConfig = {
         outputFileTracingRoot: path.join(__dirname, "../../"),
     },
     sassOptions: {
-        prependData:
-            '@import "src/styles/abstracts/_variables.scss";@import "src/styles/abstracts/_palette.scss";@import "src/styles/abstracts/_fonts.scss";@import "src/styles/abstracts/_mixins.scss";',
+        prependData: `
+            @import "@marshallku/ui/styles/abstracts/_variables.scss";
+            @import "@marshallku/ui/styles/abstracts/_palette.scss";
+            @import "@marshallku/ui/styles/abstracts/_fonts.scss";
+            @import "@marshallku/ui/styles/abstracts/_mixins.scss";
+        `,
     },
     async redirects() {
         return [

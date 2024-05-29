@@ -1,5 +1,5 @@
-@import "../../../blog/src/styles/abstracts/_palette.scss";
-@import "../../../blog/src/styles/abstracts/_mixins.scss";
+@import "../../../../packages/ui/src/styles/abstracts/_palette.scss";
+@import "../../../../packages/ui/src/styles/abstracts/_mixins.scss";
 
 html {
     @each $key, $value in $light-palette {

@@ -1,17 +1,17 @@
 import { resolve, join } from "node:path";
 
-const BLOG_ROOT = resolve("..", "blog");
-const BLOG_SRC = join(BLOG_ROOT, "src");
+const UI_ROOT = resolve("../../packages", "ui");
+const UI_SRC = join(UI_ROOT, "src");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ["@marshallku/ui"],
     sassOptions: {
         prependData: `
-            @import "${BLOG_SRC}/styles/abstracts/_variables.scss";
-            @import "${BLOG_SRC}/styles/abstracts/_palette.scss";
-            @import "${BLOG_SRC}/styles/abstracts/_fonts.scss";
-            @import "${BLOG_SRC}/styles/abstracts/_mixins.scss";
+            @import "${UI_SRC}/styles/abstracts/_variables.scss";
+            @import "${UI_SRC}/styles/abstracts/_palette.scss";
+            @import "${UI_SRC}/styles/abstracts/_fonts.scss";
+            @import "${UI_SRC}/styles/abstracts/_mixins.scss";
         `,
     },
     swcMinify: false,
