@@ -9,6 +9,24 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    resolve: {
+        alias: {
+            "#components": resolve(__dirname, "src", "components"),
+            "#types": resolve(__dirname, "src", "types"),
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `
+                    @import "src/styles/abstracts/_variables.scss";
+                    @import "src/styles/abstracts/_palette.scss";
+                    @import "src/styles/abstracts/_fonts.scss";
+                    @import "src/styles/abstracts/_mixins.scss";
+                `,
+            },
+        },
+    },
     plugins: [
         react(),
         libInjectCss(),
