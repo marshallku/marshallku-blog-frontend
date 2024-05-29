@@ -38,7 +38,7 @@ $typography-height: (
     @if map-has-key($typography-size, $key) {
         font-size: map-get($typography-size, $key);
         line-height: map-get($typography-height, $key);
+    } @else {
+        @warn "`#{$key}` doesn't exist in typography";
     }
-
-    @warn "`#{$key}` doesn't exist in typography";
 }
