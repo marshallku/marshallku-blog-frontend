@@ -9,9 +9,11 @@ Front-end application of [my blog](https://marshallku.com/)
 - applications
   - `blog`: Next.js application for running blog
   - `docs`: Documentation of components with Storybook
+  - `visual-regression`: Visual regression testing with BackstopJS
 - packages
   - `eslint-config`: ESLint config for JavaScript projects
   - `icon`: Icon font generator
+  - `react-error-boundary`: Error boundary for React components
   - `toast`: Utility for displaying toast message simply
   - `typescript-config`: TypeScript config for TypeScript projects
   - `ui`: React UI library. Temporarily unused until I am familiar with the server components
