@@ -6,6 +6,8 @@ on:
             - master
     workflow_dispatch:
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
     test:
         name: Run visual regression test
