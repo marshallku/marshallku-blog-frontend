@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from "react";
+import { type InputHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
 import Typography from "../Typography";
 import styles from "./index.module.scss";
@@ -15,7 +15,7 @@ const cx = classNames(styles, "input");
 const Input = forwardRef<HTMLInputElement, InputProps>(({ className, label, variant = "box", ...props }, ref) => {
     return (
         <label className={cx("", `--${variant}`, { className })}>
-            {label && (
+            {!!label && (
                 <Typography variant="c1" className={cx("__label")} component="div">
                     {label}
                 </Typography>
@@ -24,5 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, label, vari
         </label>
     );
 });
+
+Input.displayName = "Input";
 
 export default Input;

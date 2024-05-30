@@ -1,4 +1,4 @@
-import { TextareaHTMLAttributes, forwardRef } from "react";
+import { type TextareaHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
 import Typography from "../Typography";
 import styles from "./index.module.scss";
@@ -16,7 +16,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ({ className, label, variant = "box", ...props }, ref) => {
         return (
             <label className={cx("", `--${variant}`, { className })}>
-                {label && (
+                {!!label && (
                     <Typography variant="c1" className={cx("__label")} component="div">
                         {label}
                     </Typography>
@@ -26,5 +26,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         );
     },
 );
+
+Textarea.displayName = "Textarea";
 
 export default Textarea;

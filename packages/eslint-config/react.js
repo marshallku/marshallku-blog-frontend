@@ -38,5 +38,8 @@ module.exports = {
         "unicorn/filename-case": "off",
         "eslint-comments/require-description": "off",
         "@typescript-eslint/restrict-template-expressions": ["error", { allowNumber: true, allowBoolean: true }],
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/method-signature-style": "off",
+        "no-implicit-coercion": "off",
     },
 };

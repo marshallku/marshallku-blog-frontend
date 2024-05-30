@@ -1,6 +1,6 @@
-import { ReactNode, createElement } from "react";
+import { type ReactNode, createElement } from "react";
 import { classNames } from "@marshallku/utils";
-import { Range } from "../../types";
+import type { Range } from "../../types";
 import styles from "./index.module.scss";
 
 export type TypographyComponent = keyof Omit<
@@ -80,8 +80,8 @@ function Typography<T extends TypographyComponent = "p">({
         {
             className: cx(
                 "",
-                variant && `--${variant}`,
-                fontWeight && `--${fontWeight}`,
+                `--${variant}`,
+                `--${fontWeight}`,
                 marginTop && `--mt-${marginTop}`,
                 marginBottom && `--mb-${marginBottom}`,
                 { className },
@@ -91,5 +91,7 @@ function Typography<T extends TypographyComponent = "p">({
         children,
     );
 }
+
+Typography.displayName = "Typography";
 
 export default Typography;
