@@ -68,6 +68,7 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
     );
 
     return (
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div className={cx("", opened && "--opened", willClose && "--close")} ref={containerRef} onClick={handleClick}>
             <Hamburger onClick={close} opened={!willClose} className={cx("__hamburger")} />
             <div className={cx("__content")}>

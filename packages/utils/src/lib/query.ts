@@ -3,6 +3,10 @@ export const stringifyQuery = <T extends object>(queryObject: T, encode = true, 
     let isFirst = true;
 
     for (const key in queryObject) {
+        if (!Object.prototype.hasOwnProperty.call(queryObject, key)) {
+            continue;
+        }
+
         const value = queryObject[key];
 
         // eslint-disable-next-line eqeqeq

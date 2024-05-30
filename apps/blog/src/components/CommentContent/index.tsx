@@ -54,7 +54,9 @@ const parseComponents = (content: string) => {
 
                 if (part.match(/^https?:\/\//)) {
                     if (part.match(/\.(jpeg|jpg|gif|png)$/)) {
-                        children.push(<img key={`${i}-${j}`} className={cx("__image")} src={part} />);
+                        children.push(
+                            <img key={`${i}-${j}`} className={cx("__image")} src={part} alt="User uploaded image" />,
+                        );
                     } else if (part.match(/\.mp4|webm$/)) {
                         children.push(
                             <video

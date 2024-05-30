@@ -1,6 +1,6 @@
 export default function classNames(
     styles: Record<string, string> = {},
-    rootClassName = "",
+    rootClassName: string = "",
 ): (...names: unknown[]) => string {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const hasOwn = {}.hasOwnProperty;
@@ -40,6 +40,10 @@ export default function classNames(
             if (nameType === "object") {
                 // It's not null and array, so it must be an object.
                 for (const key in name as Record<string, unknown>) {
+                    if (!hasOwn.call(name, key)) {
+                        continue;
+                    }
+
                     const keyWithRoot = rootClassName + key;
 
                     if (key === "className" && (name as Record<string, unknown>)[key]) {

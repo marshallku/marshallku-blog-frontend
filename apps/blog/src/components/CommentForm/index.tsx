@@ -58,7 +58,7 @@ function CommentForm({ slug, submit }: CommentFormProps) {
             setName("");
             setBody("");
         },
-        [slug],
+        [slug, submit],
     );
 
     return (

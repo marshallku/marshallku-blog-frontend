@@ -1,3 +1,4 @@
+// eslint-disable-next-line @rushstack/no-new-null
 export default async function to<T, E = Error>(promise: Promise<T>): Promise<[E, null] | [null, T]> {
     try {
         const data = await promise;

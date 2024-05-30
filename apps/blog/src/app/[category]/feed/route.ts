@@ -38,7 +38,7 @@ export async function GET(_: Request, { params }: { params: { category: string }
                     category: categories.find(({ slug }) => slug === post.category)?.name || post.category.slice(1),
                     tags: post.data.tags,
                     description: post.data.description,
-                    content: marked.parse(post.content),
+                    content: await marked.parse(post.content),
                 };
             }),
     );
