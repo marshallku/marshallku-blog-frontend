@@ -1,4 +1,5 @@
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import { extname, relative, resolve } from "node:path";
 import { defineConfig } from "vite";
 import { glob } from "glob";
@@ -61,6 +62,20 @@ export default defineConfig({
             output: {
                 assetFileNames: "assets/[name][extname]",
                 entryFileNames: "[name].js",
+                async banner({ facadeModuleId }) {
+                    if (!facadeModuleId) {
+                        return "";
+                    }
+
+                    const file = readFileSync(facadeModuleId, "utf-8");
+                    const hasDirectives = file.includes(`"use client"`);
+
+                    if (!hasDirectives) {
+                        return "";
+                    }
+
+                    return `"use client";\n\n`;
+                },
             },
         },
     },
