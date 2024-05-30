@@ -1,13 +1,13 @@
 "use client";
 
 import { FormEventHandler, useCallback, useRef, useState } from "react";
+import Typography from "@marshallku/ui/Typography";
+import Input from "@marshallku/ui/Input";
+import Textarea from "@marshallku/ui/Textarea";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import { type CommentRequest } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
-import Input from "#components/Input";
-import Textarea from "#components/Textarea";
-import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
 interface CommentFormProps {

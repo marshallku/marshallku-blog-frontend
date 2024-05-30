@@ -1,10 +1,10 @@
 import Link from "next/link";
+import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Drawer from "#components/Drawer";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
-import Typography from "#components/Typography";
 import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
 import { getCategories } from "#utils/post";
 import styles from "./index.module.scss";

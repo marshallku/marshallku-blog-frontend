@@ -1,5 +1,5 @@
 import { AnchorHTMLAttributes, ReactNode } from "react";
-import Button from "#components/Button";
+import Button from "@marshallku/ui/Button";
 import { Icon } from "@marshallku/icon";
 import styles from "./index.module.scss";
 import { classNames } from "@marshallku/utils";

@@ -1,6 +1,6 @@
 import { Icon } from "@marshallku/icon";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import Typography from "#components/Typography";
 import styles from "./page.module.scss";
 
 export const dynamic = "error";

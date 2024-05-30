@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Button from "@marshallku/ui/Button";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import Button from "#components/Button";
 import ReportIssueButton from "#components/ReportIssueButton";
-import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
 export interface ErrorProps {

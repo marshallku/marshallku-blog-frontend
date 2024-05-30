@@ -1,10 +1,10 @@
 import { revalidateTag } from "next/cache";
 import { Suspense } from "react";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
 import { getCommentsBySlug, postComment } from "#api/comment/api.server";
 import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
-import Typography from "#components/Typography";
 import styles from "./page.module.scss";
 
 const SLUG = "/guestbook";
