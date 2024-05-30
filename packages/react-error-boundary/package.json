@@ -14,7 +14,7 @@
         "build": "tsup src/index.ts --format esm --dts --external react --minify --clean"
     },
     "devDependencies": {
-        "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "@types/react": "^18.2.37",
         "@types/react-dom": "^18.2.15",
