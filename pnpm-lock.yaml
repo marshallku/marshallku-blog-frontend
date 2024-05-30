@@ -11,6 +11,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.27.1
         version: 2.27.1
+      '@marshallku/prettier-config':
+        specifier: ^0.0.1
+        version: 0.0.1(prettier@3.2.5)
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
@@ -1756,6 +1759,11 @@ packages:
 
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
+
+  '@marshallku/prettier-config@0.0.1':
+    resolution: {integrity: sha512-SPjARRmDT1JKQS4QxZRgfgagSsgWKHoRDlVRD7Zc1nOt4f417W6AFoF2DrVpFOzX1o7SL35xPK897raW0MdwUw==}
+    peerDependencies:
+      prettier: '>= 3'
 
   '@mdx-js/mdx@2.3.0':
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
@@ -10630,6 +10638,10 @@ snapshots:
       fs-extra: 8.1.0
       globby: 11.1.0
       read-yaml-file: 1.1.0
+
+  '@marshallku/prettier-config@0.0.1(prettier@3.2.5)':
+    dependencies:
+      prettier: 3.2.5
 
   '@mdx-js/mdx@2.3.0':
     dependencies:
