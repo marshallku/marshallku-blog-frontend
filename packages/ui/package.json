@@ -30,7 +30,7 @@
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",
-        "@marshallku/typescript-config": "workspace:*",
+        "@marshallku/typescript-config": "^0.0.4",
         "@marshallku/utils": "workspace:^",
         "@types/node": "^20.12.7",
         "@types/react": "^18.3.3",

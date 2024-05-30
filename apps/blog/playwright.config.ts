@@ -1,4 +1,4 @@
-import path from "path";
+import { join } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3443;
@@ -9,7 +9,7 @@ export default defineConfig({
     // Timeout per test
     timeout: 30 * 1000,
     // Test directory
-    testDir: path.join(__dirname, "e2e"),
+    testDir: join(__dirname, "e2e"),
     // If a test fails, retry it additional 2 times
     retries: 2,
     // Artifacts folder where screenshots, videos, and traces are stored.

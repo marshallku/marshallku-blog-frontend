@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",
-        "@marshallku/typescript-config": "workspace:*",
+        "@marshallku/typescript-config": "^0.0.4",
         "@types/react": "^18.2.37",
         "@types/react-dom": "^18.2.15",
         "react-dom": "^18.3.1",
