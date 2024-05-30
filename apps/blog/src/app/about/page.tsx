@@ -50,13 +50,13 @@ export default function AboutPage() {
             </section>
             <section className={cx("__container", "__container--about")}>
                 <Typography component="p" marginBottom>
-                    Hello! I'm Marshall Ku, a passionate developer who loves learning and taking on new challenges. I've
-                    worked on various projects and have experience with a wide range of technologies.
+                    Hello! I&apos;m Marshall Ku, a passionate developer who loves learning and taking on new challenges.
+                    I&apos;ve worked on various projects and have experience with a wide range of technologies.
                 </Typography>
                 <Typography component="p" marginBottom>
                     I enjoy solving complex problems with code and continuously strive to improve my skills. Through
-                    side projects and professional experience, I've gained a solid foundation in multiple domains, from
-                    frontend to backend technologies.
+                    side projects and professional experience, I&apos;ve gained a solid foundation in multiple domains,
+                    from frontend to backend technologies.
                 </Typography>
                 <Typography component="p" marginBottom={8} variant="h5" fontWeight={700}>
                     What I Do
@@ -73,7 +73,7 @@ export default function AboutPage() {
                         <Typography component="strong" fontWeight={700}>
                             Backend Development:
                         </Typography>{" "}
-                        I've worked with NestJS, Axum, MongoDB, and more to create robust server-side applications.
+                        I&apos;ve worked with NestJS, Axum, MongoDB, and more to create robust server-side applications.
                     </li>
                     <li>
                         <Typography component="strong" fontWeight={700}>

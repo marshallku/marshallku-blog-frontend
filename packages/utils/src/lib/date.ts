@@ -1,28 +1,28 @@
-export const SECOND_TO_MILLISECOND = 1000;
+export const SECOND_TO_MILLISECOND: number = 1000;
 
-export const MINUTE_TO_SECOND = 60;
-export const MINUTE_TO_MILLISECOND = SECOND_TO_MILLISECOND * MINUTE_TO_SECOND;
+export const MINUTE_TO_SECOND: number = 60;
+export const MINUTE_TO_MILLISECOND: number = SECOND_TO_MILLISECOND * MINUTE_TO_SECOND;
 
-export const HOUR_TO_MINUTE = 60;
-export const HOUR_TO_SECOND = HOUR_TO_MINUTE * MINUTE_TO_SECOND;
-export const HOUR_TO_MILLISECOND = HOUR_TO_SECOND * SECOND_TO_MILLISECOND;
+export const HOUR_TO_MINUTE: number = 60;
+export const HOUR_TO_SECOND: number = HOUR_TO_MINUTE * MINUTE_TO_SECOND;
+export const HOUR_TO_MILLISECOND: number = HOUR_TO_SECOND * SECOND_TO_MILLISECOND;
 
-export const DAY_TO_HOUR = 24;
-export const DAY_TO_SECOND = DAY_TO_HOUR * HOUR_TO_SECOND;
-export const DAY_TO_MILLISECOND = DAY_TO_SECOND * SECOND_TO_MILLISECOND;
+export const DAY_TO_HOUR: number = 24;
+export const DAY_TO_SECOND: number = DAY_TO_HOUR * HOUR_TO_SECOND;
+export const DAY_TO_MILLISECOND: number = DAY_TO_SECOND * SECOND_TO_MILLISECOND;
 
-export const WEEK_TO_DAY = 7;
-export const WEEK_TO_SECOND = WEEK_TO_DAY * DAY_TO_SECOND;
-export const WEEK_TO_MILLISECOND = WEEK_TO_SECOND * SECOND_TO_MILLISECOND;
+export const WEEK_TO_DAY: number = 7;
+export const WEEK_TO_SECOND: number = WEEK_TO_DAY * DAY_TO_SECOND;
+export const WEEK_TO_MILLISECOND: number = WEEK_TO_SECOND * SECOND_TO_MILLISECOND;
 
-export const MONTH_TO_DAY = 30;
-export const MONTH_TO_SECOND = MONTH_TO_DAY * DAY_TO_SECOND;
-export const MONTH_TO_MILLISECOND = MONTH_TO_SECOND * SECOND_TO_MILLISECOND;
+export const MONTH_TO_DAY: number = 30;
+export const MONTH_TO_SECOND: number = MONTH_TO_DAY * DAY_TO_SECOND;
+export const MONTH_TO_MILLISECOND: number = MONTH_TO_SECOND * SECOND_TO_MILLISECOND;
 
-export const YEAR_TO_MONTH = 12;
-export const YEAR_TO_DAY = 365;
-export const YEAR_TO_SECOND = YEAR_TO_DAY * DAY_TO_SECOND;
-export const YEAR_TO_MILLISECOND = YEAR_TO_SECOND * SECOND_TO_MILLISECOND;
+export const YEAR_TO_MONTH: number = 12;
+export const YEAR_TO_DAY: number = 365;
+export const YEAR_TO_SECOND: number = YEAR_TO_DAY * DAY_TO_SECOND;
+export const YEAR_TO_MILLISECOND: number = YEAR_TO_SECOND * SECOND_TO_MILLISECOND;
 
 const pad = (n: number): string => `${n}`.padStart(2, "0");
 

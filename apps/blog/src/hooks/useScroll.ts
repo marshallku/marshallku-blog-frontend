@@ -49,6 +49,8 @@ export default function useScroll({ useNativeScroll = false, easing = easeInOutC
 
             const { scrollY: fromTop, scrollX: fromLeft } = window;
 
+            const startTime = performance.now();
+
             const animation = () => {
                 const { top: toTop = 0, left: toLeft = 0 } = to;
 
@@ -63,7 +65,6 @@ export default function useScroll({ useNativeScroll = false, easing = easeInOutC
                 }
             };
 
-            const startTime = performance.now();
             animation();
         },
         [useNativeScroll, easing],

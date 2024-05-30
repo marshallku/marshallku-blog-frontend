@@ -42,7 +42,7 @@ export type ButtonProps<T extends object = Record<never, never>> = ButtonHTMLAtt
 
 const cx = classNames(styles, "button");
 
-function Button<T extends object>({
+function Button<T extends object, P>({
     component,
     size = "medium",
     variant = "secondary",
@@ -53,7 +53,7 @@ function Button<T extends object>({
     disabled,
     children,
     ...props
-}: ButtonProps<T>) {
+}: ButtonProps<T>): React.ReactElement<T, string | React.JSXElementConstructor<P>> {
     const typographyVariant: TypographyProps["variant"] = useMemo(() => {
         if (size === "medium") {
             return "b2";

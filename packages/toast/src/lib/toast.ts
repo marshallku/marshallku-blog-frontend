@@ -1,5 +1,5 @@
-const DEFAULT_TIMEOUT = 3000;
-const CLASS_NAME = "toast";
+const DEFAULT_TIMEOUT: number = 3000;
+const CLASS_NAME: string = "toast";
 
 export interface ToastOption {
     timeout?: number;
