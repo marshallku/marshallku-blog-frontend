@@ -1,6 +1,6 @@
 import { InputHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
-import Typography from "#components/Typography";
+import Typography from "../Typography";
 import styles from "./index.module.scss";
 
 type InputVariant = "line" | "box";

@@ -1,6 +1,6 @@
 import { ReactNode, createElement } from "react";
 import { classNames } from "@marshallku/utils";
-import { Range } from "#types";
+import { Range } from "../../types";
 import styles from "./index.module.scss";
 
 export type TypographyComponent = keyof Omit<
