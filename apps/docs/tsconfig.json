@@ -4,7 +4,7 @@
     "exclude": ["dist", "build", "node_modules"],
     "compilerOptions": {
         "paths": {
-            "@ui": ["../../packages/ui/src"],
+            "@ui/*": ["../../packages/ui/src/components/*"],
             "@icon": ["../../packages/icon/dist"],
             "@icon/*": ["../../packages/icon/dist/*"],
             "#*": ["../blog/src/*"],
