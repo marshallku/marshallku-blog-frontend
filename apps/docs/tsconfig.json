@@ -1,5 +1,5 @@
 {
-    "extends": "@marshallku/typescript-config/react-app.json",
+    "extends": "@marshallku/typescript-config/react-library.json",
     "include": [".", ".storybook/next.config.js"],
     "exclude": ["dist", "build", "node_modules"],
     "compilerOptions": {

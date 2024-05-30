@@ -39,7 +39,7 @@
     },
     "devDependencies": {
         "@marshallku/eslint-config": "workspace:*",
-        "@marshallku/typescript-config": "workspace:*",
+        "@marshallku/typescript-config": "^0.0.4",
         "@next/bundle-analyzer": "^14.2.3",
         "@playwright/test": "^1.44.0",
         "@types/node": "^20.12.7",

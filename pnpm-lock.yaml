@@ -100,8 +100,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       '@next/bundle-analyzer':
         specifier: ^14.2.3
         version: 14.2.3
@@ -143,8 +143,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       '@storybook/addon-actions':
         specifier: ^8.1.4
         version: 8.1.4
@@ -230,8 +230,8 @@ importers:
   packages/icon:
     devDependencies:
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.48
@@ -264,8 +264,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       '@types/react':
         specifier: ^18.2.37
         version: 18.2.48
@@ -285,8 +285,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -299,8 +299,6 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
-
-  packages/typescript-config: {}
 
   packages/ui:
     dependencies:
@@ -315,8 +313,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       '@marshallku/utils':
         specifier: workspace:^
         version: link:../utils
@@ -363,8 +361,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@marshallku/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        specifier: ^0.0.4
+        version: 0.0.4
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -1764,6 +1762,9 @@ packages:
     resolution: {integrity: sha512-SPjARRmDT1JKQS4QxZRgfgagSsgWKHoRDlVRD7Zc1nOt4f417W6AFoF2DrVpFOzX1o7SL35xPK897raW0MdwUw==}
     peerDependencies:
       prettier: '>= 3'
+
+  '@marshallku/typescript-config@0.0.4':
+    resolution: {integrity: sha512-jtkJgAq5FesrHDYGS+ywgUjkmrEDikBOzV+5HxWLMqX7uDevFXAZ5Wv+FLUSEgmhpk1GASxRdbNlGLYur8oC2A==}
 
   '@mdx-js/mdx@2.3.0':
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
@@ -10642,6 +10643,8 @@ snapshots:
   '@marshallku/prettier-config@0.0.1(prettier@3.2.5)':
     dependencies:
       prettier: 3.2.5
+
+  '@marshallku/typescript-config@0.0.4': {}
 
   '@mdx-js/mdx@2.3.0':
     dependencies:
