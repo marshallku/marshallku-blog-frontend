@@ -29,7 +29,7 @@
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
     },
     "devDependencies": {
-        "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "@marshallku/utils": "workspace:^",
         "@types/node": "^20.12.7",

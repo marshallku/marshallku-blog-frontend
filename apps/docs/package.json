@@ -16,7 +16,7 @@
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
-        "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "@storybook/addon-actions": "^8.1.4",
         "@storybook/addon-docs": "^8.1.4",

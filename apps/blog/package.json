@@ -38,7 +38,7 @@
         "zod": "^3.23.8"
     },
     "devDependencies": {
-        "@marshallku/eslint-config": "workspace:*",
+        "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "@next/bundle-analyzer": "^14.2.3",
         "@playwright/test": "^1.44.0",
