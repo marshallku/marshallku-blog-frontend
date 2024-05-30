@@ -1,6 +1,6 @@
+import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
-import Typography from "#components/Typography";
 import { SITE_DESCRIPTION, SITE_SINCE } from "#constants";
 import styles from "./index.module.scss";
 

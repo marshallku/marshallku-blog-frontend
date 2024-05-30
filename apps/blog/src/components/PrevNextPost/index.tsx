@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
 import Image from "#components/Image";
-import Typography from "#components/Typography";
 import { Post } from "#types";
 import styles from "./index.module.scss";
 import { Icon } from "@marshallku/icon";

@@ -1,10 +1,10 @@
 import Link from "next/link";
+import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
 import PostList from "#components/PostList";
 import PostListGallery from "#components/PostListGallery";
 import Image from "#components/Image";
-import Typography from "#components/Typography";
 import { getPosts, getCategories } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
 import styles from "./page.module.scss";

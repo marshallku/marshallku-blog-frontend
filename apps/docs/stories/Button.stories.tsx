@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from "@storybook/react";
-import Button, { type ButtonProps } from "@blog/Button";
+import Button, { type ButtonProps } from "@ui/Button";
 
 const story: Meta<ButtonProps> = {
     component: Button,

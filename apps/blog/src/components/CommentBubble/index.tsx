@@ -1,7 +1,7 @@
+import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
 import { type Comment } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
-import Typography from "#components/Typography";
 import CommentContent from "#components/CommentContent";
 import styles from "./index.module.scss";
 

@@ -1,11 +1,11 @@
 "use client";
 
 import { copyToClipboard } from "copy2clip";
+import Button from "@marshallku/ui/Button";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import { toast } from "@marshallku/toast";
 import styles from "./index.module.scss";
-import Button from "#components/Button";
 import { AnchorHTMLAttributes } from "react";
 import ReportIssueButton from "#components/ReportIssueButton";
 

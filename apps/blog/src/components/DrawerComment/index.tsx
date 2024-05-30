@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
 import { useComments } from "#api/comment/queries";
 import CommentAvatar from "#components/CommentAvatar";
-import Typography from "#components/Typography";
 import styles from "./index.module.scss";
 
 export interface DrawerCommentProps {
