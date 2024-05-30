@@ -13,25 +13,18 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/check-spelling@master
-    lint-all:
-        name: Check quality with ESLint
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: marshallku/actions/setup-pnpm@master
-            - name: Check code quality
-              run: pnpm lint
-    build-all:
-        name: Build all packages and apps
+    build-and-lint:
+        name: Build all packages and apps, and check quality with ESLint
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages
               run: pnpm build
+            - name: Check code quality
+              run: pnpm lint
     test-blog-e2e:
         name: Run e2e test in blog
-        needs: [build-all]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -50,7 +43,6 @@ jobs:
                   retention-days: 30
     lighthouse:
         name: Lighthouse CI
-        needs: [build-all]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -69,7 +61,7 @@ jobs:
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, lint-all, build-all, test-blog-e2e, lighthouse]
+        needs: [check-spelling, build-and-lint, test-blog-e2e, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
