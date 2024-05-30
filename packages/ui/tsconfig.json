@@ -1,10 +1,5 @@
 {
     "extends": "@marshallku/typescript-config/react-library.json",
     "include": ["."],
-    "exclude": ["dist", "build", "node_modules"],
-    "compilerOptions": {
-        "paths": {
-            "#*": ["./src/*"]
-        }
-    }
+    "exclude": ["dist", "build", "node_modules"]
 }
