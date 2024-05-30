@@ -1,8 +1,8 @@
 "use client";
 
-import { ButtonHTMLAttributes, ReactNode, createElement, useMemo } from "react";
+import { type ButtonHTMLAttributes, type ReactNode, createElement, useMemo } from "react";
 import { classNames } from "@marshallku/utils";
-import Typography, { TypographyProps } from "../Typography";
+import Typography, { type TypographyProps } from "../Typography";
 import styles from "./index.module.scss";
 
 export type ButtonSize = "large" | "medium" | "small";
@@ -11,7 +11,6 @@ export type ButtonRadius = "square" | "rounded" | "capsule" | "circle";
 export type ButtonResizing = "hug" | "fill";
 
 export type ButtonProps<T extends object = Record<never, never>> = ButtonHTMLAttributes<HTMLButtonElement> & {
-    // eslint-disable-next-line no-unused-vars
     component?(props: T): ReactNode;
     /**
      * Size of the padding and font
@@ -68,7 +67,7 @@ function Button<T extends object>({
     }, [size]);
 
     return createElement(
-        component || "button",
+        component ?? "button",
         {
             className: cx(
                 "",
@@ -94,5 +93,7 @@ function Button<T extends object>({
         ),
     );
 }
+
+Button.displayName = "Button";
 
 export default Button;

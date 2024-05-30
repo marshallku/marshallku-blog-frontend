@@ -56,7 +56,7 @@ export default defineConfig({
             output: {
                 assetFileNames: "assets/[name][extname]",
                 entryFileNames: "[name].js",
-                async banner({ facadeModuleId }) {
+                banner({ facadeModuleId }) {
                     if (!facadeModuleId) {
                         return "";
                     }
