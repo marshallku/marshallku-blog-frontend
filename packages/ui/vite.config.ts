@@ -27,7 +27,13 @@ export default defineConfig({
     plugins: [
         react(),
         libInjectCss(),
-        dts({ include: ["src"] }),
+        dts({
+            include: ["src"],
+            exclude: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+            compilerOptions: {
+                declarationMap: false,
+            },
+        }),
         viteStaticCopy({
             targets: [
                 {
