@@ -23,6 +23,14 @@ jobs:
               run: pnpm build
             - name: Check code quality
               run: pnpm lint
+    test:
+        name: Run unit tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: marshallku/actions/setup-pnpm@master
+            - name: Run tests
+              run: pnpm test
     test-blog-e2e:
         name: Run e2e test in blog
         runs-on: ubuntu-latest
@@ -61,7 +69,7 @@ jobs:
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, build-and-lint, test-blog-e2e, lighthouse]
+        needs: [check-spelling, build-and-lint, test, test-blog-e2e, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
