@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { extname, relative, resolve } from "node:path";
@@ -46,7 +48,7 @@ export default defineConfig({
             input: Object.fromEntries(
                 glob
                     .sync("src/**/*.{ts,tsx}", {
-                        ignore: ["src/**/*.d.ts"],
+                        ignore: ["src/**/*.d.ts", "src/**/*.test.ts", "src/**/*.test.tsx"],
                     })
                     .map((file) => [
                         relative("src", file.slice(0, file.length - extname(file).length)),
@@ -72,5 +74,9 @@ export default defineConfig({
                 },
             },
         },
+    },
+    test: {
+        globals: true,
+        environment: "jsdom",
     },
 });
