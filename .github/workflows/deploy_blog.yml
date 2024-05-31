@@ -1,4 +1,4 @@
-name: Deploy frontend to server
+name: CD - blog app
 
 on:
     push:
