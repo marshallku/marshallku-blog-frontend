@@ -5,8 +5,12 @@
             "outputs": ["dist/**", "storybook-static/**", ".next/**"],
             "dependsOn": ["^build"]
         },
-        "lint": {},
-        "test": {},
+        "lint": {
+            "cache": false
+        },
+        "test": {
+            "cache": false
+        },
         "test:e2e": {
             "cache": false
         },
