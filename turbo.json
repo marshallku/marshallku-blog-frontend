@@ -6,7 +6,8 @@
             "dependsOn": ["^build"]
         },
         "lint": {
-            "cache": false
+            "cache": false,
+            "dependsOn": ["^build"]
         },
         "test": {
             "cache": false
@@ -20,6 +21,7 @@
         "dev": {
             "cache": false,
             "persistent": true,
+            "dependsOn": ["^build"],
             "env": [
                 "NODE_ENV",
                 "CI",
