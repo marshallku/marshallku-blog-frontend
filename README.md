@@ -1,5 +1,9 @@
 # Blog Frontend
 
+[![Deploy frontend to server](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/deploy_blog.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/deploy_blog.yml)
+[![CI](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml)
+[![Visual Regression Test](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml)
+
 ![Blog front page](https://github.com/marshall-ku/assets/assets/72745119/a9add532-4f7c-4504-98dd-5d9c823077a0)
 
 Front-end application of [my blog](https://marshallku.com/)
