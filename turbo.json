@@ -17,7 +17,8 @@
             "cache": false
         },
         "test:visual-regression": {
-            "cache": false
+            "cache": false,
+            "dependsOn": ["^build"]
         },
         "dev": {
             "cache": false,
