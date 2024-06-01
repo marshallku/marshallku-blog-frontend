@@ -11,6 +11,7 @@ import Footer from "#components/Footer";
 import GlobalNavigation from "#components/GlobalNavigation";
 import TopButton from "#components/TopButton";
 import NewrelicSnippet from "#components/NewrelicSnippet";
+import Script from "next/script";
 
 export const metadata: Metadata = {
     title: SITE_NAME,
@@ -50,11 +51,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Footer />
                 <TopButton />
                 <div id="drawer-root" />
-                <script
+                <Script
+                    id="service-worker"
                     dangerouslySetInnerHTML={{
                         __html: `(function(){if("serviceWorker" in navigator) {window.addEventListener("load",() => {navigator.serviceWorker.register("/service-worker.js")})}})()`,
                     }}
                 />
+                {process.env.NEXT_PUBLIC_GOOGLE_AD_ID && (
+                    <Script
+                        id="google-ads"
+                        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_AD_ID}`}
+                        strategy="beforeInteractive"
+                        crossOrigin="anonymous"
+                    />
+                )}
                 <GoogleAnalytics gaId="G-WPZTSDZ027" />
             </body>
         </html>
