@@ -3,31 +3,11 @@ title: 유튜브 썸네일 추출하기
 description: Github 간편하게 유튜브 썸네일을 추출할 수 있는 웹앱입니다. 220428 업데이트 모든 썸네일 크기 렌더링하도록 수정 Shorts 썸네일 추출할 수 있도록 업데이트 210222 업데이트 png 이미지 제거 추출 버튼 클릭할 때마다 html 구조를 초기화하지 않도록 수정 original.jpg가 없는 이미지는 maxresdefault.jpg 출력 링크에 시간 등 옵션이 들어있을 때 썸네일이 제대로 출력되지 않던 오류 수정 Export Thumbnails 사용법
 date:
   posted: 2019-08-05T14:37:00.000Z
-  modified: 2024-02-06T11:47:01.954Z
+  modified: 2024-06-01T00:51:05.194Z
 tags:
   - JavaScript
   - Youtube
 ogImage: /images/2019/08/유튜브-썸네일-저장.jpg
----
-
-[Github](https://github.com/marshallku/Youtube-Thumbnail-Downloader)
-
-간편하게 유튜브 썸네일을 추출할 수 있는 웹앱입니다.
-
----
-
-220428 업데이트
-
-* 모든 썸네일 크기 렌더링하도록 수정
-* Shorts 썸네일 추출할 수 있도록 업데이트
-
-210222 업데이트
-
-* png 이미지 제거
-* 추출 버튼 클릭할 때마다 html 구조를 초기화하지 않도록 수정
-* original.jpg가 없는 이미지는 maxresdefault.jpg 출력
-* 링크에 시간 등 옵션이 들어있을 때 썸네일이 제대로 출력되지 않던 오류 수정
-
 ---
 
 <style dangerouslySetInnerHTML={{ __html: ".form{display:flex;max-width:700px;margin:0 auto}.form__input{width:100%;border:1px solid #aaa;border-radius:30px;outline:0;padding:.2rem .5rem}.form__submit{display:inline-block;margin-left:10px;padding:.2rem .5rem;border:none;border-radius:4px;box-shadow:#aaa 0 0 0 2px inset;flex-shrink:0;text-decoration:none;text-align:center;cursor:pointer}@media (any-hover: hover){.form__submit{transition:color .2s cubic-bezier(.39,.5,.15,1.36),box-shadow .2s cubic-bezier(.39,.5,.15,1.36)}.form__submit:hover{color:#fff;box-shadow:#aaa 0 0 0 40px inset}}.result{position:relative;display:inline-block;width:clamp(0px,100%,calc(1280px + 2rem));margin:1rem auto 0;padding:1rem;border:1px solid rgba(0,0,0,.35);text-align:center}.result__title{position:absolute;top:0;left:50%;padding:0 10px;background-color:var(--bg-color);transform:translate3d(-50%,-50%,0)}.result__thumbnail{display:flex;flex-direction:column;gap:1rem}.result__thumbnail img{max-width:100%}" }} />
@@ -43,9 +23,29 @@ ogImage: /images/2019/08/유튜브-썸네일-저장.jpg
 
 ---
 
+[Github](https://github.com/marshallku/Youtube-Thumbnail-Downloader)
+
+간편하게 유튜브 썸네일을 추출할 수 있는 웹앱입니다.
+
+---
+
 ### 사용법
 
 1. 추출하고 싶은 비디오의 링크를 "URI of Youtube video"라 적힌 칸에 붙여 넣습니다.
 2. "Export" 버튼을 클릭합니다.
 3. 추출된 이미지를 우클릭합니다.
 4. "다른 이름으로 이미지 저장"을 클릭한 후 저장합니다. (참고: 아래에 있는 이미지일수록 크기가 작습니다)
+
+---
+
+220428 업데이트
+
+* 모든 썸네일 크기 렌더링하도록 수정
+* Shorts 썸네일 추출할 수 있도록 업데이트
+
+210222 업데이트
+
+* png 이미지 제거
+* 추출 버튼 클릭할 때마다 html 구조를 초기화하지 않도록 수정
+* original.jpg가 없는 이미지는 maxresdefault.jpg 출력
+* 링크에 시간 등 옵션이 들어있을 때 썸네일이 제대로 출력되지 않던 오류 수정
