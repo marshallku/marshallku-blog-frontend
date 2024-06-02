@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { getTags } from "#utils/post";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
 import styles from "./page.module.scss";
 
@@ -19,7 +20,12 @@ export default function TagCloudPage() {
         <div className={cx()}>
             {tags.map(({ name, count }) => (
                 <Link key={name} href={`/tag/${name}`}>
-                    {name} ({count})
+                    <Typography component="span" variant="b2">
+                        {name}
+                    </Typography>
+                    <Typography component="span" variant="c1">
+                        ({count})
+                    </Typography>
                 </Link>
             ))}
         </div>
