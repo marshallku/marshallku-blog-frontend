@@ -21,6 +21,8 @@ jobs:
             - uses: marshallku/actions/setup-pnpm@master
             - name: Build apps and packages
               run: pnpm build
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     lint:
         name: Lint all packages and apps
         runs-on: ubuntu-latest

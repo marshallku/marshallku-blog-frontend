@@ -9,6 +9,7 @@ import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 import { libInjectCss } from "vite-plugin-lib-inject-css";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { codecovVitePlugin } from "@codecov/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -41,6 +42,11 @@ export default defineConfig({
                     dest: "./",
                 },
             ],
+        }),
+        codecovVitePlugin({
+            bundleName: "@marshallku/ui",
+            enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+            uploadToken: process.env.CODECOV_TOKEN,
         }),
     ],
     build: {

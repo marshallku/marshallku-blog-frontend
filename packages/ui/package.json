@@ -30,6 +30,7 @@
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
     },
     "devDependencies": {
+        "@codecov/vite-plugin": "0.0.1-beta.8",
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "@marshallku/utils": "workspace:^",
