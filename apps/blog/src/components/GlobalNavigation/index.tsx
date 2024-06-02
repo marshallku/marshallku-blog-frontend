@@ -14,6 +14,7 @@ const cx = classNames(styles, "global-navigation");
 const NAVIGATION = [
     { path: "/", name: "Home" },
     { name: "Categories", subMenu: getCategories() } as const,
+    { path: "/tags", name: "Tags" },
     { path: "/about", name: "About" },
     { path: "/guestbook", name: "Guestbook" },
 ];
