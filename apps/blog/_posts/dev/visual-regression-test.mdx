@@ -3,6 +3,7 @@ title: Visual regression test 도입기
 description: BackstopJS와 Storybook을 활용한 시각적 회귀 테스트 시스템 구축하기
 date:
   posted: 2024-06-01T13:53:54.428Z
+  modified: 2024-06-03T05:41:57.731Z
 tags:
   - Visual Regression Test
   - Testing
@@ -447,6 +448,16 @@ jobs:
 
 다음으로, PR을 확인할 때와 마찬가지로 테스트를 수행하는 파이프라인을 추가했습니다.\
 다만, PR을 확인할 때와 달리, 테스트를 진행한 뒤 그 결과를 바탕으로 Reference 파일을 업데이트하고, 이를 커밋하는 작업을 추가했습니다.
+
+## 결과
+
+![PR 댓글에서 Visual Regression 테스트 결과](/images/2024/06/visual-regression-test-result-in-pr.png)
+
+여기까지 완료했다면, PR을 생성했을 때 위와 같이 Visual Regression Test 수행 결과를 댓글로 등록해 주고,
+
+![Visual Regression 테스트 reference 파일 자동 업데이트](/images/2024/06/visual-regression-test-result-image.png)
+
+Master 브랜치가 업데이트되면 자동으로 reference 파일을 업데이트 해주게 됩니다.
 
 ## 마치며
 
