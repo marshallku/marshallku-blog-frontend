@@ -1,3 +1,4 @@
+import { type CSSProperties } from "react";
 import { classNames } from "@marshallku/utils";
 import styles from "./index.module.scss";
 
@@ -29,36 +30,34 @@ function Loader({ className = "", size = 150, clockwise = true, strokeWidth = 5 
     const radius = (size - strokeWidth) / 2;
     const fullRadius = size / 2;
     const circumference = radius * 2 * Math.PI;
-    const rotationDirection = clockwise ? 1 : -1;
 
     return (
-        <svg className={cx("", { className })} width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <svg
+            className={cx("", clockwise && "--clockwise", { className })}
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            // Browsers do not start SVG animations until the entire page has fully loaded.
+            // So I used CSS animations instead SVG `<animate>` elements to overcome this limitation.
+            style={
+                {
+                    "--spinner-size": `${size}px`,
+                    "--spinner-stroke-width": `${strokeWidth}px`,
+                    "--radius": `${radius}px`,
+                    "--full-radius": `${fullRadius}px`,
+                    "--circumference": `${circumference}px`,
+                } as CSSProperties
+            }
+        >
             <circle
-                cx={fullRadius}
-                cy={fullRadius}
+                cx={size / 2}
+                cy={size / 2}
                 r={radius}
                 strokeWidth={strokeWidth}
                 fill="none"
-                strokeDasharray={circumference}
-                strokeDashoffset={circumference}
                 strokeLinecap="round"
-            >
-                <animate
-                    attributeName="stroke-dashoffset"
-                    from={circumference * rotationDirection}
-                    to={-circumference * rotationDirection}
-                    dur="1.5s"
-                    repeatCount="indefinite"
-                />
-                <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    from={`0 ${fullRadius} ${fullRadius}`}
-                    to={`${360 * rotationDirection} ${fullRadius} ${fullRadius}`}
-                    dur="2s"
-                    repeatCount="indefinite"
-                />
-            </circle>
+                className={cx("__spinner")}
+            />
         </svg>
     );
 }
