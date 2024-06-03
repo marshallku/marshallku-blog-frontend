@@ -48,6 +48,7 @@ export function getPostBySlug(slug: string): Post | undefined {
             tags: data.tags,
             coverImage: data.coverImage,
             ogImage: data.ogImage,
+            displayAd: data.displayAd ?? false,
         },
         content,
         slug,

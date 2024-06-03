@@ -11,6 +11,7 @@ export interface Post {
         tags: string[];
         coverImage: string;
         ogImage: string;
+        displayAd?: boolean;
     };
     content: string;
     slug: string;
