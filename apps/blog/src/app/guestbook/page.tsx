@@ -1,6 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { Suspense } from "react";
 import Typography from "@marshallku/ui/Typography";
+import Loader from "@marshallku/ui/Loader";
 import { classNames } from "@marshallku/utils";
 import { getCommentsBySlug, postComment } from "#api/comment/api.server";
 import CommentForm from "#components/CommentForm";
@@ -31,7 +32,7 @@ export default async function GuestbookPage() {
                     revalidateTag(SLUG);
                 }}
             />
-            <Suspense>
+            <Suspense fallback={<Loader size={80} className={cx("__loader")} />}>
                 <Comments />
             </Suspense>
         </div>
