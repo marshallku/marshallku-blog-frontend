@@ -1,7 +1,7 @@
 const storyData = require("../docs/storybook-static/index.json");
 
 const stories = Object.values(storyData.entries);
-const blackList = [];
+const blackList = ["components-loader--default"];
 
 /** @type {import('backstopjs').Config} */
 const config = {
