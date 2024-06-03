@@ -2,6 +2,8 @@
 
 directory='components'
 story_dir='apps/docs/stories'
+root='apps/blog/src'
+package='@blog'
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -13,6 +15,11 @@ while [[ $# -gt 0 ]]; do
         ;;
     -l | --layout)
         directory='layouts'
+        shift
+        ;;
+    -s)
+        root='packages/ui/src'
+        package='@ui'
         shift
         ;;
     *)
@@ -32,7 +39,7 @@ fi
 component_name=$(tr '[:lower:]' '[:upper:]' <<<"${name:0:1}")${name:1}
 style_name=$(echo "$component_name" | perl -pe 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')
 
-component_dir="apps/blog/src/$directory/$component_name"
+component_dir="$root/$directory/$component_name"
 
 mkdir -p "$component_dir"
 
@@ -55,7 +62,7 @@ export default $component_name" >>"$component_dir"/index.tsx
 
 # Create story file
 echo "import { type Meta, type StoryObj } from \"@storybook/react\";
-import $component_name, { type ${component_name}Props } from \"@blog/$component_name\";
+import $component_name, { type ${component_name}Props } from \"$package/$component_name\";
 
 const story: Meta<${component_name}Props> = {
     component: $component_name,
@@ -74,3 +81,10 @@ export default story;
 export const Default: StoryObj<${component_name}Props> = {
     args: {},
 };" >>"$story_dir/$component_name.stories.tsx"
+
+# Modify barrel file
+if [[ "$root" == *"apps/blog"* ]]; then
+    exit 0
+fi
+
+echo "export { default as $component_name, type ${component_name}Props } from \"./$directory/$component_name\";" >>"$root/index.ts"
