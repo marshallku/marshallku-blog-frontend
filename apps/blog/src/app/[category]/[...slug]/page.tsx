@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Script from "next/script";
 import { notFound } from "next/navigation";
 import nextDynamic from "next/dynamic";
 import Link from "next/link";
@@ -202,6 +203,14 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     </Link>
                 </div>
             </aside>
+            {post.data.displayAd && process.env.NEXT_PUBLIC_GOOGLE_AD_ID && (
+                <Script
+                    id="google-ads"
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_AD_ID}`}
+                    strategy="beforeInteractive"
+                    crossOrigin="anonymous"
+                />
+            )}
         </article>
     );
 }
