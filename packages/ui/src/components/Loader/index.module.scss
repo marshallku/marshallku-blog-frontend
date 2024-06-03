@@ -1,5 +1,34 @@
 .loader {
-    circle {
+    $self: &;
+    $PI: 3.1415;
+    --rotation-direction: -1;
+
+    &--clockwise {
+        --rotation-direction: 1;
+    }
+
+    &__spinner {
+        @keyframes dash {
+            0% {
+                stroke-dashoffset: calc((var(--circumference)) * var(--rotation-direction));
+            }
+            100% {
+                stroke-dashoffset: calc(-1 * var(--circumference) * var(--rotation-direction));
+            }
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(calc(var(--rotation-direction) * 360deg));
+            }
+        }
+
         stroke: color(theme);
+        transform-origin: center;
+        stroke-dasharray: calc(var(--spinner-size) * $PI);
+        stroke-dashoffset: calc(var(--spinner-size) * $PI);
+        animation:
+            dash 1.5s linear infinite,
+            rotate 2s linear infinite;
     }
 }
