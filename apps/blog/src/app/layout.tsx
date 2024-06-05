@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <script
                     id="theme"
                     dangerouslySetInnerHTML={{
-                        __html: `(function(){var t=localStorage.getItem("theme");if(!t){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"sepia"}document.documentElement.dataset.theme=t,document.documentElement.style.colorScheme=t})()`,
+                        __html: `!function(){function e(e){document.documentElement.dataset.theme=e,document.documentElement.style.colorScheme=e}function t(e=!1){return e?"dark":"sepia"}const n=window.matchMedia("(prefers-color-scheme: dark)");e(localStorage.getItem("theme")||t(n.matches)),n.addEventListener("change",(n=>{e(t(n.matches))}))}();`,
                     }}
                 />
                 <GlobalNavigation />
