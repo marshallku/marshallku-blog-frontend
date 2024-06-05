@@ -13,4 +13,7 @@ module.exports = {
         project: true,
         tsconfigRootDir: __dirname,
     },
+    rules: {
+        "testing-library/prefer-screen-queries": "off",
+    },
 };
