@@ -23,11 +23,18 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
     applicationName: SITE_NAME,
     icons: [
-        { rel: "icon", url: "https://marshallku.com/favicon.ico" },
-        { rel: "apple-touch-icon", url: "https://marshallku.com/logo/logo-152.png" },
-        { rel: "apple-touch-icon-precomposed", url: "https://marshallku.com/favicon.ico" },
+        { rel: "icon", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/favicon.ico` },
+        { rel: "apple-touch-icon", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/logo/logo-152.png` },
+        { rel: "apple-touch-icon-precomposed", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/favicon.ico` },
     ],
-    authors: [{ url: "https://marshallku.com/", name: "Marshall K" }],
+    authors: [{ url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/`, name: "Marshall K" }],
+    openGraph: {
+        type: "website",
+        locale: "ko_KR",
+        siteName: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        images: [{ url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/assets/banner.png` }],
+    },
 };
 
 export const viewport: Viewport = {
