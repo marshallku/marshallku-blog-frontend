@@ -20,6 +20,6 @@ describe("Typography", () => {
     it("should render with a different component", () => {
         render(<Typography {...defaultProps} component="h1" />);
 
-        expect(screen.getByText("Test").tagName).toBe("h1");
+        expect(screen.getByText("Test").tagName).toBe("H1");
     });
 });
