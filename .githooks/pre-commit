@@ -6,8 +6,8 @@ get_iso_date() {
 }
 
 # Ensure the script handles UTF-8 encoding
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+export LC_ALL=ko_KR.UTF-8
+export LANG=ko_KR.UTF-8
 
 # Check Git configuration for commit encoding
 commit_encoding=$(git config --global i18n.commitencoding)
@@ -16,7 +16,7 @@ if [ "$commit_encoding" != "utf-8" ]; then
 fi
 
 # Loop through all modified .mdx files
-for file in $(git diff --cached --name-only --diff-filter=ACM | grep '\.mdx$'); do
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep '^apps/blog/_posts' | grep '\.mdx$'); do
     # Convert file to UTF-8 if not already
     encoding=$(file -bi "$file" | sed -n 's/.*charset=//p')
     if [ "$encoding" != "utf-8" ]; then
