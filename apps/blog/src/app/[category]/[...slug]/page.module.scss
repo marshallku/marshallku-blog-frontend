@@ -162,6 +162,14 @@
             overflow-x: auto;
             background-color: color(background-dimmed);
 
+            @at-root html:not([data-theme="dark"]) & {
+                &[data-theme*=" "],
+                &[data-theme*=" "] span {
+                    color: var(--shiki-light);
+                    background-color: var(--shiki-light-bg);
+                }
+            }
+
             @at-root html[data-theme="dark"] & {
                 &[data-theme*=" "],
                 &[data-theme*=" "] span {
@@ -170,11 +178,11 @@
                 }
             }
 
-            @at-root html:not([data-theme="dark"]) & {
+            @at-root html[data-theme="sepia"] & {
                 &[data-theme*=" "],
                 &[data-theme*=" "] span {
-                    color: var(--shiki-light);
-                    background-color: var(--shiki-light-bg);
+                    color: var(--shiki-sepia);
+                    background-color: var(--shiki-sepia-bg);
                 }
             }
         }
