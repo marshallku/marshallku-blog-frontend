@@ -163,7 +163,8 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                     {
                                         theme: {
                                             dark: "one-dark-pro",
-                                            light: "solarized-light",
+                                            light: "material-theme-lighter",
+                                            sepia: "solarized-light",
                                         },
                                         keepBackground: true,
                                     },
