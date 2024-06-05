@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Function to get the current date in ISO 8601 format
+get_iso_date() {
+    date -u +"%Y-%m-%dT%H:%M:%SZ"
+}
+
+# Ensure the script handles UTF-8 encoding
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Loop through all modified .mdx files
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep '\.mdx$'); do
+    # Convert file to UTF-8 if not already
+    encoding=$(file -bi "$file" | sed -n 's/.*charset=//p')
+    if [ "$encoding" != "utf-8" ]; then
+        iconv -f "$encoding" -t utf-8 "$file" -o "$file"
+    fi
+
+    # Check if the file contains a posted date
+    if grep -q "^  posted: " "$file"; then
+        # Update the modified date with the current date
+        if grep -q "^  modified: " "$file"; then
+            # Update the existing modified date
+            sed -i -E "s/^  modified: .*/  modified: $(get_iso_date)/" "$file"
+        else
+            # Add a new modified date
+            sed -i -E "/^  posted: .*/a\  modified: $(get_iso_date)" "$file"
+        fi
+    else
+        # Add the posted date with the current date
+        sed -i -E "/^date:/a\  posted: $(get_iso_date)" "$file"
+    fi
+
+    # Stage the changes to the file
+    git add "$file"
+done
