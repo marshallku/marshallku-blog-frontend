@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { revalidateTag } from "next/cache";
 import { Suspense } from "react";
 import Typography from "@marshallku/ui/Typography";
@@ -7,6 +8,11 @@ import { getCommentsBySlug, postComment } from "#api/comment/api.server";
 import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
 import styles from "./page.module.scss";
+
+export const metadata: Metadata = {
+    title: "방명록",
+    description: "방명록",
+};
 
 const SLUG = "/guestbook";
 

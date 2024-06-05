@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Archive from "#templates/Archive";
 import { getTags, getPostsByTag } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
@@ -8,7 +9,7 @@ interface TagArchivePageProps {
     params: { tag: string };
 }
 
-export function generateMetadata({ params: { tag } }: TagArchivePageProps) {
+export function generateMetadata({ params: { tag } }: TagArchivePageProps): Metadata {
     return {
         title: `${decodeURIComponent(tag)} 태그 글`,
     };
