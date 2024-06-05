@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Icon } from "@marshallku/icon";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
@@ -5,13 +6,16 @@ import styles from "./page.module.scss";
 
 export const dynamic = "error";
 
-const cx = classNames(styles, "about");
+export const metadata: Metadata = {
+    title: "About Me",
+    openGraph: {
+        type: "profile",
+        firstName: "Marshall",
+        lastName: "Ku",
+    },
+};
 
-export function generateMetadata() {
-    return {
-        title: "About Me",
-    };
-}
+const cx = classNames(styles, "about");
 
 export default function AboutPage() {
     return (

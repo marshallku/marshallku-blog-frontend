@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Archive from "#templates/Archive";
 import { getPosts, getPostsByTag } from "#utils/post";
@@ -12,7 +13,7 @@ interface TagArchivePageProps {
     };
 }
 
-export function generateMetadata({ params: { tag } }: TagArchivePageProps) {
+export function generateMetadata({ params: { tag } }: TagArchivePageProps): Metadata {
     return {
         title: `${tag} 태그 글`,
     };

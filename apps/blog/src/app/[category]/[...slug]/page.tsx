@@ -32,14 +32,17 @@ interface PostProps {
     };
 }
 
-export async function generateMetadata({ params: { category, slug } }: PostProps) {
+export function generateMetadata({ params: { category, slug } }: PostProps): Metadata {
     const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
     if (!post) {
-        return;
+        return {
+            title: "페이지를 찾을 수 없습니다",
+            description: "페이지를 찾을 수 없습니다",
+        };
     }
 
-    const metaData: Metadata = {
+    return {
         metadataBase: new URL("https://marshallku.com"),
         title: post.data.title,
         description: post.data.description,
@@ -59,8 +62,6 @@ export async function generateMetadata({ params: { category, slug } }: PostProps
             ],
         },
     };
-
-    return metaData;
 }
 
 export async function generateStaticParams() {

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Archive from "#templates/Archive";
 import { checkCategoryExists, getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
@@ -12,7 +13,7 @@ interface ArchiveProps {
     };
 }
 
-export function generateMetadata({ params: { category } }: ArchiveProps) {
+export function generateMetadata({ params: { category } }: ArchiveProps): Metadata {
     const categoryInfo = getCategoryBySlug(`/${category}`);
 
     return {
