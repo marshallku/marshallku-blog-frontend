@@ -1,4 +1,5 @@
 {
+    "name": "marshallku-blog-frontend",
     "private": true,
     "scripts": {
         "build": "turbo run build",
@@ -18,7 +19,7 @@
         "@changesets/cli": "^2.27.1",
         "@marshallku/prettier-config": "^0.0.1",
         "prettier": "^3.2.5",
-        "turbo": "latest"
+        "turbo": "^2.0.1"
     },
     "packageManager": "pnpm@9.1.1",
     "prettier": "@marshallku/prettier-config"
