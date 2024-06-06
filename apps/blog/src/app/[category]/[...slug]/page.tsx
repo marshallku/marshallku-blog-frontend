@@ -6,8 +6,8 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-import remarkSlug from "remark-slug";
 import remarkToc from "remark-toc";
 import remarkUnwrapImages from "remark-unwrap-images";
 import imageSize from "image-size";
@@ -154,11 +154,11 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     source={post.content}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [remarkToc, remarkGfm, remarkSlug, remarkUnwrapImages],
+                            remarkPlugins: [remarkToc, remarkGfm, remarkUnwrapImages],
                             rehypePlugins: [
+                                rehypeSlug,
                                 rehypeAutolinkHeadings,
                                 [
-                                    // @ts-expect-error
                                     rehypePrettyCode,
                                     {
                                         theme: {
@@ -169,9 +169,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                         keepBackground: true,
                                     },
                                 ],
-                                // @ts-expect-error
                                 setImageMetaData,
-                                // @ts-expect-error
                                 makeIframeResponsive,
                             ],
                         },
