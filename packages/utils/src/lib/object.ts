@@ -9,6 +9,13 @@ export function removeNullish<T extends object>(obj: T): RemoveNullish<T> {
     for (const key in newObj) {
         // eslint-disable-next-line eqeqeq
         if (newObj[key] != null) {
+            if (typeof newObj[key] === "object" && !Array.isArray(newObj[key])) {
+                result[key as keyof RemoveNullish<T>] = removeNullish(newObj[key]) as NonNullable<
+                    RemoveNullish<T>[keyof RemoveNullish<T>]
+                >;
+                continue;
+            }
+
             result[key as keyof RemoveNullish<T>] = newObj[key] as NonNullable<
                 RemoveNullish<T>[keyof RemoveNullish<T>]
             >;
