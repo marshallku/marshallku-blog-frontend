@@ -1,5 +1,5 @@
 {
-    "extends": "@marshallku/typescript-config/base.json",
+    "extends": "@marshallku/typescript-config/react-library.json",
     "include": ["."],
     "exclude": ["dist", "build", "node_modules"]
 }
