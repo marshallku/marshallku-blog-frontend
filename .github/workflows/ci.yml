@@ -19,6 +19,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
+            - uses: dtinth/setup-github-actions-caching-for-turbo@v1
             - name: Build apps and packages
               run: pnpm build
               env:
@@ -37,6 +38,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
+            - uses: dtinth/setup-github-actions-caching-for-turbo@v1
             - name: Run tests
               run: pnpm test
     test-blog-e2e:
@@ -63,6 +65,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
+            - uses: dtinth/setup-github-actions-caching-for-turbo@v1
             - name: Build app
               run: |
                   cp apps/blog/.env.example apps/blog/.env
