@@ -26,12 +26,19 @@ jobs:
               id: test
               continue-on-error: true
               run: pnpm test:visual-regression
+            - name: Check test result
+              id: check-test-result
+              run: |
+                  OUTPUT=$(node apps/visual-regression/reportResult.js)
+                  echo "::set-output name=result::$OUPTUT"
             - name: Create commit comment
               if: ${{ !cancelled() }}
               uses: peter-evans/commit-comment@v3
               with:
                   body: |
                       Visual regression test result - **${{ steps.test.outcome }}**
+
+                      ${{ steps.check-test-result.outputs.result }}
             - name: Approve results
               if: ${{ steps.test.outcome == 'failure' }}
               run: |

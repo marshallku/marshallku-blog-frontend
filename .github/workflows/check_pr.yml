@@ -25,11 +25,18 @@ jobs:
               continue-on-error: true
               run: pnpm test:visual-regression
             - name: Check test result
+              id: check-test-result
+              run: |
+                  OUTPUT=$(node apps/visual-regression/reportResult.js)
+                  echo "::set-output name=result::$OUPTUT"
+            - name: Comment test result
               if: ${{ !cancelled() }}
               uses: thollander/actions-comment-pull-request@v2
               with:
                   message: |
                       Test result - ${{ steps.test.outcome }}
+
+                      ${{ steps.check-test-result.outputs.result }}
 
                       You can check results [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - name: Upload test results
