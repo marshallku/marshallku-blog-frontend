@@ -30,7 +30,7 @@ jobs:
               id: check-test-result
               run: |
                   OUTPUT=$(node apps/visual-regression/reportResult.js)
-                  echo "::set-output name=result::$OUPTUT"
+                  echo "$OUTPUT" >> "$GITHUB_ENV"
             - name: Create commit comment
               if: ${{ !cancelled() }}
               uses: peter-evans/commit-comment@v3
@@ -38,7 +38,7 @@ jobs:
                   body: |
                       Visual regression test result - **${{ steps.test.outcome }}**
 
-                      ${{ steps.check-test-result.outputs.result }}
+                      ${{ env.TEST_RESULT }}
             - name: Approve results
               if: ${{ steps.test.outcome == 'failure' }}
               run: |

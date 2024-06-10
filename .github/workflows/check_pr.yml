@@ -28,7 +28,7 @@ jobs:
               id: check-test-result
               run: |
                   OUTPUT=$(node apps/visual-regression/reportResult.js)
-                  echo "::set-output name=result::$OUPTUT"
+                  echo "$OUTPUT" >> "$GITHUB_ENV"
             - name: Comment test result
               if: ${{ !cancelled() }}
               uses: thollander/actions-comment-pull-request@v2
@@ -36,7 +36,7 @@ jobs:
                   message: |
                       Test result - ${{ steps.test.outcome }}
 
-                      ${{ steps.check-test-result.outputs.result }}
+                      ${{ env.TEST_RESULT }}
 
                       You can check results [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - name: Upload test results

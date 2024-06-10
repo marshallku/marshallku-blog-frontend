@@ -20,7 +20,9 @@ async function main() {
         ]),
     ];
 
-    console.log(tableData.map((row) => `| ${row.join(" | ")} |`).join("%0A"));
+    console.log("TEST_RESULT<<EOF");
+    console.log(tableData.map((row) => `| ${row.join(" | ")} |`).join("\n"));
+    console.log("EOF");
 }
 
 main();
