@@ -11,3 +11,4 @@ node_modules
 docker-compose.yml
 README.md
 /scripts
+.checksum

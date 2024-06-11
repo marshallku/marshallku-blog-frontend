@@ -4,9 +4,37 @@ SERVICE="blog-front"
 BLUE_SERVICE="$SERVICE-blue"
 GREEN_SERVICE="$SERVICE-green"
 CONFIG_FILE='/etc/nginx/sites-available/marshall-ku.com'
+CHECKSUM_FILE='.checksum'
+DOCKERIGNORE_FILE='.dockerignore'
 
 cd ~/dev/marshallku-blog-frontend || exit 1
 git pull origin master
+
+# List of patterns to exclude from checksum calculation
+EXCLUDE_ARGS=()
+if [ -f $DOCKERIGNORE_FILE ]; then
+    while IFS= read -r line; do
+        [[ "$line" == "" || "$line" == \#* ]] && continue
+        EXCLUDE_ARGS+=(-path "./$line" -prune -o)
+    done <$DOCKERIGNORE_FILE
+fi
+
+# Ensure there is something to prune; if not, use default find parameters
+if [ ${#EXCLUDE_ARGS[@]} -eq 0 ]; then
+    EXCLUDE_ARGS=(-type f)
+else
+    EXCLUDE_ARGS+=(-type f -print)
+fi
+
+# Calculate the checksum of the relevant files
+current_checksum=$(find . "${EXCLUDE_ARGS[@]}" -exec sha256sum {} + | sha256sum)
+
+if [ -f $CHECKSUM_FILE ] && [ "$current_checksum" == "$(cat $CHECKSUM_FILE)" ]; then
+    echo "No changes detected. Skipping deployment."
+    exit 0
+fi
+
+echo "Changes detected. Deploying..."
 
 ACTIVE_SERVICE=''
 INACTIVE_SERVICE=''
@@ -37,11 +65,14 @@ for _ in {1..10}; do
     if [[ $response -eq 200 ]]; then
         echo "Health check passed. Switching traffic"
         # Shift traffic
-        sudo /bin/sed -i "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE"
+        sudo /bin/sed -I "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE"
         # Should prevent sigkill
         sudo /bin/systemctl restart nginx || exit 1
 
         docker compose down $INACTIVE_SERVICE
+
+        # Save the current checksum
+        echo "$current_checksum" >$CHECKSUM_FILE
         exit 0
     fi
 
