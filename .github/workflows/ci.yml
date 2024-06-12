@@ -119,8 +119,8 @@ jobs:
               run: |
                   cp apps/blog/.env.example apps/blog/.env
                   pnpm build --filter @marshallku/blog
-                  if [ -d apps/blog/.next/static ]; then cp -r apps/blog/.next/static apps/blog/.next/standalone/apps/blog/.next; fi
-                  if [ -d apps/blog/public ]; then cp -r apps/blog/public apps/blog/.next/standalone/apps/blog/; fi
+                  cp -r apps/blog/.next/static apps/blog/.next/standalone/apps/blog/.next
+                  cp -r apps/blog/public apps/blog/.next/standalone/apps/blog/
             - name: Run Lighthouse CI
               env:
                   LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
