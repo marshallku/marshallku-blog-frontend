@@ -19,15 +19,12 @@ if [ -f $DOCKERIGNORE_FILE ]; then
     done <$DOCKERIGNORE_FILE
 fi
 
-# Ensure there is something to prune; if not, use default find parameters
-if [ ${#EXCLUDE_ARGS[@]} -eq 0 ]; then
-    EXCLUDE_ARGS=(-type f)
-else
-    EXCLUDE_ARGS+=(-type f -print)
-fi
+EXCLUDE_ARGS+=(-path "./.turbo" -prune -o)
+EXCLUDE_ARGS+=(-path "./.git" -prune -o)
+EXCLUDE_ARGS+=(-type f -print)
 
 # Calculate the checksum of the relevant files
-current_checksum=$(find . "${EXCLUDE_ARGS[@]}" ! -path './.git/*' -exec sha256sum {} + | sha256sum)
+current_checksum=$(find . "${EXCLUDE_ARGS[@]}" -exec sha256sum {} + | sha256sum)
 
 if [ -f $CHECKSUM_FILE ] && [ "$current_checksum" == "$(cat $CHECKSUM_FILE)" ]; then
     echo "No changes detected. Skipping deployment."
