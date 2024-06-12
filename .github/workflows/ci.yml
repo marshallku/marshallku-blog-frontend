@@ -34,6 +34,7 @@ jobs:
                   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     lint:
         name: Lint all packages and apps
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -82,6 +83,7 @@ jobs:
               run: pnpm test
     test-blog-e2e:
         name: Run e2e test in blog
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -104,6 +106,7 @@ jobs:
                   retention-days: 30
     lighthouse:
         name: Lighthouse CI
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -126,7 +129,7 @@ jobs:
                   npm i -g @lhci/cli
                   lhci autorun
     send-notification:
-        needs: [check-spelling, build, lint, test, test-blog-e2e, lighthouse]
+        needs: [check-spelling, build, lint, test, test-blog-e2e, code-ql-analyze, lighthouse]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
