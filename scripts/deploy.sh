@@ -65,7 +65,7 @@ for _ in {1..10}; do
     if [[ $response -eq 200 ]]; then
         echo "Health check passed. Switching traffic"
         # Shift traffic
-        sudo /bin/sed -I "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE"
+        sudo /bin/sed -i "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE" || exit 1
         # Should prevent sigkill
         sudo /bin/systemctl restart nginx || exit 1
 
