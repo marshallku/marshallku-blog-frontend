@@ -8,6 +8,12 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+    CI: true
+    TURBO_API: http://127.0.0.1:9080
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: foo
+
 jobs:
     test:
         name: Run visual regression test
@@ -15,7 +21,10 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: marshallku/actions/setup-pnpm@master
-            - uses: dtinth/setup-github-actions-caching-for-turbo@v1
+            - name: TurboRepo server
+              uses: felixmosh/turborepo-gh-artifacts@v3
+              with:
+                  repo-token: ${{ github.token }}
             - name: Install puppeteer
               run: npx puppeteer browsers install chrome
             - name: Run backstop server in background
