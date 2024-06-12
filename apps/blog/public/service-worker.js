@@ -90,21 +90,28 @@ self.addEventListener(
             user = { name: null };
         }
 
+        /** @type {PushManager} */
+        const pushManager = self.registration.pushManager;
+
         event.waitUntil(
-            self.registration.pushManager
+            pushManager
                 .subscribe({
                     userVisibleOnly: true,
                     applicationServerKey:
                         "BIW_TwWhaUxiXO9O0BiCuIYSvgwrTjCmP3LyESA5SDtIFdkP_U4M1OnRxkh8SM6WuFcfTBIkwoCsPWkSr0ZDIl0",
                 })
                 .then((subscription) => {
-                    let subscriptionString = JSON.stringify(subscription);
+                    const requestBody = {
+                        ...subscription.toJSON(),
+                    };
+
                     if (user.name) {
-                        subscriptionString = subscriptionString.replace("{", `{"name":"${user.name}",`);
+                        requestBody.name = user.name;
                     }
+
                     return fetch("https://push.marshallku.com", {
                         method: "POST",
-                        body: subscriptionString,
+                        body: JSON.stringify(requestBody),
                     });
                 }),
         );
