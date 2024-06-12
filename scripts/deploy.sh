@@ -27,7 +27,7 @@ else
 fi
 
 # Calculate the checksum of the relevant files
-current_checksum=$(find . "${EXCLUDE_ARGS[@]}" -exec sha256sum {} + | sha256sum)
+current_checksum=$(find . "${EXCLUDE_ARGS[@]}" ! -path './.git/*' -exec sha256sum {} + | sha256sum)
 
 if [ -f $CHECKSUM_FILE ] && [ "$current_checksum" == "$(cat $CHECKSUM_FILE)" ]; then
     echo "No changes detected. Skipping deployment."
