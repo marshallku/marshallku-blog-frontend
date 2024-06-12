@@ -58,6 +58,8 @@ function $component_name({}: ${component_name}Props) {
     return <div className={cx()}></div>;
 }
 
+$component_name.displayName = '$component_name';
+
 export default $component_name" >>"$component_dir"/index.tsx
 
 # Create story file
