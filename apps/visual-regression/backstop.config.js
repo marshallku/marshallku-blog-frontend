@@ -1,7 +1,13 @@
 const storyData = require("../docs/storybook-static/index.json");
 
+const formatStoryName = (story, kind) => {
+    const storyName = story.replace(/ |\//g, "-").toLowerCase();
+    const kindName = kind.replace(/ |\//g, "-").toLowerCase();
+    return `${storyName}--${kindName}`;
+};
+
 const stories = Object.values(storyData.entries);
-const blackList = ["components-loader--default"];
+const blackList = [formatStoryName("Components/Loader", "Default")];
 
 /** @type {import('backstopjs').Config} */
 const config = {
