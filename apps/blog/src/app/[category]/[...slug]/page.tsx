@@ -196,7 +196,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                 <Typography variant="b2" className={cx("-related-articles__text")} marginBottom={24}>
                     위 글이 유용하셨다면, 아래 글도 읽어보세요!
                 </Typography>
-                <PostList posts={posts.filter((post) => post.slug !== `/${postSlug}`).slice(0, 3)} />
+                <PostList posts={posts.filter((post) => post.slug !== `/${postSlug}`).slice(0, 4)} />
                 <div className={cx("-related-articles__more")}>
                     <Link href={`/${category}`}>
                         {categoryInfo?.name} 관련 글 더 보기 <Icon name="arrow-forward" />
