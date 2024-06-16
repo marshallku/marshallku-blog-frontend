@@ -3,14 +3,6 @@
     padding: 16px 20px;
     flex-direction: column;
 
-    @include respond-to(small) {
-        flex-direction: row;
-    }
-
-    &:not(:last-child) {
-        border-bottom: 1px solid color(list-text);
-    }
-
     &__image {
         position: relative;
         width: 100%;
@@ -20,20 +12,15 @@
         flex-shrink: 0;
 
         img {
+            position: absolute;
+            top: 0;
             display: block;
+            width: 100%;
             height: 100%;
             left: 0;
             object-fit: cover;
-            position: absolute;
-            top: 0;
+            border-radius: 4px;
             transition: transform 0.15s ease-in-out;
-            width: 100%;
-        }
-
-        @include respond-to(small) {
-            width: 20%;
-            margin-right: 16px;
-            padding-bottom: 20%;
         }
     }
 
