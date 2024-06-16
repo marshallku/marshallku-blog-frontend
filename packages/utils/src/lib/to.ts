@@ -2,9 +2,8 @@
 export default async function to<T, E = Error>(promise: Promise<T>): Promise<[E, null] | [null, T]> {
     try {
         const data = await promise;
-        const result: [null, T] = [null, data];
 
-        return result;
+        return [null, data];
     } catch (error) {
         if (error instanceof Error) {
             return [error as E, null];
