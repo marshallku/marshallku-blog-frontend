@@ -15,9 +15,11 @@ export default function PostCard({ post }: PostCardProps) {
     return (
         <article className={cx()}>
             {post.data.ogImage && (
-                <figure className={cx("__image")}>
-                    <Image src={post.data.ogImage} alt={post.data.title} forceSize={500} />
-                </figure>
+                <Link href={post.slug}>
+                    <figure className={cx("__image")}>
+                        <Image src={post.data.ogImage} alt={post.data.title} forceSize={500} />
+                    </figure>
+                </Link>
             )}
             <header className={cx("__header")}>
                 <Link href={post.slug}>

@@ -15,11 +15,11 @@ const cx = classNames(styles, "post-list");
 function PostList({ posts, paginationProps }: PostListProps) {
     return (
         <section className={cx()}>
-            <section>
+            <div className={cx("__list")}>
                 {posts.map((post) => (
                     <PostCard key={post.slug} post={post} />
                 ))}
-            </section>
+            </div>
             {paginationProps && <Pagination {...paginationProps} rowSize={PAGE_SIZE} />}
         </section>
     );
