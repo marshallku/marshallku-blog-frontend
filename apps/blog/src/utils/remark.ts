@@ -4,14 +4,17 @@ import type { Root } from "mdast";
 export function ensureToc() {
     return (tree: Root) => {
         let hasToc = false;
+        let hasHeading = false;
 
         visit(tree, "heading", (node) => {
+            hasHeading = true;
+
             if (node.depth === 1 && "value" in node.children[0] && node.children[0].value === "Table of Contents") {
                 hasToc = true;
             }
         });
 
-        if (!hasToc) {
+        if (!hasToc && hasHeading) {
             tree.children.unshift({
                 type: "heading",
                 depth: 2,
