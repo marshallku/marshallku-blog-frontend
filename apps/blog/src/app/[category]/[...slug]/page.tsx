@@ -20,7 +20,7 @@ import Image from "#components/Image";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import { ensureToc } from "#utils/remark";
-import { setImageMetaData, makeIframeResponsive } from "#utils/rehype";
+import { setImageMetaData, makeIframeResponsive, formatToc } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
 
@@ -172,6 +172,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                                 ],
                                 setImageMetaData,
                                 makeIframeResponsive,
+                                formatToc,
                             ],
                         },
                     }}
