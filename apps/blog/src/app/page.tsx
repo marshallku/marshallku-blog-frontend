@@ -37,20 +37,22 @@ export default async function Home() {
                     <Typography component="h1" variant="h1" fontWeight={700} className={cx("-header__title")}>
                         <Link href={mostRecentPost.slug}>{mostRecentPost.data.title}</Link>
                     </Typography>
-                    <Typography variant="b2" component="span" marginBottom={8} className={cx("-header__tags")}>
-                        {mostRecentPost.data.tags.map((tag) => (
-                            <Button
-                                key={tag}
-                                component={Link}
-                                href={`/tag/${tag}`}
-                                variant="outline"
-                                size="small"
-                                color="secondary"
-                            >
-                                {tag}
-                            </Button>
-                        ))}
-                    </Typography>
+                    {mostRecentPost.data.tags && (
+                        <Typography variant="b2" component="span" marginBottom={8} className={cx("-header__tags")}>
+                            {mostRecentPost.data.tags.map((tag) => (
+                                <Button
+                                    key={tag}
+                                    component={Link}
+                                    href={`/tag/${tag}`}
+                                    variant="outline"
+                                    size="small"
+                                    color="secondary"
+                                >
+                                    {tag}
+                                </Button>
+                            ))}
+                        </Typography>
+                    )}
                     <Typography variant="b2">
                         <Link href={mostRecentPost.slug}>
                             {mostRecentPost.data.description}
