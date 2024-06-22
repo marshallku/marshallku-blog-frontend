@@ -57,4 +57,10 @@
         margin-top: auto;
         text-align: right;
     }
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }
