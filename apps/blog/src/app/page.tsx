@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
 import { classNames, formatDate } from "@marshallku/utils";
@@ -35,6 +36,20 @@ export default async function Home() {
                     </Typography>
                     <Typography component="h1" variant="h1" fontWeight={700} className={cx("-header__title")}>
                         <Link href={mostRecentPost.slug}>{mostRecentPost.data.title}</Link>
+                    </Typography>
+                    <Typography variant="b2" component="span" marginBottom={8} className={cx("-header__tags")}>
+                        {mostRecentPost.data.tags.map((tag) => (
+                            <Button
+                                key={tag}
+                                component={Link}
+                                href={`/tag/${tag}`}
+                                variant="outline"
+                                size="small"
+                                color="secondary"
+                            >
+                                {tag}
+                            </Button>
+                        ))}
                     </Typography>
                     <Typography variant="b2">
                         <Link href={mostRecentPost.slug}>
