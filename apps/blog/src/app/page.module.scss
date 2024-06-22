@@ -40,6 +40,16 @@
         &__title {
             margin: 8px 0;
         }
+
+        &__tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            a {
+                background-color: transparent;
+            }
+        }
     }
 
     &__container {
