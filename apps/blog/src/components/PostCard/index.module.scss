@@ -30,6 +30,10 @@
         flex-grow: 1;
     }
 
+    &__title {
+        @include limit-line(2);
+    }
+
     &__description {
         $line-height: map-get($typography-size, b2) * 1.5;
         position: relative;
