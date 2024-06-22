@@ -33,20 +33,22 @@ export default function PostCard({ post }: PostCardProps) {
                         {post.data.description}
                     </Typography>
                 </Link>
-                <Typography variant="b2" component="span" marginBottom={8} className={cx("__tags")}>
-                    {post.data.tags.map((tag) => (
-                        <Button
-                            key={tag}
-                            component={Link}
-                            href={`/tag/${tag}`}
-                            variant="outline"
-                            size="small"
-                            color="secondary"
-                        >
-                            {tag}
-                        </Button>
-                    ))}
-                </Typography>
+                {post.data.tags && (
+                    <Typography variant="b2" component="span" marginBottom={8} className={cx("__tags")}>
+                        {post.data.tags.map((tag) => (
+                            <Button
+                                key={tag}
+                                component={Link}
+                                href={`/tag/${tag}`}
+                                variant="outline"
+                                size="small"
+                                color="secondary"
+                            >
+                                {tag}
+                            </Button>
+                        ))}
+                    </Typography>
+                )}
                 <Typography
                     component="time"
                     className={cx("__time")}
