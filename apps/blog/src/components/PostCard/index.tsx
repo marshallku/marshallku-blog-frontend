@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
 import Image from "#components/Image";
@@ -28,10 +29,24 @@ export default function PostCard({ post }: PostCardProps) {
                     </Typography>
                 </Link>
                 <Link href={post.slug}>
-                    <Typography component="p" className={cx("__description")} variant="b2" marginBottom={8}>
+                    <Typography component="p" className={cx("__description")} variant="b2" marginBottom={12}>
                         {post.data.description}
                     </Typography>
                 </Link>
+                <Typography variant="b2" component="span" marginBottom={8} className={cx("__tags")}>
+                    {post.data.tags.map((tag) => (
+                        <Button
+                            key={tag}
+                            component={Link}
+                            href={`/tag/${tag}`}
+                            variant="outline"
+                            size="small"
+                            color="secondary"
+                        >
+                            {tag}
+                        </Button>
+                    ))}
+                </Typography>
                 <Typography
                     component="time"
                     className={cx("__time")}
