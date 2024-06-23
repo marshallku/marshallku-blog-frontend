@@ -14,6 +14,39 @@
 
     &__item {
         aspect-ratio: 1 / 1;
+        transition:
+            opacity 0.2s ease-in-out,
+            transform 0.2s ease-in-out;
+
+        @include supports-hover {
+            &:has(+ *:hover) {
+                opacity: 0.75;
+            }
+            &:has(+ * + *:hover) {
+                opacity: 0.5;
+            }
+            &:hover + * {
+                opacity: 0.75;
+            }
+            &:hover + * + * {
+                opacity: 0.5;
+            }
+
+            @include respond-to(large) {
+                &:has(+ *:hover) {
+                    transform: perspective(500px) rotateY(20deg);
+                }
+                &:has(+ * + *:hover) {
+                    transform: perspective(500px) rotateY(40deg);
+                }
+                &:hover + * {
+                    transform: perspective(500px) rotateY(-20deg);
+                }
+                &:hover + * + * {
+                    transform: perspective(500px) rotateY(-40deg);
+                }
+            }
+        }
     }
 
     &__image {
@@ -21,12 +54,5 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: opacity 0.2s ease-in-out;
-
-        @include supports-hover {
-            @at-root #{$self}:hover &:not(:hover) {
-                opacity: 0.2;
-            }
-        }
     }
 }
