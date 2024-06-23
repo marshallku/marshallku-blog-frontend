@@ -18,21 +18,21 @@
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
-        "@storybook/addon-actions": "^8.1.4",
-        "@storybook/addon-docs": "^8.1.4",
-        "@storybook/addon-essentials": "^8.1.4",
-        "@storybook/addon-links": "^8.1.4",
-        "@storybook/nextjs": "^8.1.4",
-        "@storybook/react": "^8.1.4",
-        "@swc/core": "^1.5.7",
-        "@vitejs/plugin-react": "^4.3.0",
+        "@storybook/addon-actions": "^8.1.10",
+        "@storybook/addon-docs": "^8.1.10",
+        "@storybook/addon-essentials": "^8.1.10",
+        "@storybook/addon-links": "^8.1.10",
+        "@storybook/nextjs": "^8.1.10",
+        "@storybook/react": "^8.1.10",
+        "@swc/core": "^1.6.5",
+        "@vitejs/plugin-react": "^4.3.1",
         "eslint": "^8.57.0",
         "eslint-plugin-import": "^2.29.1",
-        "sass": "^1.77.2",
+        "sass": "^1.77.6",
         "serve": "^14.2.3",
-        "storybook": "^8.1.4",
+        "storybook": "^8.1.10",
         "storybook-addon-swc": "^1.2.0",
-        "typescript": "^5.4.5",
-        "vite": "^5.2.12"
+        "typescript": "^5.5.2",
+        "vite": "^5.3.1"
     }
 }
