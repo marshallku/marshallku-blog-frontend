@@ -54,7 +54,7 @@ export default function toast(
     setTimeout(() => {
         requestAnimationFrame(() => {
             div.style.opacity = "1";
-            div.style.transform = "translate3d(0, 0, 0)";
+            div.style.transform = "translate3d(-50%, 0, 0)";
 
             setTimeout(removeElement, timeout);
         });
