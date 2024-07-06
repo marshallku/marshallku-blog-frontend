@@ -51,12 +51,13 @@ export default function toast(
     }
 
     document.body.append(div);
-    setTimeout(() => {
-        requestAnimationFrame(() => {
-            div.style.opacity = "1";
-            div.style.transform = "translate3d(-50%, 0, 0)";
 
-            setTimeout(removeElement, timeout);
-        });
-    });
+    // HACK: Force reflow
+    // eslint-disable-next-line no-void
+    void div.offsetWidth;
+
+    div.style.opacity = "1";
+    div.style.transform = "translate3d(-50%, 0, 0)";
+
+    setTimeout(removeElement, timeout);
 }
