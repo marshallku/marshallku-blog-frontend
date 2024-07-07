@@ -15,7 +15,7 @@ interface TagArchivePageProps {
 
 export function generateMetadata({ params: { tag } }: TagArchivePageProps): Metadata {
     return {
-        title: `${tag} 태그 글`,
+        title: `${decodeURIComponent(tag)} 태그 글`,
     };
 }
 
