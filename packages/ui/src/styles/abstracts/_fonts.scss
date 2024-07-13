@@ -22,16 +22,26 @@ $typography-size: (
 );
 
 $typography-height: (
-    h1: 150%,
-    h2: 150%,
-    h3: 150%,
-    h4: 150%,
-    h5: 150%,
-    h6: 150%,
-    b1: 162.5%,
-    b2: 162.5%,
-    c1: 130%,
-    c2: 130%,
+    // h1: 150%,
+    h1: toRem(48.66px),
+    // h2: 150%,
+    h2: toRem(43.245px),
+    // h3: 150%,
+    h3: toRem(38.445px),
+    // h4: 150%,
+    h4: toRem(34.17px),
+    // h5: 150%,
+    h5: toRem(30.375px),
+    // h6: 150%,
+    h6: toRem(27px),
+    // b1: 162.5%,
+    b1: toRem(26px),
+    // b2: 162.5%,
+    b2: toRem(23.1075px),
+    // c1: 130%,
+    c1: toRem(16.432px),
+    // c2: 130%,
+    c2: toRem(14.118px)
 );
 
 @mixin typography($key) {
