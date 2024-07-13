@@ -35,7 +35,7 @@
     }
 
     &__description {
-        $line-height: map-get($typography-size, b2) * 1.5;
+        $line-height: map-get($typography-height, b2);
         position: relative;
         max-height: 3 * $line-height;
         overflow: hidden;
