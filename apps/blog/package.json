@@ -17,14 +17,14 @@
         "@marshallku/toast": "workspace:^",
         "@marshallku/ui": "workspace:^",
         "@marshallku/utils": "workspace:^",
-        "@next/eslint-plugin-next": "^14.2.4",
-        "@next/third-parties": "^14.2.4",
-        "@tanstack/react-query": "^5.45.1",
+        "@next/eslint-plugin-next": "^14.2.5",
+        "@next/third-parties": "^14.2.5",
+        "@tanstack/react-query": "^5.51.1",
         "copy2clip": "^1.1.1",
         "gray-matter": "^4.0.3",
         "image-size": "^1.1.1",
-        "marked": "^12.0.2",
-        "next": "^14.2.4",
+        "marked": "^13.0.2",
+        "next": "^14.2.5",
         "next-mdx-remote": "^5.0.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
@@ -40,13 +40,13 @@
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
-        "@next/bundle-analyzer": "^14.2.4",
-        "@playwright/test": "^1.44.1",
+        "@next/bundle-analyzer": "^14.2.5",
+        "@playwright/test": "^1.45.1",
         "@types/node": "^20.12.7",
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "eslint": "^8.57.0",
-        "sass": "^1.77.6",
-        "typescript": "^5.5.2"
+        "sass": "^1.77.8",
+        "typescript": "^5.5.3"
     }
 }
