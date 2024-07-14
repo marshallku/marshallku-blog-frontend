@@ -1,7 +1,7 @@
 "use client";
 
 import { ImgHTMLAttributes, useEffect, useRef } from "react";
-import { classNames } from "@marshallku/utils";
+import { classNames, tryParseUrl } from "@marshallku/utils";
 import useZoom from "#hooks/useZoom";
 import styles from "./index.module.scss";
 
@@ -36,7 +36,9 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
         return null;
     }
 
-    if (src.includes("https://lh3.googleusercontent.com")) {
+    const url = tryParseUrl(src);
+
+    if (url?.hostname === "https://lh3.googleusercontent.com") {
         return (
             <figure className={cx()}>
                 <img
