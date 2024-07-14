@@ -36,7 +36,7 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
         return null;
     }
 
-    if (src.includes("lh3.googleusercontent.com")) {
+    if (src.includes("https://lh3.googleusercontent.com")) {
         return (
             <figure className={cx()}>
                 <img
