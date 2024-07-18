@@ -42,8 +42,8 @@ export function getPostBySlug(slug: string): Post | undefined {
             title: data.title.replace(/\\/g, ""),
             description: data.description,
             date: {
-                posted: new Date(data.date.posted),
-                modified: data.date.modified ? new Date(data.date.modified) : undefined,
+                posted: new Date(data.date?.posted ?? new Date()),
+                modified: data.date?.modified ? new Date(data.date.modified) : undefined,
             },
             tags: data.tags,
             coverImage: data.coverImage,

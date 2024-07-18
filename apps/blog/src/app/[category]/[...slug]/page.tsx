@@ -52,8 +52,8 @@ export function generateMetadata({ params: { category, slug } }: PostProps): Met
             title: post.data.title,
             description: post.data.description,
             url: `https://marshallku.com/${post.slug}`,
-            publishedTime: post.data.date.posted.toISOString(),
-            modifiedTime: post.data.date.modified?.toISOString(),
+            publishedTime: post.data.date ? post.data.date.posted.toISOString() : "",
+            modifiedTime: post.data.date ? post.data.date.modified?.toISOString() : "",
             tags: post.data.tags,
             images: [
                 {
@@ -124,9 +124,11 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                             •{" "}
                         </span>
                     )}
-                    <time dateTime={post.data.date.posted.toISOString()}>
-                        {formatDate(post.data.date.posted, "yyyy년 MM월 dd일")}
-                    </time>
+                    {post.data.date && (
+                        <time dateTime={post.data.date.posted.toISOString()}>
+                            {formatDate(post.data.date.posted, "yyyy년 MM월 dd일")}
+                        </time>
+                    )}
                 </Typography>
             </header>
             {dimensions && (
