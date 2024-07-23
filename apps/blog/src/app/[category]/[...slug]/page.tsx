@@ -157,7 +157,7 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     source={post.content}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [ensureToc, remarkToc, remarkGfm, remarkUnwrapImages],
+                            remarkPlugins: [remarkToc, remarkGfm, remarkUnwrapImages],
                             rehypePlugins: [
                                 rehypeSlug,
                                 rehypeAutolinkHeadings,
