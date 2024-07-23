@@ -4,6 +4,14 @@
 [![CI](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml)
 [![Visual Regression Test](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml)
 
+![Quality Gate Status](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=alert_status)
+![Bugs](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=bugs)
+![Code Smells](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=code_smells)
+![Maintainability Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=sqale_rating)
+![Reliability Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=reliability_rating)
+![Security Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=security_rating)
+![Vulnerabilities](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=vulnerabilities)
+
 ![Blog front page](https://github.com/marshall-ku/assets/assets/72745119/a9add532-4f7c-4504-98dd-5d9c823077a0)
 
 Front-end application of [my blog](https://marshallku.com/)
