@@ -46,8 +46,9 @@ jobs:
             - name: Check code quality
               run: pnpm lint
     sonarqube:
-        name: Build
+        name: SonarQube scan
         runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/master'
         steps:
             - uses: actions/checkout@v4
               with:
