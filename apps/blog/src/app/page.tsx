@@ -66,13 +66,18 @@ export default async function Home() {
             </section>
             <section className={cx("__container", "__container--padding", "__category")}>
                 {categories
-                    .filter(({ icon }) => !!icon)
+                    .filter(
+                        (
+                            category,
+                        ): category is (typeof categories)[number] &
+                            Required<Pick<(typeof categories)[number], "icon">> => !!category.icon,
+                    )
                     .map(({ slug, name, icon, color }) => (
                         <Link href={slug} key={slug}>
                             <Typography variant="h4" fontWeight={700}>
                                 {name}
                             </Typography>
-                            <Icon name={icon!} color={color} />
+                            <Icon name={icon} color={color} />
                             <div style={{ backgroundColor: color }} />
                         </Link>
                     ))}
