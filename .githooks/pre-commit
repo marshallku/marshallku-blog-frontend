@@ -23,15 +23,20 @@ for file in $(git diff --cached --name-only --diff-filter=ACM | grep '^apps/blog
         iconv -f "$encoding" -t utf-8 "$file" -o "$file"
     fi
 
+    spaces="  "
+    if grep -q "^    posted: " "$file"; then
+        spaces="    "
+    fi
+
     # Check if the file contains a posted date
-    if grep -q "^  posted: " "$file"; then
+    if grep -q "^${spaces}posted: " "$file"; then
         # Update the modified date with the current date
-        if grep -q "^  modified: " "$file"; then
+        if grep -q "^${spaces}modified: " "$file"; then
             # Update the existing modified date
-            sed -i -E "s/^  modified: .*/  modified: $(get_iso_date)/" "$file"
+            sed -i -E "s/^${spaces}modified: .*/${spaces}modified: $(get_iso_date)/" "$file"
         else
             # Add a new modified date
-            sed -i -E "/^  posted: .*/a\  modified: $(get_iso_date)" "$file"
+            sed -i -E "/^${spaces}posted: .*/a\\${spaces}modified: $(get_iso_date)" "$file"
         fi
     else
         # Add the posted date with the current date
