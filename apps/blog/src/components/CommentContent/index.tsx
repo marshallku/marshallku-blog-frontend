@@ -57,7 +57,7 @@ const parseComponents = (content: string) => {
                         children.push(
                             <img key={`${i}-${j}`} className={cx("__image")} src={part} alt="User uploaded image" />,
                         );
-                    } else if (part.match(/\.mp4|webm$/)) {
+                    } else if (part.match(/\.(mp4|webm)$/)) {
                         children.push(
                             <video
                                 key={`${i}-${j}`}
