@@ -1,0 +1,121 @@
+---
+title: Docker로 Rust 애플리케이션 배포하기
+description: Docker를 활용해 Rust 애플리케이션을 효율적으로 배포하는 방법을 알아봅니다
+date:
+    posted: 2024-07-25T11:09:07Z
+tags:
+    - Rust
+    - Docker
+coverImage: /images/2024/07/rust-docker.png
+ogImage: /images/2024/07/rust-docker.png
+---
+
+요즘 Rust로 애플리케이션들을 이것저것 만들다 보니(어느덧 7개나 만들었습니다), Dockerizing할 일도 많았습니다.\
+어언 3개월 전에 간단하게 Multi-stage Build가 되도록 작업하고 빌드 시간을 상당히 단축했는데, 간단한 작업에선 불편함이 없어 방법을 소개해 보려 합니다.
+
+처음엔 [`cargo-chef`](https://github.com/LukeMathWalker/cargo-chef)를 사용했는데, 제가 세팅을 잘못한 건지 빌드 시간만 늘어 그냥 사용하지 않는 방향으로 작업했습니다.
+
+## Dockerfile
+
+본 글에선 애플리케이션 명을 `name_of_your_app`로 가정합니다.\
+실제로 사용할 땐 해당 이름을 실제 애플리케이션 이름으로 변경해 주세요.
+
+추가로, 애플리케이션 명에 `-`가 사용되었어도 `target/release/deps`에는 snake case로 파일이 생성됩니다.\
+로컬에서 release 빌드를 한 번 진행해 보시고 `target/release`에 있는 실행 파일 이름을 확인해 주세요.
+
+### 의존성 빌드
+
+```dockerfile
+FROM rust:1.79-alpine AS base
+
+WORKDIR /usr/src/name_of_your_app
+
+RUN set -eux; \
+    apk add --no-cache musl-dev pkgconfig libressl-dev; \
+    rm -rf $CARGO_HOME/registry
+
+COPY Cargo.* .
+
+RUN mkdir src && \
+    echo 'fn main() {println!("Hello, world!");}' > src/main.rs && \
+    cargo build --release && \
+    rm target/release/name_of_your_app* && \
+    rm target/release/deps/name_of_your_app* && \
+    rm -rf src
+```
+
+Rust로 제작하는 게 api라 `libressl-dev`같은 axum이 의존하는 패키지들을 설치하는데, 이 부분은 굳이 필요 없다면 생략하셔도 무방합니다.
+
+의존하는 패키지들은 자주 변경되지 않는데 시간이 오래 걸리는 작업이라, 이 부분을 미리 빌드해두면 시간을 꽤 유의미하게 줄일 수 있습니다.\
+`Cargo.toml`, `Cargo.lock` 파일을 복사하고
+
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+빌드를 위해 어디서 많이 본 듯한 이런 코드를 `src/main.rs`에 추가하고 빌드를 진행합니다.\
+애플리케이션 빌드 캐시가 남아 잘못된 동작을 하는 경우가 있어, 빌드 후에 애플리케이션 관련 코드는 전부 제거하도록 했습니다.
+
+### 애플리케이션 빌드
+
+```dockerfile
+FROM base AS builder
+
+COPY src src
+RUN cargo build --release
+```
+
+이제 release 빌드로 실제 애플리케이션을 빌드합니다.\
+소스 코드를 변경하면 이 단계부터 다시 빌드됩니다. 이렇게 하면 빌드 캐시를 활용해 빌드 시간을 줄일 수 있습니다.
+
+### 애플리케이션 실행
+
+```dockerfile
+FROM alpine:3.20.2
+
+WORKDIR /usr/local/bin
+
+COPY --from=builder /usr/src/name_of_your_app/target/release/name_of_your_app .
+
+EXPOSE ${PORT}
+
+CMD ["./name_of_your_app"]
+```
+
+마지막으로 빌드된 애플리케이션을 복사하고, 포트를 열어주고 실행합니다.
+
+## Docker Compose
+
+```yaml
+services:
+    app:
+        container_name: name_of_your_app
+        build: .
+        restart: unless-stopped
+        ports:
+            - ${PORT}:${PORT}
+        env_file:
+            - .env
+        environment:
+            HOST: "0.0.0.0"
+        networks:
+            - app_network
+
+networks:
+    app_network:
+        external: true
+```
+
+저는 로컬에서 사용하려고 docker compose도 함께 작성했습니다.\
+컨테이너 환경에서 실행할 땐 Host를 Loopback Address가 아닌 Wildcard Address를 사용해야 한다는 점만 주의하시면 됩니다.
+
+## 마무리
+
+이와 같은 Multi-stage Build를 사용하면 소스 코드 수정 시 빌드 시간을 많게는 90%까지도 단축할 수 있습니다.\
+특히 의존성 빌드와 애플리케이션 빌드 단계를 분리함으로써 전체적인 빌드 효율성을 높일 수 있습니다.
+
+어쩌다가 간단한 API나 툴들을 Rust로 만드는 취미가 생겼는데, 혹 Rust 찍먹하실 일이 있으시다면 도움이 되셨으면 좋겠습니다.\
+전 이렇게 이상한 거 주워 먹다가, 회사에서 Python 프로젝트 Rust로 포팅하는 이상한 작업도 겸하고 있습니다.\
+물론 속도랑 안정성 개선해 보려고 제가 좋아서 하는 거긴 합니다만, 여러분은 여름철 식중독 반드시 조심하세요.
