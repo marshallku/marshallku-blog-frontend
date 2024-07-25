@@ -2,6 +2,10 @@ export const toURL = (value: string) => {
     try {
         return new URL(value);
     } catch {
-        return new URL(`${window.location.origin}${value[0] === "/" ? value : `/${value}`}`);
+        // If the URL is relative, prepend the current origin.
+        const host = window.location.origin;
+        const path = value[0] === "/" ? value : `/${value}`;
+
+        return new URL(path, host);
     }
 };
