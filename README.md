@@ -4,13 +4,13 @@
 [![CI](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/ci.yml)
 [![Visual Regression Test](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml/badge.svg)](https://github.com/marshallku/marshallku-blog-frontend/actions/workflows/visual_regression.yml)
 
-![Quality Gate Status](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=alert_status)
-![Bugs](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=bugs)
-![Code Smells](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=code_smells)
-![Maintainability Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=sqale_rating)
-![Reliability Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=reliability_rating)
-![Security Rating](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=security_rating)
-![Vulnerabilities](https://badge.marshallku.dev?project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M&metric=vulnerabilities)
+![Quality Gate Status](https://badge.marshallku.dev?metric=alert_status&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Bugs](https://badge.marshallku.dev?metric=bugs&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Code Smells](https://badge.marshallku.dev?metric=code_smells&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Maintainability Rating](https://badge.marshallku.dev?metric=sqale_rating&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Reliability Rating](https://badge.marshallku.dev?metric=reliability_rating&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Security Rating](https://badge.marshallku.dev?metric=security_rating&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
+![Vulnerabilities](https://badge.marshallku.dev?metric=vulnerabilities&project=marshallku_marshallku-blog-frontend_AZDdALVrxOmkXdwhyB3M)
 
 ![Blog front page](https://github.com/marshall-ku/assets/assets/72745119/a9add532-4f7c-4504-98dd-5d9c823077a0)
 
