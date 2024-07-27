@@ -35,6 +35,19 @@ export const metadata: Metadata = {
         description: SITE_DESCRIPTION,
         images: [{ url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/assets/banner.png` }],
     },
+    alternates: {
+        types: {
+            "application/rss+xml": [
+                { title: "All Posts", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/feed` },
+                { title: "Dev Posts", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/dev/feed` },
+                { title: "Chat Posts", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/chat/feed` },
+                { title: "Gallery Posts", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/gallery/feed` },
+                { title: "Other Posts", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/others/feed` },
+                { title: "Works", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/work/feed` },
+                { title: "Notices", url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/notice/feed` },
+            ],
+        },
+    },
 };
 
 export const viewport: Viewport = {
