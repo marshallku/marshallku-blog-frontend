@@ -43,14 +43,14 @@ export function generateMetadata({ params: { category, slug } }: PostProps): Met
     }
 
     return {
-        metadataBase: new URL("https://marshallku.com"),
+        metadataBase: new URL(`${process.env.NEXT_PUBLIC_BLOG_ORIGIN}`),
         title: post.data.title,
         description: post.data.description,
         openGraph: {
             type: "article",
             title: post.data.title,
             description: post.data.description,
-            url: `https://marshallku.com/${post.slug}`,
+            url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/${post.slug}`,
             publishedTime: post.data.date ? post.data.date.posted.toISOString() : "",
             modifiedTime: post.data.date ? post.data.date.modified?.toISOString() : "",
             tags: post.data.tags,

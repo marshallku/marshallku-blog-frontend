@@ -18,7 +18,7 @@ export interface InteractPostProps {
 const cx = classNames(styles, "interact-post");
 
 function InteractPost({ className, title, slug }: InteractPostProps) {
-    const url = `https://marshallku.com/${slug}`;
+    const url = `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/${slug}`;
     return (
         <div className={cx("", { className })}>
             <ReportIssueButton title={`Discussion about ${title}`} body={`Link of the post: ${url}\n\n---\n\n`} />
