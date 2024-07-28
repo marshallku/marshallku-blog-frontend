@@ -26,7 +26,7 @@ export async function formatCategoryFeed(filterFunction: (post: Post) => boolean
     const posts = getPosts();
     const lastBuildDate = new Date().toUTCString();
     const categories = getCategories();
-    const host = "https://marshallku.com";
+    const host = process.env.NEXT_PUBLIC_BLOG_ORIGIN;
     const formattedPosts = await Promise.all(
         posts
             .filter(filterFunction)

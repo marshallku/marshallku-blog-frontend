@@ -8,7 +8,7 @@ export async function GET() {
     return Response.json(
         posts.slice(0, 6).map((post) => ({
             title: post.data.title,
-            uri: `https://marshallku.com${post.slug
+            uri: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}${post.slug
                 .split("/")
                 .map((x) => encodeURIComponent(x))
                 .join("/")}`,
