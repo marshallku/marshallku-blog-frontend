@@ -8,8 +8,13 @@ import { Post } from "#types";
 export async function formatCategoryFeed(filterFunction: (post: Post) => boolean) {
     const renderer = new marked.Renderer();
 
-    renderer.link = ({ href, title, text }) => {
-        return `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    renderer.link = ({ href, title, text }) =>
+        `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+
+    renderer.image = ({ href, title, text }) => {
+        const src = href.startsWith("http") ? href : `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}${href}`;
+
+        return `<img src="${src}" alt="${text}" title="${title}" loading="lazy" />`;
     };
 
     marked.setOptions({
