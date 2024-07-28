@@ -5,6 +5,7 @@
     "sideEffects": false,
     "scripts": {
         "dev": "next dev -p 3443",
+        "prebuild": "bash scripts/prebuild.sh",
         "build": "next build",
         "test": "vitest run",
         "test:e2e": "CI=true playwright test",
