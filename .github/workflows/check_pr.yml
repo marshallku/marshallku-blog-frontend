@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: marshallku/actions/setup-pnpm@master
+            - uses: marshallku/actions/setup/pnpm@master
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
               with:
