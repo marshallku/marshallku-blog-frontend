@@ -2,18 +2,26 @@
 title: \[CSS, 자바스크립트\]Material Ripple 효과 구현하기
 description: 요소를 클릭했을 때, 물결(Ripple)이 퍼져 나가는 것 같은 효과를 줄 수 있습니다.
 date:
-  posted: 2019-08-11T05:36:00.000Z
-  modified: 2023-11-19T07:57:00.000Z
+    posted: 2019-08-11T05:36:00.000Z
+    modified: 2024-08-28T12:58:04Z
 tags:
-  - CSS
-  - vanilla JS
-coverImage: /images/2019/08/material-ripple.jpg
-ogImage: /images/2019/08/material-ripple.jpg
+    - CSS
+    - vanilla JS
+coverImage: /images/2019/08/material-ripple-2.jpg
+ogImage: /images/2019/08/material-ripple-2.jpg
 ---
 
 요소를 클릭했을 때, 물결(Ripple)이 퍼져 나가는 것 같은 효과를 줄 수 있습니다.
 
-<iframe allowfullscreen="true" frameBorder="0" width="560" height="315" src="https://codepen.io/marshall-ku/embed/MNPOXB?default-tab=css%2Cresult" title="Material Ripple" loading="lazy" />
+<iframe
+    allowfullscreen="true"
+    frameBorder="0"
+    width="560"
+    height="315"
+    src="https://codepen.io/marshall-ku/embed/MNPOXB?default-tab=css%2Cresult"
+    title="Material Ripple"
+    loading="lazy"
+/>
 
 ## HTML
 
@@ -32,24 +40,24 @@ ripple 효과에 특정 색상을 원하시면 data-color이란 속성을 만드
 ```css
 @keyframes materialRipple {
     0% {
-        transform: translate(-50%, -50%) scale(1)
+        transform: translate(-50%, -50%) scale(1);
     }
 
     100% {
         transform: translate(-50%, -50%) scale(var(--material-scale));
-        opacity: 0
+        opacity: 0;
     }
 }
 
 .material-ripple {
     position: relative;
     overflow: hidden;
-  
+
     /* Additional */
     display: inline-block;
     padding: 10px 20px;
     color: #000;
-    text-decoration: none
+    text-decoration: none;
 }
 
 .material-ripple .animate {
@@ -57,7 +65,7 @@ ripple 효과에 특정 색상을 원하시면 data-color이란 속성을 만드
     height: 2px;
     position: absolute;
     border-radius: 50%;
-    animation: materialRipple 0.5s linear
+    animation: materialRipple 0.5s linear;
 }
 ```
 
@@ -69,21 +77,21 @@ position이 static이 되지 않도록 해주시고, overflow만 감춰주세요
 ## 자바스크립트
 
 ```js
-Array.from(document.querySelectorAll(".material-ripple")).forEach(a => {
+Array.from(document.querySelectorAll(".material-ripple")).forEach((a) => {
     a.addEventListener("click", function (e) {
         const ripple = document.createElement("div"),
             rect = a.getBoundingClientRect();
-        ripple.className = "animate",
-        ripple.style.left = `${e.x - rect.left}px`,
-        ripple.style.top = `${e.y - rect.top}px`,
-        ripple.style.background = `#${a.dataset.color !== undefined ? a.dataset.color : "bdc3c7"}`,
-        ripple.style.setProperty("--material-scale", a.offsetWidth),
-        a.append(ripple),
-        setTimeout(function () {
-            ripple.parentNode.removeChild(ripple)
-        }, 500)
-    })
-})
+        (ripple.className = "animate"),
+            (ripple.style.left = `${e.x - rect.left}px`),
+            (ripple.style.top = `${e.y - rect.top}px`),
+            (ripple.style.background = `#${a.dataset.color !== undefined ? a.dataset.color : "bdc3c7"}`),
+            ripple.style.setProperty("--material-scale", a.offsetWidth),
+            a.append(ripple),
+            setTimeout(function () {
+                ripple.parentNode.removeChild(ripple);
+            }, 500);
+    });
+});
 ```
 
 position: fixed 등의 상황에선 offset을 제대로 불러오지 못해 getBoundingClientRect()를 이용했습니다.
