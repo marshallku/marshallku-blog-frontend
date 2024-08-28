@@ -3,7 +3,7 @@ title: CDN 서버 구축일지
 description: PHP로 만들었던 캐시 서버 Rust로 다시 만들고, Next.js 프로젝트에 적용하기
 date:
     posted: 2024-02-20T22:43:50.712Z
-    modified: 2024-02-21T08:17:53.669Z
+    modified: 2024-08-28T23:06:21Z
 tags:
     - Rust
     - 캐시 서버
@@ -75,8 +75,8 @@ pub async fn fetch_and_cache(
 
 `reqwest`를 사용해 원본 서버에서 파일을 훔쳐와 로컬에 저장해 줍니다.
 
-- 부모 디렉터리가 없을 때 생성
-- 파일을 불러오지 못했을 때 파일 생성 방지
+-   부모 디렉터리가 없을 때 생성
+-   파일을 불러오지 못했을 때 파일 생성 방지
 
 두 가지만 신경 쓰면 됩니다.
 
@@ -442,7 +442,7 @@ tracing_subscriber::fmt()
     .compact()
     .init();
 
-// ... 
+// ...
 
 let app = Router::new()
     .route("/files/*path", get(handle_files_request))
@@ -538,8 +538,6 @@ let app = Router::new()
 
 [앞선 Rust 프로젝트](https://github.com/marshallku/menu-today)에서도 [Docker](https://github.com/marshallku/menu-today/blob/master/Dockerfile)를 사용해서, 그대로 사용할 생각이었습니다.
 
-![15,000초 동안 진행하는 cargo chef cook](/images/2024/02/decades-for-building-application.png)
-
 문제없이 빌드되고 동작하는 걸 확인하고, 제 작고 소중한 클라우드에서 이미지를 빌드했는데...
 
 ```docker
@@ -553,8 +551,8 @@ RUN set -eux; \
     rm -rf $CARGO_HOME/registry
 ```
 
-이 작업만 십여 분의 시간이 걸리더니, 의존하는 패키지들을 수십 분이 지나도 빌드가 안 끝납니다.  
-결국 한숨 자고 와서 다시 확인해봤는데도...여전히 수십 개의 패키지를 빌드해야 끝나는 상황이더라고요.
+이 작업만 십여 분의 시간이 걸리더니, 의존하는 패키지들을 수십 분이 지나도 빌드가 안 끝납니다.\
+결국 4시간이 지나고 다시 확인해봤는데도...여전히 수십 개의 패키지를 빌드해야 끝나는 상황이더라고요.
 
 결국 GitHub Actions를 사용해 GitHub Container Registry에 이미지를 올려두는 방식으로 변경했습니다.
 
@@ -574,7 +572,7 @@ if [ "$PPREVIOUS_VERSION" != "$CURRENT_VERSION" ]; then
 fi
 ```
 
-`Cargo.toml`에서 `version` 을 찾아 `version = "0.0.0"` 형태에서  `0.0.0`만 추출되도록 했습니다.
+`Cargo.toml`에서 `version` 을 찾아 `version = "0.0.0"` 형태에서 `0.0.0`만 추출되도록 했습니다.
 
 `Cargo.toml`에 버전 하나 바꿨다고 무자비하게 이미지까지 registry에 push하는 건 불안정할 수 있는데, 거듭 강조하지만 미친 짓을 할 사람이 저 혼자라 관리 포인트를 줄이는 걸 최우선으로 생각했습니다.  
 이미지 대부분이 로컬에 저장된 상태라 잠깐 장애가 생겨도 큰 문제가 없기도 하고, 자주 실수하는 부분들에 TC까지 추가된 상태에서 대규모 장애 터뜨리면...뭐 그날이 제 은퇴일 아니겠습니까.
