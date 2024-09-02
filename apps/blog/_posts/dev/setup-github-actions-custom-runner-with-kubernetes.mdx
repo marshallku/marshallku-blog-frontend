@@ -1,0 +1,292 @@
+---
+title: Kubernetes로 GitHub Actions 커스텀 러너 구축하기
+description: GitHub Actions 커스텀 러너를 Kubernetes로 구축하는 방법을 알아봅니다.
+date:
+  posted: 2024-09-02T13:27:40Z
+tags:
+    - Kubernetes
+    - GitHub Actions
+    - Helm
+coverImage: /images/2024/08/kubernetes-github-actions.png
+ogImage: /images/2024/08/kubernetes-github-actions.png
+---
+
+GitHub Actions를 사용하다 보면, 여러 이유로 GitHub Hosted Runner만으로는 부족한 경우가 있습니다. 이때, Self Hosted Runner를 사용하면 더 많은 제어권을 가질 수 있습니다.\
+이번 글에서는 GitHub Actions 커스텀 러너를 Kubernetes로 구축하는 방법을 알아보겠습니다.
+
+[Actions Runner Controller (ARC)](https://github.com/actions/actions-runner-controller)를 참고하시면 더 많은 정보를 얻을 수 있습니다.
+
+## 사전 준비
+
+### `cert-manager` 설치
+
+```sh
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+```
+
+위 명령어를 통해 `cert-manager`를 설치합니다.\
+혹은, [Helm Chart](https://cert-manager.io/docs/installation/helm/#installing-with-helm)를 사용할 수도 있습니다.
+
+### GitHub Personal Access Token 생성
+
+> **주의**
+>
+> 개인 계정으로 생성한 토큰을 사용하면, 퇴사자 발생 시 Runner가 통째로 동작하지 않을 수 있습니다.\
+> 관리용 계정을 생성해서 사용하시는 것을 추천드립니다.
+
+`Settings > Developer Settings > Tokens (classic)`에 가셔서 [`Create new Token`](https://github.com/settings/tokens/new)을 클릭하여 토큰을 생성합니다.
+
+-   `repo`: 권한 전체
+
+개인용으로 사용하시려면 위 권한만 추가하셔도 됩니다.
+
+-   `admin:org`: 권한 전체
+-   `admin:public_key`: `read:public_key` 권한
+-   `admin:repo_hook`: `read:repo_hook` 권한
+-   `admin:org_hook`: 권한 전체
+-   `notifications`: 권한 전체
+-   `workflow`: 권한 전체
+
+Organization에서 사용하시려면 위 권한을 추가로 부여해 주세요.
+
+## Helm Chart 배포
+
+### 기존 차트 사용
+
+```sh
+helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+helm upgrade --install --namespace arc-runners --create-namespace\
+  --set=authSecret.create=true\
+  --set=authSecret.github_token="REPLACE_YOUR_TOKEN_HERE"\
+  --wait actions-runner-controller actions-runner-controller/actions-runner-controller
+```
+
+단순히 위와 같이 배포하실 수도 있지만, 내부에 구축한 CD와 연동해야 하거나, 소스를 내부에서만 관리해야 한다면 차트를 직접 수정해서 배포하셔야 합니다.
+
+### 차트 수정
+
+상술했던 [Actions Runner Controller (ARC)](https://github.com/actions/actions-runner-controller)에서
+
+-   [`charts/gha-runner-scale-set-controller`](https://github.com/actions/actions-runner-controller/tree/master/charts/gha-runner-scale-set-controller)
+-   [`charts/gha-runner-scale-set`](https://github.com/actions/actions-runner-controller/tree/master/charts/gha-runner-scale-set)
+
+위 두 디렉터리를 복사해서, 관리하시는 Git Repository에 옮겨주세요.
+
+#### Namespace 생성
+
+```sh
+kubectl create ns arc-runners
+```
+
+위 명령어를 통해 `arc-runners` Namespace를 생성합니다.
+
+#### PAT(Personal Access Token) 추가
+
+```yaml
+githubConfigSecret: pre-defined-secret
+```
+
+`gha-runner-scale-set-controller/values.yaml`의 `githubConfigSecret`을 위와 같이 수정해 주세요.
+
+```sh
+kubectl create secret generic pre-defined-secret --namespace=arc-runners --from-literal=github_token='YOUR_GITHUB_TOKEN'
+```
+
+다음으로 Secret을 생성해 주세요.
+
+#### Helm Chart 배포
+
+```sh
+helm install gha-runner-scale-set-controller ./gha-runner-scale-set-controller --namespace=arc-runners
+helm install custom-runner ./gha-runner-scale-set --namespace=arc-runners
+```
+
+위 명령어를 통해 Helm Chart를 배포합니다.\
+`custom-runner`는 Worfklow 파일 내에서 `runs-on: custom-runner`와 같이 사용되는 이름이므로, 신중하게 정해주세요!
+
+```sh
+helm list -n arc-runners
+```
+
+위 명령어를 통해 차트가 제대로 배포되었는지 확인하실 수 있습니다.
+
+```txt
+NAME                           	NAMESPACE  	REVISION	UPDATED                             	STATUS  	CHART                                	APP VERSION
+gha-runner-scale-set-controller	arc-runners	1       	2024-08-20 11:33:03.315368 +0900 KST	deployed	gha-runner-scale-set-controller-0.9.3	0.9.3
+custom-runner                  	arc-runners	1       	2024-08-20 11:33:15.988032 +0900 KST	deployed	gha-runner-scale-set-0.9.3           	0.9.3
+```
+
+![Runner 목록](/images/2024/08/self-hosted-runners.png)
+
+성공적으로 배포되었다면, Runner 목록에 위와 같이 배포한 Runner가 보일 겁니다.
+
+## Docker in Docker 활성화
+
+Kubernetes 내부에서 동작하기에, 기본적으로 `docker` 명령어를 사용할 수 없습니다.
+
+```yaml
+containerMode:
+    type: "dind"
+    kubernetesModeWorkVolumeClaim:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "dynamic-blob-storage"
+        resources:
+            requests:
+                storage: 1Gi
+    kubernetesModeServiceAccount:
+        annotations:
+```
+
+위와 같이 `gha-runner-scale-set/values.yaml` 내 `containerMode`를 `dind`로 수정해 주세요.\
+주석 처리되어있는 부분을 해제만 하셔도 됩니다.
+
+## Runner 이미지 수정
+
+### 이미지 작성
+
+제일 처음 Self-Hosted Runner를 사용해 보면, GitHub-Hosted Runner와 달리 많은 툴이 설치되어 있지 않아, 기존에 사용하던 Workflow들이 대부분 동작하지 않을 겁니다.\
+Workflow를 모조리 수정해서 툴을 설치하는 것도 방법이지만, 모든 Workflow를 수정하는 것도 비용이고, 매번 빌드할 때마다 설치하는 시간도 비용이니, Runner 이미지를 수정해서 필요한 툴을 설치해 두는 것이 좋습니다.
+
+```Dockerfile
+ARG VERSION
+FROM ghcr.io/actions/actions-runner:${VERSION}
+
+USER root
+
+RUN apt update -y && apt install -y \
+    jq \
+    unzip \
+    git \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/* \
+    # Install Azure CLI
+    && curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
+    # Install AzCopy
+    && wget -c https://aka.ms/downloadazcopy-v10-linux -O - | tar -xz \
+    && mv azcopy_linux_amd64_*/azcopy /usr/local/bin
+
+USER runner
+```
+
+위와 같이 `Dockerfile`을 작성해, 필요한 툴들을 설치합니다.\
+`sudo`를 사용하지 말고, `USER`를 `root`로 변경한 후, 필요한 툴을 설치하고 다시 `USER`를 `runner`로 변경해 주세요.
+
+### Build Script 작성
+
+```sh
+#!/bin/bash
+
+VERSION=2.319.1
+
+docker login acronesystemkrc001.azurecr.io || exit 1
+
+docker build --build-arg VERSION=$VERSION \
+    -t acronesystemkrc001.azurecr.io/seegene/actions-runner:latest \
+    -t acronesystemkrc001.azurecr.io/seegene/actions-runner:$VERSION \
+    . || exit 1
+
+docker push acronesystemkrc001.azurecr.io/seegene/actions-runner:$VERSION
+docker push acronesystemkrc001.azurecr.io/seegene/actions-runner:latest
+```
+
+편한 관리를 위해, 위와 같이 `build.sh`를 작성해 특정 버전을 build / push할 수 있도록 했습니다.
+
+### 이미지 교체
+
+```yaml
+template:
+    spec:
+        containers:
+            - name: runner
+              image:
+                  repository: "YOUR_REGISTRY/actions-runner"
+                  imagePullPolicy: Always
+                  tag: "2.319.1"
+              command: ["/home/runner/run.sh"]
+```
+
+다음으로, `gha-runner-scale-set/values.yaml`의 `template.spec.containers`에 있는 이미지를 교체해 주세요.\
+만약 테스트를 진행하신다면 `gha-runner-scale-set/tests/template_test.go` 내의 이미지도 교체해 주셔야 합니다.
+
+## Node Pool 추가
+
+실제 서비스가 운영 중인 경우, 리소스를 공유하게 되면 다른 서비스에 영향을 줄 수 있습니다.\
+따라서, 별도의 Node Pool을 추가해 Runner만 사용할 수 있도록 설정했습니다.
+
+```sh
+az aks nodepool add \
+    --resource-group MY_RESOURCE_GROUP \
+    --cluster-name MY_AKS_CLUSTER \
+    --name MY_NODEPOOL_NAME \
+    --os-sku Ubuntu \
+    --enable-cluster-autoscaler \
+    --priority Spot \
+    --eviction-policy Delete \
+    --min-count 1 \
+    --max-count 10 \
+    --max-pods 110 \
+    --node-vm-size standard_D8ls_v5 \
+    --mode User \
+    --zones 1 2 \
+    --no-wait
+```
+
+AKS를 사용하고 있어, 위와 같이 Node Pool을 추가했습니다.
+
+```yaml
+nodeSelector:
+    agentpool: cicd01
+```
+
+Node Pool이 성공적으로 추가되었다면, `gha-runner-scale-set-controller/values.yaml`의 `nodeSelector`를 위와 같이 수정해 주세요.
+
+## Spot Instance 사용
+
+Node Pool을 추가할 때 Spot Instance를 사용하도록 설정했습니다.
+이러면 눈곱만큼이긴 하지만, 소소하게 비용을 절감하실 수 있습니다.\
+
+최초에 job이 실행될 때 새로운 spot instance가 생성되어야 하기에, 약 1분 이상 가량 시간이 더 소요된다는 단점이 있긴 합니다.
+
+```yaml
+tolerations:
+    - key: "kubernetes.azure.com/scalesetpriority"
+      operator: "Equal"
+      value: "spot"
+      effect: "NoSchedule"
+
+affinity:
+    nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+                - matchExpressions:
+                      - key: agentpool
+                        operator: In
+                        values:
+                            - cicd01
+                      - key: kubernetes.azure.com/scalesetpriority
+                        operator: In
+                        values:
+                            - spot
+```
+
+`gha-runner-scale-set-controller/values.yaml`의 `tolerations`과 `affinity`를 위와 같이 수정해 주세요.
+
+```sh
+helm upgrade install gha-runner-scale-set-controller ./gha-runner-scale-set-controller --namespace=arc-runners
+```
+
+적용은 위와 같이 하시면 됩니다.
+
+## 마무리
+
+이렇게 GitHub Actions의 커스텀 러너를 Kubernetes 환경에 구축하는 방법을 알아보았습니다. 이 방법을 통해 다음과 같은 이점을 얻을 수 있습니다:
+
+1. 리소스 활용도 향상: 기존 인프라를 효율적으로 활용할 수 있습니다.
+2. 비용 절감: Spot Instance 사용으로 추가적인 비용 절감이 가능합니다.
+3. 커스터마이징: 필요한 도구들을 미리 설치하여 빌드 시간을 단축할 수 있습니다.
+4. 보안 강화: 내부 네트워크에서 실행되므로 보안을 강화할 수 있습니다.
+
+물론 이 방식에도 초기 설정의 복잡성이나 유지보수 부담 등의 단점이 있을 수 있습니다. 하지만 대규모 프로젝트나 특별한 요구사항이 있는 경우, 이러한 접근 방식이 매우 유용할 수 있습니다.
+
+개인적으로 삽질을 좀 많이 하면서 작업했는데, 다음에 구축하시는 분은 조금이나마 빠르게 구축하시길 바라는 마음을 담아 마무리하겠습니다.
