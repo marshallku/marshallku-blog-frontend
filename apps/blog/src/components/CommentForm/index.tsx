@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEventHandler, useCallback, useRef, useState } from "react";
+import { MutateOptions } from "@tanstack/react-query";
 import Typography from "@marshallku/ui/Typography";
 import Input from "@marshallku/ui/Input";
 import Textarea from "@marshallku/ui/Textarea";
@@ -9,18 +10,26 @@ import { classNames } from "@marshallku/utils";
 import { type CommentRequest } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
 import styles from "./index.module.scss";
+import { toast } from "@marshallku/toast";
 
 interface CommentFormProps {
     slug: string;
-    submit(data: CommentRequest): void;
+    submit(data: CommentRequest, options?: MutateOptions<unknown, Error, CommentRequest, unknown>): void;
+    isClientSide?: boolean;
 }
 
 const cx = classNames(styles, "comment-form");
 
-function CommentForm({ slug, submit }: CommentFormProps) {
+function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
     const [name, setName] = useState("");
     const [body, setBody] = useState("");
     const formRef = useRef<HTMLFormElement>(null);
+
+    const reset = useCallback(() => {
+        formRef.current?.reset();
+        setName("");
+        setBody("");
+    }, []);
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
         (event) => {
@@ -30,17 +39,15 @@ function CommentForm({ slug, submit }: CommentFormProps) {
             const body = formData.get("body");
 
             if (!body || typeof body !== "string" || body.trim() === "") {
-                return {
-                    message: "내용을 입력해 주세요.",
-                };
+                toast("내용을 입력해 주세요.");
+                return;
             }
 
             const korean = /[\u3131-\uD79D]/giu;
 
             if (!korean.test(body)) {
-                return {
-                    message: "한글을 입력해 주세요.",
-                };
+                toast("한글을 입력해 주세요.");
+                return;
             }
 
             const data = {
@@ -53,12 +60,19 @@ function CommentForm({ slug, submit }: CommentFormProps) {
                 parentCommentId: formData.get("parentCommentId") as string,
             };
 
-            submit(data);
-            formRef.current?.reset();
-            setName("");
-            setBody("");
+            if (isClientSide) {
+                submit(data, {
+                    onSuccess: reset,
+                    onError: (error) => {
+                        toast(error.message);
+                    },
+                });
+            } else {
+                submit(data);
+                reset();
+            }
         },
-        [slug, submit],
+        [slug, isClientSide, submit, reset],
     );
 
     return (
