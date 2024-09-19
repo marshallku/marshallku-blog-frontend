@@ -93,7 +93,7 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                         setName(value);
                     }}
                 />
-                <Input className={cx("__input")} name="url" inputMode="url" placeholder="주소" />
+                <Input className={cx("__input")} name="url" inputMode="url" placeholder="웹사이트" />
                 <Input className={cx("__input")} name="email" inputMode="email" placeholder="이메일 (비공개)" />
                 <Textarea
                     className={cx("__textarea")}
