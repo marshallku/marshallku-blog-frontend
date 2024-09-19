@@ -7,7 +7,7 @@ export interface PostCommentFormProps {
 
 function PostCommentForm({ slug }: PostCommentFormProps) {
     const { mutate } = usePostComment(slug);
-    return <CommentForm slug={slug} submit={mutate} />;
+    return <CommentForm slug={slug} submit={mutate} isClientSide />;
 }
 
 export default PostCommentForm;
