@@ -1,9 +1,11 @@
 @forward "./abstracts/_palette.scss";
 @forward "./abstracts/_mixins.scss";
 
+@use "sass:meta";
+
 html {
     @each $key, $value in $light-palette {
-        @if type-of($value) == "map" {
+        @if meta.type-of($value) == "map" {
             @each $child-key, $child-value in $value {
                 --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
             }
@@ -18,7 +20,7 @@ html {
 
 html[data-theme="dark"] {
     @each $key, $value in $dark-palette {
-        @if type-of($value) == "map" {
+        @if meta.type-of($value) == "map" {
             @each $child-key, $child-value in $value {
                 --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
             }
@@ -33,7 +35,7 @@ html[data-theme="dark"] {
 
 html[data-theme="sepia"] {
     @each $key, $value in $sepia-palette {
-        @if type-of($value) == "map" {
+        @if meta.type-of($value) == "map" {
             @each $child-key, $child-value in $value {
                 --palette-#{"" + $key}-#{"" + $child-key}: #{$child-value};
             }
