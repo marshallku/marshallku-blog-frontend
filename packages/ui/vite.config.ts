@@ -17,10 +17,10 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 additionalData: `
-                    @import "src/styles/abstracts/_variables.scss";
-                    @import "src/styles/abstracts/_palette.scss";
-                    @import "src/styles/abstracts/_fonts.scss";
-                    @import "src/styles/abstracts/_mixins.scss";
+                    @use "@marshallku/ui/styles/abstracts/variables" as *;
+                    @use "@marshallku/ui/styles/abstracts/palette" as *;
+                    @use "@marshallku/ui/styles/abstracts/fonts" as *;
+                    @use "@marshallku/ui/styles/abstracts/mixins" as *;
                 `,
             },
         },
