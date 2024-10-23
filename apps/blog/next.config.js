@@ -6,7 +6,7 @@ const analyzing = process.env.ANALYZE === "true";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    transpilePackages: ["@marshallku/ui"],
+    transpilePackages: ["@marshallku/ui", "next-mdx-remote"],
     output: "standalone",
     assetPrefix: process.env.NEXT_PUBLIC_FILE_CDN_URL,
     outputFileTracingRoot: path.join(__dirname, "../../"),
