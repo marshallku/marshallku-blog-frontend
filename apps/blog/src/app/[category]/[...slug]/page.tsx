@@ -9,7 +9,7 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
-import remarkUnwrapImages from "remark-unwrap-images";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import imageSize from "image-size";
 import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
@@ -156,8 +156,9 @@ export default async function Post({ params: { category, slug } }: PostProps) {
                     source={post.content}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [remarkToc, remarkGfm, remarkUnwrapImages],
+                            remarkPlugins: [remarkToc, remarkGfm],
                             rehypePlugins: [
+                                rehypeUnwrapImages,
                                 rehypeSlug,
                                 rehypeAutolinkHeadings,
                                 [
