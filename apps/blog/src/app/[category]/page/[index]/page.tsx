@@ -7,13 +7,14 @@ import { PAGE_SIZE } from "#constants";
 export const dynamic = "error";
 
 interface ArchiveProps {
-    params: {
+    params: Promise<{
         category: string;
         index: string;
-    };
+    }>;
 }
 
-export function generateMetadata({ params: { category } }: ArchiveProps): Metadata {
+export async function generateMetadata({ params }: ArchiveProps): Promise<Metadata> {
+    const { category } = await params;
     const categoryInfo = getCategoryBySlug(`/${category}`);
 
     return {
@@ -35,7 +36,8 @@ export function generateStaticParams() {
     );
 }
 
-export default async function ArchivePage({ params: { category, index } }: ArchiveProps) {
+export default async function ArchivePage({ params }: ArchiveProps) {
+    const { category, index } = await params;
     const posts = getPosts(category);
     const pageIndex = Number(index);
 

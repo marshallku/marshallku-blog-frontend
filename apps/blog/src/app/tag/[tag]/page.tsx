@@ -6,10 +6,12 @@ import { PAGE_SIZE } from "#constants";
 export const dynamic = "error";
 
 interface TagArchivePageProps {
-    params: { tag: string };
+    params: Promise<{ tag: string }>;
 }
 
-export function generateMetadata({ params: { tag } }: TagArchivePageProps): Metadata {
+export async function generateMetadata({ params }: TagArchivePageProps): Promise<Metadata> {
+    const { tag } = await params;
+
     return {
         title: `${decodeURIComponent(tag)} 태그 글`,
     };
@@ -19,7 +21,8 @@ export async function generateStaticParams() {
     return getTags().map(({ name }) => ({ tag: name }));
 }
 
-export default function TagArchivePage({ params: { tag } }: TagArchivePageProps) {
+export default async function TagArchivePage({ params }: TagArchivePageProps) {
+    const { tag } = await params;
     const decodedTag = decodeURIComponent(tag);
     const posts = getPostsByTag(decodedTag);
     const postsInPage = posts.slice(0, PAGE_SIZE);

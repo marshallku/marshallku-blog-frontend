@@ -26,13 +26,14 @@ import styles from "./page.module.scss";
 export const dynamic = "error";
 
 interface PostProps {
-    params: {
+    params: Promise<{
         category: string;
         slug: string[];
-    };
+    }>;
 }
 
-export function generateMetadata({ params: { category, slug } }: PostProps): Metadata {
+export async function generateMetadata({ params }: PostProps): Promise<Metadata> {
+    const { category, slug } = await params;
     const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
     if (!post) {
@@ -77,7 +78,8 @@ const PostComment = nextDynamic(() => import("#components/PostComment"), {
     ssr: false,
 });
 
-export default async function Post({ params: { category, slug } }: PostProps) {
+export default async function Post({ params }: PostProps) {
+    const { category, slug } = await params;
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
     const post = getPostBySlug(postSlug);
 
