@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Script from "next/script";
 import { notFound } from "next/navigation";
-import nextDynamic from "next/dynamic";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -19,6 +18,7 @@ import InteractPost from "#components/InteractPost";
 import Image from "#components/Image";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
+import PostCommentWrapper from "#components/PostCommentWrapper";
 import { setImageMetaData, makeIframeResponsive, formatToc } from "#utils/rehype";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
@@ -73,10 +73,6 @@ export async function generateStaticParams() {
 }
 
 const cx = classNames(styles, "page");
-
-const PostComment = nextDynamic(() => import("#components/PostComment"), {
-    ssr: false,
-});
 
 export default async function Post({ params }: PostProps) {
     const { category, slug } = await params;
@@ -187,7 +183,7 @@ export default async function Post({ params }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
-            <PostComment slug={`/${postSlug}`} />
+            <PostCommentWrapper slug={`/${postSlug}`} />
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>
                 <Typography
