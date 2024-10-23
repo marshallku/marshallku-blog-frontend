@@ -1,3 +1,6 @@
+@use "sass:meta";
+@use "sass:map";
+
 $breakpoints: (
     "small": (
         min-width: 480px,
@@ -14,10 +17,10 @@ $breakpoints: (
 );
 
 @mixin respond-to($breakpoint) {
-    $raw-query: map-get($breakpoints, $breakpoint);
+    $raw-query: map.get($breakpoints, $breakpoint);
 
     @if $raw-query {
-        $query: if(type-of($raw-query) == "string", unquote($raw-query), inspect($raw-query));
+        $query: if(meta.type-of($raw-query) == "string", unquote($raw-query), inspect($raw-query));
 
         @media screen and (#{$query}) {
             @content;

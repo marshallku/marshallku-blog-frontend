@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .home {
     padding-top: $global-navigation-height;
 
@@ -28,7 +30,7 @@
 
         &__content {
             position: relative;
-            width: clamp(0px, map-get($container-width, "large"), 100%);
+            width: clamp(0px, map.get($container-width, "large"), 100%);
             padding: 0 12px 32px;
             z-index: 5;
 
@@ -53,7 +55,7 @@
     }
 
     &__container {
-        width: clamp(0px, map-get($container-width, "large"), 100%);
+        width: clamp(0px, map.get($container-width, "large"), 100%);
         margin: 36px auto 48px;
 
         &--padding {

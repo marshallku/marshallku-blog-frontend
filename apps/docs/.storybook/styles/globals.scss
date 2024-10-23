@@ -1,5 +1,7 @@
-@import "../../../../packages/ui/src/styles/abstracts/_palette.scss";
-@import "../../../../packages/ui/src/styles/abstracts/_mixins.scss";
+@forward "../../../../packages/ui/src/styles/abstracts/_palette.scss";
+@forward "../../../../packages/ui/src/styles/abstracts/_mixins.scss";
+
+@use "sass:map";
 
 html {
     @each $key, $value in $light-palette {
