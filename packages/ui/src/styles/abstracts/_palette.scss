@@ -118,7 +118,7 @@ $container-width: (
     @if map.has-key($palette, $key) {
         $color: map.get($palette, $key);
 
-        @if type-of($color) == "map" {
+        @if meta.type-of($color) == "map" {
             @if map.has-key($color, $sub-key) {
                 @return map.get($color, $sub-key);
             }
@@ -137,7 +137,7 @@ $container-width: (
     @if map.has-key($light-palette, $key) {
         $color: map.get($light-palette, $key);
 
-        @if type-of($color) == "map" {
+        @if meta.type-of($color) == "map" {
             @if map.has-key($color, $sub-key) {
                 @return var(--palette-#{$key}-#{$sub-key});
             }
