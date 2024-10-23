@@ -1,6 +1,8 @@
+@use "sass:map";
+
 .tag-cloud {
     display: flex;
-    width: clamp(0px, map-get($container-width, "large"), 100%);
+    width: clamp(0px, map.get($container-width, "large"), 100%);
     margin: 0 auto;
     // padding-right = padding-left + half of tag width
     padding: $global-navigation-height + 20px 12px 10px 12px + 15px;

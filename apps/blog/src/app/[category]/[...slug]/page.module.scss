@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .page {
     $banner-height: 128px;
 
@@ -13,7 +15,7 @@
     }
 
     &__cover-image {
-        width: clamp(0px, map-get($container-width, large), 100%);
+        width: clamp(0px, map.get($container-width, large), 100%);
         margin: -($banner-height - 16px) auto 0;
         padding: 0 $container-padding;
 
@@ -55,7 +57,7 @@
     }
 
     &__post-information {
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin-bottom: 12px;
         padding: 36px $container-padding;
         background-color: rgba(0, 0, 0, 0.25);
@@ -68,7 +70,7 @@
     }
 
     &__meta {
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin: 0 auto;
         padding: 56px $container-padding 24px;
     }
@@ -87,7 +89,7 @@
     &__body {
         @include typography(b1);
 
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin: 0 auto;
         padding: 12px $container-padding;
         -ms-text-size-adjust: 100%;
@@ -288,13 +290,13 @@
     }
 
     &__interact {
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin: 24px auto 36px;
         padding: 0 $container-padding;
     }
 
     &-related-articles {
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin: 0 auto;
         padding-bottom: 32px;
 

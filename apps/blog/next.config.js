@@ -9,15 +9,13 @@ const nextConfig = {
     transpilePackages: ["@marshallku/ui"],
     output: "standalone",
     assetPrefix: process.env.NEXT_PUBLIC_FILE_CDN_URL,
-    experimental: {
-        outputFileTracingRoot: path.join(__dirname, "../../"),
-    },
+    outputFileTracingRoot: path.join(__dirname, "../../"),
     sassOptions: {
         prependData: `
-            @import "@marshallku/ui/styles/abstracts/_variables.scss";
-            @import "@marshallku/ui/styles/abstracts/_palette.scss";
-            @import "@marshallku/ui/styles/abstracts/_fonts.scss";
-            @import "@marshallku/ui/styles/abstracts/_mixins.scss";
+            @use "@marshallku/ui/styles/abstracts/variables" as *;
+            @use "@marshallku/ui/styles/abstracts/palette" as *;
+            @use "@marshallku/ui/styles/abstracts/fonts" as *;
+            @use "@marshallku/ui/styles/abstracts/mixins" as *;
         `,
     },
     async redirects() {

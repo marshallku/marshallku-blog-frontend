@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .banner {
     &__header {
         position: relative;
@@ -28,7 +30,7 @@
     }
 
     &__content {
-        width: clamp(0px, map-get($container-width, small), 100%);
+        width: clamp(0px, map.get($container-width, small), 100%);
         margin: 250px 0 0;
         padding: 36px $container-padding;
         border-radius: 12px 12px 0 0;
