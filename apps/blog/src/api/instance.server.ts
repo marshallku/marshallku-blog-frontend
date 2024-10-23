@@ -3,14 +3,19 @@
 import { cookies, headers } from "next/headers";
 import httpClient, { HTTPClient } from "#utils/httpClient";
 
-const initializeHeaders = (initHeaders?: RequestInit["headers"]) => ({
-    "User-Agent": headers().get("User-Agent") ?? "",
-    "x-forwarded-for": headers().get("x-forwarded-for") ?? "",
-    "x-real-ip": headers().get("x-real-ip") ?? "",
-    referer: headers().get("referer") ?? "",
-    Cookie: cookies().toString(),
-    ...initHeaders,
-});
+const initializeHeaders = async (initHeaders?: RequestInit["headers"]) => {
+    const httpHeaders = await headers();
+    const httpCookies = await cookies();
+
+    return {
+        "User-Agent": httpHeaders.get("User-Agent") ?? "",
+        "x-forwarded-for": httpHeaders.get("x-forwarded-for") ?? "",
+        "x-real-ip": httpHeaders.get("x-real-ip") ?? "",
+        referer: httpHeaders.get("referer") ?? "",
+        Cookie: httpCookies.toString(),
+        ...initHeaders,
+    };
+};
 
 /**
  * Redirects if the response status is 401.
@@ -23,8 +28,9 @@ export const request: HTTPClient<unknown> = httpClient({
     credentials: "include",
     cache: "no-store",
     interceptors: {
-        request(_, init) {
-            init.headers = initializeHeaders(init.headers);
+        async request(_, init) {
+            const initializedHeaders = await initializeHeaders(init.headers);
+            init.headers = { ...init.headers, ...initializedHeaders };
             return init;
         },
         async response(response) {
