@@ -1,3 +1,6 @@
+@use "sass:meta";
+@use "sass:map";
+
 $light-palette: (
     theme: #f1718c,
     text: #080808,
@@ -112,12 +115,12 @@ $container-width: (
 );
 
 @function get-color($palette, $key, $sub-key: null) {
-    @if map-has-key($palette, $key) {
-        $color: map-get($palette, $key);
+    @if map.has-key($palette, $key) {
+        $color: map.get($palette, $key);
 
         @if type-of($color) == "map" {
-            @if map-has-key($color, $sub-key) {
-                @return map-get($color, $sub-key);
+            @if map.has-key($color, $sub-key) {
+                @return map.get($color, $sub-key);
             }
 
             @warn "`#{$sub-key}` doesn't exist in color";
@@ -131,11 +134,11 @@ $container-width: (
 }
 
 @function color($key, $sub-key: null) {
-    @if map-has-key($light-palette, $key) {
-        $color: map-get($light-palette, $key);
+    @if map.has-key($light-palette, $key) {
+        $color: map.get($light-palette, $key);
 
         @if type-of($color) == "map" {
-            @if map-has-key($color, $sub-key) {
+            @if map.has-key($color, $sub-key) {
                 @return var(--palette-#{$key}-#{$sub-key});
             }
 

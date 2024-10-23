@@ -1,6 +1,8 @@
+@use "sass:map";
+
 .comment-form {
     display: flex;
-    width: clamp(0px, map-get($container-width, small), 100%);
+    width: clamp(0px, map.get($container-width, small), 100%);
     margin: 24px auto;
     padding: 0 12px;
 

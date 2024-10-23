@@ -1,5 +1,5 @@
-@import "./abstracts/_palette.scss";
-@import "./abstracts/_mixins.scss";
+@forward "./abstracts/_palette.scss";
+@forward "./abstracts/_mixins.scss";
 
 html {
     @each $key, $value in $light-palette {

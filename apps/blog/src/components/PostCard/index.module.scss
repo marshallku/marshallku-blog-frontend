@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .post-card {
     display: flex;
     padding: 16px 20px;
@@ -35,7 +37,7 @@
     }
 
     &__description {
-        $line-height: map-get($typography-height, b2);
+        $line-height: map.get($typography-height, b2);
         position: relative;
         max-height: 3 * $line-height;
         overflow: hidden;
