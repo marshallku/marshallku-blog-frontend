@@ -8,10 +8,10 @@ const nextConfig = {
     transpilePackages: ["@marshallku/ui"],
     sassOptions: {
         prependData: `
-            @import "${UI_SRC}/styles/abstracts/_variables.scss";
-            @import "${UI_SRC}/styles/abstracts/_palette.scss";
-            @import "${UI_SRC}/styles/abstracts/_fonts.scss";
-            @import "${UI_SRC}/styles/abstracts/_mixins.scss";
+            @use "${UI_SRC}/styles/abstracts/variables" as *;
+            @use "${UI_SRC}/styles/abstracts/palette" as *;
+            @use "${UI_SRC}/styles/abstracts/fonts" as *;
+            @use "${UI_SRC}/styles/abstracts/mixins" as *;
         `,
     },
     swcMinify: false,
