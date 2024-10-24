@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "type": "module",
     "sideEffects": [
-        "**/*.css"
+        "**/*.css",
+        "**/*.scss"
     ],
     "license": "MIT",
     "files": [
