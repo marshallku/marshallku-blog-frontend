@@ -87,7 +87,7 @@ export default async function Post({ params }: PostProps) {
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
     const hasCoverImage = !!post.data.coverImage;
-    const dimensions = hasCoverImage && imageSize(`public${decodeURIComponent(post.data.coverImage)}`);
+    const dimensions = hasCoverImage && imageSize(`public${decodeURIComponent(post.data.coverImage!)}`);
 
     return (
         <article className={cx()}>
@@ -131,7 +131,7 @@ export default async function Post({ params }: PostProps) {
             {dimensions && (
                 <figure className={cx("__cover-image")}>
                     <Image
-                        src={post.data.coverImage}
+                        src={post.data.coverImage!}
                         alt={post.data.title}
                         width={dimensions.width}
                         height={dimensions.height}
