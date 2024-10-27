@@ -9,7 +9,7 @@ export interface Post {
             modified?: Date;
         };
         tags: string[];
-        coverImage: string;
+        coverImage?: string;
         ogImage: string;
         displayAd?: boolean;
     };

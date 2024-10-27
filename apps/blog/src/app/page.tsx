@@ -28,7 +28,11 @@ export default async function Home() {
         <section className={cx()}>
             <header className={cx("-header")}>
                 <figure className={cx("-header__cover")}>
-                    <Image src={mostRecentPost.data.coverImage} alt={mostRecentPost.data.title} loading="eager" />
+                    <Image
+                        src={mostRecentPost.data.coverImage || mostRecentPost.data.ogImage}
+                        alt={mostRecentPost.data.title}
+                        loading="eager"
+                    />
                 </figure>
                 <div className={cx("-header__content")}>
                     <Typography variant="c1">
