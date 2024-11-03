@@ -1,0 +1,668 @@
+---
+title: Git Garden 제작기 및 소개
+description: GitHub 프로필을 꾸미기 위한 새로운 애플리케이션을 제작해 봤습니다
+date:
+  posted: 2024-11-03T08:12:49Z
+tags:
+    - GitHub
+    - Rust
+    - 제작일지
+ogImage: /images/2024/11/gitgarden-preview.png
+---
+
+## 들어가며
+
+개인적으로 GitHub 프로필을 꾸미는 것을 좋아합니다.\
+거기다 커밋도 1,606일째 매일 하는 중이라, GitHub에 한 활동을 기반으로 꾸미는 것 역시 좋아합니다.
+
+이런 선호를 기반으로, GitHub 프로필을 꾸미기 위한 새로운 애플리케이션 [gitgarden](https://github.com/marshallku/gitgarden)을 제작해 봤습니다.
+
+## 기능 소개
+
+![2023년 제 Git Garden](/images/2024/11/gitgarden-preview.png)
+
+위와 같이, GitHub에서 활동을 할 때마다 정원이 가꿔지는 형태의 애플리케이션입니다.
+
+-   집 등의 오브젝트는, 사용자마다 다른 좌표로 배치됩니다
+-   흔히 '잔디'라 불리는 contributions가 밭에 작물로 자랍니다
+-   새로운 repository를 생성하면, 새로운 나무가 심어집니다
+-   외에도 이슈 생성 / PR 생성 등의 활동에 따라 다양한 풀을 집 근처에 심을 수 있습니다
+
+## 사용법
+
+### GitHub 프로필에 적용하기
+
+```markdown
+[![GitGarden](https://gitgarden.marshallku.dev/?user_name=YOUR_GITHUB_USERNAME)](https://github.com/marshallku/gitgarden)
+```
+
+위 Markdown에서 `YOUR_GITHUB_USERNAME`을 자신의 GitHub 아이디로 변경하고 GitHub 프로필 README에 붙여 넣으면 적용은 끝입니다.
+
+### 옵션
+
+```markdown
+[![GitGarden](https://gitgarden.marshallku.dev/?user_name=YOUR_GITHUB_USERNAME&year=2023)](https://github.com/marshallku/gitgarden)
+```
+
+만약 특정 년도의 정원을 보고자 한다면, 위와 같이 `year` 옵션을 추가하시면 됩니다.
+
+## Self-Hosting 가이드
+
+본인의 토큰을 사용하거나, 더 빠른 속도 등을 위해 직접 호스팅하시고 싶다면, `ghcr.io/marshallku/gitgarden` 이미지를 사용하셔서 호스팅하실 수 있습니다.
+
+```bash
+docker run -d \
+  --name gitgarden \
+  --restart unless-stopped \
+  -p 18085:18085 \
+  -e HOST=0.0.0.0 \
+  -e PORT=18085 \
+  -e GITHUB_TOKEN=YOUR_GITHUB_TOKEN \
+  -e CARGO_MANIFEST_DIR=/usr/local/bin \
+  ghcr.io/marshallku/gitgarden:latest
+```
+
+-   `HOST`: 호스트 주소, `0.0.0.0`으로 설정해 주시면 됩니다
+-   `PORT`: 포트 번호, 기본값은 `18085`입니다
+-   `GITHUB_TOKEN`: GitHub API를 사용하기 위한 토큰입니다
+-   `CARGO_MANIFEST_DIR`: Rust 애플리케이션에서 사용하는 환경 변수입니다
+
+위 값들을 설정해 컨테이너를 실행하시면 됩니다.
+
+```bash
+HOST=0.0.0.0
+PORT=18085
+GITHUB_TOKEN=YOUR_GITHUB_TOKEN
+CARGO_MANIFEST_DIR=/usr/local/bin
+```
+
+혹은 위 환경 변수들을 `.env` 파일에 저장하고, 아래와 같이 `docker-compose.yml` 파일을 작성하셔서 실행하실 수도 있습니다.
+
+```yaml
+services:
+    gitgarden:
+        container_name: gitgarden
+        image: "ghcr.io/marshallku/gitgarden:latest"
+        pull_policy: always
+        restart: unless-stopped
+        ports:
+            - ${PORT}:${PORT}
+        env_file:
+            - .env
+        environment:
+            HOST: "0.0.0.0"
+```
+
+## Technical Implementation
+
+### 기술 스택
+
+언제나처럼 Rust와 [`axum`](https://github.com/tokio-rs/axum)으로 제작한 애플리케이션입니다.\
+최근 Rust로 잡다한 api들을 만들면서, 매번 쓰는 패턴들이 비슷비슷해 [`http_server_template`](https://github.com/marshallku/http_server_template) 프로젝트를 만들었는데, 해당 템플릿으로 만든 첫 프로젝트입니다.
+
+```txt
+📁 Project Root
+├── 🌐 .github
+├── 🖼️ assets
+└── 🗂️ src
+    ├── 🚀 api
+    │   └── 📜 schemas
+    ├── 🔢 constants
+    ├── 🏗️ controllers
+    │   └── 🧪 __tests__
+    ├── 🔐 env
+    ├── 🖥️ render
+    │   └── 🧪 __tests__
+    ├── 🛠️ services
+    └── 🔧 utils
+        └── 🧪 __tests__
+```
+
+위와 같은 구조로 프로젝트를 구성했습니다.\
+굳이 controller, service 같이 나눌 필요 없이 코드를 작성할 순 있지만, 아무래도 코드가 길어지다보니 당장 제가 보기도 불편해져서 쪼갰습니다.
+
+### GitHub API 연동
+
+#### GraphQL API
+
+```rust
+use reqwest::{
+    header::{HeaderMap, HeaderName, ACCEPT, AUTHORIZATION, USER_AGENT},
+    Client, Error,
+};
+use serde_json::{json, Value};
+use std::collections::HashMap;
+
+pub async fn github_graphql_request(
+    query: &str,
+    headers: &HashMap<&str, &str>,
+    data: Value,
+    token: &str,
+) -> Result<Value, Error> {
+    let client = Client::new();
+
+    let mut request_headers = HeaderMap::new();
+    request_headers.insert(AUTHORIZATION, format!("token {}", token).parse().unwrap());
+    request_headers.insert(ACCEPT, "*/*".parse().unwrap());
+    request_headers.insert(USER_AGENT, "reqwest".parse().unwrap());
+
+    for (key, value) in headers {
+        request_headers.insert(
+            HeaderName::from_bytes(key.as_bytes()).unwrap(),
+            value.parse().unwrap(),
+        );
+    }
+
+    let mut body = json!({
+        "query": query
+    });
+
+    // Merge the additional data into the body
+    if let Some(obj) = body.as_object_mut() {
+        if let Some(data_obj) = data.as_object() {
+            obj.extend(data_obj.clone());
+        }
+    }
+
+    let response = client
+        .post("https://api.github.com/graphql")
+        .headers(request_headers)
+        .json(&body)
+        .send()
+        .await?;
+
+    let json_response: Value = response.json().await?;
+
+    Ok(json_response)
+}
+```
+
+먼저, 위와 같이 GitHub GraphQL API를 호출하는 함수를 작성했습니다.\
+대부분 요청이 GraphQL로만 이뤄지다 보니, 이 함수 하나만 잘 써두면 대부분 정보들은 가져올 수 있습니다.
+
+```rust
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GithubGraphQLResponse<T> {
+    pub data: Option<T>,
+    pub errors: Option<Vec<GithubGraphQLError>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GithubGraphQLError {
+    #[serde(rename = "type")]
+    pub error_type: String,
+    pub path: Vec<String>,
+    pub locations: Vec<Location>,
+    pub message: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Location {
+    pub line: i32,
+    pub column: i32,
+}
+```
+
+다음으론, API가 응답하는 공통적인 형태를 정의해두었습니다.\
+여담으로, 매크로로 rename까지 가능한게 상당히 편리합니다.
+
+```graphql
+query ($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+        login
+        contributionsCollection(from: $from, to: $to) {
+            totalCommitContributions
+            totalIssueContributions
+            totalPullRequestContributions
+            totalPullRequestReviewContributions
+            totalRepositoriesWithContributedCommits
+            totalRepositoriesWithContributedIssues
+            totalRepositoriesWithContributedPullRequests
+            totalRepositoriesWithContributedPullRequestReviews
+        }
+    }
+}
+```
+
+다음으로 별도 파일에 GraphQL 쿼리를 작성해두면,
+
+```rust
+let query = include_str!("schemas/user_id.gql");
+let headers: HashMap<&str, &str> = HashMap::new();
+
+let data = json!({
+    "variables": {
+        "login": user_name,
+    }
+});
+
+let response = match github_graphql_request(query, &headers, data, token).await {
+    Ok(response) => response,
+    Err(error) => {
+        println!("Error: {:?}", error);
+        return Err(vec![GithubGraphQLError {
+            error_type: "RequestError".to_string(),
+            locations: vec![],
+            message: error.to_string(),
+            path: vec![],
+        }]);
+    }
+};
+
+let response: GithubGraphQLResponse<UserIdData> = serde_json::from_value(response).unwrap();
+```
+
+위와 같이 간단하게 GitHub API를 호출할 수 있습니다.
+
+#### Contributions
+
+```rust
+use std::collections::HashMap;
+use tl::{parse, ParserOptions};
+
+fn parse_commit_from_string(
+    data: &str,
+) -> Result<HashMap<String, u32>, Box<dyn std::error::Error>> {
+    let mut commits_by_day = HashMap::new();
+    let document = parse(data, ParserOptions::default()).unwrap();
+    let nodes = document
+        .nodes()
+        .iter()
+        .filter(|node| node.as_tag().map_or(false, |tag| tag.name() == "td"));
+
+    for td in nodes {
+        let td = td.as_tag().unwrap();
+
+        let attributes = td.attributes();
+
+        let date = attributes
+            .get("data-date")
+            .flatten()
+            .and_then(|date| date.try_as_utf8_str());
+        let level = attributes
+            .get("data-level")
+            .flatten()
+            .and_then(|level| level.try_as_utf8_str());
+
+        match (date, level) {
+            (Some(date), Some(level)) => {
+                if let Ok(level) = level.parse::<u32>() {
+                    if level > 0 {
+                        commits_by_day.insert(date.to_string(), level);
+                    }
+                }
+            }
+            _ => continue,
+        }
+    }
+
+    Ok(commits_by_day)
+}
+
+pub async fn get_daily_commits(
+    user_name: &str,
+    year: i32,
+) -> Result<HashMap<String, u32>, Box<dyn std::error::Error>> {
+    let from = format!("{}-01-01", year);
+    let to = format!("{}-12-31", year);
+    let query = format!("?from={}&to={}", from, to);
+    let url = format!(
+        "https://github.com/users/{}/contributions{}",
+        user_name, query
+    );
+
+    let response = reqwest::get(&url).await?.text().await?;
+    let commits = parse_commit_from_string(&response)?;
+
+    Ok(commits)
+}
+```
+
+Contribution 영역은, 아무래도 GitHub이랑 생김새를 맞추려면, 레벨이 변화하는 정책부터 신경써야할 게 많습니다.
+
+그러던 와중, [contributions 페이지](https://github.com/users/marshallku/contributions)를 발견했습니다.\
+별도로 쓰일 페이지가 아닌 지라 들어가보면 화면에 보이는 것도 별로 없고, 레이아웃이 왕창 틀어져있는 이상한 페이지를 발견할 수 있는데, html을 열어보면 GitHub 프로필 페이지에 있는 contribution 영역이 그대로 들어가 있습니다.
+
+여기서 각 일자별로 `data-date`, `data-level` 두 값만 일단 가져와 hash map에 넣어두면, 일자별 커밋 레벨을 파악할 수 있습니다.
+
+사실 데이터 가져와서 예쁘게 뿌리는 게 전부인 프로젝트라, 여기까지 성공하고 잘 마무리할 수 있겠다고 생각했습니다.
+
+### SVG 렌더링
+
+#### 좌표 설정
+
+```rust
+use rand::{Rng, SeedableRng};
+use rand_chacha::ChaCha8Rng;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+
+const MAX_RETRY: u32 = 10;
+
+#[derive(Debug, Clone)]
+pub struct Rectangle {
+    pub x1: f64,
+    pub y1: f64,
+    pub x2: f64,
+    pub y2: f64,
+}
+
+pub fn generate_coordinate<T: Hash>(
+    key: T,
+    x_range: (f64, f64),
+    y_range: (f64, f64),
+    dead_zone: Option<&Rectangle>,
+) -> Option<(f64, f64)> {
+    let mut hasher = DefaultHasher::new();
+    key.hash(&mut hasher);
+    let seed = hasher.finish();
+
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+
+    for _ in 0..MAX_RETRY {
+        let x = rng.gen_range(x_range.0..x_range.1);
+        let y = rng.gen_range(y_range.0..y_range.1);
+
+        if let Some(zones) = dead_zone {
+            if !is_in_rectangle(x, y, zones) {
+                return Some((x, y));
+            }
+        } else {
+            return Some((x, y));
+        }
+    }
+
+    log::error!("Failed to generate a coordinate.");
+
+    None
+}
+
+pub fn is_in_rectangle(x: f64, y: f64, rectangles: &Rectangle) -> bool {
+    x >= rectangles.x1 && x <= rectangles.x2 && y >= rectangles.y1 && y <= rectangles.y2
+}
+```
+
+오브젝트들 배치하면서 꽤 중요하게 생각했던 게 일관성입니다.\
+무작정 랜덤으로 배치하면 화면을 새로 그릴 때마다 다른 정원이 나오니, 1년동안 같은 정원을 볼 수 있도록 만들고 싶었습니다.
+
+그러던 와중 가장 간단하게 생각한게, 사용자 이름은 사용자마다 고유한 값이니, 이를 해싱한 뒤 시드로 사용하는 것이었습니다.
+
+거기다 추가로, 집 같이 커다란 오브젝트에 나무가 겹치는 불상사를 막기 위해 dead zone을 설정할 수 있도록 했습니다.
+
+#### 오브젝트 렌더링
+
+```rust
+pub trait Renderable {
+    fn render(&self) -> String;
+}
+```
+
+집, 밭, 꽃, 풀 등 다양한 오브젝트들을 렌더링하기 위해, `Renderable` trait를 정의했습니다.\
+각 오브젝트들은 이 trait을 구현하도록 하고, 최종적으로 `render` 함수들만 호출하면 SVG로 렌더링된 결과를 얻을 수 있습니다.
+
+```rust
+use crate::utils::{
+    coordinate::{generate_coordinate, Rectangle},
+    encode::encode_from_path,
+};
+
+use super::renderable::Renderable;
+
+pub struct Home {
+    coordinate: Rectangle,
+    pub dead_zone: Rectangle,
+}
+
+impl Home {
+    pub fn new(user_name: &str) -> Self {
+        let (x, y) = generate_coordinate(user_name, (80.0, 730.0), (25.0, 70.0), None).unwrap();
+
+        let coordinate = Rectangle {
+            x1: x,
+            y1: y,
+            x2: x + 67.0,
+            y2: y + 152.0,
+        };
+
+        Self {
+            coordinate: coordinate.clone(),
+            // Add object size to coordinate
+            dead_zone: Rectangle {
+                x1: coordinate.x1,
+                y1: coordinate.y1,
+                x2: coordinate.x2,
+                y2: coordinate.y2 + 89.0,
+            },
+        }
+    }
+}
+
+impl Renderable for Home {
+    fn render(&self) -> String {
+        let home = encode_from_path("objects/home.png");
+        let road = encode_from_path("objects/stone_road.png");
+
+        format!(
+            r#"<image width="151" height="155" x="{}" y="{}" xlink:href="data:image/png;base64,{}" />
+            <image width="31" height="89" x="{}" y="{}" xlink:href="data:image/png;base64,{}" />"#,
+            self.coordinate.x1,
+            self.coordinate.y1,
+            home,
+            self.coordinate.x2,
+            self.coordinate.y2,
+            road
+        )
+    }
+}
+```
+
+가장 간단한 예시로 집을 렌더링하는 코드입니다.
+
+위와 같은 형태로 오브젝트들을 분리해두니, `format` 만으로 충분히 알아볼 수 있을 만큼의 코드를 작성할 수 있어, 굳이 handlebars 등의 템플릿 엔진도 사용하지 않을 수 있었습니다.
+
+#### 렌더링 최적화
+
+GitHub에 이미지를 추가할 땐 링크를 활용할 수 없어, 이미지를 base64로 인코딩해 SVG에 넣어주어야 합니다.\
+이러면 밭만 렌더링하는 데 최대 365 \* 2개의 base64 이미지를 추가해야 하는데, 이러면 별 활동을 안 해도 SVG가 수십 메가바이트가 넘어가는 문제가 발생합니다.
+
+```rust
+pub struct Farm {
+    width: u32,
+    height: u32,
+    progress: f32,
+    objects: Vec<Box<dyn Renderable>>,
+}
+
+impl Farm {
+    // ...
+    pub fn render(&self) -> String {
+        // ...
+
+        let svg = format!(
+            r##"
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 {} {}"
+                fill="none"
+                style="width: {}px; height: {}px;"
+            >
+               <rect width="100%" height="100%" fill="{}" />
+               <defs>
+                    <style>
+                        .{} {{
+                            mix-blend-mode: color;
+                            opacity: 0.8;
+                        }}
+                    </style>
+               </defs>
+               <defs>{}</defs>
+               <defs>{}</defs>
+               {}
+            </svg>
+            "##,
+            self.width,
+            self.height,
+            self.width,
+            self.height,
+            background_color,
+            MASK_CLASS,
+            self.register_objects(),
+            self.register_masks(),
+            self.objects
+                .iter()
+                .map(|object| object.render())
+                .collect::<String>()
+        );
+
+        svg.replace('\n', "")
+    }
+
+    // ...
+
+    fn register_objects(&self) -> String {
+        Objects::iter().fold(String::new(), |mut acc, object| {
+            let path = object.to_path();
+            let encoded = encode_from_path(&path);
+            let (width, height) = object.to_size();
+
+            write!(
+                acc,
+                r#"<image id="{}" width="{}" height="{}" xlink:href="data:image/png;base64,{}" />"#,
+                object.to_string(),
+                width,
+                height,
+                encoded
+            )
+            .expect("Writing to string should not fail");
+
+            acc
+        })
+    }
+}
+```
+
+이를 해결하기 위해 제일 상단 `Farm` 구조체에서, 미리 base64로 인코딩된 이미지들을 SVG에 등록해두고, 필요할 때마다 해당 이미지를 참조하도록 했습니다.
+
+```rust
+#[derive(Debug, Clone, Copy, Hash, Eq, PartialEq)]
+pub enum Objects {
+    FlowerOne,
+    // ...
+}
+
+impl Objects {
+    pub fn to_string(&self) -> String {
+        match self {
+            Objects::FlowerOne => "flower-1".to_string(),
+            // ...
+        }
+    }
+
+    pub fn to_path(&self) -> String {
+        match self {
+            Objects::FlowerOne => "flowers/1-1.png".to_string(),
+            // ...
+        }
+    }
+
+    pub fn to_size(&self) -> (u32, u32) {
+        match self {
+            Objects::FlowerOne => (16, 16),
+            // ...
+        }
+    }
+
+    pub fn iter() -> impl Iterator<Item = Objects> {
+        [
+            Objects::FlowerOne,
+            // ...
+        ]
+        .into_iter()
+    }
+
+    // ...
+}
+```
+
+이렇게 `Objects` enum을 하나 만들어두면, 해당 오브젝트의 이미지가 있는 경로, id, 크기 등을 실수 없이 관리할 수 있습니다.
+
+#### 열매 색상 변경
+
+![원본 이미지](/images/2024/11/flower.png)
+
+16\*16 크기의 이미지라 잘 보이진 않지만...위와 같이 커밋을 제일 많이 한 상황에는 열매가 맺히도록 했습니다.\
+여기에 사용자마다 차별점을 더 주기 위해 가장 많이 사용한 언어의 색상이 열매에 반영되도록 작업해봤습니다.
+
+![오버레이 이미지](/images/2024/11/flower-overlay.png)
+
+먼저 Illustrator로 열매 이미지를 연 뒤, 한땀한땀 열매 영역만 선택해 위와 같이 오버레이를 제작했습니다.
+
+```html
+<svg
+    viewBox="0 0 16 16"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="16"
+    height="16"
+>
+    <path d="M1 5h1.02V4H8v-.99L9 3V2h4v.99L14 3v1h1v1h1v7.01L15 12v1h-5v1H9v1H7.05L7 14H6v-1H2v-1H1V5z" fill="#fff" />
+    <rect x="0" y="0" width="16" height="16" fill="#000" />
+</svg>
+```
+
+그러면 위와 같은 svg 파일이 생성됩니다.
+
+사실 이걸 그대로 mask에 적용하면 될 줄 알았는데, 도무지 적용이 되질 않아 한참을 씨름했습니다.\
+이런데서 발목을 잡힐 줄은 몰랐어서 꽤나 스트레스였습니다.
+
+```html
+<mask id="flower-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+    <rect x="0" y="0" width="1" height="1" fill="#000" />
+    <path
+        d="M0.0625 0.3125h0.06375v-0.0625H0.5v-0.061875L0.5625 0.1875v-0.0625h0.25v0.061875L0.875 0.1875v0.0625h0.0625v0.0625h0.0625v0.438125L0.9375 0.75v0.0625h-0.3125v0.0625h-0.0625v0.0625h-0.121875L0.4375 0.875h-0.0625v-0.0625h-0.25v-0.0625h-0.0625v-0.4375z"
+        fill="#fff"
+    />
+</mask>
+```
+
+알고보니 절대적인 경로를 사용해, SVG에 정확히 해당 좌표에만 mask가 적용되고 있었던 터라, 1\*1 크기의 mask로 변경하여 해결했습니다.
+
+## 계획
+
+커밋하는 시간대를 분석하는 작업은 끝내뒀는데, 이걸 정원에 녹일 방법을 모르겠어서 적용을 못했습니다.\
+하늘을 추가해, star 수에 따라 별을 렌더링하고, 커밋하는 시간대에 따라 하늘 색상을 변경해보면 어떨까 생각 중입니다.
+
+또한, PR, 이슈 등의 활동에 따라 늘어나는 풀들도 너무 규칙 없이 증식만 하는 느낌이라, 좀 더 정돈해보면 어떨까 싶습니다.
+
+그리고 별로 중요한 지표는 아니지만, 현재는 test coverage가 76.2%인데, 그래도 80% 이상으로는 올려보고 싶은 마음입니다.
+
+## 기여하기
+
+어떠한 형태의 기여도 환영입니다!!\
+버그 리포트나 기능 추가 뿐 아니라, 상술한 디자인 같은 아이디어도 환영합니다.
+
+### 로컬 개발 환경 설정
+
+```bash
+HOST=127.0.0.1
+PORT=18080
+GITHUB_TOKEN=YOUR_GITHUB_TOKEN
+```
+
+`.env.example`을 복사해 `.env` 파일을 생성한 뒤, `YOUR_GITHUB_TOKEN`을 본인의 GitHub 토큰으로 변경해주세요.\
+그 다음, `cargo run` 명령어로 애플리케이션을 실행해 주시면 됩니다.
+
+## 마무리
+
+오랜만에 꽤 재미있게 작업한 프로젝트입니다.\
+한 3년쯤 전부터 GitHub에 한 활동을 기반으로 정원을 꾸미는 프로젝트를 진행하고 싶었는데, 드디어 그 꿈을 이뤘네요.
+
+당장에 큰 쓸모는 없을 수 있어도, 개인적으로 프로필도 좀 더 예뻐졌고, 업무에 필요한 간단한 api를 제작할 때도 큰 고민 없이 일단 Rust로 작업할 만큼 이 언어가 편해지기도 했습니다.
+
+GitHub을 단순히 코드 저장소로 사용하는 것을 넘어, 개개인의 성장과 노력을 시각적으로 표현하고자 하는 목표를 갖고 있습니다.\
+그래서 언젠가는 좀 더 다듬어서 개개인이 커스터마이징할 수 있도록 게임으로 만들어보고 싶기도 합니다.
+
+함께 멋진 정원을 가꾸면서 성장하는 개발자가 되면 좋겠습니다!
