@@ -15,7 +15,11 @@ function PostListGallery({ posts }: PostListGalleryProps) {
         <div className={cx()}>
             {posts.map((post) => (
                 <Link key={post.slug} href={post.slug} className={cx("__item")}>
-                    <Image className={cx("__image")} src={post.data.coverImage} alt={post.data.title} />
+                    <Image
+                        className={cx("__image")}
+                        src={post.data.coverImage || post.data.ogImage}
+                        alt={post.data.title}
+                    />
                 </Link>
             ))}
         </div>
