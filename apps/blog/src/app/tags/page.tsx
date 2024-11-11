@@ -18,16 +18,21 @@ export default function TagCloudPage() {
 
     return (
         <div className={cx()}>
-            {tags.map(({ name, count }) => (
-                <Link key={name} href={`/tag/${name}`}>
-                    <Typography component="span" variant="b2">
-                        {name}
-                    </Typography>
-                    <Typography component="span" variant="c1">
-                        ({count})
-                    </Typography>
-                </Link>
-            ))}
+            <Typography variant="h1" component="h1" fontWeight={700} className={cx("__title")}>
+                태그 목록
+            </Typography>
+            <div className={cx("__tags")}>
+                {tags.map(({ name, count }) => (
+                    <Link key={name} href={`/tag/${name}`}>
+                        <Typography component="span" variant="b2">
+                            {name}
+                        </Typography>
+                        <Typography component="span" variant="c1">
+                            ({count})
+                        </Typography>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 }
