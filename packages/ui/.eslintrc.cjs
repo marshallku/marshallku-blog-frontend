@@ -12,6 +12,7 @@ module.exports = {
     parserOptions: {
         project: true,
         tsconfigRootDir: __dirname,
+        sourceType: "module",
     },
     rules: {
         "@rushstack/typedef-var": "off",
