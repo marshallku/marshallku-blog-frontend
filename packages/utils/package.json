@@ -2,9 +2,9 @@
     "name": "@marshallku/utils",
     "version": "0.0.1",
     "type": "module",
-    "main": "./dist/index.mjs",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.mts",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "sideEffects": false,
     "license": "MIT",
     "files": [
