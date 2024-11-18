@@ -11,6 +11,7 @@
         },
         "test": {
             "cache": false,
+            "outputs": ["coverage/**", "playwright-report/**"],
             "dependsOn": ["^build"]
         },
         "test:e2e": {
