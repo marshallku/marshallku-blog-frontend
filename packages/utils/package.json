@@ -15,7 +15,8 @@
         "dev": "tsup src/index.ts --format esm --watch --dts",
         "lint": "eslint \"src/**/*.ts*\"",
         "test": "vitest run",
-        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+        "postbuild": "ls -al dist"
     },
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
