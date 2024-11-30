@@ -80,9 +80,6 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                 <CommentAvatar name={name} />
             </figure>
             <form className={cx("__form")} onSubmit={handleSubmit} ref={formRef}>
-                <Typography variant="c1" marginBottom={16}>
-                    댓글을 남겨주세요.
-                </Typography>
                 <Input
                     className={cx("__input")}
                     name="name"
@@ -97,7 +94,7 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                     className={cx("__textarea")}
                     name="body"
                     value={body}
-                    placeholder="댓글을 입력해 주세요."
+                    placeholder="댓글을 입력해 주세요. 작성한 댓글은 수정하거나 삭제할 수 없습니다."
                     onChange={({ currentTarget: { value } }) => {
                         setBody(value);
                     }}
