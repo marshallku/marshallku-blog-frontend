@@ -5,7 +5,6 @@ export interface Comment {
     name: string;
     byPostAuthor: boolean;
     password: string;
-    email: string;
     url: string;
     body: string;
     parentCommentId?: string;

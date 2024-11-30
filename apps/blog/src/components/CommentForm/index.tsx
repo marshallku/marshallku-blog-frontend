@@ -54,7 +54,6 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                 name: (formData.get("name") as string) || "익명",
                 postSlug: slug,
                 password: formData.get("password") as string,
-                email: formData.get("email") as string,
                 url: formData.get("url") as string,
                 body,
                 parentCommentId: formData.get("parentCommentId") as string,
@@ -82,7 +81,7 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
             </figure>
             <form className={cx("__form")} onSubmit={handleSubmit} ref={formRef}>
                 <Typography variant="c1" marginBottom={16}>
-                    댓글을 남겨주세요. (이메일 주소는 공개되지 않습니다.)
+                    댓글을 남겨주세요.
                 </Typography>
                 <Input
                     className={cx("__input")}
@@ -94,7 +93,6 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                     }}
                 />
                 <Input className={cx("__input")} name="url" inputMode="url" placeholder="웹사이트" />
-                <Input className={cx("__input")} name="email" inputMode="email" placeholder="이메일 (비공개)" />
                 <Textarea
                     className={cx("__textarea")}
                     name="body"
