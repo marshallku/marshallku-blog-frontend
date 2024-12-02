@@ -14,6 +14,8 @@ services:
             - app_network
         environment:
             - TZ=Asia/Seoul
+        volumes:
+            - ../marshallku-blog-posts/:./apps/blog/_posts
     blog-front-green:
         <<: *front
         container_name: blog-front-green
