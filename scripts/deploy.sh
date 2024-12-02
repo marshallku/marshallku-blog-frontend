@@ -7,7 +7,7 @@ CONFIG_FILE='/etc/nginx/sites-available/marshall-ku.com'
 CHECKSUM_FILE='.checksum'
 DOCKERIGNORE_FILE='.dockerignore'
 
-cd ~/dev/marshallku-blog-posts || exit 1
+cd ~/dev/marshallku-blog-frontend/apps/blog/_posts || exit 1
 git pull origin master
 cd ~/dev/marshallku-blog-frontend || exit 1
 git pull origin master

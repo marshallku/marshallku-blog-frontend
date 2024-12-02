@@ -1,3 +1,4 @@
+.git
 .github
 .gitattributes
 .gitignore
@@ -12,3 +13,4 @@ docker-compose.yml
 README.md
 scripts
 .checksum
+!apps/blog/_posts/*.mdx
