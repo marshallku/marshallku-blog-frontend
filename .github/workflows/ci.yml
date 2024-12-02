@@ -27,6 +27,7 @@ jobs:
               with:
                   repository: marshallku/marshallku-blog-posts
                   path: apps/blog/_posts
+                  token: ${{ secrets.GH_TOKEN }}
             - uses: marshallku/actions/setup/pnpm@master
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
@@ -103,6 +104,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
+              with:
+                  repository: marshallku/marshallku-blog-posts
+                  path: apps/blog/_posts
+                  token: ${{ secrets.GH_TOKEN }}
             - uses: marshallku/actions/setup/pnpm@master
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
@@ -126,6 +132,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
+              with:
+                  repository: marshallku/marshallku-blog-posts
+                  path: apps/blog/_posts
+                  token: ${{ secrets.GH_TOKEN }}
             - uses: marshallku/actions/setup/pnpm@master
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
