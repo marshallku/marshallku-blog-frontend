@@ -33,7 +33,7 @@ export default function classNames(
             }
 
             if (Array.isArray(name)) {
-                func(name);
+                func(...name);
                 continue;
             }
 
