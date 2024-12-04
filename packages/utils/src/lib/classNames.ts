@@ -44,14 +44,14 @@ export default function classNames(
                         continue;
                     }
 
-                    const keyWithRoot = rootClassName + key;
-
                     if (key === "className" && (name as Record<string, unknown>)[key]) {
                         classes.push((name as Record<string, unknown>)[key]);
                         continue;
                     }
 
-                    if (hasOwn.call(name, keyWithRoot) && (name as Record<string, unknown>)[keyWithRoot]) {
+                    const keyWithRoot = rootClassName + key;
+
+                    if ((name as Record<string, unknown>)[key] || (name as Record<string, unknown>)[keyWithRoot]) {
                         classes.push(styles[keyWithRoot] || keyWithRoot);
                     }
                 }
