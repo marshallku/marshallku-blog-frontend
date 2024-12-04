@@ -2,15 +2,15 @@
 
 import { FormEventHandler, useCallback, useRef, useState } from "react";
 import { MutateOptions } from "@tanstack/react-query";
-import Typography from "@marshallku/ui/Typography";
 import Input from "@marshallku/ui/Input";
 import Textarea from "@marshallku/ui/Textarea";
 import { Icon } from "@marshallku/icon";
-import { classNames } from "@marshallku/utils";
+import { classNames, generateRandomName } from "@marshallku/utils";
 import { type CommentRequest } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
 import styles from "./index.module.scss";
 import { toast } from "@marshallku/toast";
+import Button from "@marshallku/ui/Button";
 
 interface CommentFormProps {
     slug: string;
@@ -21,7 +21,7 @@ interface CommentFormProps {
 const cx = classNames(styles, "comment-form");
 
 function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
-    const [name, setName] = useState("");
+    const [name, setName] = useState("익명");
     const [body, setBody] = useState("");
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -83,12 +83,21 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                 <Input
                     className={cx("__input")}
                     name="name"
-                    placeholder="이름 (미입력시 '익명')"
+                    placeholder="이름"
                     value={name}
                     onChange={({ currentTarget: { value } }) => {
                         setName(value);
                     }}
-                />
+                >
+                    <Button
+                        size="small"
+                        onClick={() => {
+                            setName(generateRandomName());
+                        }}
+                    >
+                        무작위 생성
+                    </Button>
+                </Input>
                 <Input className={cx("__input")} name="url" inputMode="url" placeholder="웹사이트" />
                 <Textarea
                     className={cx("__textarea")}
