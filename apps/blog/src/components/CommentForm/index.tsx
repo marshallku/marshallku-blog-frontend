@@ -21,7 +21,7 @@ interface CommentFormProps {
 const cx = classNames(styles, "comment-form");
 
 function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
-    const [name, setName] = useState("익명");
+    const [name, setName] = useState(generateRandomName());
     const [body, setBody] = useState("");
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -87,6 +87,9 @@ function CommentForm({ slug, submit, isClientSide = false }: CommentFormProps) {
                     value={name}
                     onChange={({ currentTarget: { value } }) => {
                         setName(value);
+                    }}
+                    onFirstFocus={() => {
+                        setName("");
                     }}
                 >
                     <Button
