@@ -2,7 +2,7 @@
 
 import { Suspense, useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "@marshallku/react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 import { classNames } from "@marshallku/utils";
 import Comments from "#components/Comments";
 import PostCommentForm from "#components/PostCommentForm";

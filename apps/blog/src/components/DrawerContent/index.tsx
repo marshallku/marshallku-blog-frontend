@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, Suspense, useCallback, useRef } from "react";
-import { ErrorBoundary } from "@marshallku/react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Hamburger from "#components/Hamburger";
