@@ -176,6 +176,8 @@ export default async function Post({ params }: PostProps) {
                             ],
                         },
                     }}
+                    // FIXME: Update after next-mdx-remote supports react 19
+                    // @ts-ignore
                     components={MDXComponents}
                 />
                 <Typography component="div" variant="c1" className={cx("__copyright")}>

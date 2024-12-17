@@ -21,10 +21,10 @@
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "eslint": "^8.56.0",
-        "react": "^18.3.1",
+        "react": "^19.0.0",
         "tsup": "^8.3.5",
-        "typescript": "^5.6.3",
-        "vitest": "^2.1.5",
+        "typescript": "^5.7.2",
+        "vitest": "^2.1.8",
         "vitest-monocart-coverage": "^2.1.2"
     },
     "publishConfig": {

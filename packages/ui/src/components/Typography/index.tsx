@@ -1,4 +1,4 @@
-import { type ReactNode, createElement } from "react";
+import { type ReactNode, createElement, type JSX } from "react";
 import { classNames } from "@marshallku/utils";
 import type { Range } from "../../types";
 import styles from "./index.module.scss";

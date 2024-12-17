@@ -1,9 +1,13 @@
-import { HTMLProps } from "react";
+import type { AnchorHTMLAttributes, DetailedHTMLProps, ImgHTMLAttributes, TableHTMLAttributes } from "react";
 import NextLink from "next/link";
 import { Icon } from "@marshallku/icon";
 import PostImage from "#components/PostImage";
 
-function Link({ href, children, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "ref">) {
+function Link({
+    href,
+    children,
+    ...rest
+}: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) {
     if (!href) {
         return null;
     }
@@ -33,9 +37,11 @@ function Link({ href, children, ...rest }: Omit<HTMLProps<HTMLAnchorElement>, "r
 }
 
 const MDXComponents = {
-    img: PostImage,
+    img: (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => (
+        <PostImage {...props} useLowQualityPlaceholder />
+    ),
     a: Link,
-    table: (props: HTMLProps<HTMLTableElement>) => (
+    table: (props: DetailedHTMLProps<TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>) => (
         <div className="table">
             <table {...props} />
         </div>
