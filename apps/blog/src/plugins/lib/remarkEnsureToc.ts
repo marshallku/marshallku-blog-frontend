@@ -1,7 +1,7 @@
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 
-export function ensureToc() {
+export default function remarkEnsureToc() {
     return (tree: Root) => {
         let hasToc = false;
         let hasHeading = false;

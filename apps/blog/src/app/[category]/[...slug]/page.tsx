@@ -19,7 +19,7 @@ import Image from "#components/Image";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import PostCommentWrapper from "#components/PostCommentWrapper";
-import { setImageMetaData, makeIframeResponsive, formatToc } from "#utils/rehype";
+import { rehypeFormatToc, rehypeImageMetaData, rehypeResponsiveIframe } from "#plugins";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
 
@@ -170,9 +170,9 @@ export default async function Post({ params }: PostProps) {
                                         keepBackground: true,
                                     },
                                 ],
-                                setImageMetaData,
-                                makeIframeResponsive,
-                                formatToc,
+                                rehypeImageMetaData,
+                                rehypeResponsiveIframe,
+                                rehypeFormatToc,
                             ],
                         },
                     }}
