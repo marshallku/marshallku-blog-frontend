@@ -20,7 +20,7 @@
         "@marshallku/typescript-config": "^0.0.4",
         "eslint": "^8.56.0",
         "tsup": "^8.3.5",
-        "typescript": "^5.7.2"
+        "typescript": "^5.7.3"
     },
     "publishConfig": {
         "access": "public"

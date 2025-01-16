@@ -23,7 +23,7 @@
         "fantasticon": "^3.0.0",
         "react": "^19.0.0",
         "tsup": "^8.3.5",
-        "typescript": "^5.7.2"
+        "typescript": "^5.7.3"
     },
     "publishConfig": {
         "access": "public"
