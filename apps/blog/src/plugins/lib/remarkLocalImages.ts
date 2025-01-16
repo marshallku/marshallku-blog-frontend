@@ -4,10 +4,9 @@ import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 import { POSTS_DIRECTORY, PUBLIC_DIRECTORY } from "#constants";
 
-export default function remarkLocalImages({ slug }: { slug: string }) {
-    const postsDir = POSTS_DIRECTORY;
-    const publicDir = PUBLIC_DIRECTORY;
+const POSTS_PATH = "posts";
 
+export default function remarkLocalImages({ slug }: { slug: string }) {
     return (tree: Root) => {
         visit(tree, "image", (node) => {
             const imageUrl = node.url || "";
@@ -18,7 +17,7 @@ export default function remarkLocalImages({ slug }: { slug: string }) {
             }
 
             // Absolute path to the MDX file
-            const mdxFilePath = join(postsDir, slug, "index.mdx");
+            const mdxFilePath = join(POSTS_DIRECTORY, slug, "index.mdx");
             // e.g. /Users/you/your-project/posts/hello-world/index.mdx
             const mdxDir = dirname(mdxFilePath);
 
@@ -30,10 +29,10 @@ export default function remarkLocalImages({ slug }: { slug: string }) {
             //   -> We figure out a sub-directory by removing postsDir from sourcePath
             //   -> For example, if postsDir = /Users/you/your-project/posts
             //      subPath might be: hello-world/images/sample.png
-            const subPath = relative(postsDir, sourcePath);
+            const subPath = relative(POSTS_DIRECTORY, sourcePath);
             // e.g. "hello-world/images/sample.png"
 
-            const targetPath = join(publicDir, "posts", subPath);
+            const targetPath = join(PUBLIC_DIRECTORY, POSTS_PATH, subPath);
             // e.g. /Users/you/your-project/public/posts/hello-world/images/sample.png
 
             // Ensure the target directory exists
@@ -44,7 +43,7 @@ export default function remarkLocalImages({ slug }: { slug: string }) {
 
             // Rewrite the Markdown image URL
             // so that Next.js serves it from /posts/hello-world/images/sample.png
-            node.url = "/posts/" + subPath.replace(/\\/g, "/");
+            node.url = `/${POSTS_PATH}/${subPath.replace(/\\/g, "/")}`;
         });
     };
 }
