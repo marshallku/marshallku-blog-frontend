@@ -1,17 +1,21 @@
 import { mkdirSync, copyFileSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { visit } from "unist-util-visit";
+import type { Root } from "mdast";
 import { POSTS_DIRECTORY, PUBLIC_DIRECTORY } from "#constants";
 
 export default function remarkLocalImages({ slug }: { slug: string }) {
     const postsDir = POSTS_DIRECTORY;
     const publicDir = PUBLIC_DIRECTORY;
 
-    return (tree: any, file: any) => {
-        visit(tree, "image", (node: any) => {
+    return (tree: Root) => {
+        visit(tree, "image", (node) => {
             const imageUrl = node.url || "";
+
             // Only handle local images (e.g., './images/foo.png')
-            if (!imageUrl.startsWith("./")) return;
+            if (!imageUrl.startsWith("./")) {
+                return;
+            }
 
             // Absolute path to the MDX file
             const mdxFilePath = join(postsDir, slug, "index.mdx");
