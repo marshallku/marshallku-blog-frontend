@@ -2,7 +2,7 @@
 
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
-import { extname, relative, resolve } from "node:path";
+import { dirname, extname, join, relative, resolve } from "node:path";
 import { defineConfig } from "vite";
 import { glob } from "glob";
 import react from "@vitejs/plugin-react";
@@ -11,16 +11,18 @@ import { libInjectCss } from "vite-plugin-lib-inject-css";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 
+const currentDirectory = dirname(fileURLToPath(import.meta.url));
+
 // https://vitejs.dev/config/
 export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
                 additionalData: `
-                    @use "src/styles/abstracts/variables" as *;
-                    @use "src/styles/abstracts/palette" as *;
-                    @use "src/styles/abstracts/fonts" as *;
-                    @use "src/styles/abstracts/mixins" as *;
+                    @use "${join(currentDirectory, "./src/styles/abstracts/variables")}" as *;
+                    @use "${join(currentDirectory, "./src/styles/abstracts/palette")}" as *;
+                    @use "${join(currentDirectory, "./src/styles/abstracts/fonts")}" as *;
+                    @use "${join(currentDirectory, "./src/styles/abstracts/mixins")}" as *;
                 `,
             },
         },
