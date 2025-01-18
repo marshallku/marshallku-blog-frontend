@@ -17,7 +17,7 @@ export default function remarkLocalImages({ slug }: { slug: string }) {
             }
 
             // Absolute path to the MDX file
-            const mdxFilePath = join(POSTS_DIRECTORY, slug, "index.mdx");
+            const mdxFilePath = join(POSTS_DIRECTORY, `${slug}.mdx`);
             // e.g. /Users/you/your-project/posts/hello-world/index.mdx
             const mdxDir = dirname(mdxFilePath);
 
