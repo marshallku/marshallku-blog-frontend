@@ -19,7 +19,6 @@ jobs:
                   port: ${{ secrets.SERVER_PORT }}
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.ED_KEY }}
-                  script_stop: true
                   script: /home/${{ secrets.SERVER_USER }}/dev/marshallku-blog-frontend/scripts/deploy.sh
     send-notification:
         needs: [deploy]
