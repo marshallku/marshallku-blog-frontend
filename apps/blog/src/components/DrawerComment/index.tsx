@@ -5,6 +5,7 @@ import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
 import { useComments } from "#api/comment/queries";
 import CommentAvatar from "#components/CommentAvatar";
+import { DRAWER_COMMENT_COUNT } from "#constants";
 import styles from "./index.module.scss";
 
 export interface DrawerCommentProps {
@@ -14,7 +15,7 @@ export interface DrawerCommentProps {
 const cx = classNames(styles, "drawer-comment");
 
 function DrawerComment({ closeDrawer }: DrawerCommentProps) {
-    const { data } = useComments({ count: 6 });
+    const { data } = useComments({ count: DRAWER_COMMENT_COUNT });
 
     return (
         <ol className={cx()}>
