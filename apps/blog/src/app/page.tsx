@@ -16,12 +16,10 @@ const cx = classNames(styles, "home");
 
 export default async function Home() {
     const posts = getPosts();
-    const mostRecentPost = posts[0];
     const categories = getCategories();
-    const postsInPage = posts
-        .slice(1)
-        .filter(({ category }) => !!categories.find(({ slug }) => slug === category))
-        .slice(0, PAGE_SIZE);
+    const devPosts = posts.filter(({ category }) => category === "/dev");
+    const mostRecentPost = devPosts[0];
+    const postsInPage = devPosts.slice(1).slice(0, PAGE_SIZE);
     const galleryPosts = posts.filter(({ category }) => category === "/gallery").slice(0, 6);
 
     return (
