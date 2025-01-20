@@ -41,4 +41,40 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
+    &__skeleton {
+        @keyframes skeleton-loading {
+            0% {
+                transform: translateX(100%) skewX(-10deg);
+            }
+            100% {
+                transform: translateX(-100%) skewX(-10deg);
+            }
+        }
+
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                color(background-dimmed) 0%,
+                color(sub) 50%,
+                color(background-dimmed) 100%
+            );
+            animation: skeleton-loading 1.4s ease-in-out infinite;
+        }
+    }
+
+    &__skeleton-body {
+        width: 100%;
+        flex-grow: 1;
+        color: transparent;
+    }
 }

@@ -7,6 +7,7 @@ import { Icon, IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
 import Hamburger from "#components/Hamburger";
 import DrawerComment from "#components/DrawerComment";
+import DrawerCommentSkeleton from "#components/DrawerComment/Skeleton";
 import styles from "./index.module.scss";
 
 interface DrawerContentProps {
@@ -91,8 +92,8 @@ function DrawerContent({ opened, closeDrawer, willClose, setWillClose }: DrawerC
                         ))}
                     </ul>
                 </nav>
-                <ErrorBoundary fallback={null}>
-                    <Suspense fallback={null}>
+                <ErrorBoundary fallback={<DrawerCommentSkeleton />}>
+                    <Suspense fallback={<DrawerCommentSkeleton />}>
                         <DrawerComment closeDrawer={close} />
                     </Suspense>
                 </ErrorBoundary>
