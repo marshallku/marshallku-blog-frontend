@@ -55,7 +55,7 @@ if [ -n "$target" ]; then
     cd "$target" || exit 1
 fi
 
-packages=$(pnpm outdated)
+packages=$(pnpm outdated 2>&1)
 IFS=$'\n'
 mapfile -t lines <<<"$packages"
 regex="│ ([a-zA-Z0-9\._@\/-]+)(.*)? │ +([0-9\.]+) (\(wanted +([0-9\.]+)\))? +│ +([0-9\.]+) +│"
