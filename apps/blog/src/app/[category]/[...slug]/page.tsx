@@ -19,6 +19,7 @@ import Image from "#components/Image";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
 import PostCommentWrapper from "#components/PostCommentWrapper";
+import Profile from "#components/Profile";
 import { rehypeFormatToc, rehypeImageMetaData, rehypeResponsiveIframe } from "#plugins";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
 import styles from "./page.module.scss";
@@ -185,6 +186,7 @@ export default async function Post({ params }: PostProps) {
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
+            <Profile size="small" showContact className={cx("__profile")} />
             <PostCommentWrapper slug={`/${postSlug}`} />
             <PrevNextPost previousPost={posts[postIndex + 1]} nextPost={posts[postIndex - 1]} />
             <aside className={cx("-related-articles")}>

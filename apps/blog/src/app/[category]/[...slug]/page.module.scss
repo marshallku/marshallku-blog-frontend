@@ -295,6 +295,11 @@
         padding: 0 $container-padding;
     }
 
+    &__profile {
+        width: clamp(0px, map.get($container-width, small), 100%);
+        margin: 24px auto 36px;
+    }
+
     &-related-articles {
         width: clamp(0px, map.get($container-width, small), 100%);
         margin: 0 auto;
