@@ -1,0 +1,64 @@
+.profile {
+    $self: &;
+    padding: 0 12px;
+    text-align: center;
+
+    &--size-small {
+        display: flex;
+        text-align: left;
+        gap: 12px;
+    }
+
+    &__profile {
+        margin-bottom: 24px;
+
+        @at-root #{$self}--size-small & {
+            margin-bottom: 0;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__contact {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+
+        @at-root #{$self}--size-small & {
+            justify-content: flex-start;
+            gap: 4px;
+        }
+
+        > li > a {
+            display: flex;
+            padding: 8px;
+            align-items: center;
+            border: 1px solid color(sub);
+            border-radius: 50%;
+
+            @at-root #{$self}--size-small & {
+                padding: 4px;
+                border: none;
+            }
+
+            > i {
+                font-size: 1.2em;
+
+                @at-root #{$self}--size-small & {
+                    font-size: 0.8em;
+                }
+            }
+        }
+    }
+}

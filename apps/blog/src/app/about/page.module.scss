@@ -22,37 +22,11 @@
     }
 
     &__profile {
-        margin: 24px 0;
-
-        > img {
-            display: block;
-            margin: 0 auto;
-            border-radius: 50%;
-        }
+        margin: 24px 0 32px;
     }
 
     &__title {
         margin: 0 0 24px;
         text-align: center;
-    }
-
-    &__contact {
-        display: flex;
-        margin-bottom: 32px;
-        gap: 8px;
-        align-items: center;
-        justify-content: center;
-
-        > li > a {
-            display: flex;
-            padding: 8px;
-            align-items: center;
-            border: 1px solid color(sub);
-            border-radius: 50%;
-
-            > i {
-                font-size: 1.2em;
-            }
-        }
     }
 }

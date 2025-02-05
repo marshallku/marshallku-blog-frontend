@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { Icon } from "@marshallku/icon";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
+import Profile from "#components/Profile";
 import styles from "./page.module.scss";
 
 export const dynamic = "error";
@@ -20,38 +20,7 @@ const cx = classNames(styles, "about");
 export default function AboutPage() {
     return (
         <div className={cx()}>
-            <section className={cx("__container")}>
-                <figure className={cx("__profile")}>
-                    <img src="https://github.com/marshallku.png" alt="Marshall Ku" width="150" height="150" />
-                </figure>
-                <Typography variant="h1" component="h1" className={cx("__title")} fontWeight={700}>
-                    Marshall Ku / 구영표
-                </Typography>
-                <ul className={cx("__contact")}>
-                    <li>
-                        <a href="https://github.com/marshallku" target="_blank" rel="noopener noreferrer nofollow">
-                            <Icon name="github" />
-                            <Typography className="sr-only">GitHub</Typography>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="https://www.linkedin.com/in/marshallku/"
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                        >
-                            <Icon name="linkedin" />
-                            <Typography className="sr-only">LinkedIn</Typography>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailto:marshall@kakao.com">
-                            <Icon name="mail" />
-                            <Typography className="sr-only">marshall@kakao.com</Typography>
-                        </a>
-                    </li>
-                </ul>
-            </section>
+            <Profile size="large" showContact className={cx("__profile")} />
             <section className={cx("__container", "__container--about")}>
                 <Typography component="p" marginBottom>
                     Hello! I&apos;m Marshall Ku, a passionate developer who loves learning and taking on new challenges.
