@@ -28,17 +28,19 @@ function Profile({ className, size = "large", showContact = true }: ProfileProps
                 </a>
             </figure>
             <div className={cx("__content")}>
-                <Typography
-                    variant={size === "large" ? "h1" : "b1"}
-                    component="a"
-                    href="https://resume.marshallku.com"
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    className={cx("__title")}
-                    fontWeight={700}
-                >
-                    Marshall Ku / 구영표
-                </Typography>
+                <div>
+                    <Typography
+                        variant={size === "large" ? "h1" : "b1"}
+                        component="a"
+                        href="https://resume.marshallku.com"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className={cx("__title")}
+                        fontWeight={700}
+                    >
+                        Marshall Ku / 구영표
+                    </Typography>
+                </div>
                 {showContact && (
                     <ul className={cx("__contact")}>
                         <li>
