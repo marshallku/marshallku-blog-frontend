@@ -3,55 +3,9 @@
 .home {
     padding-top: $global-navigation-height;
 
-    &-header {
+    &__header {
         position: relative;
         display: flex;
-        height: toRem(500px);
-        background-color: #000;
-        color: #fff;
-        align-items: flex-end;
-        justify-content: center;
-
-        &__cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-
-            img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                opacity: 0.3;
-            }
-        }
-
-        &__content {
-            position: relative;
-            width: clamp(0px, map.get($container-width, "large"), 100%);
-            padding: 0 12px 32px;
-            z-index: 5;
-
-            a {
-                color: #fff;
-            }
-        }
-
-        &__title {
-            margin: 8px 0;
-        }
-
-        &__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-
-            a {
-                background-color: transparent;
-            }
-        }
     }
 
     &__container {

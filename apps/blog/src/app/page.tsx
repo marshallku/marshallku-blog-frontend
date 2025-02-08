@@ -7,8 +7,9 @@ import PostList from "#components/PostList";
 import PostListGallery from "#components/PostListGallery";
 import Image from "#components/Image";
 import { getPosts, getCategories } from "#utils/post";
-import { PAGE_SIZE } from "#constants";
+import { PAGE_SIZE, SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import styles from "./page.module.scss";
+import Profile from "#components/Profile";
 
 export const dynamic = "error";
 
@@ -18,50 +19,17 @@ export default async function Home() {
     const posts = getPosts();
     const categories = getCategories();
     const devPosts = posts.filter(({ category }) => category === "/dev");
-    const mostRecentPost = devPosts[0];
-    const postsInPage = devPosts.slice(1).slice(0, PAGE_SIZE);
+    const postsInPage = devPosts.slice(0, PAGE_SIZE);
     const galleryPosts = posts.filter(({ category }) => category === "/gallery").slice(0, 6);
 
     return (
         <section className={cx()}>
-            <header className={cx("-header")}>
-                <figure className={cx("-header__cover")}>
-                    <Image
-                        src={mostRecentPost.data.coverImage || mostRecentPost.data.ogImage}
-                        alt={mostRecentPost.data.title}
-                        loading="eager"
-                    />
-                </figure>
-                <div className={cx("-header__content")}>
-                    <Typography variant="c1">
-                        {formatDate(mostRecentPost.data.date.posted, "yyyy년 MM월 dd일")}
-                    </Typography>
-                    <Typography component="h1" variant="h1" fontWeight={700} className={cx("-header__title")}>
-                        <Link href={mostRecentPost.slug}>{mostRecentPost.data.title}</Link>
-                    </Typography>
-                    {mostRecentPost.data.tags && (
-                        <Typography variant="b2" component="span" marginBottom={8} className={cx("-header__tags")}>
-                            {mostRecentPost.data.tags.map((tag) => (
-                                <Button
-                                    key={tag}
-                                    component={Link}
-                                    href={`/tag/${tag}`}
-                                    variant="outline"
-                                    size="small"
-                                    color="secondary"
-                                >
-                                    {tag}
-                                </Button>
-                            ))}
-                        </Typography>
-                    )}
-                    <Typography variant="b2">
-                        <Link href={mostRecentPost.slug}>
-                            {mostRecentPost.data.description}
-                            <br />더 보기 <Icon name="arrow-forward" />
-                        </Link>
-                    </Typography>
-                </div>
+            <header className={cx("__header")}>
+                <Typography variant="h1" fontWeight={700}>
+                    {SITE_NAME}
+                </Typography>
+                <Typography>{SITE_DESCRIPTION}</Typography>
+                <Profile size="small" showContact />
             </header>
             <section className={cx("__container")}>
                 <PostList posts={postsInPage} />
