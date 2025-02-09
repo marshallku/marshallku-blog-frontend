@@ -6,6 +6,18 @@
     &__header {
         position: relative;
         display: flex;
+        width: clamp(0px, map.get($container-width, "large"), 100%);
+        padding: 0 20px;
+        margin: 36px auto 12px;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        @include respond-to(medium) {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
     }
 
     &__container {

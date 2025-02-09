@@ -25,11 +25,15 @@ export default async function Home() {
     return (
         <section className={cx()}>
             <header className={cx("__header")}>
-                <Typography variant="h1" fontWeight={700}>
-                    {SITE_NAME}
-                </Typography>
-                <Typography>{SITE_DESCRIPTION}</Typography>
-                <Profile size="small" showContact />
+                <div className={cx("__header-content")}>
+                    <Typography variant="h1" fontWeight={700} marginBottom={8}>
+                        {SITE_NAME}
+                    </Typography>
+                    <Typography marginBottom={24}>{SITE_DESCRIPTION}</Typography>
+                </div>
+                <div className={cx("__profile")}>
+                    <Profile size="small" showContact />
+                </div>
             </header>
             <section className={cx("__container")}>
                 <PostList posts={postsInPage} />
