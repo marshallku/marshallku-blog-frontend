@@ -2,7 +2,12 @@
 
 import { useCallback, useState } from "react";
 
-const VIDEO_SIZES = ["hq720", "sddefault", "hqdefault", "mqdefault", "default"];
+const VIDEO_SIZE_NAMES = ["hq720", "sddefault", "hqdefault", "mqdefault", "default"];
+
+const extractVideoId = (videoUrl: string) => {
+    const videoPattern = /youtu\.?be(\.com)?\/(live\/)?(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/;
+    return videoUrl.match(videoPattern)?.[4];
+};
 
 function YoutubeThumbnailExtractor() {
     const [videoId, setVideoId] = useState("");
@@ -12,11 +17,16 @@ function YoutubeThumbnailExtractor() {
     const handleSubmit = useCallback(
         (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
-            const youtubeRegex = /youtu\.?be(\.com)?\/(live\/)?(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/;
-            const id = videoUrl.match(youtubeRegex)?.[4];
-            if (!id) return;
+
+            const id = extractVideoId(videoUrl);
+
+            if (!id) {
+                return;
+            }
+
+            const thumbnails = VIDEO_SIZE_NAMES.map((size) => `https://i.ytimg.com/vi/${id}/${size}.jpg`);
+
             setVideoId(id);
-            const thumbnails = VIDEO_SIZES.map((size) => `https://i.ytimg.com/vi/${id}/${size}.jpg`);
             setThumbnails(thumbnails);
         },
         [videoUrl],
