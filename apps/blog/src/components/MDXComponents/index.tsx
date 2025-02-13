@@ -2,6 +2,7 @@ import type { AnchorHTMLAttributes, DetailedHTMLProps, ImgHTMLAttributes, TableH
 import NextLink from "next/link";
 import { Icon } from "@marshallku/icon";
 import PostImage from "#components/PostImage";
+import YoutubeThumbnailExtractor from "#components/YoutubeThumbnailExtractor";
 
 function Link({
     href,
@@ -46,6 +47,7 @@ const MDXComponents = {
             <table {...props} />
         </div>
     ),
+    YoutubeThumbnailExtractor,
 };
 
 export default MDXComponents;
