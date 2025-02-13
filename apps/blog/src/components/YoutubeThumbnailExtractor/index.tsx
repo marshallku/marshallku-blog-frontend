@@ -3,6 +3,13 @@
 import { useCallback, useState } from "react";
 
 const VIDEO_SIZE_NAMES = ["hq720", "sddefault", "hqdefault", "mqdefault", "default"];
+const VIDEO_SIZES = [
+    [1280, 720],
+    [640, 480],
+    [480, 360],
+    [320, 180],
+    [120, 90],
+];
 
 const extractVideoId = (videoUrl: string) => {
     const videoPattern = /youtu\.?be(\.com)?\/(live\/)?(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/;
@@ -50,8 +57,13 @@ function YoutubeThumbnailExtractor() {
             <div className="result" style={{ display: videoId ? "block" : "none" }}>
                 <div className="result__title">Thumbnails</div>
                 <div className="result__thumbnail">
-                    {thumbnails.map((thumbnail) => (
-                        <img key={thumbnail} src={thumbnail} alt={thumbnail} />
+                    {thumbnails.map((thumbnail, index) => (
+                        <figure key={thumbnail}>
+                            <img src={thumbnail} alt={thumbnail} />
+                            <figcaption>
+                                {VIDEO_SIZES[index][0]} * {VIDEO_SIZES[index][1]}
+                            </figcaption>
+                        </figure>
                     ))}
                 </div>
             </div>
