@@ -29,7 +29,7 @@
         }
     };
     m();
-    const a = ["maxresdefault", "sddefault", "hqdefault", "mqdefault", "default"];
+    const a = ["hq720", "sddefault", "hqdefault", "mqdefault", "default"];
     function d(n) {
         const r = /youtu\.?be(\.com)?\/(live\/)?(shorts\/|watch\?v=|embed\/)?([^&?\s]+)/,
             i = n.match(r);
