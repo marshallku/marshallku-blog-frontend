@@ -18,6 +18,7 @@ const nextConfig = {
             @use "@marshallku/ui/styles/abstracts/mixins" as *;
         `,
     },
+    pageExtensions: ["ts", "tsx", "mdx"],
     async redirects() {
         return [
             {
