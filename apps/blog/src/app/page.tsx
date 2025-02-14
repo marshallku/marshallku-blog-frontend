@@ -1,11 +1,9 @@
 import Link from "next/link";
-import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
-import { classNames, formatDate } from "@marshallku/utils";
+import { classNames } from "@marshallku/utils";
 import PostList from "#components/PostList";
 import PostListGallery from "#components/PostListGallery";
-import Image from "#components/Image";
 import { getPosts, getCategories } from "#utils/post";
 import { PAGE_SIZE, SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import styles from "./page.module.scss";
