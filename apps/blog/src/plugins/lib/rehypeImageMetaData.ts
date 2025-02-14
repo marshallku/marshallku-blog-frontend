@@ -3,6 +3,7 @@ import type { Processor } from "unified";
 import type { Node } from "unist";
 import type { VFile } from "vfile";
 import { imageSize } from "image-size";
+import { unsafe } from "@marshallku/utils";
 import type { ImageNode } from "#plugins/types";
 
 function isExternalImage(path: string) {
@@ -18,16 +19,14 @@ function addImageMetaData(node: ImageNode) {
         return;
     }
 
-    try {
+    unsafe(() => {
         const dimensions = imageSize(`public${decodeURIComponent(src)}`);
 
         if (dimensions) {
             node.properties.width = dimensions.width;
             node.properties.height = dimensions.height;
         }
-    } catch (err) {
-        console.error(`Failed to get image dimensions for ${src}`);
-    }
+    }, true);
 }
 
 export default function rehypeImageMetaData(this: Processor) {
