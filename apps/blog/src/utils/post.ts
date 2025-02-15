@@ -72,9 +72,12 @@ export function getPostsByTag(tag: string): Omit<Post, "content">[] {
     return posts.filter(({ data: { tags } }) => tags?.find((x) => x.toLocaleLowerCase() === tag.toLocaleLowerCase()));
 }
 
-export function getPosts(category?: string): Omit<Post, "content">[] {
+export function getPosts<T extends boolean>(
+    category?: string,
+    getContent?: T,
+): (T extends true ? Post : Omit<Post, "content">)[] {
     return getPostSlugs(category)
-        .map((slug) => getPostBySlug(slug, false)!)
+        .map((slug) => getPostBySlug(slug, getContent)!)
         .sort((a, b) => {
             if (a.data.date.posted > b.data.date.posted) {
                 return -1;

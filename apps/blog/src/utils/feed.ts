@@ -23,7 +23,7 @@ export async function formatCategoryFeed(filterFunction: (post: Post) => boolean
         renderer,
     });
 
-    const posts = getPosts();
+    const posts = getPosts(undefined, true);
     const lastBuildDate = new Date().toUTCString();
     const categories = getCategories();
     const host = process.env.NEXT_PUBLIC_BLOG_ORIGIN;
