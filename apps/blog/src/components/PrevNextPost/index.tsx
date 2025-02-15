@@ -7,13 +7,13 @@ import styles from "./index.module.scss";
 import { Icon } from "@marshallku/icon";
 
 export interface PrevNextPostProps {
-    previousPost?: Post;
-    nextPost?: Post;
+    previousPost?: Omit<Post, "content">;
+    nextPost?: Omit<Post, "content">;
 }
 
 const cx = classNames(styles, "prev-next-post");
 
-const Article = ({ post, isPreviousPost }: { post: Post; isPreviousPost?: boolean }) => (
+const Article = ({ post, isPreviousPost }: { post: Omit<Post, "content">; isPreviousPost?: boolean }) => (
     <article className={cx("-post", isPreviousPost && "-post--previous")}>
         <Link href={post.slug} className={cx("-post__meta")}>
             <Typography variant="c1" className={cx("-post__label")}>

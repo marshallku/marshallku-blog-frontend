@@ -27,7 +27,10 @@ export function getPostSlugs(subDirectory?: string): string[] {
     return files.map((file) => file.replace(POSTS_DIRECTORY, "").replace(/\.mdx$/, ""));
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
+export function getPostBySlug<T extends boolean>(
+    slug: string,
+    getContent?: T,
+): (T extends true ? Post : Omit<Post, "content">) | undefined {
     const fullPath = join(POSTS_DIRECTORY, `${slug}.mdx`);
 
     if (!existsSync(fullPath)) {
@@ -37,7 +40,7 @@ export function getPostBySlug(slug: string): Post | undefined {
     const fileContents = readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
-    return {
+    const post: Omit<Post, "content"> & { content?: Post["content"] } = {
         data: {
             title: data.title.replace(/\\/g, ""),
             description: data.description,
@@ -50,21 +53,28 @@ export function getPostBySlug(slug: string): Post | undefined {
             ogImage: data.ogImage,
             displayAd: data.displayAd ?? false,
         },
-        content,
         slug,
         category: parse(slug).dir,
     };
+
+    if (getContent) {
+        post.content = content;
+
+        return post as Post;
+    }
+
+    return post as Post;
 }
 
-export function getPostsByTag(tag: string): Post[] {
+export function getPostsByTag(tag: string): Omit<Post, "content">[] {
     const posts = getPosts();
 
     return posts.filter(({ data: { tags } }) => tags?.find((x) => x.toLocaleLowerCase() === tag.toLocaleLowerCase()));
 }
 
-export function getPosts(category?: string): Post[] {
+export function getPosts(category?: string): Omit<Post, "content">[] {
     return getPostSlugs(category)
-        .map((slug) => getPostBySlug(slug)!)
+        .map((slug) => getPostBySlug(slug, false)!)
         .sort((a, b) => {
             if (a.data.date.posted > b.data.date.posted) {
                 return -1;
@@ -103,7 +113,7 @@ export function getTags(): Tag[] {
         ).result;
 }
 
-export function getGroupedPostByCategory(): Record<string, Post[]> {
+export function getGroupedPostByCategory(): Record<string, Omit<Post, "content">[]> {
     return groupBy(getPosts(), ({ category }) => category.split("/")[1]);
 }
 

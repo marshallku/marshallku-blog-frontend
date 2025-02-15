@@ -6,7 +6,7 @@ import { Post } from "#types";
 import styles from "./index.module.scss";
 
 export interface PostListProps {
-    posts: Post[];
+    posts: Omit<Post, "content">[];
     paginationProps?: Omit<PaginationProps, "rowSize">;
 }
 

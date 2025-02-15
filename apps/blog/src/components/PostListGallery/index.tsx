@@ -5,7 +5,7 @@ import { Post } from "#types";
 import styles from "./index.module.scss";
 
 export interface PostListGalleryProps {
-    posts: Post[];
+    posts: Omit<Post, "content">[];
 }
 
 const cx = classNames(styles, "post-list-gallery");

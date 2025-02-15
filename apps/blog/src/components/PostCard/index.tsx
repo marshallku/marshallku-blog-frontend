@@ -7,7 +7,7 @@ import { Post } from "#types";
 import styles from "./index.module.scss";
 
 export interface PostCardProps {
-    post: Post;
+    post: Omit<Post, "content">;
 }
 
 const cx = classNames(styles, "post-card");

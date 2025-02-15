@@ -78,7 +78,7 @@ const cx = classNames(styles, "page");
 export default async function Post({ params }: PostProps) {
     const { category, slug } = await params;
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
-    const post = getPostBySlug(postSlug);
+    const post = getPostBySlug(postSlug, true);
 
     if (!post) {
         return notFound();
