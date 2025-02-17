@@ -11,7 +11,9 @@ RUN corepack enable
 WORKDIR /app
 
 # remove all empty node_modules folder structure
-RUN rm -rf /app/out/full/*/*/node_modules
+RUN rm -rf /app/out/full/*/*/node_modules \
+    # Create log file for New Relic agent
+    && touch newrelic_agent.log
 
 FROM base AS builder
 
@@ -46,7 +48,7 @@ FROM base AS runner
 WORKDIR /app
 
 COPY --from=installer /app/apps/blog/newrelic.js .
-RUN pnpm add @newrelic/next
+RUN pnpm add newrelic
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
@@ -61,5 +63,6 @@ COPY --from=installer /app/apps/blog/package.json .
 COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/.next/static ./apps/blog/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/blog/public ./apps/blog/public
+COPY --from=base --chown=nextjs:nodejs /app/newrelic_agent.log ./newrelic_agent.log
 
-CMD node -r @newrelic/next apps/blog/server.js
+CMD node -r newrelic apps/blog/server.js
