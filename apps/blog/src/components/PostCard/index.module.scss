@@ -1,17 +1,27 @@
 @use "sass:map";
 
 .post-card {
+    $self: &;
     display: flex;
     padding: 16px 20px;
     flex-direction: column;
+    transition: transform 0.15s ease-in-out;
+
+    @include supports-hover {
+        @at-root &:hover {
+            transform: translateY(-5px);
+        }
+    }
 
     &__image {
         position: relative;
         width: 100%;
         height: 0;
         margin-bottom: 12px;
-        padding-bottom: 100%;
+        padding-bottom: 56.25%;
         flex-shrink: 0;
+        transition: transform 0.15s ease-in-out;
+        overflow: hidden;
 
         img {
             position: absolute;
@@ -23,6 +33,12 @@
             object-fit: cover;
             border-radius: 4px;
             transition: transform 0.15s ease-in-out;
+
+            @include supports-hover {
+                @at-root #{$self}:hover & {
+                    transform: scale(1.15);
+                }
+            }
         }
     }
 
