@@ -1,0 +1,33 @@
+.toggleButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color, #e0e0e0);
+    background: transparent;
+    color: var(--text-color, inherit);
+    font-size: 0.875rem;
+    line-height: 1.75;
+    letter-spacing: 0.02857em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: var(--hover-bg, rgba(0, 0, 0, 0.04));
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    &.selected {
+        background-color: var(--selected-bg, rgba(0, 0, 0, 0.08));
+        color: var(--selected-color, inherit);
+
+        &:hover {
+            background-color: var(--selected-hover-bg, rgba(0, 0, 0, 0.12));
+        }
+    }
+} 
