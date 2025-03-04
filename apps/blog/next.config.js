@@ -37,6 +37,16 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: "/others/:path*",
+                destination: "/chat/:path*",
+                permanent: true,
+            },
+            {
+                source: "/others",
+                destination: "/chat",
+                permanent: true,
+            },
+            {
                 source: "/rss",
                 destination: "/feed.xml",
                 permanent: true,
