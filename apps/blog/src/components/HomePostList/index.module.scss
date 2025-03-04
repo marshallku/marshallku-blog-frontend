@@ -1,0 +1,33 @@
+@use "sass:map";
+
+.home-post-list {
+    width: clamp(0px, map.get($container-width, "large"), 100%);
+    margin: 36px auto 48px;
+
+    &__toggle-button-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+
+    &__view-more {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    &__view-more-button {
+        $button: &;
+
+        i {
+            margin-left: 4px;
+            transition: transform 0.2s ease-in-out;
+
+            @at-root #{$button}:hover {
+                i {
+                    transform: translateX(4px);
+                }
+            }
+        }
+    }
+}
