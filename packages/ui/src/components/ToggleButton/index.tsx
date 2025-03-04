@@ -1,6 +1,7 @@
 import { ButtonHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
 import styles from "./index.module.scss";
+import Button from "../Button";
 
 export interface ToggleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     /**
@@ -22,16 +23,18 @@ const cx = classNames(styles, "toggle-button");
 const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
     ({ selected, disabled, children, value, className, ...props }, ref) => {
         return (
-            <button
+            <Button
                 ref={ref}
-                type="button"
+                size="small"
+                variant="text"
+                radius="square"
                 className={cx("", { "--selected": selected, "--disabled": disabled })}
                 disabled={disabled}
                 value={value}
                 {...props}
             >
                 {children}
-            </button>
+            </Button>
         );
     },
 );
