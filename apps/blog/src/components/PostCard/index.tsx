@@ -18,7 +18,7 @@ export default function PostCard({ post }: PostCardProps) {
             {post.data.ogImage && (
                 <Link href={post.slug}>
                     <figure className={cx("__image")}>
-                        <Image src={post.data.ogImage} alt={post.data.title} forceSize={500} />
+                        <Image src={post.data.ogImage} alt={post.data.title} forceSize={500} useLowQualityPlaceholder />
                     </figure>
                 </Link>
             )}
