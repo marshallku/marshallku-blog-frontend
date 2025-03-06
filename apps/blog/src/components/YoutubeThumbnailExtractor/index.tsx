@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@marshallku/icon";
 import { useCallback, useState } from "react";
 
 const VIDEO_SIZE_NAMES = ["hq720", "sddefault", "hqdefault", "mqdefault", "default"];
@@ -62,6 +63,10 @@ function YoutubeThumbnailExtractor() {
                             <img src={thumbnail} alt={thumbnail} />
                             <figcaption>
                                 {VIDEO_SIZES[index][0]} * {VIDEO_SIZES[index][1]}
+                                {" - "}
+                                <a href={`/api/youtube-download?id=${videoId}&size=${VIDEO_SIZE_NAMES[index]}`}>
+                                    다운로드 <Icon name="arrow-downward" />
+                                </a>
                             </figcaption>
                         </figure>
                     ))}
