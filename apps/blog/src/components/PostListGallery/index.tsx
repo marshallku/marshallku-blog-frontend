@@ -19,6 +19,7 @@ function PostListGallery({ posts }: PostListGalleryProps) {
                         className={cx("__image")}
                         src={post.data.coverImage || post.data.ogImage}
                         alt={post.data.title}
+                        useLowQualityPlaceholder
                     />
                 </Link>
             ))}

@@ -1,0 +1,10 @@
+.image {
+    &__image {
+        &--placeholder {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: filter 0.2s ease-in-out;
+        }
+    }
+}

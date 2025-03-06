@@ -1,4 +1,8 @@
-import { type ImgHTMLAttributes } from "react";
+"use client";
+
+import { useMemo, useState, type ImgHTMLAttributes } from "react";
+import { classNames } from "@marshallku/utils";
+import styles from "./index.module.scss";
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
     src: string;
@@ -10,10 +14,20 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 const IMAGE_SIZE = [480, 600, 860, 1180];
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
 
+const cx = classNames(styles, "image");
+
 function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityPlaceholder, ...rest }: ImageProps) {
-    const extension = src.split(".").pop();
-    const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
+    const [srcWithoutExtension, extension] = useMemo(() => {
+        const srcWithoutExtension = src.split(".").slice(0, -1).join(".");
+        const extension = src.split(".").pop();
+        return [srcWithoutExtension, extension];
+    }, [src]);
     const hasCdnUrl = CDN_URL !== "";
+    const [loaded, setLoaded] = useState(false);
+
+    const handleLoad = () => {
+        setLoaded(true);
+    };
 
     if (!disableWebP && hasCdnUrl) {
         const sizes = forceSize
@@ -23,7 +37,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
               : IMAGE_SIZE;
 
         return (
-            <picture>
+            <picture className={cx()}>
                 {sizes.map((size) => (
                     <source
                         key={`webp-${size}`}
@@ -54,12 +68,21 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
                         useLowQualityPlaceholder
                             ? {
                                   backgroundImage: `url(${CDN_URL}${srcWithoutExtension}.w10.${extension})`,
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                  backgroundRepeat: "no-repeat",
+                                  filter: loaded ? "none" : "blur(20px)",
+                                  ...rest.style,
                               }
-                            : {}
+                            : rest.style
                     }
+                    className={cx("__image", useLowQualityPlaceholder && "__image--placeholder", {
+                        className: rest.className,
+                    })}
+                    onLoad={handleLoad}
+                    onError={handleLoad}
+                    ref={(imageRef) => {
+                        if (imageRef?.complete) {
+                            handleLoad();
+                        }
+                    }}
                 />
             </picture>
         );

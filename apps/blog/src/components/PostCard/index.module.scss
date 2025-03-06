@@ -32,7 +32,9 @@
             left: 0;
             object-fit: cover;
             border-radius: 4px;
-            transition: transform 0.15s ease-in-out;
+            transition:
+                transform 0.15s ease-in-out,
+                filter 0.2s ease-in-out;
 
             @include supports-hover {
                 @at-root #{$self}:hover & {
