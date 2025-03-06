@@ -17,10 +17,13 @@ const extractVideoId = (videoUrl: string) => {
     return videoUrl.match(videoPattern)?.[4];
 };
 
+const getImageUrl = (id: string, size: string) => `https://i.ytimg.com/vi/${id}/${size}.jpg`;
+
 function YoutubeThumbnailExtractor() {
     const [videoId, setVideoId] = useState("");
     const [videoUrl, setVideoUrl] = useState("");
-    const [thumbnails, setThumbnails] = useState<string[]>([]);
+    const [thumbnails, setThumbnails] = useState<[string, string][]>([]);
+    const [errorOccurred, setErrorOccurred] = useState<boolean[]>([...VIDEO_SIZE_NAMES].map(() => false));
 
     const handleSubmit = useCallback(
         (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,12 +35,32 @@ function YoutubeThumbnailExtractor() {
                 return;
             }
 
-            const thumbnails = VIDEO_SIZE_NAMES.map((size) => `https://i.ytimg.com/vi/${id}/${size}.jpg`);
+            const thumbnails: [string, string][] = VIDEO_SIZE_NAMES.map((size) => [size, getImageUrl(id, size)]);
 
             setVideoId(id);
             setThumbnails(thumbnails);
+            setErrorOccurred([...VIDEO_SIZE_NAMES].map(() => false));
         },
         [videoUrl],
+    );
+
+    const handleError = useCallback(
+        (index: number) => {
+            if (errorOccurred[index]) {
+                return;
+            }
+
+            setErrorOccurred((prev) => [...prev.slice(0, index), true, ...prev.slice(index + 1)]);
+
+            // If image is maximum size, try to use `maxresdefault` instead
+            // Otherwise, just ignore the error
+            if (index !== 0) {
+                return;
+            }
+
+            setThumbnails((prev) => [["maxresdefault", getImageUrl(videoId, "maxresdefault")], ...prev.slice(1)]);
+        },
+        [videoId, errorOccurred],
     );
 
     return (
@@ -58,13 +81,22 @@ function YoutubeThumbnailExtractor() {
             <div className="result" style={{ display: videoId ? "block" : "none" }}>
                 <div className="result__title">Thumbnails</div>
                 <div className="result__thumbnail">
-                    {thumbnails.map((thumbnail, index) => (
+                    {thumbnails.map(([size, thumbnail], index) => (
                         <figure key={thumbnail}>
-                            <img src={thumbnail} alt={thumbnail} />
+                            <img
+                                src={thumbnail}
+                                alt={thumbnail}
+                                onError={() => handleError(index)}
+                                onLoad={({ currentTarget }) => {
+                                    if (currentTarget.naturalWidth !== VIDEO_SIZES[index][0]) {
+                                        handleError(index);
+                                    }
+                                }}
+                            />
                             <figcaption>
                                 {VIDEO_SIZES[index][0]} * {VIDEO_SIZES[index][1]}
                                 {" - "}
-                                <a href={`/api/youtube-download?id=${videoId}&size=${VIDEO_SIZE_NAMES[index]}`}>
+                                <a href={`/api/youtube-download?id=${videoId}&size=${size}`}>
                                     다운로드 <Icon name="arrow-downward" />
                                 </a>
                             </figcaption>
