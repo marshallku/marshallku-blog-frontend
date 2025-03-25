@@ -2,15 +2,15 @@ import { visit } from "unist-util-visit";
 import type { Processor } from "unified";
 import type { Node } from "unist";
 import type { VFile } from "vfile";
-import { imageSize } from "image-size";
-import { unsafe } from "@marshallku/utils";
+import { imageSizeFromFile } from "image-size/fromFile";
+import { to } from "@marshallku/utils";
 import type { ImageNode } from "#plugins/types";
 
 function isExternalImage(path: string) {
     return path.startsWith("http");
 }
 
-function addImageMetaData(node: ImageNode) {
+async function addImageMetaData(node: ImageNode) {
     const {
         properties: { src },
     } = node;
@@ -19,23 +19,33 @@ function addImageMetaData(node: ImageNode) {
         return;
     }
 
-    unsafe(() => {
-        const dimensions = imageSize(`public${decodeURIComponent(src)}`);
+    const [error, dimensions] = await to(imageSizeFromFile(`public${decodeURIComponent(src)}`));
 
-        if (dimensions) {
-            node.properties.width = dimensions.width;
-            node.properties.height = dimensions.height;
-        }
-    }, true);
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    if (dimensions) {
+        node.properties = {
+            ...node.properties,
+            width: dimensions.width,
+            height: dimensions.height,
+        };
+    }
 }
 
 export default function rehypeImageMetaData(this: Processor) {
     return async function transformer(tree: Node, _: VFile) {
+        const promises: Promise<void>[] = [];
+
         visit(tree, "element", (node: ImageNode) => {
             if (node.type === "element" && node.tagName === "img") {
-                addImageMetaData(node);
+                promises.push(addImageMetaData(node));
             }
         });
+
+        await Promise.all(promises);
 
         return tree;
     };

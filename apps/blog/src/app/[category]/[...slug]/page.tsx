@@ -9,10 +9,10 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import rehypeUnwrapImages from "rehype-unwrap-images";
-import imageSize from "image-size";
+import { imageSizeFromFile } from "image-size/fromFile";
 import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
-import { classNames, formatDate } from "@marshallku/utils";
+import { classNames, formatDate, to } from "@marshallku/utils";
 import MDXComponents from "#components/MDXComponents";
 import InteractPost from "#components/InteractPost";
 import Image from "#components/Image";
@@ -88,7 +88,7 @@ export default async function Post({ params }: PostProps) {
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
     const hasCoverImage = !!post.data.coverImage;
-    const dimensions = hasCoverImage && imageSize(`public${decodeURIComponent(post.data.coverImage!)}`);
+    const [, dimensions] = await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage!)}`));
 
     return (
         <article className={cx()}>

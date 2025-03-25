@@ -19,8 +19,8 @@
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
         "eslint": "^8.56.0",
-        "tsup": "^8.3.5",
-        "typescript": "^5.7.3"
+        "tsup": "^8.4.0",
+        "typescript": "^5.8.2"
     },
     "publishConfig": {
         "access": "public"

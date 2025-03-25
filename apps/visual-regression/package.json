@@ -13,6 +13,6 @@
     "devDependencies": {
         "@types/backstopjs": "^6.1.3",
         "backstopjs": "^6.3.25",
-        "express": "^4.21.1"
+        "express": "^4.21.2"
     }
 }
