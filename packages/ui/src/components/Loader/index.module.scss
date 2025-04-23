@@ -23,12 +23,14 @@
             }
         }
 
-        stroke: color(theme);
-        transform-origin: center;
-        stroke-dasharray: calc(var(--spinner-size) * $PI);
-        stroke-dashoffset: calc(var(--spinner-size) * $PI);
-        animation:
-            dash 1.5s linear infinite,
-            rotate 2s linear infinite;
+        & {
+            stroke: color(theme);
+            transform-origin: center;
+            stroke-dasharray: calc(var(--spinner-size) * $PI);
+            stroke-dashoffset: calc(var(--spinner-size) * $PI);
+            animation:
+                dash 1.5s linear infinite,
+                rotate 2s linear infinite;
+        }
     }
 }

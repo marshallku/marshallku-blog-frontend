@@ -37,6 +37,7 @@
 
     &__body {
         display: -webkit-box;
+        line-clamp: 2;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
@@ -52,8 +53,10 @@
             }
         }
 
-        position: relative;
-        overflow: hidden;
+        & {
+            position: relative;
+            overflow: hidden;
+        }
 
         &::before {
             content: "";
