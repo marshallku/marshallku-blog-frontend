@@ -47,10 +47,10 @@ function ToggleButtonGroup<T extends string | number | (string | number)[]>({
         multiple
             ? Array.isArray(value)
                 ? (value as string[] | number[])
-                : value
+                : value != null
                   ? [value]
                   : []
-            : value
+            : value != null
               ? [value as string | number]
               : [],
     );
