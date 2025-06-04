@@ -1,7 +1,7 @@
 "use client";
 
 import { request } from "#api/instance.client";
-import { removeNullish, stringifyQuery } from "@marshallku/utils";
+import { removeFalsy, removeNullish, stringifyQuery } from "@marshallku/utils";
 import { type GetRecentCommentParameters, type CommentListResponse, type CommentRequest } from "./types";
 
 export async function getComments(params: GetRecentCommentParameters = {}): Promise<CommentListResponse> {
@@ -15,6 +15,6 @@ export async function getCommentsBySlug(slug: string): Promise<CommentListRespon
 export async function postComment(data: CommentRequest) {
     return request("/comment/create", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(removeFalsy(data)),
     });
 }
