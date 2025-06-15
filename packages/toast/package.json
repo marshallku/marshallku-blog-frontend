@@ -18,9 +18,9 @@
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
-        "eslint": "^8.56.0",
-        "tsup": "^8.4.0",
-        "typescript": "^5.8.2"
+        "eslint": "^8.57.1",
+        "tsup": "^8.5.0",
+        "typescript": "^5.8.3"
     },
     "publishConfig": {
         "access": "public"

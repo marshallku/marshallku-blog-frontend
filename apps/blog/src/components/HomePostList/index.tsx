@@ -20,7 +20,7 @@ interface HomePostListProps {
 const cx = classNames(styles, "home-post-list");
 
 function HomePostList({ categories, posts }: HomePostListProps) {
-    const [selectedCategory, setSelectedCategory] = useState<string>("/dev");
+    const [selectedCategory, setSelectedCategory] = useState("");
     const categoriesWithAll = [{ slug: "", name: "전체" }, ...categories];
 
     return (

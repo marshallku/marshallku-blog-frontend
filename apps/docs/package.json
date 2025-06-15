@@ -12,8 +12,8 @@
     },
     "dependencies": {
         "@marshallku/ui": "workspace:*",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0"
     },
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
@@ -32,7 +32,7 @@
         "serve": "^14.2.4",
         "storybook": "^8.6.9",
         "storybook-addon-swc": "^1.2.0",
-        "typescript": "^5.8.2",
-        "vite": "^6.2.3"
+        "typescript": "^5.8.3",
+        "vite": "^6.3.5"
     }
 }

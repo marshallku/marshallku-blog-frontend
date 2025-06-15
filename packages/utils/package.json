@@ -20,11 +20,11 @@
     "devDependencies": {
         "@marshallku/eslint-config": "^0.0.4",
         "@marshallku/typescript-config": "^0.0.4",
-        "eslint": "^8.56.0",
-        "react": "^19.0.0",
-        "tsup": "^8.4.0",
-        "typescript": "^5.8.2",
-        "vitest": "^3.0.9",
+        "eslint": "^8.57.1",
+        "react": "^19.1.0",
+        "tsup": "^8.5.0",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.3",
         "vitest-monocart-coverage": "^3.0.1"
     },
     "publishConfig": {
