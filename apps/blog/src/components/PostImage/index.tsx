@@ -4,6 +4,7 @@ import { ImgHTMLAttributes, useEffect, useRef } from "react";
 import { classNames, tryParseUrl } from "@marshallku/utils";
 import useZoom from "#hooks/useZoom";
 import styles from "./index.module.scss";
+import PostBlobImage from "#components/PostBlobImage";
 
 const IMAGE_SIZE = [480, 600, 860, 1180, 1536, 2048];
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
@@ -17,6 +18,7 @@ const cx = classNames(styles, "post-image");
 function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, height, ...rest }: PostImageProps) {
     const imageRef = useRef<HTMLImageElement>(null);
     const { attach, detach } = useZoom();
+    const isBlob = typeof src === "object" && src instanceof Blob;
 
     useEffect(() => {
         if (!imageRef.current) {
@@ -34,6 +36,14 @@ function PostImage({ useLowQualityPlaceholder = true, src, title, alt, width, he
 
     if (!src) {
         return null;
+    }
+
+    if (isBlob) {
+        return (
+            <figure>
+                <PostBlobImage src={src} alt={alt} />
+            </figure>
+        );
     }
 
     const url = tryParseUrl(src);
