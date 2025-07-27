@@ -78,6 +78,7 @@ export function getPosts<T extends boolean>(
 ): (T extends true ? Post : Omit<Post, "content">)[] {
     return getPostSlugs(category)
         .map((slug) => getPostBySlug(slug, getContent)!)
+        .filter((post) => post.data.hidden !== true)
         .sort((a, b) => {
             if (a.data.date.posted > b.data.date.posted) {
                 return -1;

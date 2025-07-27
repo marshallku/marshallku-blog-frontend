@@ -12,6 +12,7 @@ export interface Post {
         coverImage?: string;
         ogImage: string;
         displayAd?: boolean;
+        hidden?: boolean;
     };
     content: string;
     slug: string;
