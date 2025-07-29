@@ -52,6 +52,7 @@ export function getPostBySlug<T extends boolean>(
             coverImage: data.coverImage,
             ogImage: data.ogImage,
             displayAd: data.displayAd ?? false,
+            hidden: data.hidden ?? false,
         },
         slug,
         category: parse(slug).dir,
