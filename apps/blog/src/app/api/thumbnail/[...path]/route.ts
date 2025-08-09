@@ -6,8 +6,6 @@ const EMOJI_MAP: Record<string, string> = {
     smile: "😊",
     heart: "❤️",
     fire: "🔥",
-    thumbsup: "👍",
-    thumbsdown: "👎",
     star: "⭐",
     rocket: "🚀",
     check: "✅",
