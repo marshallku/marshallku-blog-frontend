@@ -164,9 +164,7 @@ function generateSVG(config: ThumbnailConfig) {
       <stop offset="100%" style="stop-color:${backgroundColor[1]};stop-opacity:1" />
     </linearGradient>
     `
-            : `
-    <rect width="${width}" height="${height}" fill="${backgroundColor}" />
-    `
+            : ""
     }
   </defs>
   <rect width="${width}" height="${height}" fill="${hasGradient ? "url(#bg)" : backgroundColor}" />
