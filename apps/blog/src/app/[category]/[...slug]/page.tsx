@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
     const { category, slug } = await params;
     const post = getPostBySlug(`${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`);
 
-    if (!post) {
+    if (!post || post.data.hidden) {
         return {
             title: "페이지를 찾을 수 없습니다",
             description: "페이지를 찾을 수 없습니다",
@@ -80,7 +80,7 @@ export default async function Post({ params }: PostProps) {
     const postSlug = `${category}/${slug.map((x) => decodeURIComponent(x)).join("/")}`;
     const post = getPostBySlug(postSlug, true);
 
-    if (!post) {
+    if (!post || post.data.hidden) {
         return notFound();
     }
 
