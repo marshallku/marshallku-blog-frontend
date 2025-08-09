@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     const response = await fetch(`https://img.youtube.com/vi/${videoId}/${videoSize}.jpg`);
     const buffer = await response.arrayBuffer();
 
-    return new NextResponse(Buffer.from(buffer), {
+    return new NextResponse(new Blob([new Uint8Array(buffer)]), {
         headers: {
             // Modify hq720 to maxresdefault for backward compatibility
             "Content-Disposition": `attachment; filename="${videoSize === "hq720" ? "maxresdefault" : videoSize}.jpg"`,
