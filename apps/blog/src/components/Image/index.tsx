@@ -13,6 +13,7 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 
 const IMAGE_SIZE = [480, 600, 860, 1180];
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
+const RESIZABLE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"];
 
 const cx = classNames(styles, "image");
 
@@ -29,7 +30,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
         setLoaded(true);
     };
 
-    if (!disableWebP && hasCdnUrl) {
+    if (!disableWebP && hasCdnUrl && extension != null && RESIZABLE_EXTENSIONS.includes(extension)) {
         const sizes = forceSize
             ? [forceSize]
             : width && height
