@@ -25,12 +25,13 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
     }, [src]);
     const hasCdnUrl = CDN_URL !== "";
     const [loaded, setLoaded] = useState(false);
+    const isResizable = extension == null || RESIZABLE_EXTENSIONS.includes(extension);
 
     const handleLoad = () => {
         setLoaded(true);
     };
 
-    if (!disableWebP && hasCdnUrl && (extension == null || RESIZABLE_EXTENSIONS.includes(extension))) {
+    if (!disableWebP && hasCdnUrl && isResizable) {
         const sizes = forceSize
             ? [forceSize]
             : width && height
@@ -91,7 +92,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
 
     return (
         <img
-            src={`${CDN_URL}${srcWithoutExtension}${forceSize && hasCdnUrl ? `.w${forceSize}` : ""}.${extension}`}
+            src={`${CDN_URL}${srcWithoutExtension}${forceSize && hasCdnUrl && isResizable ? `.w${forceSize}` : ""}.${extension}`}
             srcSet={
                 width && height && hasCdnUrl
                     ? IMAGE_SIZE.filter((size) => size < Number(width))
