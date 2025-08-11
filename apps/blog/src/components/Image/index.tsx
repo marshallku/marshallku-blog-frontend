@@ -30,7 +30,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
         setLoaded(true);
     };
 
-    if (!disableWebP && hasCdnUrl && extension != null && RESIZABLE_EXTENSIONS.includes(extension)) {
+    if (!disableWebP && hasCdnUrl && (extension == null || RESIZABLE_EXTENSIONS.includes(extension))) {
         const sizes = forceSize
             ? [forceSize]
             : width && height
