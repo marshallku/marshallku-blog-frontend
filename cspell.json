@@ -97,6 +97,7 @@
         "**/public/images/**",
         "*.svg",
         "*.mdx",
+        "CLAUDE.md",
         "apps/blog/src/components/NewrelicSnippet/index.tsx",
         "sonar-project.properties"
     ]
