@@ -1,9 +1,12 @@
 #!/bin/bash
 
-SERVICE="blog-front"
-BLUE_SERVICE="$SERVICE-blue"
-GREEN_SERVICE="$SERVICE-green"
-CONFIG_FILE='/etc/nginx/sites-available/marshall-ku.com'
+# Simplified deployment script using Traffic Switcher's port switching
+# Usage: ./deploy.sh [service] [blue_port] [green_port]
+
+SERVICE_NAME="blog-front"
+BLUE_PORT="4200"
+GREEN_PORT="4201"
+API_URL="http://localhost:1143"
 CHECKSUM_FILE='.checksum'
 DOCKERIGNORE_FILE='.dockerignore'
 
@@ -29,56 +32,83 @@ EXCLUDE_ARGS+=(-type f -print)
 current_checksum=$(find . "${EXCLUDE_ARGS[@]}" -exec sha256sum {} + | sha256sum)
 
 if [ -f $CHECKSUM_FILE ] && [ "$current_checksum" == "$(cat $CHECKSUM_FILE)" ]; then
-    echo "No changes detected. Skipping deployment."
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}No changes detected, skipping deployment${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     exit 0
 fi
 
-echo "Changes detected. Deploying..."
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-ACTIVE_SERVICE=''
-INACTIVE_SERVICE=''
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}Starting deployment for service: ${YELLOW}$SERVICE_NAME${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-if docker ps --format "{{.Names}}" | grep -q "$BLUE_SERVICE"; then
-    echo "Switching to green"
-    ACTIVE_SERVICE="$GREEN_SERVICE"
-    INACTIVE_SERVICE="$BLUE_SERVICE"
-else
-    echo "Switching to blue"
-    ACTIVE_SERVICE="$BLUE_SERVICE"
-    INACTIVE_SERVICE="$GREEN_SERVICE"
+# Get current service configuration
+echo -e "\n${BLUE}Checking current configuration...${NC}"
+CURRENT_CONFIG=$(curl -s "$API_URL/config" | jq ".services[] | select(.name == \"$SERVICE_NAME\")")
+
+if [ -z "$CURRENT_CONFIG" ]; then
+    echo -e "${RED}✗ Service '$SERVICE_NAME' not found${NC}"
+    exit 1
 fi
 
-ACTIVE_PORT=$([ "$ACTIVE_SERVICE" == "$BLUE_SERVICE" ] && echo '4200' || echo '4201')
-INACTIVE_PORT=$([ "$ACTIVE_SERVICE" == "$BLUE_SERVICE" ] && echo '4201' || echo '4200')
+CURRENT_PORT=$(echo "$CURRENT_CONFIG" | jq -r '.port')
+echo -e "${GREEN}✓ Current port: $CURRENT_PORT${NC}"
 
-# Build container
-docker compose up --build -d $ACTIVE_SERVICE
+# Determine target port (switch between blue and green)
+if [ "$CURRENT_PORT" == "$BLUE_PORT" ]; then
+    TARGET_PORT=$GREEN_PORT
+    TARGET_COLOR="green"
+    CONTAINER_NAME="${SERVICE_NAME}-green"
+else
+    TARGET_PORT=$BLUE_PORT
+    TARGET_COLOR="blue"
+    CONTAINER_NAME="${SERVICE_NAME}-blue"
+fi
 
-# Health check
-for _ in {1..10}; do
-    SERVER_URL="http://0.0.0.0:$ACTIVE_PORT"
-    response=$(curl -s -o /dev/null -I -w "%{http_code}" "$SERVER_URL")
+echo -e "${GREEN}✓ Target port: $TARGET_PORT (${TARGET_COLOR})${NC}"
 
-    echo "$SERVER_URL responded with status $response"
+# Build and start the target container
+echo -e "\n${BLUE}Building and starting container on port $TARGET_PORT...${NC}"
+docker compose up --build -d "$CONTAINER_NAME"
 
-    if [[ $response -eq 200 ]]; then
-        echo "Health check passed. Switching traffic"
-        # Shift traffic
-        sudo /bin/sed -i "s/:$INACTIVE_PORT/:$ACTIVE_PORT/g" "$CONFIG_FILE" || exit 1
-        # Should prevent sigkill
-        sudo /bin/systemctl restart nginx || exit 1
-
-        docker compose down $INACTIVE_SERVICE
-
-        # Save the current checksum
-        echo "$current_checksum" >$CHECKSUM_FILE
-        exit 0
-    fi
-
+# Wait for container to be ready
+echo -e "${BLUE}Waiting for container to initialize...${NC}"
+for i in {1..5}; do
+    echo -n "."
     sleep 1
 done
+echo ""
 
-# Rollback
-echo "Health check failed. Rolling back"
-docker compose down $ACTIVE_SERVICE
-exit 1
+PORT_CHECK_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$API_URL/config/port" \
+    -H "Content-Type: application/json" \
+    -d "{
+        \"service\": \"$SERVICE_NAME\",
+        \"port\": $TARGET_PORT,
+        \"skip_health_check\": false
+    }")
+
+# Extract HTTP status code (last line) and response body
+HTTP_STATUS=$(echo "$PORT_CHECK_RESPONSE" | tail -c 4)
+RESPONSE_BODY=$(echo "$PORT_CHECK_RESPONSE" | head -c -4)
+
+if [ "$HTTP_STATUS" -eq 200 ]; then
+    echo -e "\n${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GREEN}🎉 Deployment completed successfully!${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    exit 0
+else
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${RED}Deployment failed and rolled back ${HTTP_STATUS}${NC}"
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    docker compose stop "$CONTAINER_NAME"
+    exit 1
+fi
+
+
