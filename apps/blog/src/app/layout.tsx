@@ -6,7 +6,7 @@ import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 import Footer from "#components/Footer";
 import GlobalNavigation from "#components/GlobalNavigation";
@@ -57,6 +57,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko" suppressHydrationWarning>
+            <GoogleTagManager gtmId="GTM-5PZZGKF" />
             <body>
                 <NewrelicSnippet />
                 {/* HACK: Dirty hack for implementing theme toggle */}
