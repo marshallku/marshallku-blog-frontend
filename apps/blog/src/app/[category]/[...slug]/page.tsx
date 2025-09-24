@@ -87,8 +87,8 @@ export default async function Post({ params }: PostProps) {
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
-    const hasCoverImage = !!post.data.coverImage;
     const [, dimensions] = await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage!)}`));
+    const hasCoverImage = !!post.data.coverImage && (dimensions || post.data.coverImage?.includes("/api/thumbnail"));
 
     return (
         <article className={cx()}>
@@ -129,13 +129,13 @@ export default async function Post({ params }: PostProps) {
                     )}
                 </Typography>
             </header>
-            {dimensions && (
+            {hasCoverImage && (
                 <figure className={cx("__cover-image")}>
                     <Image
                         src={post.data.coverImage!}
                         alt={post.data.title}
-                        width={dimensions.width}
-                        height={dimensions.height}
+                        width={dimensions?.width}
+                        height={dimensions?.height}
                         useLowQualityPlaceholder
                     />
                 </figure>
