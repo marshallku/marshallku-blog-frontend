@@ -87,8 +87,11 @@ export default async function Post({ params }: PostProps) {
     const categoryInfo = getCategoryBySlug(category);
     const posts = getPosts(category);
     const postIndex = posts.findIndex((post) => post.slug === `/${postSlug}`);
-    const [, dimensions] = await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage!)}`));
-    const hasCoverImage = !!post.data.coverImage && (dimensions || post.data.coverImage?.includes("/api/thumbnail"));
+    const isGeneratedFromApi = post.data.coverImage?.includes("/api/thumbnail");
+    const [, dimensions] = isGeneratedFromApi
+        ? [null, { width: 1200, height: 630 } satisfies Awaited<ReturnType<typeof imageSizeFromFile>>]
+        : await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage!)}`));
+    const hasCoverImage = !!post.data.coverImage && (dimensions || isGeneratedFromApi);
 
     return (
         <article className={cx()}>
