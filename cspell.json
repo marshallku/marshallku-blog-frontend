@@ -33,6 +33,7 @@
         "laravel",
         "lcov",
         "letsencrypt",
+        "llms",
         "localforage",
         "mailchimp",
         "marshallku",
@@ -100,6 +101,7 @@
         "*.mdx",
         "CLAUDE.md",
         "apps/blog/src/components/NewrelicSnippet/index.tsx",
-        "sonar-project.properties"
+        "sonar-project.properties",
+        "**/llms.txt"
     ]
 }
