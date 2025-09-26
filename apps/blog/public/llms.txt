@@ -1,0 +1,132 @@
+# Marshall Ku's Tech Blog
+
+## About
+
+This is Marshall Ku's personal tech blog, built with Next.js 15 and React 19. The blog focuses on web development, programming, and technology topics, with posts primarily written in Korean.
+
+## Author
+
+Marshall Ku is a passionate full-stack developer specializing in:
+- Frontend Development: React, Next.js, TypeScript, modern JavaScript
+- Backend Development: NestJS, Axum, MongoDB, Rust
+- DevOps: Docker, Kubernetes, GitHub Actions, CI/CD pipelines
+- System Architecture: CDN servers, performance optimization, caching strategies
+
+## Content Categories
+
+### Development (dev)
+Technical posts covering:
+- Web Development (JavaScript, TypeScript, React, Next.js)
+- CSS and UI/UX techniques
+- Rust programming and system development
+- WordPress to Next.js migration
+- Performance optimization
+- Testing strategies (unit, E2E, visual regression)
+- PWA development
+- GitHub Actions and CI/CD
+- Docker and containerization
+
+### Chat
+Personal stories and experiences:
+- Development journey
+- Equipment reviews
+- Life updates
+- Learning experiences
+
+### Gallery
+Visual content and portfolios
+
+### Notice
+Blog announcements and updates
+
+### Work
+Professional projects and work experiences
+
+## Featured Topics
+
+### Recent Focus Areas
+- Migration from WordPress to Next.js
+- Building CDN servers with Rust
+- Performance optimization techniques
+- Visual regression testing with BackstopJS
+- GitHub Actions custom runners with Kubernetes
+- PWA development and deployment
+- React component libraries and design systems
+
+### Popular Post Series
+- WordPress theme development diaries
+- Smooth-zoom library development
+- Blog migration journey
+- Home server setup and management
+- JavaScript fundamentals and advanced techniques
+- CSS tricks and animations
+
+## Technical Stack
+
+### Current Blog Architecture
+- **Framework**: Next.js 15 with App Router
+- **UI**: React 19, TypeScript, SCSS Modules
+- **Content**: MDX with extensive plugin pipeline
+- **Monorepo**: Turborepo with pnpm workspaces
+- **Testing**: Vitest, Playwright, BackstopJS
+- **Deployment**: Blue-green deployment with Docker
+- **CDN**: Custom Rust-based CDN server
+- **Analytics**: Google Analytics & AdSense
+
+### Key Features
+- Static site generation for optimal performance
+- Dark/light/sepia theme modes
+- PWA with offline support
+- RSS feed generation
+- Comment system
+- Tag-based search and filtering
+- Responsive design
+- Code syntax highlighting with Shiki
+- SEO optimization with OpenGraph and Twitter Cards
+
+## Notable Projects
+
+1. **Blog Migration**: Successfully migrated from WordPress/PHP to Next.js, improving performance and developer experience
+2. **CDN Server**: Built a custom CDN server in Rust for image optimization and caching
+3. **Smooth-zoom**: JavaScript library for image zooming functionality
+4. **GitGarden**: GitHub contribution visualization tool
+5. **Various UI Components**: Button, Input, Toast notifications, and more
+
+## Post Archives
+
+The blog contains extensive technical content dating back several years, covering:
+- Over 100 technical articles on web development
+- Tutorials and how-to guides
+- Project retrospectives and learnings
+- Performance optimization case studies
+- Open source contributions
+
+## Contact & Links
+
+- Blog: https://marshallku.com
+- GitHub: https://github.com/marshallku
+- Professional inquiries: https://www.linkedin.com/in/marshallku/
+
+## Keywords
+
+JavaScript, TypeScript, React, Next.js, Rust, WordPress, Performance Optimization, PWA, Docker, Kubernetes, GitHub Actions, CI/CD, Web Development, Frontend, Backend, Full Stack, Korean Tech Blog, 마샬쿠, Marshall Ku
+
+## Recent Posts Sample
+
+- WordPress에서 Next.js로 마이그레이션 여정
+- CDN 서버 구축일지 (Rust)
+- Next.js 번들 사이즈 최적화
+- Visual Regression Test 구축하기
+- GitHub Actions로 Kubernetes Custom Runner 설정하기
+- React에서 Dialog 만들기
+- PWA를 스토어에 출시하기
+- Material Ripple 효과 구현하기
+
+## Language
+
+Primary content language: Korean (한국어)
+Code and technical documentation: English
+
+---
+
+This blog represents years of technical exploration, continuous learning, and sharing knowledge with the developer community. It serves as both a personal development journal and a resource for other developers facing similar challenges.
