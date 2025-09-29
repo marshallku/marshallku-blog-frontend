@@ -25,7 +25,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
     }, [src]);
     const hasCdnUrl = CDN_URL !== "";
     const [loaded, setLoaded] = useState(false);
-    const isResizable = extension == null || RESIZABLE_EXTENSIONS.includes(extension);
+    const isResizable = extension != null && RESIZABLE_EXTENSIONS.includes(extension);
 
     const handleLoad = () => {
         setLoaded(true);
