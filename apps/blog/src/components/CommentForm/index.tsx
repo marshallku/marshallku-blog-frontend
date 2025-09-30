@@ -8,9 +8,9 @@ import { Icon } from "@marshallku/icon";
 import { classNames, generateRandomName } from "@marshallku/utils";
 import { type CommentRequest } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
-import styles from "./index.module.scss";
 import { toast } from "@marshallku/toast";
 import Button from "@marshallku/ui/Button";
+import styles from "./index.module.scss";
 
 interface CommentFormProps {
     slug: string;
