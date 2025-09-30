@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ImgHTMLAttributes } from "react";
+import { useCallback, useMemo, useState, type ImgHTMLAttributes } from "react";
 import { classNames } from "@marshallku/utils";
 import styles from "./index.module.scss";
 
@@ -27,9 +27,9 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
     const [loaded, setLoaded] = useState(false);
     const isResizable = extension != null && RESIZABLE_EXTENSIONS.includes(extension);
 
-    const handleLoad = () => {
+    const handleLoad = useCallback(() => {
         setLoaded(true);
-    };
+    }, []);
 
     if (!disableWebP && hasCdnUrl && isResizable) {
         const sizes = forceSize
