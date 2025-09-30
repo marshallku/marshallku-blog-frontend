@@ -94,7 +94,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
         <img
             src={`${CDN_URL}${srcWithoutExtension}${forceSize && hasCdnUrl && isResizable ? `.w${forceSize}` : ""}.${extension}`}
             srcSet={
-                width && height && hasCdnUrl
+                width && height && hasCdnUrl && isResizable
                     ? IMAGE_SIZE.filter((size) => size < Number(width))
                           .map((size) => `${CDN_URL}${srcWithoutExtension}.w${size}.${extension} ${size}w`)
                           .join(", ")
