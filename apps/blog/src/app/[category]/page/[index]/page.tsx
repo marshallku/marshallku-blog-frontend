@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Archive from "#templates/Archive";
-import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
+import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
 
 export const dynamic = "error";
 
@@ -50,11 +50,12 @@ export default async function ArchivePage({ params }: ArchiveProps) {
     const start = actualIndex * PAGE_SIZE;
     const end = start + PAGE_SIZE;
     const postsInPage = posts.slice(start, end);
+    const firstPost = postsInPage[0];
 
     return (
         <Archive
             title={categoryInfo?.name ? `${categoryInfo.name} 카테고리 글` : "카테고리 최근 글"}
-            coverImage={categoryInfo?.coverImage || postsInPage[0]?.data?.coverImage || postsInPage[0]?.data?.ogImage}
+            coverImage={categoryInfo?.coverImage || firstPost?.data?.coverImage || firstPost?.data?.ogImage}
             postListProps={{
                 posts: postsInPage,
                 paginationProps: {

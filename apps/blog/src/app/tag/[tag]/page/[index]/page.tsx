@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Archive from "#templates/Archive";
-import { getPosts, getPostsByTag } from "#utils/post";
 import { PAGE_SIZE } from "#constants";
+import { getPosts, getPostsByTag } from "#utils/post";
 
 export const dynamic = "error";
 
@@ -50,13 +50,12 @@ export default async function TagArchivePage({ params }: TagArchivePageProps) {
     const actualIndex = pageIndex - 1;
     const start = actualIndex * PAGE_SIZE;
     const end = start + PAGE_SIZE;
-    const postsInPage = posts.slice(start, end);
 
     return (
         <Archive
             title={`${decodedTag} 태그 글`}
             postListProps={{
-                posts: postsInPage,
+                posts: posts.slice(start, end),
                 paginationProps: {
                     currentIndex: pageIndex,
                     totalCount: posts.length,

@@ -185,7 +185,7 @@ export default async function Post({ params }: PostProps) {
                     components={MDXComponents}
                 />
                 <Typography component="div" variant="c1" className={cx("__copyright")}>
-                    ⓒ {post.data.date.posted.getFullYear()}. Marshall K All rights reserved
+                    ⓒ{post.data.date.posted.getFullYear()}. Marshall K All rights reserved
                 </Typography>
             </main>
             <InteractPost className={cx("__interact")} title={post.data.title} slug={post.slug} />
