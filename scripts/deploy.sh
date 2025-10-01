@@ -66,10 +66,12 @@ if [ "$CURRENT_PORT" == "$BLUE_PORT" ]; then
     TARGET_PORT=$GREEN_PORT
     TARGET_COLOR="green"
     CONTAINER_NAME="${SERVICE_NAME}-green"
+    PREVIOUS_CONTAINER_NAME="${SERVICE_NAME}-blue"
 else
     TARGET_PORT=$BLUE_PORT
     TARGET_COLOR="blue"
     CONTAINER_NAME="${SERVICE_NAME}-blue"
+    PREVIOUS_CONTAINER_NAME="${SERVICE_NAME}-green"
 fi
 
 echo -e "${GREEN}✓ Target port: $TARGET_PORT (${TARGET_COLOR})${NC}"
@@ -99,6 +101,8 @@ HTTP_STATUS=$(echo "$PORT_CHECK_RESPONSE" | tail -c 4)
 RESPONSE_BODY=$(echo "$PORT_CHECK_RESPONSE" | head -c -4)
 
 if [ "$HTTP_STATUS" -eq 200 ]; then
+    echo -e "${GREEN}✓ Previous container:${NC} $PREVIOUS_CONTAINER_NAME"
+    docker compose down "$PREVIOUS_CONTAINER_NAME"
     echo -e "\n${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${GREEN}🎉 Deployment completed successfully!${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
