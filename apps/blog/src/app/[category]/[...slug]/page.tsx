@@ -22,6 +22,7 @@ import PostCommentWrapper from "#components/PostCommentWrapper";
 import Profile from "#components/Profile";
 import { rehypeFormatToc, rehypeImageMetaData, rehypeResponsiveIframe } from "#plugins";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
+import { SITE_NAME } from "#constants";
 import styles from "./page.module.scss";
 
 export const dynamic = "error";
@@ -51,6 +52,7 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
         openGraph: {
             type: "article",
             title: post.data.title,
+            siteName: SITE_NAME,
             description: post.data.description,
             url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/${post.slug}`,
             publishedTime: post.data.date ? post.data.date.posted.toISOString() : "",
@@ -58,8 +60,8 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
             tags: post.data.tags,
             images: [
                 {
-                    url: post.data.ogImage,
-                    secureUrl: post.data.ogImage,
+                    url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}${post.data.ogImage}`,
+                    secureUrl: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}${post.data.ogImage}`,
                     alt: post.data.title,
                 },
             ],
