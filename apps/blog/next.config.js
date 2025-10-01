@@ -51,6 +51,12 @@ const nextConfig = {
                 destination: "/feed.xml",
                 permanent: true,
             },
+            // Old posts
+            {
+                source: "/dev/240930-outage",
+                destination: "/dev/250930-outage",
+                permanent: true,
+            },
         ];
     },
 };
