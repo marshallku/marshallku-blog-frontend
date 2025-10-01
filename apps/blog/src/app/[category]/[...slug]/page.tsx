@@ -59,6 +59,7 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
             images: [
                 {
                     url: post.data.ogImage,
+                    secureUrl: post.data.ogImage,
                     alt: post.data.title,
                 },
             ],

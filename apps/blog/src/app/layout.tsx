@@ -33,7 +33,13 @@ export const metadata: Metadata = {
         locale: "ko_KR",
         siteName: SITE_NAME,
         description: SITE_DESCRIPTION,
-        images: [{ url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/assets/banner.png` }],
+        images: [
+            {
+                url: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/assets/banner.png`,
+                secureUrl: `${process.env.NEXT_PUBLIC_BLOG_ORIGIN}/assets/banner.png`,
+                alt: SITE_NAME,
+            },
+        ],
     },
     alternates: {
         types: {
