@@ -14,7 +14,11 @@ function ThemeToggle() {
 
         document.documentElement.setAttribute("data-theme", nextTheme);
         document.documentElement.style.colorScheme = nextTheme === "dark" ? "dark" : "light";
-        localStorage.setItem("theme", nextTheme);
+
+        const userPrefersTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (userPrefersTheme !== nextTheme) {
+            localStorage.setItem("theme", nextTheme);
+        }
     };
 
     return (
