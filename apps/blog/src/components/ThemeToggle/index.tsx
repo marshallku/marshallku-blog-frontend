@@ -18,6 +18,8 @@ function ThemeToggle() {
         const userPrefersTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         if (userPrefersTheme !== nextTheme) {
             localStorage.setItem("theme", nextTheme);
+        } else {
+            localStorage.removeItem("theme");
         }
     };
 
