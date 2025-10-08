@@ -116,7 +116,7 @@ jobs:
           envs: GH_PACKAGE_TOKEN
 
   send-notification:
-    needs: [push-image]
+    needs: [push-image, deploy]
     if: ${{ failure() }}
     uses: marshallku/actions/.github/workflows/send-notification.yml@master
     with:
