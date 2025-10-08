@@ -42,16 +42,10 @@ ENV TURBO_TEAM=${TURBO_TEAM:-marshallk}
 ARG TURBO_TOKEN
 ENV TURBO_TOKEN=${TURBO_TOKEN}
 
-# Create turbo cache directory
-RUN mkdir -p .turbo
+ARG TURBO_API
+ENV TURBO_API=${TURBO_API}
 
-# Use remote cache if TURBO_TOKEN is provided
-RUN --mount=type=cache,id=turbo,target=/app/.turbo \
-    if [ -n "$TURBO_TOKEN" ]; then \
-    pnpm turbo run build --filter=@marshallku/blog... --remote-cache; \
-    else \
-    pnpm turbo run build --filter=@marshallku/blog...; \
-    fi
+RUN pnpm turbo run build --filter=@marshallku/blog...
 
 FROM base AS runner
 WORKDIR /app
