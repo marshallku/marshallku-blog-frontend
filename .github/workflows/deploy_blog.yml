@@ -29,9 +29,10 @@ jobs:
                   path: apps/blog/_posts
                   token: ${{ secrets.GH_TOKEN }}
 
-            - name: Add newrelic content
+            - name: Add secret files
               run: |
-                  echo "${{ secrets.NEWRELIC_JS_CONTENT }}" > apps/blog/newrelic.js
+                  printf '%s\n' '${{ secrets.NEWRELIC_JS_CONTENT }}' > apps/blog/newrelic.js
+                  printf '%s\n' '${{ secrets.ENV_FILE }}' > apps/blog/.env.production
 
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
