@@ -91,7 +91,10 @@ jobs:
           build-args: |
             TURBO_API=${{ env.TURBO_API }}
             TURBO_TEAM=${{ env.TURBO_TEAM }}
+          secret-envs: |
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+          github-token: ${{ secrets.GH_PACKAGE_TOKEN }}
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
