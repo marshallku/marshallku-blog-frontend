@@ -1,107 +1,107 @@
 name: CD - blog app
 
 on:
-    push:
-        branches:
-            - master
-            - chore/deploy
-    workflow_dispatch:
+  push:
+    branches:
+      - master
+      - chore/deploy
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
-    REGISTRY: ghcr.io
-    IMAGE_NAME: marshallku/marshallku-blog-frontend
-    TURBO_API: http://127.0.0.1:9080
-    TURBO_TEAM: marshallk
-    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: marshallku/marshallku-blog-frontend
+  TURBO_API: http://127.0.0.1:9080
+  TURBO_TEAM: marshallk
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
-    push-image:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-            - name: Checkout blog posts
-              uses: actions/checkout@v4
-              with:
-                  repository: marshallku/marshallku-blog-posts
-                  path: apps/blog/_posts
-                  token: ${{ secrets.GH_TOKEN }}
-
-            - name: Add secret files
-              run: |
-                  printf '%s\n' '${{ secrets.NEWRELIC_JS_CONTENT }}' > apps/blog/newrelic.js
-                  printf '%s\n' '${{ secrets.ENV_FILE }}' > apps/blog/.env.production
-
-            - name: TurboRepo server
-              uses: felixmosh/turborepo-gh-artifacts@v3
-              with:
-                  repo-token: ${{ github.token }}
-
-            - name: Setup pnpm
-              uses: marshallku/actions/setup/pnpm@master
-
-            - name: Set up QEMU
-              uses: docker/setup-qemu-action@v3
-
-            - name: Setup cache
-              uses: actions/cache@v4
-              with:
-                  path: /tmp/.buildx-cache
-                  key: ${{ runner.os }}-buildx-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-buildx-
-
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-
-            - name: Log in to the Container registry
-              uses: docker/login-action@v3
-              if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-              with:
-                  registry: ${{ env.REGISTRY }}
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Docker meta
-              id: meta
-              uses: docker/metadata-action@v5
-              with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                  tags: |
-                      type=ref,event=branch
-                      type=ref,event=pr
-                      type=semver,pattern={{version}}
-
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v6
-              with:
-                  context: .
-                  file: apps/blog/Dockerfile
-                  push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-                  tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-                  labels: ${{ steps.meta.outputs.labels }}
-                  cache-from: |
-                      type=local,src=/tmp/.buildx-cache
-                      type=gha
-                  cache-to: |
-                      type=local,dest=/tmp/.buildx-cache-new,mode=max
-                      type=gha,mode=max
-                  build-args: |
-                      TURBO_API=${{ env.TURBO_API }}
-                      TURBO_TEAM=${{ env.TURBO_TEAM }}
-                      TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
-            - name: Move cache
-              run: |
-                  rm -rf /tmp/.buildx-cache
-                  mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-    send-notification:
-        needs: [push-image]
-        if: ${{ failure() }}
-        uses: marshallku/actions/.github/workflows/send-notification.yml@master
+  push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Checkout blog posts
+        uses: actions/checkout@v4
         with:
-            failed: ${{ contains(join(needs.*.result, ','), 'failure') }}
-            message: "CI job failed - push"
-        secrets:
-            url: ${{ secrets.DISCORD_WEBHOOK_URI }}
+          repository: marshallku/marshallku-blog-posts
+          path: apps/blog/_posts
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Add secret files
+        run: |
+          printf '%s\n' '${{ secrets.NEWRELIC_JS_CONTENT }}' > apps/blog/newrelic.js
+          printf '%s\n' '${{ secrets.ENV_FILE }}' > apps/blog/.env.production
+
+      - name: TurboRepo server
+        uses: felixmosh/turborepo-gh-artifacts@v3
+        with:
+          repo-token: ${{ github.token }}
+
+      - name: Setup pnpm
+        uses: marshallku/actions/setup/pnpm@master
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/blog/Dockerfile
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+            type=gha
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache-new,mode=max
+            type=gha,mode=max
+          build-args: |
+            TURBO_API=${{ env.TURBO_API }}
+            TURBO_TEAM=${{ env.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+  send-notification:
+    needs: [push-image]
+    if: ${{ failure() }}
+    uses: marshallku/actions/.github/workflows/send-notification.yml@master
+    with:
+      failed: ${{ contains(join(needs.*.result, ','), 'failure') }}
+      message: "CI job failed - push"
+    secrets:
+      url: ${{ secrets.DISCORD_WEBHOOK_URI }}
