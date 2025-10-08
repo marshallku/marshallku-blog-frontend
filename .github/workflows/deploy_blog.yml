@@ -72,19 +72,13 @@ jobs:
                       type=ref,event=pr
                       type=semver,pattern={{version}}
 
-            - name: Add default tags
-              run: echo "TAGS=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly" >> $GITHUB_ENV
-
-            - name: Overwrite version tags
-              if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && steps.create-tag-release.outputs.tag-exists == 'false' }}
-              run: echo "TAGS=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.check.outputs.version }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
-
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
                   context: .
+                  file: apps/blog/Dockerfile
                   push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-                  tags: ${{ env.TAGS }}
+                  tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
                   labels: ${{ steps.meta.outputs.labels }}
                   cache-from: |
                       type=local,src=/tmp/.buildx-cache
