@@ -82,7 +82,7 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
-                  context: .
+                  context: apps/blog
                   push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
                   tags: ${{ env.TAGS }}
                   labels: ${{ steps.meta.outputs.labels }}
