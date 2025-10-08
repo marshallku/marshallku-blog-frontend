@@ -99,6 +99,22 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+  deploy:
+    needs: [push-image]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run remote script
+        uses: appleboy/ssh-action@master
+        env:
+          GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.ED_KEY }}
+          script: /home/${{ secrets.SERVER_USER }}/dev/containers/blog-frontend/deploy.sh
+          envs: GH_PACKAGE_TOKEN
+
   send-notification:
     needs: [push-image]
     if: ${{ failure() }}
