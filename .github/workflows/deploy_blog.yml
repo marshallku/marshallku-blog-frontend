@@ -82,7 +82,7 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
-                  context: apps/blog
+                  context: .
                   push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
                   tags: ${{ env.TAGS }}
                   labels: ${{ steps.meta.outputs.labels }}
@@ -99,19 +99,8 @@ jobs:
               run: |
                   rm -rf /tmp/.buildx-cache
                   mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Run remote script
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.SERVER_IP }}
-                  port: ${{ secrets.SERVER_PORT }}
-                  username: ${{ secrets.SERVER_USER }}
-                  key: ${{ secrets.ED_KEY }}
-                  script: /home/${{ secrets.SERVER_USER }}/dev/marshallku-blog-frontend/scripts/deploy.sh
     send-notification:
-        needs: [deploy]
+        needs: [push-image]
         if: ${{ failure() }}
         uses: marshallku/actions/.github/workflows/send-notification.yml@master
         with:
