@@ -28,10 +28,16 @@ jobs:
                   repository: marshallku/marshallku-blog-posts
                   path: apps/blog/_posts
                   token: ${{ secrets.GH_TOKEN }}
+
+            - name: Add newrelic content
+              run: |
+                  echo "${{ secrets.NEWRELIC_JS_CONTENT }}" > apps/blog/newrelic.js
+
             - name: TurboRepo server
               uses: felixmosh/turborepo-gh-artifacts@v3
               with:
                   repo-token: ${{ github.token }}
+
             - name: Setup pnpm
               uses: marshallku/actions/setup/pnpm@master
 
