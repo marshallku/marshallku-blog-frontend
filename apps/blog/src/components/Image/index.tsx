@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, type ImgHTMLAttributes } from "react";
+import { useMemo, type ImgHTMLAttributes } from "react";
 import { classNames } from "@marshallku/utils";
 import styles from "./index.module.scss";
 
@@ -24,12 +24,7 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
         return [srcWithoutExtension, extension];
     }, [src]);
     const hasCdnUrl = CDN_URL !== "";
-    const [loaded, setLoaded] = useState(false);
     const isResizable = extension != null && RESIZABLE_EXTENSIONS.includes(extension);
-
-    const handleLoad = useCallback(() => {
-        setLoaded(true);
-    }, []);
 
     if (!disableWebP && hasCdnUrl && isResizable) {
         const sizes = forceSize
@@ -70,7 +65,6 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
                         useLowQualityPlaceholder
                             ? {
                                   backgroundImage: `url(${CDN_URL}${srcWithoutExtension}.w10.${extension})`,
-                                  filter: loaded ? "none" : "blur(20px)",
                                   ...rest.style,
                               }
                             : rest.style
@@ -78,13 +72,6 @@ function Image({ src, alt, width, height, forceSize, disableWebP, useLowQualityP
                     className={cx("__image", useLowQualityPlaceholder && "__image--placeholder", {
                         className: rest.className,
                     })}
-                    onLoad={handleLoad}
-                    onError={handleLoad}
-                    ref={(imageRef) => {
-                        if (imageRef?.complete) {
-                            handleLoad();
-                        }
-                    }}
                 />
             </picture>
         );
