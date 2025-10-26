@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";

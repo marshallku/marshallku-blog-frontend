@@ -35,7 +35,7 @@ export default async function GuestbookPage() {
                     "use server";
 
                     await postComment(data);
-                    revalidateTag(SLUG);
+                    revalidateTag(SLUG, "max");
                 }}
             />
             <Suspense fallback={<Loader size={80} className={cx("__loader")} />}>
