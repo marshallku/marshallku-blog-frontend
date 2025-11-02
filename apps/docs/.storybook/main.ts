@@ -9,16 +9,14 @@ const config: StorybookConfig = {
             nextConfigPath: resolve("./next.config.js"),
         },
     },
-    addons: ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-docs"],
+    addons: ["@storybook/addon-links", "@storybook/addon-docs"],
     staticDirs: [
         {
             from: resolve("../blog/public"),
             to: "public",
         },
     ],
-    docs: {
-        autodocs: true,
-    },
+    docs: {},
 };
 
 export default config;
