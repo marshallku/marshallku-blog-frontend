@@ -22,7 +22,6 @@ const CATEGORIES = [
     { slug: "/work", name: "작업물", icon: "package", color: "#b37700" },
     { slug: "/chat", name: "잡담", icon: "chat-bubble", color: "#ffdb4d" },
     { slug: "/gallery", name: "갤러리", icon: "photo-camera", color: "#ff4d4d" },
-    { slug: "/others", name: "기타", icon: "category", color: "#999" },
 ] as const;
 
 const cx = classNames(styles, "drawer-content");
