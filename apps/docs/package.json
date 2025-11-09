@@ -16,7 +16,7 @@
         "react-dom": "^19.2.0"
     },
     "devDependencies": {
-        "@marshallku/eslint-config": "^0.0.4",
+        "@marshallku/eslint-config": "workspace:*",
         "@marshallku/typescript-config": "^0.0.4",
         "@storybook/addon-actions": "^9.0.8",
         "@storybook/addon-docs": "^10.0.2",
@@ -26,7 +26,8 @@
         "@storybook/react": "^10.0.2",
         "@swc/core": "^1.11.13",
         "@vitejs/plugin-react": "^5.1.0",
-        "eslint": "^8.57.0",
+        "eslint": "^9.17.0",
+        "typescript-eslint": "^8.18.2",
         "eslint-plugin-import": "^2.31.0",
         "sass": "^1.93.3",
         "serve": "^14.2.5",
