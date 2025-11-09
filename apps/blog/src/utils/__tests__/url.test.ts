@@ -13,6 +13,7 @@ export const toURL = (value: string) => {
 */
 
 import { describe, expect, it } from "vitest";
+
 import { toURL } from "../url";
 
 describe("toURL function", () => {

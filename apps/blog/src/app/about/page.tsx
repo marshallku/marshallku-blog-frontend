@@ -1,8 +1,11 @@
-import { Metadata } from "next";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import Profile from "#components/Profile";
+import { type Metadata } from "next";
+
 import styles from "./page.module.scss";
+
+import Profile from "#components/Profile";
+
 
 export const dynamic = "error";
 

@@ -1,4 +1,5 @@
 import { visit } from "unist-util-visit";
+
 import type { Root } from "mdast";
 
 export default function remarkEnsureToc() {

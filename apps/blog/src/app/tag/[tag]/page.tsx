@@ -1,6 +1,7 @@
-import { Metadata } from "next";
-import Archive from "#templates/Archive";
+import { type Metadata } from "next";
+
 import { PAGE_SIZE } from "#constants";
+import Archive from "#templates/Archive";
 import { getTags, getPostsByTag } from "#utils/post";
 
 export const dynamic = "error";

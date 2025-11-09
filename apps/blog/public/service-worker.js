@@ -42,7 +42,7 @@ self.addEventListener("push", (event) => {
         }
 
         self.registration.showNotification(data.title, obj);
-    } catch (err) {
+    } catch {
         const data = event.data.text();
 
         self.registration.showNotification(data, {
@@ -86,7 +86,7 @@ self.addEventListener(
 
         try {
             user = JSON.parse(user);
-        } catch (err) {
+        } catch {
             user = { name: null };
         }
 

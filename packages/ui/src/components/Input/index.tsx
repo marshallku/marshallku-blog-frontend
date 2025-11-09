@@ -1,5 +1,6 @@
-import { type InputHTMLAttributes, type FocusEvent, ReactNode, forwardRef, useRef } from "react";
 import { classNames } from "@marshallku/utils";
+import { type InputHTMLAttributes, type FocusEvent, type ReactNode, forwardRef, useRef } from "react";
+
 import Typography from "../Typography";
 import styles from "./index.module.scss";
 

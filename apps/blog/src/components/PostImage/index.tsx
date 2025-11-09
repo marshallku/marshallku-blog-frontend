@@ -1,10 +1,13 @@
 "use client";
 
-import { ImgHTMLAttributes, useEffect, useRef } from "react";
 import { classNames, tryParseUrl } from "@marshallku/utils";
-import useZoom from "#hooks/useZoom";
+import { type ImgHTMLAttributes, useEffect, useRef } from "react";
+
+
 import styles from "./index.module.scss";
+
 import PostBlobImage from "#components/PostBlobImage";
+import useZoom from "#hooks/useZoom";
 
 const IMAGE_SIZE = [480, 600, 860, 1180, 1536, 2048];
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";

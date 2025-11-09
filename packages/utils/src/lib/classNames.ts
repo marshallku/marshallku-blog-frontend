@@ -2,7 +2,7 @@ export default function classNames(
     styles: Record<string, string> = {},
     rootClassName: string = "",
 ): (...names: unknown[]) => string {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+     
     const hasOwn = {}.hasOwnProperty;
     const func = (...names: unknown[]): string => {
         const classes: unknown[] = [];

@@ -1,8 +1,10 @@
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import Banner from "#components/Banner";
-import PostList, { PostListProps } from "#components/PostList";
+
 import styles from "./index.module.scss";
+
+import Banner from "#components/Banner";
+import PostList, { type PostListProps } from "#components/PostList";
 
 export interface ArchiveProps {
     title: string;

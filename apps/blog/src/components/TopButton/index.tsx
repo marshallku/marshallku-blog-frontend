@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { classNames } from "@marshallku/utils";
 import { Icon } from "@marshallku/icon";
-import useScroll from "#hooks/useScroll";
+import { classNames } from "@marshallku/utils";
+import { useEffect, useRef } from "react";
+
 import styles from "./index.module.scss";
+
+import useScroll from "#hooks/useScroll";
 
 const cx = classNames(styles, "top-button");
 

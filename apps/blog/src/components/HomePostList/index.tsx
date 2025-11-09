@@ -1,16 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
+import { Icon } from "@marshallku/icon";
+import Button from "@marshallku/ui/Button";
 import ToggleButton from "@marshallku/ui/ToggleButton";
 import ToggleButtonGroup from "@marshallku/ui/ToggleButtonGroup";
 import { classNames } from "@marshallku/utils";
+import Link from "next/link";
+import { useState } from "react";
+
+import styles from "./index.module.scss";
+
+import type { Category, Post } from "#types";
+
 import PostList from "#components/PostList";
 import { PAGE_SIZE } from "#constants";
-import type { Category, Post } from "#types";
-import styles from "./index.module.scss";
-import Button from "@marshallku/ui/Button";
-import { Icon } from "@marshallku/icon";
+
 
 interface HomePostListProps {
     categories: (Category & { slug: string })[];

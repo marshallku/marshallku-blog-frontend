@@ -1,12 +1,14 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
 import { classNames } from "@marshallku/utils";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense, useMemo } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+import styles from "./index.module.scss";
+
 import Comments from "#components/Comments";
 import PostCommentForm from "#components/PostCommentForm";
-import styles from "./index.module.scss";
 
 export interface PostCommentProps {
     slug: string;

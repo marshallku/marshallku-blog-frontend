@@ -1,5 +1,6 @@
-import { test as testBase, Page } from "@playwright/test";
+import { test as testBase, type Page } from "@playwright/test";
 import MCR from "monocart-coverage-reports";
+
 import coverageOptions from "./mcr.config";
 
 // fixtures

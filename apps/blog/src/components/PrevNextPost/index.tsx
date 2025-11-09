@@ -1,10 +1,12 @@
-import Link from "next/link";
+import { Icon } from "@marshallku/icon";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import Image from "#components/Image";
-import { Post } from "#types";
+import Link from "next/link";
+
 import styles from "./index.module.scss";
-import { Icon } from "@marshallku/icon";
+
+import Image from "#components/Image";
+import { type Post } from "#types";
 
 export interface PrevNextPostProps {
     previousPost?: Omit<Post, "content">;

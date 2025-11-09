@@ -1,5 +1,6 @@
-import { type CSSProperties } from "react";
 import { classNames } from "@marshallku/utils";
+import { type CSSProperties } from "react";
+
 import styles from "./index.module.scss";
 
 export interface LoaderProps {

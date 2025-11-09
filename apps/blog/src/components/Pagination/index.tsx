@@ -1,9 +1,11 @@
-import Link from "next/link";
-import { useMemo } from "react";
 import { Icon } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import { NonNullableProperties } from "#types";
+import Link from "next/link";
+import { useMemo } from "react";
+
 import styles from "./index.module.scss";
+
+import { type NonNullableProperties } from "#types";
 
 export interface PaginationProps {
     /** index of current page */

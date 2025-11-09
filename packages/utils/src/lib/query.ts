@@ -9,7 +9,7 @@ export const stringifyQuery = <T extends object>(queryObject: T, encode = true, 
 
         const value = queryObject[key];
 
-        // eslint-disable-next-line eqeqeq
+         
         if (value == null) {
             continue;
         }

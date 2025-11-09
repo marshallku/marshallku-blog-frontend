@@ -1,9 +1,11 @@
 "use server";
 
 import { marked } from "marked";
-import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
+
 import { getCategories, getPosts } from "./post";
-import { Post } from "#types";
+
+import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
+import { type Post } from "#types";
 
 export async function formatCategoryFeed(filterFunction: (post: Post) => boolean) {
     const renderer = new marked.Renderer();

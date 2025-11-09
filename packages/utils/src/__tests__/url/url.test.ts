@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { tryParseUrl } from "../..";
 
 describe("tryParseUrl function", () => {

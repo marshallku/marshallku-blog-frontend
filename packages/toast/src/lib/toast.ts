@@ -53,7 +53,7 @@ export default function toast(
     document.body.append(div);
 
     // HACK: Force reflow
-    // eslint-disable-next-line no-void
+     
     void div.offsetWidth;
 
     div.style.opacity = "1";

@@ -1,15 +1,16 @@
 /// <reference types="vitest" />
 
-import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
-import { defineConfig } from "vite";
-import { glob } from "glob";
+import { fileURLToPath } from "node:url";
+
+import { codecovVitePlugin } from "@codecov/vite-plugin";
 import react from "@vitejs/plugin-react";
+import { glob } from "glob";
+import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { libInjectCss } from "vite-plugin-lib-inject-css";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import { codecovVitePlugin } from "@codecov/vite-plugin";
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 

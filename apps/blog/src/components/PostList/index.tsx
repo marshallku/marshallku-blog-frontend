@@ -1,9 +1,11 @@
 import { classNames } from "@marshallku/utils";
-import Pagination, { PaginationProps } from "#components/Pagination";
+
+import styles from "./index.module.scss";
+
+import Pagination, { type PaginationProps } from "#components/Pagination";
 import PostCard from "#components/PostCard";
 import { PAGE_SIZE } from "#constants";
-import { Post } from "#types";
-import styles from "./index.module.scss";
+import { type Post } from "#types";
 
 export interface PostListProps {
     posts: Omit<Post, "content">[];

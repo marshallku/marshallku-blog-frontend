@@ -1,12 +1,15 @@
 "use client";
 
-import { copyToClipboard } from "copy2clip";
-import Button from "@marshallku/ui/Button";
 import { Icon } from "@marshallku/icon";
-import { classNames } from "@marshallku/utils";
 import { toast } from "@marshallku/toast";
-import ReportIssueButton from "#components/ReportIssueButton";
+import Button from "@marshallku/ui/Button";
+import { classNames } from "@marshallku/utils";
+import { copyToClipboard } from "copy2clip";
+
 import styles from "./index.module.scss";
+
+import ReportIssueButton from "#components/ReportIssueButton";
+
 
 export interface InteractPostProps {
     className?: string;

@@ -1,5 +1,5 @@
-import { getCategories } from "#utils/post";
 import { formatCategoryFeed } from "#utils/feed";
+import { getCategories } from "#utils/post";
 
 export const dynamic = "error";
 

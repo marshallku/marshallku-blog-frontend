@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+
 import { easeInOutCubic } from "#utils/easing";
 
 const DEFAULT_DURATION = 500;

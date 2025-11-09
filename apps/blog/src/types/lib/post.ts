@@ -1,4 +1,4 @@
-import { IconProps } from "@marshallku/icon";
+import { type IconProps } from "@marshallku/icon";
 
 export interface Post {
     data: {

@@ -1,6 +1,8 @@
-import type { AnchorHTMLAttributes, DetailedHTMLProps, ImgHTMLAttributes, TableHTMLAttributes } from "react";
-import NextLink from "next/link";
 import { Icon } from "@marshallku/icon";
+import NextLink from "next/link";
+
+import type { AnchorHTMLAttributes, DetailedHTMLProps, ImgHTMLAttributes, TableHTMLAttributes } from "react";
+
 import PostImage from "#components/PostImage";
 import YoutubeThumbnailExtractor from "#components/YoutubeThumbnailExtractor";
 

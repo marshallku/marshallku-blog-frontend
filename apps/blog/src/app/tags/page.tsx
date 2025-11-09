@@ -1,9 +1,12 @@
-import { Metadata } from "next";
-import Link from "next/link";
-import { getTags } from "#utils/post";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
+import { type Metadata } from "next";
+import Link from "next/link";
+
 import styles from "./page.module.scss";
+
+import { getTags } from "#utils/post";
+
 
 export const dynamic = "error";
 

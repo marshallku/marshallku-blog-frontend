@@ -1,8 +1,10 @@
-import { AnchorHTMLAttributes, ReactNode } from "react";
-import Button from "@marshallku/ui/Button";
 import { Icon } from "@marshallku/icon";
-import styles from "./index.module.scss";
+import Button from "@marshallku/ui/Button";
 import { classNames } from "@marshallku/utils";
+import { type AnchorHTMLAttributes, type ReactNode } from "react";
+
+import styles from "./index.module.scss";
+
 
 export interface ReportIssueButtonProps {
     title: string;

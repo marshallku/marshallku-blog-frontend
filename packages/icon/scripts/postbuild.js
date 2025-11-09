@@ -1,7 +1,6 @@
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 
-const { default: icons } = await import("../dist/icons.json", { with: { type: "json" } });
-
+const icons = JSON.parse(readFileSync("./dist/icons.json", "utf-8"));
 const content = `const icons = [
     ${Object.keys(icons)
         .sort((a, b) => a.localeCompare(b))

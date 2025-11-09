@@ -1,11 +1,11 @@
 import { visit } from "unist-util-visit";
+
+import type { ElementNode } from "#plugins/types";
 import type { Processor } from "unified";
 import type { Node } from "unist";
-import type { VFile } from "vfile";
-import type { ElementNode } from "#plugins/types";
 
 export default function rehypeFormatToc(this: Processor) {
-    return async function transformer(tree: Node, _: VFile) {
+    return async function transformer(tree: Node) {
         let willUpdateToc = false;
         let headingIndex = -1;
 

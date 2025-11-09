@@ -1,7 +1,8 @@
 "use client";
 
-import { type PostImageProps } from "#components/PostImage";
 import { useEffect, useState } from "react";
+
+import { type PostImageProps } from "#components/PostImage";
 
 export interface PostBlobImageProps extends PostImageProps {
     src: Blob;

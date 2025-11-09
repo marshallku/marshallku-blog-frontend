@@ -1,7 +1,10 @@
-import { type ReactNode, createElement, type JSX } from "react";
 import { classNames } from "@marshallku/utils";
-import type { Range } from "../../types";
+import { type ReactNode, createElement, type JSX } from "react";
+
 import styles from "./index.module.scss";
+
+import type { Range } from "../../types";
+
 
 export type TypographyComponent = keyof Omit<
     HTMLElementTagNameMap,

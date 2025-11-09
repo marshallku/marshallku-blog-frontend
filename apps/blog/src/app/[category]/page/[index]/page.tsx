@@ -1,7 +1,8 @@
-import { Metadata } from "next";
+import { type Metadata } from "next";
 import { notFound } from "next/navigation";
-import Archive from "#templates/Archive";
+
 import { PAGE_SIZE } from "#constants";
+import Archive from "#templates/Archive";
 import { getCategoryBySlug, getGroupedPostByCategory, getPosts } from "#utils/post";
 
 export const dynamic = "error";

@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
 import { classNames } from "@marshallku/utils";
+import { type ReactNode } from "react";
+
 import styles from "./index.module.scss";
 
 export interface CommentContentProps {

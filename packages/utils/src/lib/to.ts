@@ -1,5 +1,7 @@
 export default function to<T, E = Error>(promise: Promise<T>): Promise<[E, null] | [null, T]>;
+// eslint-disable-next-line no-redeclare
 export default function to<T, E = Error>(value: T): [E, null] | [null, T];
+// eslint-disable-next-line no-redeclare
 export default function to<T, E = Error>(
     promiseOrValue: Promise<T> | T,
 ): Promise<[E, null] | [null, T]> | ([E, null] | [null, T]) {

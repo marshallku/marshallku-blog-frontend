@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
+import Link from "next/link";
+
+import styles from "./index.module.scss";
+
 import { useComments } from "#api/comment/queries";
 import CommentAvatar from "#components/CommentAvatar";
 import { DRAWER_COMMENT_COUNT } from "#constants";
-import styles from "./index.module.scss";
 
 export interface DrawerCommentProps {
     closeDrawer(): void;

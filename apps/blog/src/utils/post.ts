@@ -1,10 +1,13 @@
 import { existsSync, readFileSync } from "fs";
 import { join, parse } from "path";
-import matter from "gray-matter";
+
 import { groupBy } from "@marshallku/utils";
-import { POSTS_DIRECTORY } from "#constants";
-import { Category, Post, Tag } from "#types";
+import matter from "gray-matter";
+
 import { walk } from "./file";
+
+import { POSTS_DIRECTORY } from "#constants";
+import { type Category, type Post, type Tag } from "#types";
 
 export function checkCategoryExists(category: string): boolean {
     return existsSync(join(POSTS_DIRECTORY, category));
@@ -78,7 +81,8 @@ export function getPosts<T extends boolean>(
     getContent?: T,
 ): (T extends true ? Post : Omit<Post, "content">)[] {
     return getPostSlugs(category)
-        .map((slug) => getPostBySlug(slug, getContent)!)
+        .map((slug) => getPostBySlug(slug, getContent))
+        .filter((post): post is Post => post != null)
         .filter((post) => post.data.hidden !== true)
         .sort((a, b) => {
             if (a.data.date.posted > b.data.date.posted) {

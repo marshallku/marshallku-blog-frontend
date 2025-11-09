@@ -1,13 +1,15 @@
-import Link from "next/link";
-import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
+import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
+import Link from "next/link";
+
+import styles from "./index.module.scss";
+
 import Drawer from "#components/Drawer";
+import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
 import Logo from "#components/Logo";
 import ThemeToggle from "#components/ThemeToggle";
-import GlobalNavigationBackground from "#components/GlobalNavigationBackground";
 import { getCategories } from "#utils/post";
-import styles from "./index.module.scss";
 
 const cx = classNames(styles, "global-navigation");
 

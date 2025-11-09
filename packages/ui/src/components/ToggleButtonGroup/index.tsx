@@ -1,9 +1,10 @@
 "use client";
 
-import { Children, ReactElement, cloneElement, useCallback, useState } from "react";
+import { classNames } from "@marshallku/utils";
+import { Children, type ReactElement, cloneElement, useCallback, useState } from "react";
+
 import { type ToggleButtonProps } from "../ToggleButton";
 import styles from "./index.module.scss";
-import { classNames } from "@marshallku/utils";
 
 export interface ToggleButtonGroupProps<T extends string | number | (string | number)[]> {
     /**

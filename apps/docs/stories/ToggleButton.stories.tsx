@@ -1,7 +1,8 @@
-import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
 import ToggleButton from "@ui/ToggleButton";
 import ToggleButtonGroup, { type ToggleButtonGroupProps } from "@ui/ToggleButtonGroup";
+import { useState } from "react";
+
+import type { Meta, StoryObj } from "@storybook/react";
 
 const story: Meta<ToggleButtonGroupProps<string>> = {
     component: ToggleButtonGroup,

@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
-import Image from "#components/Image";
-import { Post } from "#types";
+import Link from "next/link";
+
 import styles from "./index.module.scss";
+
+import Image from "#components/Image";
+import { type Post } from "#types";
 
 export interface PostCardProps {
     post: Omit<Post, "content">;

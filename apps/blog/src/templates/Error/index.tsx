@@ -1,12 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import Button from "@marshallku/ui/Button";
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import ReportIssueButton from "#components/ReportIssueButton";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import styles from "./index.module.scss";
+
+import ReportIssueButton from "#components/ReportIssueButton";
+
 
 export interface ErrorProps {
     title?: string;

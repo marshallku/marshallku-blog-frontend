@@ -1,7 +1,8 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
-import httpClient, { HTTPClient } from "#utils/httpClient";
+
+import httpClient, { type HTTPClient } from "#utils/httpClient";
 
 const initializeHeaders = async (initHeaders?: RequestInit["headers"]) => {
     const httpHeaders = await headers();
@@ -37,7 +38,7 @@ export const request: HTTPClient<unknown> = httpClient({
             try {
                 return await response.json();
             } catch {
-                // eslint-disable-next-line no-console
+                 
                 console.error("Failed to parse response body as JSON.");
                 return null;
             }

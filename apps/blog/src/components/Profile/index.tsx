@@ -1,8 +1,10 @@
-import { classNames } from "@marshallku/utils";
-import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
-import Image from "#components/Image";
+import Typography from "@marshallku/ui/Typography";
+import { classNames } from "@marshallku/utils";
+
 import styles from "./index.module.scss";
+
+import Image from "#components/Image";
 
 export interface ProfileProps {
     className?: string;

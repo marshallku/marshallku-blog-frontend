@@ -1,8 +1,10 @@
-import Typography from "@marshallku/ui/Typography";
 import { Icon } from "@marshallku/icon";
+import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
-import { SITE_DESCRIPTION, SITE_SINCE } from "#constants";
+
 import styles from "./index.module.scss";
+
+import { SITE_DESCRIPTION, SITE_SINCE } from "#constants";
 
 const cx = classNames(styles, "footer");
 

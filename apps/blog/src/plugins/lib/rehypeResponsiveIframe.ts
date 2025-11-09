@@ -1,8 +1,8 @@
 import { visit } from "unist-util-visit";
+
+import type { IframeNode } from "#plugins/types";
 import type { Processor } from "unified";
 import type { Node, Parent } from "unist";
-import type { VFile } from "vfile";
-import type { IframeNode } from "#plugins/types";
 
 function simplifyAspectRatio(width: number, height: number): { width: number; height: number } {
     const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
@@ -14,7 +14,7 @@ function simplifyAspectRatio(width: number, height: number): { width: number; he
 }
 
 export default function rehypeResponsiveIframe(this: Processor) {
-    return async function transformer(tree: Node, _: VFile) {
+    return async function transformer(tree: Node) {
         visit(tree, "mdxJsxFlowElement", (node: IframeNode, index, parent: Parent) => {
             if (node.name !== "iframe") {
                 return;

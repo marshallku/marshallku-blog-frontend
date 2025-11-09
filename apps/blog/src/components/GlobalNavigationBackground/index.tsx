@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { classNames } from "@marshallku/utils";
+import { useEffect, useRef } from "react";
+
 import styles from "./index.module.scss";
 
 const cx = classNames(styles, "global-navigation-background");

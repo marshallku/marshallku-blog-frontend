@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const EMOJI_MAP: Record<string, string> = {
     cry: "😢",
@@ -20,17 +20,11 @@ const EMOJI_MAP: Record<string, string> = {
     building: "🏗️",
 };
 
-const POSITION_MAP = {
-    center: "center",
-    top: "flex-start",
-    bottom: "flex-end",
-    left: "flex-start",
-    right: "flex-end",
-} as const;
+type TextAlign = "center" | "top" | "bottom" | "left" | "right";
 
 interface ThumbnailConfig {
     emoji: string;
-    textAlign: keyof typeof POSITION_MAP;
+    textAlign: TextAlign;
     title: string;
     body: string;
     fontSize: number;
@@ -109,11 +103,9 @@ function parseThumbnailPath(path: string): ThumbnailConfig | null {
         }
     }
 
-    console.log(config);
-
     return {
         emoji: config.emoji,
-        textAlign: config.textAlign as keyof typeof POSITION_MAP,
+        textAlign: config.textAlign,
         title: config.title,
         body: config.body,
         fontSize: config.fontSize,

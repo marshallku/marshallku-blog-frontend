@@ -1,8 +1,11 @@
-import Link from "next/link";
 import { classNames } from "@marshallku/utils";
-import Image from "#components/Image";
-import { Post } from "#types";
+import Link from "next/link";
+
 import styles from "./index.module.scss";
+
+import Image from "#components/Image";
+import { type Post } from "#types";
+
 
 export interface PostListGalleryProps {
     posts: Omit<Post, "content">[];

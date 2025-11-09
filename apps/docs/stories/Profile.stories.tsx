@@ -1,5 +1,5 @@
-import { type Meta, type StoryObj } from "@storybook/react";
 import Profile, { type ProfileProps } from "@blog/Profile";
+import { type Meta, type StoryObj } from "@storybook/react";
 
 const story: Meta<ProfileProps> = {
     component: Profile,

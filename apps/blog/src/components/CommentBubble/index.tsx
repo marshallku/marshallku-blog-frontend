@@ -1,9 +1,11 @@
 import Typography from "@marshallku/ui/Typography";
 import { classNames, formatDate } from "@marshallku/utils";
+
+import styles from "./index.module.scss";
+
 import { type Comment } from "#api";
 import CommentAvatar from "#components/CommentAvatar";
 import CommentContent from "#components/CommentContent";
-import styles from "./index.module.scss";
 
 export interface CommentBubbleProps {
     data: Comment;

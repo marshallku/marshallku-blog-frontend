@@ -1,7 +1,10 @@
-import { ReactNode } from "react";
 import { classNames } from "@marshallku/utils";
-import Image from "#components/Image";
+import { type ReactNode } from "react";
+
 import styles from "./index.module.scss";
+
+import Image from "#components/Image";
+
 
 export interface BannerProps {
     title: string;

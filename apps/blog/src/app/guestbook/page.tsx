@@ -1,13 +1,15 @@
-import { Metadata } from "next";
+import Loader from "@marshallku/ui/Loader";
+import Typography from "@marshallku/ui/Typography";
+import { classNames } from "@marshallku/utils";
+import { type Metadata } from "next";
 import { revalidateTag } from "next/cache";
 import { Suspense } from "react";
-import Typography from "@marshallku/ui/Typography";
-import Loader from "@marshallku/ui/Loader";
-import { classNames } from "@marshallku/utils";
+
+import styles from "./page.module.scss";
+
 import { getCommentsBySlug, postComment } from "#api/comment/api.server";
 import CommentForm from "#components/CommentForm";
 import CommentList from "#components/CommentList";
-import styles from "./page.module.scss";
 
 export const metadata: Metadata = {
     title: "방명록",

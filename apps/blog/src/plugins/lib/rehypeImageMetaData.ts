@@ -1,10 +1,10 @@
+import { to } from "@marshallku/utils";
+import { imageSizeFromFile } from "image-size/fromFile";
 import { visit } from "unist-util-visit";
+
+import type { ImageNode } from "#plugins/types";
 import type { Processor } from "unified";
 import type { Node } from "unist";
-import type { VFile } from "vfile";
-import { imageSizeFromFile } from "image-size/fromFile";
-import { to } from "@marshallku/utils";
-import type { ImageNode } from "#plugins/types";
 
 function isExternalImage(path: string) {
     return path.startsWith("http");
@@ -36,7 +36,7 @@ async function addImageMetaData(node: ImageNode) {
 }
 
 export default function rehypeImageMetaData(this: Processor) {
-    return async function transformer(tree: Node, _: VFile) {
+    return async function transformer(tree: Node) {
         const promises: Promise<void>[] = [];
 
         visit(tree, "element", (node: ImageNode) => {

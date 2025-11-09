@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { toURL } from "#utils/url";
 
 const AVATAR_SIZE = 40;

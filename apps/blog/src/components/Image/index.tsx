@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, type ImgHTMLAttributes } from "react";
 import { classNames } from "@marshallku/utils";
+import { useMemo, type ImgHTMLAttributes } from "react";
+
 import styles from "./index.module.scss";
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {

@@ -1,5 +1,6 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
+import { type ButtonHTMLAttributes, forwardRef } from "react";
+
 import styles from "./index.module.scss";
 import Button from "../Button";
 
@@ -28,7 +29,7 @@ const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
                 size="small"
                 variant="text"
                 radius="square"
-                className={cx("", { "--selected": selected, "--disabled": disabled })}
+                className={`${cx("", { "--selected": selected, "--disabled": disabled })} ${className}`}
                 disabled={disabled}
                 value={value}
                 {...props}

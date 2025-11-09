@@ -1,7 +1,10 @@
 import { mkdirSync, copyFileSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
+
 import { visit } from "unist-util-visit";
+
 import type { Root } from "mdast";
+
 import { POSTS_DIRECTORY, PUBLIC_DIRECTORY } from "#constants";
 
 const POSTS_PATH = "posts";

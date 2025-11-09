@@ -1,7 +1,8 @@
 "use client";
 
-import { PostCommentProps } from "#components/PostComment";
 import dynamic from "next/dynamic";
+
+import { type PostCommentProps } from "#components/PostComment";
 
 const PostComment = dynamic(() => import("#components/PostComment"), {
     ssr: false,

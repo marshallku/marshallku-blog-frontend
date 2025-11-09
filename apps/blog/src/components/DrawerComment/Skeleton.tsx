@@ -1,7 +1,9 @@
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
-import { DRAWER_COMMENT_COUNT } from "#constants";
+
 import styles from "./index.module.scss";
+
+import { DRAWER_COMMENT_COUNT } from "#constants";
 
 const cx = classNames(styles, "drawer-comment");
 

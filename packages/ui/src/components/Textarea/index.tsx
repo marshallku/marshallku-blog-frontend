@@ -1,5 +1,6 @@
-import { type TextareaHTMLAttributes, forwardRef } from "react";
 import { classNames } from "@marshallku/utils";
+import { type TextareaHTMLAttributes, forwardRef } from "react";
+
 import Typography from "../Typography";
 import styles from "./index.module.scss";
 

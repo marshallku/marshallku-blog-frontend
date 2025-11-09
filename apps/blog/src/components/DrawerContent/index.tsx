@@ -1,14 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { Dispatch, MouseEventHandler, ReactNode, SetStateAction, Suspense, useCallback, useRef } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Icon, IconProps } from "@marshallku/icon";
+import { Icon, type IconProps } from "@marshallku/icon";
 import { classNames } from "@marshallku/utils";
-import Hamburger from "#components/Hamburger";
+import Link from "next/link";
+import { type Dispatch, type MouseEventHandler, type ReactNode, type SetStateAction, Suspense, useCallback, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+import styles from "./index.module.scss";
+
 import DrawerComment from "#components/DrawerComment";
 import DrawerCommentSkeleton from "#components/DrawerComment/Skeleton";
-import styles from "./index.module.scss";
+import Hamburger from "#components/Hamburger";
+
 
 interface DrawerContentProps {
     opened: boolean;

@@ -1,8 +1,9 @@
 "use client";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import DrawerContent from "#components/DrawerContent";
 import Hamburger from "#components/Hamburger";
 
@@ -31,7 +32,7 @@ function Drawer() {
                             setWillClose(false);
                         }}
                     />,
-                    document.getElementById("drawer-root")!,
+                    document.getElementById("drawer-root") as HTMLElement,
                 )}
         </QueryClientProvider>
     );

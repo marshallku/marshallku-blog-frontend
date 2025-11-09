@@ -1,8 +1,10 @@
 "use server";
 
-import { request } from "#api/instance.server";
 import { removeFalsy } from "@marshallku/utils";
+
 import { type Comment, type CommentListResponse } from "./types";
+
+import { request } from "#api/instance.server";
 
 export async function getComments() {
     return request<CommentListResponse>("/api/v2/recent", {

@@ -1,8 +1,11 @@
-import { Fragment } from "react";
 import { classNames } from "@marshallku/utils";
+import { Fragment } from "react";
+
+import styles from "./index.module.scss";
+
 import { type CommentListResponse } from "#api";
 import CommentBubble from "#components/CommentBubble";
-import styles from "./index.module.scss";
+
 
 export interface CommentListProps {
     data: CommentListResponse;

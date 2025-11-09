@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
+import { type AnchorHTMLAttributes, type DetailedHTMLProps } from "react";
+import { describe, expect, it } from "vitest";
+
 import Button from ".";
 
 describe("Button", () => {

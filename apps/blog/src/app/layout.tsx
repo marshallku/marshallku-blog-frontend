@@ -4,14 +4,16 @@ import "@marshallku/ui/styles/reset.scss";
 import "@marshallku/ui/styles/globals.scss";
 import "./globals.css";
 
-import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
-import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
+import Script from "next/script";
+
+import type { Metadata, Viewport } from "next";
+
 import Footer from "#components/Footer";
 import GlobalNavigation from "#components/GlobalNavigation";
-import TopButton from "#components/TopButton";
 import NewrelicSnippet from "#components/NewrelicSnippet";
+import TopButton from "#components/TopButton";
+import { SITE_DESCRIPTION, SITE_NAME } from "#constants";
 
 export const metadata: Metadata = {
     title: SITE_NAME,

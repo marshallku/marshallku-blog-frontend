@@ -1,7 +1,8 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
 import { classNames, randomInRange } from "@marshallku/utils";
+import { type ReactNode, useEffect, useState } from "react";
+
 import styles from "./index.module.scss";
 
 interface BlogBannerProps {

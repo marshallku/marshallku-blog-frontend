@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { to } from "../..";
 
 describe("to function", () => {

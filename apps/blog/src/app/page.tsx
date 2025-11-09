@@ -1,12 +1,15 @@
 import Typography from "@marshallku/ui/Typography";
 import { classNames } from "@marshallku/utils";
+
+import styles from "./page.module.scss";
+
+import BlogBanner from "#components/BlogBanner";
 import HomePostList from "#components/HomePostList";
 import PostListGallery from "#components/PostListGallery";
 import Profile from "#components/Profile";
-import BlogBanner from "#components/BlogBanner";
-import { getPosts, getCategories } from "#utils/post";
 import { SMALL_PAGE_SIZE, SITE_DESCRIPTION, SITE_NAME } from "#constants";
-import styles from "./page.module.scss";
+import { getPosts, getCategories } from "#utils/post";
+
 
 export const dynamic = "error";
 

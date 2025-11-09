@@ -1,4 +1,5 @@
 import { join } from "node:path";
+
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3443;

@@ -1,29 +1,31 @@
-import { Metadata } from "next";
-import Script from "next/script";
-import { notFound } from "next/navigation";
+import { Icon } from "@marshallku/icon";
+import Typography from "@marshallku/ui/Typography";
+import { classNames, formatDate, to } from "@marshallku/utils";
+import { imageSizeFromFile } from "image-size/fromFile";
+import { type Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import Script from "next/script";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
-import rehypeUnwrapImages from "rehype-unwrap-images";
-import { imageSizeFromFile } from "image-size/fromFile";
-import Typography from "@marshallku/ui/Typography";
-import { Icon } from "@marshallku/icon";
-import { classNames, formatDate, to } from "@marshallku/utils";
-import MDXComponents from "#components/MDXComponents";
-import InteractPost from "#components/InteractPost";
+
+import styles from "./page.module.scss";
+
 import Image from "#components/Image";
+import InteractPost from "#components/InteractPost";
+import MDXComponents from "#components/MDXComponents";
+import PostCommentWrapper from "#components/PostCommentWrapper";
 import PostList from "#components/PostList";
 import PrevNextPost from "#components/PrevNextPost";
-import PostCommentWrapper from "#components/PostCommentWrapper";
 import Profile from "#components/Profile";
+import { SITE_NAME } from "#constants";
 import { rehypeFormatToc, rehypeImageMetaData, rehypeResponsiveIframe } from "#plugins";
 import { getPostBySlug, getPostSlugs, getCategoryBySlug, getPosts } from "#utils/post";
-import { SITE_NAME } from "#constants";
-import styles from "./page.module.scss";
 
 export const dynamic = "error";
 
@@ -93,7 +95,7 @@ export default async function Post({ params }: PostProps) {
     const isGeneratedFromApi = post.data.coverImage?.includes("/api/thumbnail");
     const [, dimensions] = isGeneratedFromApi
         ? [null, { width: 1200, height: 630 } satisfies Awaited<ReturnType<typeof imageSizeFromFile>>]
-        : await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage!)}`));
+        : await to(imageSizeFromFile(`public${decodeURIComponent(post.data.coverImage as string)}`));
     const hasCoverImage = !!post.data.coverImage && (dimensions || isGeneratedFromApi);
 
     return (
@@ -138,7 +140,7 @@ export default async function Post({ params }: PostProps) {
             {hasCoverImage && (
                 <figure className={cx("__cover-image")}>
                     <Image
-                        src={post.data.coverImage!}
+                        src={post.data.coverImage as string}
                         alt={post.data.title}
                         width={dimensions?.width}
                         height={dimensions?.height}
